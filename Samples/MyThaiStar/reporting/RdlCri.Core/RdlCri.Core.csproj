@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ZXing.Net" Version="0.16.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RdlEngine.Core\RdlEngine.Core.csproj" />
+    <ProjectReference Include="..\ZKWeb.System.Drawing\ZKWeb.System.Drawing.csproj" />
+  </ItemGroup>
+
+</Project>

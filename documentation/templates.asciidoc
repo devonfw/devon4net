@@ -1,0 +1,67 @@
+:toc: macro
+toc::[]
+:icons: font
+:iconfont-remote!:
+:iconfont-name: font-awesome
+:stylesdir: css
+
+= Templates
+
+== Overview
+
+The .Net Core and .Net Framework given templates allows to start coding an application with the following functionality ready to use:
+
+
+Please refer to link:userguide.html[User guide] in order to start developing.
+
+
+== Net Core 3.0
+
+The _.Net Core 3.0_ template allows you to start developing an n-layer server application to provide the latest features. The template can be used in Visual Studio Code and Visual Studio 2019.
+
+The application result can be deployed as a console application, microservice or web page.
+
+To start developing with devon4Net template, please follow this instructions:
+
+==== Using devon4Net template
+==== Option 1
+. Open your favourite terminal (Win/Linux/iOS)
+. Go to future project's path
+. Type _dotnet new --install Devon4Net.WebAPI.Template_
+. Type _dotnet new Devon4NetAPI_
+. Go to project's path
+. You are ready to start developing with _devon4Net_
+
+
+==== Option 2
+. Create a new dotnet API project from scracht
+. Add the nuget package reference to your project
+. Type _dotnet new --install Devon4Net.WebAPI.Template_
+
+
+== Net Core 2.1.x
+
+The _.Net Core 2.1.x_ template allows you to start developing an n-layer server application to provide the latest features. The template can be used in Visual Studio Code and Visual Studio 2017.
+
+The application result can be deployed as a console application, microservice or web page.
+
+To start developing with devon4Net template, please follow this instructions:
+
+==== Using devon4Net template
+. Open your favourite terminal (Win/Linux/iOS)
+. Go to future project's path
+. Type _dotnet new --install Devon4Net.WebAPI.Template::1.0.8_
+. Type _dotnet new Devon4NetAPI_
+. Go to project's path
+. You are ready to start developing with _devon4Net_
+
+
+NOTE: For the latest updates on references packages, please get the sorces from https://github.com/devonfw/devon4net/tree/core2.1.x[Github]
+
+== Links
+
+icon:= fa-floppy-o[]  link:https://github.com/devonfw/devon4net/tree/develop/Templates[.Net templates]
+
+
+
+

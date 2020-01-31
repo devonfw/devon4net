@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Devon4Net.WebAPI.Template</id>
+    <title>Devon4Net web API solution template</title>
+    <version>3.0.5</version>
+    <description>Project template to develop web API template for .NET core 3.0</description>
+    <tags>OASP Devon4Net webapi devonfw</tags>
+    <authors>iCSD/ADCenter Capgemini Valencia</authors>
+    <copyright>Copyright © Capgemini</copyright>
+    <language>en-US</language>
+   <licenseUrl>http://www.devonfw.com/terms-of-use/</licenseUrl>
+    <projectUrl>https://oasp.github.io/</projectUrl>
+    <iconUrl>https://avatars2.githubusercontent.com/u/7803029?s=200amp;v=4</iconUrl>
+    <packageTypes>
+      <packageType name="Template" />
+    </packageTypes>
+    <releaseNotes>Added support for .Net core 3.0. HTTP security via certificates, killswitch functionality and many more features. HTTP2 support</releaseNotes>
+  </metadata>
+  <files>
+    <file src="Content/**" target="" />
+  </files>
+</package>

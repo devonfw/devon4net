@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:MvxContentPage x:TypeArguments="viewModels:ShoppingCartListViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:pages="clr-namespace:MyThaiStar.Core.Pages;assembly=MyThaiStar.Core"
+                      xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                      xmlns:viewModels="clr-namespace:MyThaiStar.Core.ViewModels;assembly=MyThaiStar.Core"
+                      x:Class="MyThaiStar.Core.Pages.ShoppingCartListPage" Title="Selected dishes">
+    <views:MvxContentPage.Content>
+      <StackLayout Spacing="0" Padding="0">
+        <Grid  CompressedLayout.IsHeadless="true">
+
+          <Image Opacity="1" x:Name="Img" Source="cartbg.jpg" Scale="1.5" Aspect="AspectFill"/>
+
+          <StackLayout Padding="10,10,10,0" BackgroundColor="Transparent">
+
+            <ListView ItemsSource="{Binding ShoppingCartItems}"
+                      SeparatorVisibility="None"
+                      BackgroundColor="Transparent"
+                      SeparatorColor="#DFDFDF"
+                      HasUnevenRows="false"
+                      RowHeight="100"
+                      x:Name="ListViewItems"
+                      IsPullToRefreshEnabled="False">
+              <ListView.ItemTemplate>
+                <DataTemplate>
+                  <ViewCell>
+                    <pages:ShoppingCartListItemView  />
+                  </ViewCell>
+                </DataTemplate>
+              </ListView.ItemTemplate>
+            </ListView>
+          </StackLayout>
+        </Grid>
+        <StackLayout HorizontalOptions="FillAndExpand" BackgroundColor="Transparent" VerticalOptions="End" Padding="10,10,10,0">
+          <Button HorizontalOptions="FillAndExpand" Text="Go to order" TextColor="White" BackgroundColor="Chocolate" Clicked="GoShoppingCommand"></Button>
+        </StackLayout>
+      </StackLayout>
+    </views:MvxContentPage.Content>
+</views:MvxContentPage>

@@ -1,0 +1,10 @@
+﻿1
+-----------------
+Add and edit this files (set properties to copy always)
+AOPAssemblies.xml (assembly names without ending .dll)
+
+
+2 Call example
+-----------------
+var service = ErrorHandlerSingleton.Container.Resolve<Ixxxxx>();
+service.DoSomething();

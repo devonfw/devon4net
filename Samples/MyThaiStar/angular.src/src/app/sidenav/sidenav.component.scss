@@ -1,0 +1,28 @@
+.sidenav-info-text {
+  color: lightslategrey
+}
+
+.sidenav-info {
+  font-size: 0.8em;
+  justify-content: space-between
+}
+
+.scrollOrders {
+    overflow-y: scroll;
+}
+
+.invitationAlert {
+  font-size: 0.80em;
+}
+
+@media (max-width: 600px) {
+  .forDesktop {
+    display: none;
+  }
+}
+
+@media (min-width: 600px) {
+  .forMobile {
+    display: none;
+  }
+}

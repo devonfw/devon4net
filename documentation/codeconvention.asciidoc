@@ -1,0 +1,185 @@
+:toc: macro
+toc::[]
+:icons: font
+:iconfont-remote!:
+:iconfont-name: font-awesome
+:stylesdir: css
+
+= Code conventions
+
+== [navy]#Introduction#
+This document covers .NET Coding Standards and is recommended to be read by team leaders/sw architects and developing teams operating in the Microsoft .NET environment.
+
+“All the code in the system looks as if it was written by a single – very competent – individual” (K. Beck) 
+
+== [navy]#Capitalization Conventions#
+=== [navy]#Terminology#
+
+==== Camel Case (camelCase)
+Each word or abbreviation in the middle of the phrase begins with a capital letter, with no intervening spaces or punctuation.
+
+The camelCasing convention, used only for parameter names, capitalizes the first character of each word except the first word, as shown in the following examples. As the example also shows, two-letter acronyms that begin a camel-cased identifier are both lowercase.
+
+icon:= fa-thumbs-o-up[] use camelCasing for parameter names.
+
+==== Pascal Case (PascalCase)
+The first letter of each concatenated word is capitalized. No other characters are used to separate the words, like hyphens or underscores.
+
+The PascalCasing convention, used for all identifiers except parameter names, capitalizes the first character of each word (including acronyms over two letters in length).
+
+icon:= fa-thumbs-o-up[] use PascalCasing for all public member, type, and namespace names consisting of multiple words.
+
+
+==== Underscore Prefix (_underScore)
+For underscore ( _ ), the word after _ use camelCase terminology.
+
+
+
+== [navy]#General Naming Conventions#
+icon:= fa-thumbs-o-up[] choose easily readable identifier names.
+
+icon:= fa-thumbs-o-up[] favor readability over brevity.
+
+    ◦ e.g.: GetLength is a better name than GetInt.
+    ◦ Aim for the “ubiquitous language” (E. Evans): A language distilled from the domain language, which helps the team clarifying domain concepts and communicating with domain experts.
+
+icon:= fa-thumbs-o-up[] prefer adding a suffix rather than a prefix to indicate a new version of an existing API.
+
+icon:= fa-thumbs-o-up[] use a numeric suffix to indicate a new version of an existing API, particularly if the existing name of the API is the only name that makes sense (i.e., if it is an industry standard) and if adding any meaningful suffix (or changing the name) is not an appropriate option.
+
+icon:= fa-thumbs-o-down[] do not use underscores, hyphens, or any other non-alphanumeric characters.
+
+icon:= fa-thumbs-o-down[] do not use Hungarian notation.
+
+icon:= fa-thumbs-o-down[] avoid using identifiers that conflict with keywords of widely used programming languages.
+
+icon:= fa-thumbs-o-down[] do not use abbreviations or contractions as part of identifier names.
+
+icon:= fa-thumbs-o-down[] do not use any acronyms that are not widely accepted, and even if they are, only when necessary.
+
+icon:= fa-thumbs-o-down[] do not use the "Ex" (or a similar) suffix for an identifier to distinguish it from an earlier version of the same API.
+
+icon:= fa-thumbs-o-down[] do not use C# reserved words as names. 
+
+icon:= fa-thumbs-o-down[] do not use Hungarian notation. Hungarian notation is the practice of including a prefix in identifiers to encode some metadata about the parameter, such as the data type of the identifier. 
+
+    ◦ e.g.: iNumberOfClients, sClientName
+
+
+== [navy]#Names of Assemblies and DLLs#
+
+An assembly is the unit of deployment and identity for managed code programs. Although assemblies can span one or more files, typically an assembly maps one-to-one with a DLL. Therefore, this section describes only DLL naming conventions, which then can be mapped to assembly naming conventions.
+
+icon:= fa-thumbs-o-up[] choose names for your assembly DLLs that suggest large chunks of functionality, such as System.Data.
+
+Assembly and DLL names don’t have to correspond to namespace names, but it is reasonable to follow the namespace name when naming assemblies. A good rule of thumb is to name the DLL based on the common prefix of the assemblies contained in the assembly. For example, an assembly with two namespaces, MyCompany.MyTechnology.FirstFeature and MyCompany.MyTechnology.SecondFeature, could be called MyCompany.MyTechnology.dll.
+
+icon:= fa-thumbs-o-up[] consider naming DLLs according to the following pattern: +
+<Company>.<Component>.dll
+where <Component> contains one or more dot-separated clauses. 
+
+For example:
+Litware.Controls.dll.
+
+== [navy]#General coding style#
+
+* Source files: One Namespace per file and one class per file. 
+
+* Braces: On new line. Always use braces when optional. 
+
+
+* Indention: Use tabs with size of 4. 
+
+* Comments: Use // for simple comment or /// for summaries. Do not /* … */ and do not flower box.
+
+* Use Use built-in C# native data types vs .NET CTS types (string instead of String)
+
+* Avoid changing default type in Enums. 
+
+* Use _base_ or _this_ only in constructors or within an override. 
+
+* Always check for null before invoking events.
+
+* Avoid using _Finalize_. Use C# Destructors and do not create Finalize() method. 
+
+* Suggestion: Use blank lines, to make it much more readable by dividing it into small, easy-to-digest sections:
+
+    ◦ Use a single blank line to separate logical groups of code, such as control structures.
+    ◦ Use two blank lines to separate method definitions
+    
+[options="header"]
+|=======================
+|*Case*|*Convention*
+|Source File| Pascal case. Match class name and file name
+|Namespace| Pascal case
+|Class| Pascal case
+|Interface| Pascal case
+|Generics| Single capital letter (T or K)
+|Methods| Pascal case (use a Verb or Verb+Object)
+|Public field|Pascal case
+|Private field|Camel case with underscore (_) prefix
+|Static field|Pascal case
+|Property|Pascal case. Try to use get and and set convention {get;set;}
+|Constant|Pascal case
+|Enum|Pascal case
+|Variable (inline)|Camel case
+|Param|Camel case
+|=======================
+
+
+== [navy]#Use of Region guideline#
+Regions can be used to collapse code inside Visual Studio .NET. Regions are ideal candidates to hide boiler plate style code that adds little value to the reader on your code. Regions can then be expanded to provide progressive disclosure of the underlying details of the class or method.
+
+
+* Do Not regionalise entire type definitions that are of an important nature. Types such as enums (which tend to be fairly static in their nature) can be regionalised – their permissible values show up in Intellisense anyway.
+
+* Do Not regionalise an entire file. When another developer opens the file, all they will see is a single line in the code editor pane.
+
+* Do regionalise boiler plate type code.
+
+== [navy]#Use of Comment guideline#
+Code is the only completely reliable documentation: write “good code” first!
+
+=== [navy]#Avoid Unnecessary comments#
+
+
+* Choosing good names for fields, methods, parameters, etc. “let the code speak” (K. Beck) by itself reducing the need for comments and documentation
+
+
+* Avoid “repeating the code” and commenting the obvious
+
+
+* Avoid commenting “tricky code”: rewrite it! If there’s no time at present to refactor a tricky section, mark it with a TODO and schedule time to take care of it as soon as possible.
+
+
+=== [navy]#Effective comments#
+
+
+* Use comments to summarize a section of code
+
+
+* Use comments to clarify sensitive pieces of code
+
+
+* Use comments to clarify the intent of the code
+
+
+
+* Bad written or out-of-date comments are more damaging than helpful:
+
+
+* Write clear and effective comments
+
+
+* Pay attention to pre-existing comments when modifying code or copying&pasting code
+
+
+
+== [navy]#External links#
+https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/naming-guidelines[Naming guidelines]
+
+https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/general-naming-conventions[General naming conventions]
+
+https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/capitalization-conventions[Capitalization conventions]
+
+https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/names-of-assemblies-and-dlls[Assembly and Name Spaces conventions]

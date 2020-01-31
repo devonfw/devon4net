@@ -1,0 +1,53 @@
+version: '3'
+services:
+  mail:
+    build: "mailservice"
+    ports:
+      - "2025:2025"
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.2
+  client:
+    build: "angular"
+    ports:
+      - "4200:80"
+    depends_on:
+      - server
+      - mail
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.3      
+  server:
+    build: "netcore"
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mail
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.4      
+  db:
+    image: "microsoft/mssql-server-linux"
+    ports:
+      - "1401:1433"    
+    environment:
+        SA_PASSWORD: "C@pgemini2017"
+        ACCEPT_EULA: "Y"    
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.5
+  reporting:
+    build: "reporting"
+    ports:
+      - "2021:2021"
+    depends_on:
+      - db
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.6
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+        

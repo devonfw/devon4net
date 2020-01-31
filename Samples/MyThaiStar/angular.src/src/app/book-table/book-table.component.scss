@@ -1,0 +1,45 @@
+mat-form-field {
+  width: 100% !important;
+}
+
+.background-layout {
+  height: 100%;
+  background-color: white;
+}
+
+.bottom-border {
+  border-bottom: 1px solid lightgray;
+}
+
+.subtitle-card {
+  color: lightslategrey;
+}
+
+.title-card {
+  font-size: 1.17em;
+}
+
+.menu-image {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url('../../assets/images/slider-1.jpg');
+}
+
+.invite-image {
+  width: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url('../../assets/images/slider-2.jpg');
+}
+
+@media (max-width: 600px) {
+  .forDesktop {
+    display: none;
+  }
+}
+
+@media (min-width: 600px) {
+  .forMobile {
+    display: none;
+  }
+}

@@ -1,0 +1,43 @@
+<mat-card class="card-height" flex>
+  <div layout-gt-xs="row" flex>
+    <div flex-gt-xs="50" layout="column" class= "menu-image card-image-height card-height" [style.background-image]="'url(' + menuInfo.image.content + ')'">
+      <button mat-fab *ngIf="auth.isLogged()" (click)="changeFavouriteState()" class="push-sm favourite-button">
+        <mat-icon [class.fab-on]="!menuInfo.isfav" [class.fab-off]="menuInfo.isfav">star</mat-icon>
+      </button>
+      <span flex></span>
+      <div style="background-color: rgba(0,0,0,0.3)" flex>
+        <mat-list>
+          <mat-list-item>
+            <img mat-list-avatar src="https://help.github.com/assets/images/help/profile/identicon.png">
+            <p mat-line class="twitter-title">John Smith <span class="twitter-text">@jsmith</span></p>
+            <p mat-line class="twitter-text">{{"ipsum dolor sits it sit sem ipsum dolor sits its it  sem ipsum dolor sits itsit sem ipsum sem ipsum dolor sits itsit sem ipsumsem ipsum dolor sits itsit sem ipsum dolor s its " | truncate: 100}}</p>
+          </mat-list-item>
+          <mat-list-item>
+            <img mat-list-avatar src="https://help.github.com/assets/images/help/profile/identicon.png">
+            <p mat-line class="twitter-title">Ann Smith <span class="twitter-text">@annS</span></p>
+            <p mat-line class="twitter-text">{{"ipsum dolor sits it sit sem ipsum dolor sits its it  sem ipsum dolor sits itsit sem ipsum sem ipsum dolor sits itsit sem ipsumsem ipsum dolor sits itsit sem ipsum dolor s its " | truncate: 100}}</p>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+
+    <div flex-gt-xs="50" layout="column" class= "pad" flex>
+      <div layout="row" flex>
+        <span flex></span>
+        <span class="price">{{menuInfo.dish.price | number : '1.2-2'}} €</span>
+      </div>
+      <h3 class="text-upper">{{menuInfo.dish.name}}</h3>
+      <span class="push-bottom-sm" flex>
+        {{menuInfo.dish.description}}
+      </span>
+      <div layout-gt-xs="column" layout-xs="row" class="justify-space-between" flex>
+        <mat-checkbox class="push-bottom-sm" [checked]="extra.selected" *ngFor="let extra of menuInfo.extras" (change)="selectedOption(extra)">{{extra.name}} +{{extra.price}}€</mat-checkbox>
+      </div>
+      <span flex></span>
+      <div class="align-right" flex>
+        <button mat-button (click)="addOrderMenu()" color="accent" class="text-upper property-text-bold">Add to order</button>
+      </div>
+    </div>
+  </div>
+
+</mat-card>

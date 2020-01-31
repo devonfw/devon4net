@@ -1,0 +1,1 @@
+﻿Add resource files to this folder and set properties to "Copy always"

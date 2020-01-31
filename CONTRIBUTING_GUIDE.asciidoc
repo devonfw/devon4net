@@ -1,0 +1,159 @@
+:toc: macro
+toc::[]
+
+:doctype: book
+:reproducible:
+:source-highlighter: rouge
+:listing-caption: Listing
+
+== Code Contributions
+
+=== Notes on Code Contributions
+
+Both projects, devon and OASP, are intended to be easy to contribute to. One service allowing such simplicity is GitHub was therefore selected as preferred collaboration platform.
+
+In order to contribute code, git and GitHub specific pull-requests are being used.
+
+It is mandatory to follow the <<Contributor Covenant Code of Conduct,code of conduct>> that must be present in the root of every OSS or private project as `CODE_OF_CONDUCT.asciidoc` or `CODE_OF_CONDUCT.md`. 
+
+=== Introduction to Git and GitHub
+
+Git is a version control system used for a coordinated and versioned collaboration of computer files. It enables a project to be easily worked on by multiple developers and contributors.
+
+GitHub is an online repository used by deonvfw and OASP in order to host the corresponding files. Using the command line tool or the GUI Tool "GitHub Desktop" a user can easily manage project files. There are private and public repositories. Public ones (like OASP) can be accessed by everyone, private repositories (like devon) require access permissions.
+
+==== Creating a new user account
+
+The devon and OASP projects use GitHub as hosting service. Therefore you'll need an account to allow collaboration. Visit https://github.com/join?source=header-home[this page] to create a new account. If available, use *your CORP username* as GitHub username and *your CORP email address*.
+
+A GitHub account is essential for contributing code and gaining permissions to access private repositories.
+
+==== Git Basics
+
+An in-depth documentation on basic Git syntax and usage can be found on the https://git-scm.com/docs[official Git homepage]. Another helpful and easy to follow instruction can be found http://rogerdudler.github.io/git-guide/[here].
+
+=== Structure of our projects
+
+In total, there are three GitHub projects regarding OASP and devon:
+
+* link:https://github.com/oasp-forge[*oasp-forge*]
++
+Repository used for work on the guide - Similar to the according devon repository link:https://github.com/devonfw/devon-guide/wiki[*devon-guide*]
+* link:https://github.com/oasp/[*oasp*]
++
+The official _Open Application Standard Platform_ project repository. Usually, two main branches exist:
+
+** *develop*
++
+This branch contains software in the state of being in development.
+** *master*
++
+This branch contains software in release state.
+
+* link:https://github.com/devonfw/[*devonfw*]
++
+This is a private repository. You have to be logged in and have permissions to access the project and its repositories. Similar to OASP, there are usually two branches:
+
+** *develop*
+** *master*
+
+=== Contributing to our projects
+
+In order to contribute to our projects, developers must follow the following <<Development Guidelines,development guidelines>>. Other sources about contributing to devon/OASP:
+
+* https://github.com/oasp/oasp4j/wiki/oasp-code-contributions[OASP code contributions]
+* https://github.com/oasp/oasp4j/wiki/oasp-documentation[OASP documentation]
+* https://troom.capgemini.com/sites/vcc/devon/collaboration.aspx[Devon collaboration]
+
+*Every project must include the following files* in order to establish the contributing rules and facilitate the process:
+
+* `CONTRIBUTING.asciidoc` that establishes the specific guidelines of contributing in a project repository.
+* `CODE_OF_CONDUCT.asciidoc` mandatory to contribute.
+* `ISSUE_TEMPLATE.asciidoc` that defines the appropriated way to submit an issue in a project repository. 
+* `PULL_REQUEST_TEMPLATE.asciidoc` that specifies the rules in order to submit a pull request in a project repository. 
+
+This files should be included at the root folder or in a `docs` folder. https://github.com/stevemao/github-issue-templates[This repository] is a good resource to find the perfect templates for issues and pull requests that fit in your repository. 
+
+==== Process of contributing code to the devon/OASP projects
+
+* Use the issue tracker to check whether the issue you would like to be working on exists. Otherwise create a new issue.
++
+.Using GitHub's issue tracker
+image::images/contributing/issue_list.PNG[Issue list, width="450", link="images/contributing/issue_list.PNG"]
+
+* Before making more complex changes you should probably notify the community. The worst case would be you investing time and effort into something that'll be later rejected. Oftentimes the https://www.yammer.com/capgemini.com/#/threads/inGroup?type=in_group&feedId=5030942&view=all[Devon Community] on Yammer will have the right answer.
+* Assign yourself to the issue you would like to work on. If a member was already assigned to your preferred issue, get in contact to contribute to the same issue.
+* Fork the desired repository to your corporate GitHub account. Afterwards you'll have your own copy of the repository you'd like to work on.  
+* Create a new branch for your feature/bugfix. Check out the develop branch for the upcoming release. The following changes will afterwards be merged when the new version is released.
+* Please read the <<Working with forked repositories,Working with forked repositories>> document to learn all about this topic.
+** Check out the develop branch
++
+[source, bash]
+----
+git checkout develop-x.y.z
+----
+** Create a new branch
++
+[source, bash]
+----
+git checkout -b myBranchName
+----
+* Apply your modifications according to the https://github.com/oasp/oasp4j/wiki/coding-conventions[coding conventions] to the newly created branch
+* Verify your changes to only include relevant and required changes.
+* Commit your changes locally
+** When commiting changes please follow this pattern for your commit message:
++
+[source]
+----
+#<issueId>: <change description>
+----
+
+** When working on multiple different repositories, the actual repository name of the change should also be declared in the commit message:
++
+
+[source]
+----
+<project>/<repository>#<issueId>: <change description>
+----
++
+For example:
++
+[source]
+----
+oasp/oasp4j#1: added REST service for tablemanagement
+----
++
+*Note:* Starting directly with a # symbol will comment out the line when using the editor to insert a commit message. Instead, you should use a prefix like a space or simply typing "Issue". E.g.:
++
+[source]
+----
+Issue #4: Added some new feature, fixed some bug
+----
++
+The language to be used for commit messages is English.
+* Push the changes to your Fork of the repository
+* After completing the issue/bugfix/feature, use the _pull request_ function in GitHub. This feature allows other members to look over your branch, automated CI systems may test your changes and finally apply the changes to the corresponding branch (if no conflicts occur).
++
+Use the tab "Pull requests" and the button labeled "New pull request". Afterwards you can _Choose different branches or forks above to discuss and review changes_.
+
+=== Reviewing Pull Requests
+
+Detailed information about revieweing can be found on the https://help.github.com/articles/reviewing-changes-in-pull-requests/[official topic on GitHub Pull Requests].
+
+There are two different methods to review Pull Requests:
+
+* *Human based reviews*
++
+Other project members are able to discuss the changes made in the pull request by having insight into changed files and file differences by commenting.
++
+.People can add comments to pull requests and suggest further changes
+image::images/contributing/pr_commenting.PNG[Commenting on pull requests, width="450", link="images/contributing/pr_commenting.PNG"]
+
+* *CI based reviews*
++
+CI Systems like https://jenkins.io/[Jenkins] or https://travis-ci.org/[Travis.ci] are able to listen for new pull requests on specified projects. As soon as the request was made, Travis for example checks out the to-be-merged branch and builds it. This enables an automated build which could even include testcases. Finally, the CI approves the pull requests if the build was built and tested successfully, otherwise it'll let the project members know that something went wrong.
++
+.If Travis fails to build a project, it'll post the results directly to the pull request
+image::images/contributing/travis_failure.png[Travis failed to build, width="450", link="images/contributing/travis_failure.png"]
++
+Combining these two possibilities should accelerate the reviewing process of pull requests.

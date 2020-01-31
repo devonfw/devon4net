@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F955794C-3A41-4A7F-AAC1-C8D6C26A8468}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Excalibur.Shared</RootNamespace>
+    <AssemblyName>Excalibur.Shared</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .NET Framework is automatically included -->
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Business\BaseListBusiness.cs" />
+    <Compile Include="Business\Typed\IListBusinessOfInt.cs" />
+    <Compile Include="Business\Typed\BaseListBusinessOfInt.cs" />
+    <Compile Include="Business\BaseSingleBusiness.cs" />
+    <Compile Include="Business\Typed\BaseSingleBusinessOfInt.cs" />
+    <Compile Include="Business\BusinessBase.cs" />
+    <Compile Include="Business\EDomainState.cs" />
+    <Compile Include="Business\IBusiness.cs" />
+    <Compile Include="Business\IExMainThreadDispatcher.cs" />
+    <Compile Include="Business\IListBusiness.cs" />
+    <Compile Include="Business\ISingleBusiness.cs" />
+    <Compile Include="Collections\ExObservableCollection.cs" />
+    <Compile Include="Collections\ExSortedObservableCollection.cs" />
+    <Compile Include="Collections\IObservableCollection.cs" />
+    <Compile Include="Collections\ISortedObservableCollection.cs" />
+    <Compile Include="Collections\SafeEnumerator.cs" />
+    <Compile Include="Comparers\BaseComparer.cs" />
+    <Compile Include="Configuration\ConfigurationManager.cs" />
+    <Compile Include="Configuration\IConfigurationManager.cs" />
+    <Compile Include="Core\ExSingletonBase.cs" />
+    <Compile Include="Core\ExSingletonCache.cs" />
+    <Compile Include="ObjectConverter\BaseObjectMapper.cs" />
+    <Compile Include="ObjectConverter\IObjectMapper.cs" />
+    <Compile Include="ObjectConverter\ObjectMapperRegistrar.cs" />
+    <Compile Include="Observable\ObservableBase.cs" />
+    <Compile Include="Observable\Typed\ObservableBaseOfInt.cs" />
+    <Compile Include="Observable\ObservableObjectBase.cs" />
+    <Compile Include="Presentation\BaseListPresentation.cs" />
+    <Compile Include="Presentation\Typed\BaseListPresentationOfInt.cs" />
+    <Compile Include="Presentation\BaseSinglePresentation.cs" />
+    <Compile Include="Presentation\Typed\BaseSinglePresentationOfInt.cs" />
+    <Compile Include="Presentation\BaseSortedPresentation.cs" />
+    <Compile Include="Presentation\BasePresentation.cs" />
+    <Compile Include="Presentation\IListPresentation.cs" />
+    <Compile Include="Presentation\Typed\IListPresentationOfInt.cs" />
+    <Compile Include="Presentation\ISinglePresentation.cs" />
+    <Compile Include="Presentation\Typed\ISinglePresentationOfInt.cs" />
+    <Compile Include="Presentation\ISortedPresentation.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IServiceBase.cs" />
+    <Compile Include="Services\ServiceBase.cs" />
+    <Compile Include="State\BaseState.cs" />
+    <Compile Include="State\IBaseState.cs" />
+    <Compile Include="Storage\Typed\StorageDomainOfInt.cs" />
+    <Compile Include="Storage\Typed\IObjectStorageProviderOfInt.cs" />
+    <Compile Include="Storage\IStorageService.cs" />
+    <Compile Include="Storage\IObjectStorageProvider.cs" />
+    <Compile Include="Storage\StorageDomain.cs" />
+    <Compile Include="Storage\StorageServiceBase.cs" />
+    <Compile Include="Utils\MessageBase.cs" />
+    <Compile Include="Utils\Timer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=6.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoMapper.6.1.1\lib\netstandard1.1\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\portable-net45+win8+wp8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PubSub, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PubSub.2.0.0\lib\netstandard1.1\PubSub.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Primitives, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ComponentModel.Primitives.4.3.0\lib\netstandard1.0\System.ComponentModel.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.TypeConverter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ComponentModel.TypeConverter.4.3.0\lib\netstandard1.0\System.ComponentModel.TypeConverter.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="XLabs.IOC, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\XLabs.IoC.2.3.0-pre05\lib\portable-net45+win8+wpa81+wp8+monoandroid+monotouch+xamarinios10+xamarinmac\XLabs.IOC.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Project="..\..\packages\NETStandard.Library.2.0.1\build\NETStandard.Library.targets" Condition="Exists('..\..\packages\NETStandard.Library.2.0.1\build\NETStandard.Library.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\NETStandard.Library.2.0.1\build\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NETStandard.Library.2.0.1\build\NETStandard.Library.targets'))" />
+  </Target>
+</Project>

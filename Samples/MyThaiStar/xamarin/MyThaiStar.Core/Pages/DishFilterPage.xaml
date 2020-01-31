@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:MvxContentPage x:TypeArguments="viewModels:DishFilterViewModel"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:MyThaiStar.Core.ViewModels;assembly=MyThaiStar.Core"
+             xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"       
+             xmlns:mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+             x:Class="MyThaiStar.Core.Pages.DishFilterPage" Title="Filter menu">
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="Transparent" Opacity="0.7" Padding="15,15,15,0">
+            <Label Text="Search by"/>
+            <Entry mvx:Bi.nd="Text SearchBy"/>
+            <Grid BackgroundColor="Transparent" Padding="15,15,15,0" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="0"  Text="Price" VerticalOptions="CenterAndExpand" HorizontalOptions="Start" />
+                <Slider Grid.Row="1" Grid.Column="0" x:Name="SliderPrice" mvx:Bi.nd="Value Price, Mode=TwoWay" Maximum="50"/>
+                <Label Grid.Row="1" Grid.Column="1" mvx:Bi.nd="Text Price, Mode=TwoWay" VerticalOptions="CenterAndExpand" HorizontalOptions="Start" />
+                <Label Grid.Row="2" Grid.Column="0"  Text="Likes" VerticalOptions="CenterAndExpand" HorizontalOptions="Start" />
+                <Slider Grid.Row="3" Grid.Column="0"  x:Name="SliderLikes"  mvx:Bi.nd="Value Likes, Mode=TwoWay" Maximum="500"/>
+                <Label Grid.Row="3" Grid.Column="1" mvx:Bi.nd="Text Likes, Mode=TwoWay" VerticalOptions="CenterAndExpand" HorizontalOptions="Start" />
+            </Grid>
+            <ScrollView Padding="15,15" HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand" BackgroundColor="Transparent">
+                <Grid BackgroundColor="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="60"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" Text="Main dishes" VerticalOptions="Center" HorizontalOptions="StartAndExpand" />
+                    <Switch Grid.Row="0" Grid.Column="1" x:Name="SwMainDishes" mvx:Bi.nd="IsToggled MainDish"/>
+                    <Label Grid.Row="1" Grid.Column="0" Text="Starter" VerticalOptions="Center" HorizontalOptions="StartAndExpand" />
+                    <Switch Grid.Row="1" Grid.Column="1" x:Name="SwStarter" mvx:Bi.nd="IsToggled Starter" />
+                    <Label Grid.Row="2" Grid.Column="0" Text="Dessert" VerticalOptions="Center" HorizontalOptions="StartAndExpand" />
+                    <Switch Grid.Row="2" Grid.Column="1" x:Name="SwDessert"  mvx:Bi.nd="IsToggled Dessert"/>
+                    <Label Grid.Row="3" Grid.Column="0" Text="Noodle" VerticalOptions="Center" HorizontalOptions="StartAndExpand" />
+                    <Switch Grid.Row="3" Grid.Column="1" x:Name="SwNoodle" mvx:Bi.nd="IsToggled Noodle" />
+                    <Label Grid.Row="4" Grid.Column="0" Text="Rice" VerticalOptions="Center" HorizontalOptions="StartAndExpand" />
+                    <Switch Grid.Row="4" Grid.Column="1" x:Name="SwRice"  mvx:Bi.nd="IsToggled Rice"/>
+                    <Label Grid.Row="5" Grid.Column="0" Text="Curry" VerticalOptions="Center" HorizontalOptions="StartAndExpand" />
+                    <Switch Grid.Row="5" Grid.Column="1" x:Name="SwCurry" mvx:Bi.nd="IsToggled Curry"/>
+                    <Label Grid.Row="6" Grid.Column="0" Text="Vegan" VerticalOptions="Center" HorizontalOptions="StartAndExpand" />
+                    <Switch Grid.Row="6" Grid.Column="1" x:Name="SwVegan" mvx:Bi.nd="IsToggled Vegan"/>
+                    <Label Grid.Row="7" Grid.Column="0" Text="Vegetarian" VerticalOptions="Center" HorizontalOptions="StartAndExpand" />
+                    <Switch Grid.Row="7" Grid.Column="1" x:Name="SwVegetarian" mvx:Bi.nd="IsToggled Vegetarian"/>
+                </Grid>
+            </ScrollView>
+            <Grid HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" BackgroundColor="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Grid.Row="0" HorizontalOptions="FillAndExpand" Text="Reset" TextColor="White" BackgroundColor="Chocolate" Command="{Binding ResetFilter}"/>
+                <Button Grid.Column="1" Grid.Row="0" HorizontalOptions="FillAndExpand" Text="Apply" TextColor="White" BackgroundColor="Chocolate" Command="{Binding SetFilter}"/>
+            </Grid>
+            </StackLayout>
+    </ContentPage.Content>
+</views:MvxContentPage>

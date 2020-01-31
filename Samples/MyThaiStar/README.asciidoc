@@ -1,0 +1,48 @@
+﻿# My Thai Star .NET Core (server) and Xamarin (frontend android/iOS) implementation
+
+## Folder Contents
+
+* *angular* : Angular client to support backend. Just binaries.
+
+* *database* : Database scripts and .bak file 
+
+* *mailservice*: Microservice implementation to send notifications.
+
+* *netcore*: Server side using .net core 2.1.x.
+    
+* *xamarin*: Xamarin client based on Excalibur framework from The Netherlands using XForms.
+
+## Setting up SQL Server instance
+
+* Start SqlServer Management Studio (Automatically star the session with windows auth)
+* Right-click Databases and select Restore Database
+* On the General page, use the Source section to specify the source and location of the backup sets to restore.
+* Device option: Select backup devices dialog box => Add File => Locate Backup File
+* In the Destination section, the Database box is automatically populated with the name of the database to be restored. To change the name of the database, enter the new name in the Database box : MyThaiStar
+* Press Ok, the database is ready
+* Setting up the SA user:
+** Go to Security  Logins => 'sa' and double click 
+	- Uncheck “Enforce password policy” and set password to : sa
+* Go to status and set Permission to grant and login enabled.
+
+## Setting up SQL Server docker instance
+
+* Start the docker instances with docker-compose.yml
+* From console command go to /database/SQLServer execute:
+      docker exec -i mythaistar_db_1 /bin/bash -c "cat > /tmp/MyThaiStar.bak" < MyThaiStar.bak
+* Start SqlServer Management Studio and connect to SQL Server docker instance:
+** Host: localhost,1401
+** Pass: C@pgemini2017
+* Folow the steps for the SQL Server normal instance and search for the .bak file at /tmp
+
+## Setting up SQL Server from Linux systems
+* From console command go to /database/SQLServer execute:
+      docker exec -i mythaistar_db_1 /bin/bash -c "cat > /tmp/MyThaiStar.bak" < MyThaiStar.bak
+
+* Restore the database on docker container with the following command:
+
+sudo docker exec -it mythaistar_db_1  /opt/mssql-tools/bin/sqlcmd \
+   -S localhost -U sa -P 'C@pgemini2017' \
+   -Q 'RESTORE DATABASE MyThaiStar FROM DISK = "/tmp/MyThaiStar.bak" WITH MOVE "MyThaiStar" TO "/var/opt/mssql/data/mythaistar.mdf", MOVE "MyThaiStar_log" TO "/var/opt/mssql/data/mythaistar_log.ldf"'
+  
+
