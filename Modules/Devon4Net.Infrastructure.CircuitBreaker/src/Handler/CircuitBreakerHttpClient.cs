@@ -1,8 +1,11 @@
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -24,7 +27,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             Logger = logger;
         }
 
-        public async Task<string> Get(string endPointName, string url)
+        public async Task<string> Get(string endPointName, string url, Dictionary<string,string> headers = null)
         {
             HttpClient httpClient = null;
             HttpResponseMessage httpResponseMessage = null;
@@ -35,7 +38,8 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                 var errorHttp = false;
                 using (httpClient = GetDefaultClient(endPointName))
                 {
-                    httpResponseMessage = await httpClient.GetAsync(httpClient.BaseAddress + url).ConfigureAwait(false);
+                    SetHttpClientHeaders(headers, httpClient);
+                    httpResponseMessage = await httpClient.GetAsync(httpClient.BaseAddress + Uri.EscapeUriString(url)).ConfigureAwait(false);
 
                     if (httpResponseMessage != null && httpResponseMessage.IsSuccessStatusCode)
                     {
@@ -66,7 +70,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             return result;
         }
 
-        public async Task<Stream> GetAsStream(string endPointName, string url)
+        public async Task<Stream> GetAsStream(string endPointName, string url, Dictionary<string,string> headers = null)
         {
             Stream result = null;
             HttpClient httpClient = null;
@@ -76,7 +80,9 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                 var errorHttp = false;
                 using (httpClient = GetDefaultClient(endPointName))
                 {
-                    httpResponseMessage = await httpClient.GetAsync(httpClient.BaseAddress + url).ConfigureAwait(false);
+                    SetHttpClientHeaders(headers, httpClient);
+                    
+                    httpResponseMessage = await httpClient.GetAsync(httpClient.BaseAddress + Uri.EscapeUriString(url)).ConfigureAwait(false);
 
                     if (httpResponseMessage?.IsSuccessStatusCode == true)
                     {
@@ -106,8 +112,8 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
             return result;
         }
-
-        public async Task<T> Post<T>(string endPointName, string url, object dataToSend, string mediaType)
+        
+        public async Task<T> PostJson<T>(string endPointName, string url, string dataToSend, string mediaType, Dictionary<string,string> headers = null)
         {
             T result;
             var httpResult = string.Empty;
@@ -120,9 +126,62 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                 var errorHttp = false;
                 using (httpClient = GetDefaultClient(endPointName))
                 {
+                    
+                    SetHttpClientHeaders(headers, httpClient);
+
+                    httpResponseMessage = await httpClient.PostAsync(httpClient.BaseAddress + Uri.EscapeUriString(url), new StringContent(dataToSend, Encoding.UTF8, mediaType)).ConfigureAwait(false);
+
+                    if (httpResponseMessage?.IsSuccessStatusCode == true)
+                    {
+                        httpResult = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        errorHttp = true;
+                    }
+
+                    httpClient = null;
+                    httpResponseMessage = null;
+
+                    if (errorHttp) throw new HttpRequestException($"The httprequest to {endPointName} was not successful.");
+
+                    result = Deserialize<T>(httpResult);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogException(ref ex);
+                throw;
+            }
+            finally
+            {
+                if (httpClient != null) httpClient.Dispose();
+                if (httpContent != null) httpContent.Dispose();
+                if (httpResponseMessage != null) httpResponseMessage.Dispose();
+            }
+
+            return result;
+        }        
+
+        public async Task<T> Post<T>(string endPointName, string url, object dataToSend, string mediaType, Dictionary<string,string> headers = null)
+        {
+            T result;
+            var httpResult = string.Empty;
+            HttpClient httpClient = null;
+            HttpContent httpContent = null;
+            HttpResponseMessage httpResponseMessage = null;
+
+            try
+            {
+                var errorHttp = false;
+                using (httpClient = GetDefaultClient(endPointName))
+                {
+                    
+                    SetHttpClientHeaders(headers, httpClient);
+
                     httpContent = CreateJsonHttpContent(dataToSend, mediaType);
 
-                    httpResponseMessage = await httpClient.PostAsync(httpClient.BaseAddress + url, httpContent).ConfigureAwait(false);
+                    httpResponseMessage = await httpClient.PostAsync(httpClient.BaseAddress + Uri.EscapeUriString(url), httpContent).ConfigureAwait(false);
 
                     if (httpResponseMessage?.IsSuccessStatusCode == true)
                     {
@@ -157,7 +216,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             return result;
         }
 
-        public async Task<T> Put<T>(string endPointName, string url, object dataToSend, string mediaType)
+        public async Task<T> Put<T>(string endPointName, string url, object dataToSend, string mediaType, Dictionary<string,string> headers = null)
         {
             T result;
             var httpResult = string.Empty;
@@ -170,8 +229,9 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                 var errorHttp = false;
                 using (httpClient = GetDefaultClient(endPointName))
                 {
+                    SetHttpClientHeaders(headers, httpClient);
                     httpContent = CreateJsonHttpContent(dataToSend, mediaType);
-                    httpResponseMessage = await httpClient.PutAsync(httpClient.BaseAddress + url, httpContent).ConfigureAwait(false);
+                    httpResponseMessage = await httpClient.PutAsync(httpClient.BaseAddress + Uri.EscapeUriString(url), httpContent).ConfigureAwait(false);
 
                     if (httpResponseMessage?.IsSuccessStatusCode == true)
                     {
@@ -207,7 +267,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
         }
 
-        public async Task<string> Delete(string endPointName, string url)
+        public async Task<string> Delete(string endPointName, string url, Dictionary<string,string> headers = null)
         {
             HttpClient httpClient = null;
             HttpResponseMessage httpResponseMessage = null;
@@ -218,7 +278,8 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                 var errorHttp = false;
                 using (httpClient = GetDefaultClient(endPointName))
                 {
-                    httpResponseMessage = await httpClient.DeleteAsync(httpClient.BaseAddress + url).ConfigureAwait(false);
+                    SetHttpClientHeaders(headers, httpClient);
+                    httpResponseMessage = await httpClient.DeleteAsync(httpClient.BaseAddress + Uri.EscapeUriString(url)).ConfigureAwait(false);
 
                     if (httpResponseMessage?.IsSuccessStatusCode == true)
                     {
@@ -249,7 +310,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             return result;
         }
 
-        public async Task<HttpResponseMessage> Patch(string endPointName, string url, HttpContent content)
+        public async Task<HttpResponseMessage> Patch(string endPointName, string url, HttpContent content, Dictionary<string,string> headers = null)
         {
             HttpClient httpClient = null;
             HttpResponseMessage result = null;
@@ -259,7 +320,8 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
                 using (httpClient = GetDefaultClient(endPointName))
                 {
-                    var request = new HttpRequestMessage(method, httpClient.BaseAddress + url)
+                    SetHttpClientHeaders(headers, httpClient);
+                    var request = new HttpRequestMessage(method, httpClient.BaseAddress + Uri.EscapeUriString(url))
                     {
                         Content = content
                     };
@@ -318,6 +380,15 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
         private T Deserialize<T>(string input)
         {
             return JsonSerializer.Deserialize<T>(input);
+        }
+        
+        private static void SetHttpClientHeaders(Dictionary<string, string> headers, HttpClient httpClient)
+        {
+            if (headers == null || !headers.Any()) return;
+            foreach (var (key, value) in headers)
+            {
+                httpClient.DefaultRequestHeaders.Add(key, value);
+            }
         }
     }
 }
