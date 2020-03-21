@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.Log", "src\Devon4Net.Infrastructure.Log.csproj", "{FF976C15-AB62-4613-A463-55407FEB5336}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{AD149E7A-3BFA-4480-B5D4-C8F6ACB9A5A0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF976C15-AB62-4613-A463-55407FEB5336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF976C15-AB62-4613-A463-55407FEB5336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF976C15-AB62-4613-A463-55407FEB5336}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF976C15-AB62-4613-A463-55407FEB5336}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C1F64549-0F9E-40FB-8DA2-9D9356C1AA1E}
+	EndGlobalSection
+EndGlobal
