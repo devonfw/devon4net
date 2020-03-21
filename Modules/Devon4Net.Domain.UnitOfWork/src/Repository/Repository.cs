@@ -18,19 +18,21 @@ namespace Devon4Net.Domain.UnitOfWork.Repository
             DbContext = context;
         }
 
-        public async Task<T> Create(T entity)
+        public async Task<T> Create(T entity, bool detach = true)
         {
             var result = await DbContext.Set<T>().AddAsync(entity).ConfigureAwait(false);
             result.State = EntityState.Added;
             await DbContext.SaveChangesAsync().ConfigureAwait(false);
+            if (detach) result.State = EntityState.Detached;
             return result.Entity;
         }
 
-        public async Task<bool> Delete(T entity)
+        public async Task<bool> Delete(T entity, bool detach = true)
         {
             var result = DbContext.Set<T>().Remove(entity);
             result.State = EntityState.Deleted;
             var deleted = await DbContext.SaveChangesAsync().ConfigureAwait(false);
+            if (detach) result.State = EntityState.Detached;
             return deleted > 0;
         }
 
@@ -76,17 +78,18 @@ namespace Devon4Net.Domain.UnitOfWork.Repository
             return GetPagedResult(currentPage, pageSize, GetQueryFromPredicate(predicate));
         }
 
-        public async Task<T> Update(T entity)
+        public async Task<T> Update(T entity, bool detach = true)
         {
             var result = DbContext.Set<T>().Update(entity);
             result.State = EntityState.Modified;
             await DbContext.SaveChangesAsync().ConfigureAwait(false);
+            if (detach) result.State = EntityState.Detached;
             return result.Entity;
         }
 
         private IQueryable<T> GetQueryFromPredicate(Expression<Func<T, bool>> predicate)
         {
-            return predicate != null ? DbContext.Set<T>().AsNoTracking().Where(predicate) : DbContext.Set<T>().AsNoTracking();
+            return predicate != null ? DbContext.Set<T>().Where(predicate).AsNoTracking() : DbContext.Set<T>().AsNoTracking();
         }
 
         private IQueryable<T> GetResultSetWithNestedProperties(IList<string> includedNestedFiels, Expression<Func<T, bool>> predicate = null)
@@ -107,7 +110,7 @@ namespace Devon4Net.Domain.UnitOfWork.Repository
             pagedResult.PageCount = (int)Math.Ceiling(pageCount);
 
             var skip = (currentPage - 1) * pageSize;
-            pagedResult.Results = await resultList.Skip(skip).Take(pageSize).ToListAsync().ConfigureAwait(false);
+            pagedResult.Results = await resultList.Skip(skip).Take(pageSize).AsNoTracking().ToListAsync().ConfigureAwait(false);
 
             return pagedResult;
         }
