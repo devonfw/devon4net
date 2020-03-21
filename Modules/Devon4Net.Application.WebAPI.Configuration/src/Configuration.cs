@@ -97,7 +97,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         {
             LogOptions = ServiceProvider.GetService<IOptions<LogOptions>>()?.Value;
             if (LogOptions == null) return;
-            services.SetupLog(LogOptions);
+            services.SetupLog(LogOptions, ServiceProvider);
         }
     }
 }
