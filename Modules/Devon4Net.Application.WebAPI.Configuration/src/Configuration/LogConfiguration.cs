@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Devon4Net.Infrastructure.Log.Attribute;
 using Serilog;
-using Serilog.Events;
 using Serilog.Sinks.Graylog.Extended;
 using System;
 using Devon4Net.Infrastructure.Common.Options.Log;
 using Devon4Net.Infrastructure.Common;
 using System.IO;
+using Microsoft.Extensions.Logging;
 
 namespace Devon4Net.Application.WebAPI.Configuration
 {
@@ -15,9 +15,12 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private const string DefaultLogFile = "log-{0}.txt";
         private const string DefaultSqliteFile = "devonfwLogDatabase.db";
         private static LoggerConfiguration LoggerConfiguration { get; set; }
-        public static void SetupLog(this IServiceCollection services, LogOptions logOptions)
+        private static ServiceProvider ServiceProvider { get; set; }
+        public static void SetupLog(this IServiceCollection services, LogOptions logOptions, ServiceProvider serviceProvider)
         {
             if (logOptions == null) return;
+
+            ServiceProvider = serviceProvider;
 
             ConfigureLog(logOptions);
 
@@ -30,6 +33,9 @@ namespace Devon4Net.Application.WebAPI.Configuration
             {
                 SetupGraylog(logOptions.GrayLog);
             }
+
+            ServiceProvider.GetService<ILoggerFactory>().AddSerilog(dispose: true);
+
         }
 
         private static void SetupLogAop(ref IServiceCollection services, LogOptions logOptions)
@@ -51,12 +57,12 @@ namespace Devon4Net.Application.WebAPI.Configuration
         public static void ConfigureLog(LogOptions logOptions)
         {
             var logFile = logOptions.LogFile != null ? string.Format(logOptions.LogFile, DateTime.Today.ToShortDateString().Replace("/", string.Empty)) : DefaultLogFile;
-
             LoggerConfiguration = new LoggerConfiguration()
-                    .MinimumLevel.Override("Microsoft", GetLogLevel(logOptions.LogLevel))
                     .Enrich.FromLogContext()
                     .WriteTo.Console()
                     .WriteTo.File(GetValidPath(logFile, DefaultLogFile));
+
+            SetLogLevel(logOptions.LogLevel, LoggerConfiguration);
 
             if (!string.IsNullOrEmpty(logOptions.SeqLogServerHost))
             {
@@ -68,27 +74,25 @@ namespace Devon4Net.Application.WebAPI.Configuration
                 LoggerConfiguration = LoggerConfiguration.WriteTo.SQLite(GetValidPath(logOptions.SqliteDatabase, DefaultSqliteFile));
             }
 
-            Serilog.Log.Logger = LoggerConfiguration.CreateLogger();
+            Log.Logger = LoggerConfiguration.CreateLogger();
         }
 
         private static void SetupGraylog(GraylogOptions graylogOptions)
         {
-            if (graylogOptions != null)
+            if (graylogOptions == null) return;
+            var graylogConfig = new GraylogSinkConfiguration
             {
-                var graylogConfig = new GraylogSinkConfiguration
-                {
-                    GraylogTransportType = GetGraylogTransportTypeFromString(graylogOptions.GrayLogProtocol),
-                    Host = graylogOptions.GrayLogHost,
-                    Port = graylogOptions.GrayLogPort,
-                    UseSecureConnection = graylogOptions.UseSecureConnection,
-                    UseAsyncLogging = graylogOptions.UseAsyncLogging,
-                    RetryCount = graylogOptions.RetryCount,
-                    RetryIntervalMs = graylogOptions.RetryIntervalMs,
-                    MaxUdpMessageSize = graylogOptions.MaxUdpMessageSize
-                };
+                GraylogTransportType = GetGraylogTransportTypeFromString(graylogOptions.GrayLogProtocol),
+                Host = graylogOptions.GrayLogHost,
+                Port = graylogOptions.GrayLogPort,
+                UseSecureConnection = graylogOptions.UseSecureConnection,
+                UseAsyncLogging = graylogOptions.UseAsyncLogging,
+                RetryCount = graylogOptions.RetryCount,
+                RetryIntervalMs = graylogOptions.RetryIntervalMs,
+                MaxUdpMessageSize = graylogOptions.MaxUdpMessageSize
+            };
 
-                LoggerConfiguration = LoggerConfiguration.WriteTo.Graylog(graylogConfig);
-            }
+            LoggerConfiguration = LoggerConfiguration.WriteTo.Graylog(graylogConfig);
         }
 
         private static GraylogTransportType GetGraylogTransportTypeFromString(string transportType)
@@ -101,8 +105,6 @@ namespace Devon4Net.Application.WebAPI.Configuration
                     return GraylogTransportType.Udp;
                 case "http":
                     return GraylogTransportType.Http;
-                default:
-                    break;
             }
             return GraylogTransportType.Udp;
         }
@@ -117,25 +119,29 @@ namespace Devon4Net.Application.WebAPI.Configuration
             return Path.GetFullPath(inputPath);
         }
 
-        private static LogEventLevel GetLogLevel(string logLevelDescription)
+        private static void SetLogLevel(string logEventLevel, LoggerConfiguration loggerConfiguration)
         {
-            if (string.IsNullOrEmpty(logLevelDescription)) return LogEventLevel.Debug;
-            switch (logLevelDescription.ToLower())
+            if (string.IsNullOrEmpty(logEventLevel)) return;
+            switch (logEventLevel.ToLower())
             {
                 case "warning":
-                    return LogEventLevel.Warning;
+                    loggerConfiguration.MinimumLevel.Warning();
+                    return;
                 case "verbose":
-                    return LogEventLevel.Verbose;
+                    loggerConfiguration.MinimumLevel.Verbose();
+                    return;
                 case "fatal":
-                    return LogEventLevel.Fatal;
+                    loggerConfiguration.MinimumLevel.Fatal();
+                    return;
                 case "error":
-                    return LogEventLevel.Error;
+                    loggerConfiguration.MinimumLevel.Error();
+                    return;
                 case "information":
-                    return LogEventLevel.Information;
-                case "debug":
+                    loggerConfiguration.MinimumLevel.Information();
+                    return;
                 default:
-                    return LogEventLevel.Debug;
-
+                    loggerConfiguration.MinimumLevel.Debug();
+                    return;
             }
         }
     }

@@ -8,9 +8,9 @@ namespace Devon4Net.Domain.UnitOfWork.Repository
 {
     public interface IRepository<T> where T : class
     {
-        Task<T> Create(T entity);
-        Task<T> Update(T entity);
-        Task<bool> Delete(T entity);
+        Task<T> Create(T entity, bool detach = true);
+        Task<T> Update(T entity, bool detach = true);
+        Task<bool> Delete(T entity, bool detach = true);
         Task<bool> Delete(Expression<Func<T, bool>> predicate = null);
         Task<T> GetFirstOrDefault(Expression<Func<T, bool>> predicate = null);
         Task<T> GetLastOrDefault(Expression<Func<T, bool>> predicate = null);
