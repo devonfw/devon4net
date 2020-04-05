@@ -63,7 +63,7 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
                 Subject = new ClaimsIdentity(clientClaims),
                 Expires = DateTime.UtcNow.AddMinutes(Convert.ToInt16(JwtOptions.ClockSkew)),
                 IssuedAt = DateTime.Now,
-                Claims = clientClaims.ToDictionary(x => x.Type, x => x.Value as object),
+                Claims = clientClaims.Where(c=>c.Type != ClaimTypes.Role).ToDictionary(x => x.Type, x => x.Value as object),
                 SigningCredentials = SigningCredentials
             };
             return new JwtSecurityTokenHandler().CreateEncodedJwt(tokenDescriptor);
