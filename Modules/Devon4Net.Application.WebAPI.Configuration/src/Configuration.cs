@@ -54,6 +54,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
 
         public static void ConfigureDevonFw(this IApplicationBuilder app)
         {
+            app.UseRequestLocalization();
             app.SetupDevonfwMiddleware();
             if (DevonfwOptions.UseSwagger && SwaggerOptions!=null && SwaggerOptions.Endpoint!=null) app.ConfigureSwaggerApplication(SwaggerOptions);
         }
