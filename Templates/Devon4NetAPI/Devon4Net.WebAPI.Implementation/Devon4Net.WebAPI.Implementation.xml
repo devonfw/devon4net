@@ -10,11 +10,12 @@
             Please remember to avoid the use ob logic in a controller !!!
             </summary>
         </member>
-        <member name="M:Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers.AuthController.#ctor(Microsoft.Extensions.Options.IOptions{Devon4Net.Infrastructure.Common.Options.JWT.JwtOptions})">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers.AuthController.#ctor(Microsoft.Extensions.Options.IOptions{Devon4Net.Infrastructure.Common.Options.JWT.JwtOptions},Devon4Net.Infrastructure.JWT.Handlers.IJwtHandler)">
             <summary>
             COnstructor with DI
             </summary>
             <param name="jwtOptions"></param>
+            <param name="jwtHandler"></param>
         </member>
         <member name="M:Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers.AuthController.Login(System.String,System.String)">
             <summary>

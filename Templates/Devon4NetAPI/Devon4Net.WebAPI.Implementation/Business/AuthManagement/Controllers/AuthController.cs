@@ -24,7 +24,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers
     [Route("[controller]")]
     public class AuthController: ControllerBase
     {
-        private IJwtHandlerJwtHandler { get; set; }
+        private IJwtHandler JwtHandler { get; set; }
 
         /// <summary>
         /// COnstructor with DI
