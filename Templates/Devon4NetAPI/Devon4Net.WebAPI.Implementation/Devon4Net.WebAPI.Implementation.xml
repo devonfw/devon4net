@@ -442,6 +442,10 @@
         <member name="M:Devon4Net.WebAPI.Implementation.Configure.DevonConfiguration.SetupDevonDependencyInjection(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
             Sets up the service dependency injection
+            For example:
+            services.AddTransient"ITodoService, TodoService"();
+            services.AddTransient"ITodoRepository, TodoRepository"();
+            Put your DI declarations here
             </summary>
             <param name="services"></param>
         </member>
