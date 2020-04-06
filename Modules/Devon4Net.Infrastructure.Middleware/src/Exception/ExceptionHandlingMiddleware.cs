@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Devon4Net.Infrastructure.Common.Exceptions;
 using Devon4Net.Infrastructure.Common.Options.KillSwitch;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace Devon4Net.Infrastructure.Middleware.Exception
 {
@@ -86,7 +86,7 @@ namespace Devon4Net.Infrastructure.Middleware.Exception
             if (string.IsNullOrEmpty(errorMessage)) return context.Response.WriteAsync(string.Empty);
             
             context.Response.ContentType = "application/json";
-            var result = JsonConvert.SerializeObject(new { error = errorMessage });
+            var result = JsonSerializer.Serialize(new { error = errorMessage });
             return context.Response.WriteAsync(result);
 
         }

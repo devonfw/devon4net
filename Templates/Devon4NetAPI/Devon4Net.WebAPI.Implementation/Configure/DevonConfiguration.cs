@@ -1,7 +1,5 @@
-﻿using Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Service;
-using Devon4Net.WebAPI.Implementation.Business.TodoManagement.Service;
-using Devon4Net.WebAPI.Implementation.Data.Repositories;
-using Devon4Net.WebAPI.Implementation.Domain.RepositoryInterfaces;
+﻿using System.Reflection;
+using Devon4Net.Infrastructure.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Devon4Net.WebAPI.Implementation.Configure
@@ -13,17 +11,23 @@ namespace Devon4Net.WebAPI.Implementation.Configure
     {
         /// <summary>
         /// Sets up the service dependency injection
+        /// For example:
+        /// services.AddTransient"ITodoService, TodoService"();
+        /// services.AddTransient"ITodoRepository, TodoRepository"();
+        /// Put your DI declarations here
         /// </summary>
         /// <param name="services"></param>
         public static void SetupDevonDependencyInjection(this IServiceCollection services)
         {
-            //Services
-            services.AddTransient<ITodoService, TodoService>();
-            services.AddTransient<IEmployeeService, EmployeeService>();
+            var assemblyToScan = Assembly.GetAssembly(typeof(DevonConfiguration));
 
-            //Repositories
-            services.AddTransient<ITodoRepository, TodoRepository>();
-            services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+            services.RegisterAssemblyPublicNonGenericClasses(assemblyToScan)
+                .Where(x => x.Name.EndsWith("Service"))
+                .AsPublicImplementedInterfaces();
+
+            services.RegisterAssemblyPublicNonGenericClasses(assemblyToScan)
+                .Where(x => x.Name.EndsWith("Repository"))
+                .AsPublicImplementedInterfaces();
         }
     }
 }
