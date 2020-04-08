@@ -6,11 +6,9 @@ using Devon4Net.WebAPI.Implementation.Configure;
 using Devon4Net.WebAPI.Implementation.Domain.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Logging;
 using System.Security.Claims;
 
 namespace Devon4Net.Application.WebAPI
