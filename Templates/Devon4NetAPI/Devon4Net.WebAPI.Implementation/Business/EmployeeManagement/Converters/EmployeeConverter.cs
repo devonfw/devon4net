@@ -23,7 +23,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Converters
                 Id = item.Id,
                 Name = item.Name,
                 Surname = item.Surname,
-                Mail = item.Surname
+                Mail = item.Mail
             };
         }
 
