@@ -1,4 +1,5 @@
-﻿using Devon4Net.Domain.UnitOfWork.Repository;
+﻿using System.Linq;
+using Devon4Net.Domain.UnitOfWork.Repository;
 using Devon4Net.Domain.UnitOfWork.UnitOfWork;
 using Devon4Net.Infrastructure.Common.Options.CircuitBreaker;
 using Devon4Net.Infrastructure.Common.Options.Cors;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Devon4Net.Infrastructure.Common.Options.Log;
 using Devon4Net.Application.WebAPI.Configuration.Application;
+using Devon4Net.Infrastructure.Common.Options.RabbitMq;
 
 namespace Devon4Net.Application.WebAPI.Configuration
 {
@@ -25,6 +27,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static  CorsOptions CorsOptions { get; set; }
         private static  CircuitBreakerOptions CircuitBreakerOptions { get; set; }
         private static LogOptions LogOptions { get; set; }
+        private static RabbitMQOptions RabbitMqOptions { get; set; }
 
         public static void ConfigureDevonFw(this IServiceCollection services, IConfiguration configuration)
         {
@@ -40,6 +43,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             services.SetupKillSwitch(ref configuration);
             services.Configure<KillSwitchOptions>(configuration.GetSection("KillSwitchConfiguration"));
             services.Configure<LogOptions>(configuration.GetSection("Log"));
+            services.Configure<RabbitMQOptions>(configuration.GetSection("RabbitMq"));
 
             ServiceProvider = services.BuildServiceProvider();
             DevonfwOptions = ServiceProvider.GetService<IOptions<DevonfwOptions>>()?.Value;
@@ -50,6 +54,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             configuration.SetupHeaders();
             SetupLog(ref services);
             SetupJwt(ref services);
+            SetupRabbitMq(ref services);
         }
 
         public static void ConfigureDevonFw(this IApplicationBuilder app)
@@ -99,6 +104,13 @@ namespace Devon4Net.Application.WebAPI.Configuration
             LogOptions = ServiceProvider.GetService<IOptions<LogOptions>>()?.Value;
             if (LogOptions == null) return;
             services.SetupLog(LogOptions, ServiceProvider);
+        }
+
+        private static void SetupRabbitMq(ref IServiceCollection services)
+        {
+            RabbitMqOptions = ServiceProvider.GetService<IOptions<RabbitMQOptions>>()?.Value;
+            if (RabbitMqOptions?.Hosts == null || !RabbitMqOptions.Hosts.Any()) return;
+            services.SetupRabbitMq(RabbitMqOptions);
         }
     }
 }
