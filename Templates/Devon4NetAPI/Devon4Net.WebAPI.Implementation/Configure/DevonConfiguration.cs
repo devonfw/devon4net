@@ -32,7 +32,7 @@ namespace Devon4Net.WebAPI.Implementation.Configure
                 .AsPublicImplementedInterfaces();
 
             services.RegisterAssemblyPublicNonGenericClasses(assemblyToScan)
-                .Where(x => x.Name.Contains("CQRSHandler"))
+                .Where(x => x.Name.EndsWith("CQRSHandler"))
                 .AsSingletonPublicImplementedClasses();
 
             //services.AddSingleton<UserTestCqrsHandler>();
