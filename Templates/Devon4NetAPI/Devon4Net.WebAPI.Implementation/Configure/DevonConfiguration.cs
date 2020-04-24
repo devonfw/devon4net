@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 using Devon4Net.Infrastructure.Common.Helpers;
+using Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers;
+using EasyNetQ;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Devon4Net.WebAPI.Implementation.Configure
@@ -28,6 +30,12 @@ namespace Devon4Net.WebAPI.Implementation.Configure
             services.RegisterAssemblyPublicNonGenericClasses(assemblyToScan)
                 .Where(x => x.Name.EndsWith("Repository"))
                 .AsPublicImplementedInterfaces();
+
+            services.RegisterAssemblyPublicNonGenericClasses(assemblyToScan)
+                .Where(x => x.Name.Contains("CQRSHandler"))
+                .AsSingletonPublicImplementedClasses();
+
+            //services.AddSingleton<UserTestCqrsHandler>();
         }
     }
 }

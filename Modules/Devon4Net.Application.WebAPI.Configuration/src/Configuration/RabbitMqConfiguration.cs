@@ -42,9 +42,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
 
                 connection.Validate();
 
-                var bus = RabbitHutch.CreateBus(connection, serviceRegister => serviceRegister.Register(serviceProvider => Log.Logger));
-                
-                services.AddSingleton(bus);
+                services.AddSingleton<IBus>(RabbitHutch.CreateBus(connection, serviceRegister => serviceRegister.Register(serviceProvider => Log.Logger)));
             }
             catch (ArgumentNullException ex) { Devon4NetLogger.Error(ex); }
             catch (EasyNetQException ex) { Devon4NetLogger.Error(ex); }

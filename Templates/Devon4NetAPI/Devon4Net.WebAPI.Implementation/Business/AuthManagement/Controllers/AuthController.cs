@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Devon4Net.Infrastructure.Common.Options.JWT;
 using Devon4Net.Infrastructure.JWT.Common.Const;
 using Devon4Net.Infrastructure.JWT.Handlers;
@@ -10,7 +9,6 @@ using Devon4Net.Infrastructure.Log;
 using Devon4Net.WebAPI.Implementation.Business.AuthManagement.Dto;
 using Devon4Net.WebAPI.Implementation.Business.UserManagement.Dto;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -27,7 +25,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers
         private IJwtHandler JwtHandler { get; set; }
 
         /// <summary>
-        /// COnstructor with DI
+        /// Constructor with DI
         /// </summary>
         /// <param name="jwtOptions"></param>
         /// <param name="jwtHandler"></param>

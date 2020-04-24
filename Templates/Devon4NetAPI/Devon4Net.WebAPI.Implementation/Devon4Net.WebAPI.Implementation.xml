@@ -12,7 +12,7 @@
         </member>
         <member name="M:Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers.AuthController.#ctor(Microsoft.Extensions.Options.IOptions{Devon4Net.Infrastructure.Common.Options.JWT.JwtOptions},Devon4Net.Infrastructure.JWT.Handlers.IJwtHandler)">
             <summary>
-            COnstructor with DI
+            Constructor with DI
             </summary>
             <param name="jwtOptions"></param>
             <param name="jwtHandler"></param>

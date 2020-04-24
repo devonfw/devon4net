@@ -28,6 +28,7 @@ namespace Devon4Net.Infrastructure.Common.Helpers
 
             var allPublicTypes = assemblies.SelectMany(x => x.GetExportedTypes()
                 .Where(y => y.IsClass && !y.IsAbstract && !y.IsGenericType && !y.IsNested));
+
             return new AutoRegisterData(services, allPublicTypes);
         }
 
@@ -64,6 +65,24 @@ namespace Devon4Net.Infrastructure.Common.Helpers
                 {
                     autoRegData.Services.Add(new ServiceDescriptor(infc, classType, lifetime));
                 }
+            }
+
+            return autoRegData.Services;
+        }
+
+        /// <summary>
+        /// This registers the classes against any public class (other than IDisposable) implemented by the class as a Singleton instance
+        /// </summary>
+        /// <param name="autoRegData">AutoRegister data produced by <see cref="RegisterAssemblyPublicNonGenericClasses"/></param> method
+        /// <returns></returns>
+        public static IServiceCollection AsSingletonPublicImplementedClasses(this AutoRegisterData autoRegData)
+        {
+            if (autoRegData == null) throw new ArgumentNullException(nameof(autoRegData));
+            foreach (var classType in (autoRegData.TypeFilter == null
+                ? autoRegData.TypesToConsider
+                : autoRegData.TypesToConsider.Where(autoRegData.TypeFilter)))
+            {
+                autoRegData.Services.AddSingleton(classType);
             }
 
             return autoRegData.Services;
