@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Net.Security;
+using Devon4Net.Infrastructure.Common;
 using Devon4Net.Infrastructure.Common.Options.RabbitMq;
 using Devon4Net.Infrastructure.Log;
 using EasyNetQ;
@@ -63,7 +64,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             hostConfiguration.Ssl.CertPassphrase = host.SslCertPassPhrase;
             hostConfiguration.Ssl.AcceptablePolicyErrors = sslPolicyErrors;
             hostConfiguration.Ssl.ServerName = host.SslServerName;
-            hostConfiguration.Ssl.CertPath = host.SslCertPath;
+            hostConfiguration.Ssl.CertPath = FileOperations.GetFileFullPath(host.SslCertPath);
             hostConfiguration.Ssl.Enabled = host.Ssl;
 
             return hostConfiguration;
