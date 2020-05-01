@@ -15,7 +15,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Samples
 
     public class UserTestCQRSHandler : RabbitMqHandler<UserTestCommand>
     {
-        public UserTestCQRSHandler(IBus serviceBus) : base(serviceBus)
+        public UserTestCQRSHandler(IBus serviceBus) : base(serviceBus, true)
         {
         }
 
