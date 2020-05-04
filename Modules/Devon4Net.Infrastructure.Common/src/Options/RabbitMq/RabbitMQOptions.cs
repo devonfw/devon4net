@@ -15,6 +15,7 @@ namespace Devon4Net.Infrastructure.Common.Options.RabbitMq
         public bool PersistentMessages { get; set; }
         public string Platform { get; set; }
         public int? Timeout { get; set; }
+        public Backup Backup { get; set; }
     }
 
     public class HostDefnition
@@ -26,6 +27,11 @@ namespace Devon4Net.Infrastructure.Common.Options.RabbitMq
         public string SslCertPath { get; set; }
         public string SslCertPassPhrase { get; set; }
         public string SslPolicyErrors { get; set; }
+    }
 
+    public class Backup
+    {
+        public bool UseSqLite { get; set; }
+        public string DatabaseConnectionString { get; set; }
     }
 }

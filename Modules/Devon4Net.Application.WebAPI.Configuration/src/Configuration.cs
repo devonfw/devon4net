@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using Devon4Net.Domain.UnitOfWork.Repository;
 using Devon4Net.Domain.UnitOfWork.UnitOfWork;
 using Devon4Net.Infrastructure.Common.Options.CircuitBreaker;
@@ -14,7 +15,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Devon4Net.Infrastructure.Common.Options.Log;
 using Devon4Net.Application.WebAPI.Configuration.Application;
+using Devon4Net.Domain.UnitOfWork.Common;
+using Devon4Net.Domain.UnitOfWork.Enums;
+using Devon4Net.Infrastructure.Common;
 using Devon4Net.Infrastructure.Common.Options.RabbitMq;
+using Devon4Net.Infrastructure.RabbitMQ.Domain.Database;
 
 namespace Devon4Net.Application.WebAPI.Configuration
 {
@@ -61,14 +66,14 @@ namespace Devon4Net.Application.WebAPI.Configuration
         {
             app.UseRequestLocalization();
             app.SetupDevonfwMiddleware();
-            if (DevonfwOptions.UseSwagger && SwaggerOptions!=null && SwaggerOptions.Endpoint!=null) app.ConfigureSwaggerApplication(SwaggerOptions);
+            if (DevonfwOptions.UseSwagger && SwaggerOptions?.Endpoint != null) app.ConfigureSwaggerApplication(SwaggerOptions);
         }
 
         private static void SetupSwagger(ref IServiceCollection services)
         {
             if (DevonfwOptions != null && !DevonfwOptions.UseSwagger) return;
             SwaggerOptions = ServiceProvider.GetService<IOptions<SwaggerOptions>>()?.Value;
-            if (SwaggerOptions == null || SwaggerOptions.Endpoint == null) return;
+            if (SwaggerOptions?.Endpoint == null) return;
             services.SetupSwaggerService(SwaggerOptions);
         }
         
@@ -111,6 +116,11 @@ namespace Devon4Net.Application.WebAPI.Configuration
             RabbitMqOptions = ServiceProvider.GetService<IOptions<RabbitMQOptions>>()?.Value;
             if (RabbitMqOptions?.Hosts == null || !RabbitMqOptions.Hosts.Any()) return;
             services.SetupRabbitMq(RabbitMqOptions);
+            if (!RabbitMqOptions.Backup.UseSqLite) return;
+            
+            var sqLiteFullPath =  FileOperations.GetFileFullPath("RabbitMqBackup.db");
+            if (!File.Exists(sqLiteFullPath)) throw new FileNotFoundException($"Error: The RabbitMq SqLite database file (RabbitMqBackup.db) was not found");
+            services.SetupDatabase<RabbitMqBackupContext>(sqLiteFullPath, DatabaseType.Sqlite);
         }
     }
 }
