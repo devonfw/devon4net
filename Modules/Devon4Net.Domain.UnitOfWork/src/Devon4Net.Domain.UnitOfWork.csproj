@@ -25,9 +25,14 @@
       <WarningLevel>0</WarningLevel>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <WarningsAsErrors></WarningsAsErrors>
+      <NoWarn>1701;1702;8034;1705;NU1605;NU1608;NU1701;CS1705</NoWarn>
+      <WarningLevel>0</WarningLevel>
+    </PropertyGroup>
+
     <ItemGroup>
       <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
-      <PackageReference Include="EntityFrameworkCore.Jet" Version="2.2.0" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="3.1.3" />
