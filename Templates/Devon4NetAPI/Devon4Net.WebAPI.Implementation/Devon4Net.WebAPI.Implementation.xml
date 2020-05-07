@@ -298,8 +298,8 @@
             <summary>
             Sends a message to the RabbitMq server queue
             </summary>
-            <param name="user"></param>
-            <param name="password"></param>
+            <param name="name">Name of the user</param>
+            <param name="surname">Surname of the user</param>
             <returns></returns>
         </member>
         <member name="T:Devon4Net.WebAPI.Implementation.Business.TodoManagement.Controllers.TodoController">
@@ -467,6 +467,15 @@
             services.AddTransient"ITodoService, TodoService"();
             services.AddTransient"ITodoRepository, TodoRepository"();
             Put your DI declarations here
+            </summary>
+            <param name="services"></param>
+            <param name="configuration"></param>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Configure.DevonConfiguration.SetupDatabase(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Setup here your database connections.
+            To use RabbitMq message backup declare the 'RabbitMqBackupContext' database setup
+            PE: services.SetupDatabase&lt;RabbitMqBackupContext&gt;($"Data Source={FileOperations.GetFileFullPath("RabbitMqBackupSqLite.db")}", DatabaseType.Sqlite);
             </summary>
             <param name="services"></param>
             <param name="configuration"></param>

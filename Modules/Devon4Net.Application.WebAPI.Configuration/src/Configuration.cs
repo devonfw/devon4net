@@ -17,18 +17,17 @@ using Devon4Net.Application.WebAPI.Configuration.Application;
 using Devon4Net.Infrastructure.Common.Options.LiteDb;
 using Devon4Net.Infrastructure.Common.Options.RabbitMq;
 using Devon4Net.Infrastructure.Extensions.Helpers;
-using Devon4Net.WebAPI.Implementation.Configure;
 
 namespace Devon4Net.Application.WebAPI.Configuration
 {
     public static class Configuration
     {
         private static ServiceProvider ServiceProvider { get; set; }
-        private static  DevonfwOptions DevonfwOptions { get; set; }
-        private static  SwaggerOptions SwaggerOptions { get; set; }
-        private static  JwtOptions JwtOptions { get; set; }
-        private static  CorsOptions CorsOptions { get; set; }
-        private static  CircuitBreakerOptions CircuitBreakerOptions { get; set; }
+        private static DevonfwOptions DevonfwOptions { get; set; }
+        private static SwaggerOptions SwaggerOptions { get; set; }
+        private static JwtOptions JwtOptions { get; set; }
+        private static CorsOptions CorsOptions { get; set; }
+        private static CircuitBreakerOptions CircuitBreakerOptions { get; set; }
         private static LogOptions LogOptions { get; set; }
         private static RabbitMqOptions RabbitMqOptions { get; set; }
         private static LiteDbOptions LiteDbOptions { get; set; }
@@ -64,8 +63,6 @@ namespace Devon4Net.Application.WebAPI.Configuration
             SetupJwt(ref services);
             SetupLiteDb(ref services);
             SetupRabbitMq(ref services);
-
-            services.SetupDevonDependencyInjection(configuration);
         }
 
         public static void ConfigureDevonFw(this IApplicationBuilder app)

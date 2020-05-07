@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Devon4Net.Infrastructure.Extensions;
 using Devon4Net.Infrastructure.Extensions.Helpers;
-using Devon4Net.Infrastructure.JWT.Common.Const;
 using Devon4Net.Infrastructure.Log;
 using Devon4Net.Infrastructure.RabbitMQ.Commands;
 using Devon4Net.Infrastructure.RabbitMQ.Common;

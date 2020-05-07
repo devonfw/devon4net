@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Devon4Net.Infrastructure.Common.Helpers;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Devon4Net.Infrastructure.Log.Attribute
@@ -34,8 +33,8 @@ namespace Devon4Net.Infrastructure.Log.Attribute
             }
             catch (Exception ex)
             {
-                Devon4Net.Infrastructure.Log.Devon4NetLogger.Error(ex);
-                throw ex;
+                Devon4NetLogger.Error(ex);
+                throw;
             }
         }
 
@@ -48,8 +47,8 @@ namespace Devon4Net.Infrastructure.Log.Attribute
             }
             catch (Exception ex)
             {
-                Devon4Net.Infrastructure.Log.Devon4NetLogger.Error(ex);
-                throw ex;
+                Devon4NetLogger.Error(ex);
+                throw;
             }
         }
 
@@ -61,8 +60,8 @@ namespace Devon4Net.Infrastructure.Log.Attribute
             }
             catch (Exception ex)
             {
-                Devon4Net.Infrastructure.Log.Devon4NetLogger.Error(ex);
-                throw ex;
+                Devon4NetLogger.Error(ex);
+                throw;
             }
         }
 
@@ -75,8 +74,8 @@ namespace Devon4Net.Infrastructure.Log.Attribute
             }
             catch (Exception ex)
             {
-                Devon4Net.Infrastructure.Log.Devon4NetLogger.Error(ex);
-                throw ex;
+                Devon4NetLogger.Error(ex);
+                throw;
             }
         }
 
@@ -91,8 +90,8 @@ namespace Devon4Net.Infrastructure.Log.Attribute
             }
             catch (Exception ex)
             {
-                Devon4Net.Infrastructure.Log.Devon4NetLogger.Error(ex);
-                throw ex;
+                Devon4NetLogger.Error(ex);
+                throw;
             }
         }
 
@@ -105,19 +104,19 @@ namespace Devon4Net.Infrastructure.Log.Attribute
             }
             catch (Exception ex)
             {
-                Devon4Net.Infrastructure.Log.Devon4NetLogger.Error(ex);
-                throw ex;
+                Devon4NetLogger.Error(ex);
+                throw;
             }
         }
 
         private void LogEvent(string method, Microsoft.AspNetCore.Mvc.ObjectResult result)
         {
-            Devon4Net.Infrastructure.Log.Devon4NetLogger.Information($"Result from {method}: {result.StatusCode} | Value: {GetValue(result.Value)}");
+            Devon4NetLogger.Information($"Result from {method}: {result.StatusCode} | Value: {GetValue(result.Value)}");
         }
 
         private void LogEvent(string method, string result)
         {
-            Devon4Net.Infrastructure.Log.Devon4NetLogger.Information($"Result from {method}: {result}");
+            Devon4NetLogger.Information($"Result from {method}: {result}");
         }
 
         private string GetValue(object toPrint)
@@ -129,7 +128,7 @@ namespace Devon4Net.Infrastructure.Log.Attribute
             }
             catch (Exception ex)
             {
-                Devon4Net.Infrastructure.Log.Devon4NetLogger.Error($"The result object can not be represented. Please use serializable objects: {ex.Message} | {ex.InnerException} ");
+                Devon4NetLogger.Error($"The result object can not be represented. Please use serializable objects: {ex.Message} | {ex.InnerException} ");
             }
 
             return result;

@@ -35,7 +35,9 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Samples.Handllers
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
+#pragma warning disable 1998 
         public override async Task HandleCommand(UserSampleCommand command)
+#pragma warning restore 1998
         {
             Devon4NetLogger.Debug($"User {command.Name} {command.SurName} handled!!");
         }

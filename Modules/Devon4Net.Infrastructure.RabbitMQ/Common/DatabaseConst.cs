@@ -1,4 +1,4 @@
-﻿namespace Devon4Net.Infrastructure.JWT.Common.Const
+﻿namespace Devon4Net.Infrastructure.RabbitMQ.Common
 {
     public static class DatabaseConst
     {
