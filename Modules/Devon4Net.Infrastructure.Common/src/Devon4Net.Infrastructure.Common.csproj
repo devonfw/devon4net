@@ -4,7 +4,7 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <Version>3.1.3</Version>
+        <Version>3.1.4</Version>
         <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
         <Company>Capgemini S.A.</Company>
         <Description>Common classes to manage the web api template configuration</Description>

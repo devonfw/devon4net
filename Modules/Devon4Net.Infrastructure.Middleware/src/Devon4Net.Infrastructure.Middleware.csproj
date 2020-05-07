@@ -4,7 +4,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <Version>3.1.3</Version>
+        <Version>3.1.4</Version>
         <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
         <Company>Capgemini S.A.</Company>
         <Description>Common middleware for exception management, custom heaeders and client certificate verification</Description>

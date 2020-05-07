@@ -17,7 +17,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute("Log component to create log file, log sqlite database and graylog traces for weba" +
     "pi on .net core 3.0")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("3.1.3.3")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("3.1.3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("3.1.4")]
 [assembly: System.Reflection.AssemblyProductAttribute("Devon4Net.Infrastructure.Log")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Devon4Net.Infrastructure.Log")]
 [assembly: System.Reflection.AssemblyVersionAttribute("3.1.3.3")]
