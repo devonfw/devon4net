@@ -39,8 +39,8 @@ namespace Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Controller
         /// <summary>
         /// Sends a message to the RabbitMq server queue
         /// </summary>
-        /// <param name="user"></param>
-        /// <param name="password"></param>
+        /// <param name="name">Name of the user</param>
+        /// <param name="surname">Surname of the user</param>
         /// <returns></returns>
         [HttpPost]
         [HttpOptions]
@@ -50,14 +50,14 @@ namespace Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> SendRabbitMqMessage(string user, string password)
+        public async Task<IActionResult> SendRabbitMqMessage(string name, string surname)
         {
             Devon4NetLogger.Debug("Executing SendRabbitMqMessage from controller RabbitMqController");
 
             if (RabbitMqOptions?.Hosts == null || !RabbitMqOptions.Hosts.Any())
                 return StatusCode(StatusCodes.Status500InternalServerError, "No RabbitMq instance set up");
 
-            var userCommand = new UserSampleCommand {Name = user, SurName = password};
+            var userCommand = new UserSampleCommand {Name = name, SurName = surname};
             var published = await UserSampleRabbitHandler.Publish(userCommand).ConfigureAwait(false);
             return Ok(published);
         }
