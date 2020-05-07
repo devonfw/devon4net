@@ -1,15 +1,9 @@
 using Devon4Net.Application.WebAPI.Configuration;
-using Devon4Net.Domain.UnitOfWork.Common;
-using Devon4Net.Domain.UnitOfWork.Enums;
-using Devon4Net.Infrastructure.JWT.Common.Const;
-using Devon4Net.WebAPI.Implementation.Configure;
-using Devon4Net.WebAPI.Implementation.Domain.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Security.Claims;
 
 namespace Devon4Net.Application.WebAPI
 {
@@ -35,25 +29,10 @@ namespace Devon4Net.Application.WebAPI
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.ConfigureDevonFw(Configuration);
-            SetupDatabase(services);
-            services.SetupDevonDependencyInjection();
             services.AddControllers();
             services.AddOptions();
-            SetupJwtPolicies(services);
             services.AddMvc(option => option.EnableEndpointRouting = false);
-        }
-
-        private void SetupDatabase(IServiceCollection services)
-        {
-            services.SetupDatabase<TodoContext>(Configuration, "Default", DatabaseType.InMemory);
-            services.SetupDatabase<EmployeeContext>(Configuration, "Employee", DatabaseType.InMemory);
-        }
-
-        private void SetupJwtPolicies(IServiceCollection services)
-        {
-            services.AddJwtPolicy(AuthConst.DevonSamplePolicy, ClaimTypes.Role, AuthConst.DevonSampleUserRole);
         }
 
         /// <summary>

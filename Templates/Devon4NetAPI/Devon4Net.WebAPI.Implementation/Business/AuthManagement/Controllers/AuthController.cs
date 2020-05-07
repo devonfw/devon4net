@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Devon4Net.Infrastructure.Common.Options.JWT;
 using Devon4Net.Infrastructure.JWT.Common.Const;
 using Devon4Net.Infrastructure.JWT.Handlers;
@@ -9,6 +10,7 @@ using Devon4Net.Infrastructure.Log;
 using Devon4Net.WebAPI.Implementation.Business.AuthManagement.Dto;
 using Devon4Net.WebAPI.Implementation.Business.UserManagement.Dto;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -29,7 +31,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers
         /// </summary>
         /// <param name="jwtOptions"></param>
         /// <param name="jwtHandler"></param>
-        public AuthController( IOptions<JwtOptions> jwtOptions, IJwtHandler jwtHandler)
+        public AuthController(IOptions<JwtOptions> jwtOptions, IJwtHandler jwtHandler)
         {
             JwtHandler = jwtHandler;
         }
@@ -43,11 +45,11 @@ namespace Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers
         [HttpOptions]
         [AllowAnonymous]
         [Route("/v1/auth/login")]
-        [ProducesResponseType(typeof(LoginResponse), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
-        public IActionResult Login(string user, string password)
+        [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Login(string user, string password)
         {
             Devon4NetLogger.Debug("Executing Login from controller AuthController");
 
@@ -71,11 +73,11 @@ namespace Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers
         [Authorize(AuthenticationSchemes = AuthConst.AuthenticationScheme, Roles = AuthConst.DevonSampleUserRole)]
         // Or use [Authorize(Policy = AuthConst.DevonSamplePolicy)]
         [Route("/v1/auth/currentuser")]
-        [ProducesResponseType(typeof(CurrentUserResponse), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(500)]
+        [ProducesResponseType(typeof(CurrentUserResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult CurrentUser()
         {
             Devon4NetLogger.Debug("Executing CurrentUser from controller AuthController");
@@ -87,7 +89,6 @@ namespace Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers
             var userClaims = JwtHandler.GetUserClaims(token).ToList();
             
             // Return result with claims values
-
             var result = new CurrentUserResponse {
                 Id = JwtHandler.GetClaimValue(userClaims, ClaimTypes.NameIdentifier),
                 UserName = JwtHandler.GetClaimValue(userClaims, ClaimTypes.Name),

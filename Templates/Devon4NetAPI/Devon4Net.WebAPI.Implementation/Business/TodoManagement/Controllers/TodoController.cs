@@ -34,10 +34,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.TodoManagement.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(List<TodoDto>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
+        [ProducesResponseType(typeof(List<TodoDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> GetTodo()
         {
             Devon4NetLogger.Debug("Executing GetTodo from controller TodoController");
@@ -49,10 +49,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.TodoManagement.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [ProducesResponseType(typeof(TodoDto), 201)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
+        [ProducesResponseType(typeof(TodoDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Create(string todoDescription)
         {
             Devon4NetLogger.Debug("Executing GetTodo from controller TodoController");
@@ -65,10 +65,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.TodoManagement.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpDelete]
-        [ProducesResponseType(typeof(long), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
+        [ProducesResponseType(typeof(long), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Delete(long todoId)
         {
             Devon4NetLogger.Debug("Executing GetTodo from controller TodoController");
@@ -80,10 +80,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.TodoManagement.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPut]
-        [ProducesResponseType(typeof(TodoDto), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
+        [ProducesResponseType(typeof(TodoDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpOptions]
         public async Task<ActionResult> ModifyTodo(long todoId)
         {

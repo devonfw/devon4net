@@ -1,7 +1,16 @@
 ﻿using System.Reflection;
+using System.Security.Claims;
+using Devon4Net.Domain.UnitOfWork.Common;
+using Devon4Net.Domain.UnitOfWork.Enums;
+using Devon4Net.Infrastructure.Common;
 using Devon4Net.Infrastructure.Common.Helpers;
-using Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers;
-using EasyNetQ;
+using Devon4Net.Infrastructure.JWT.Common;
+using Devon4Net.Infrastructure.JWT.Common.Const;
+using Devon4Net.Infrastructure.RabbitMQ.Common;
+using Devon4Net.Infrastructure.RabbitMQ.Domain.Database;
+using Devon4Net.Infrastructure.RabbitMQ.Samples.Handllers;
+using Devon4Net.WebAPI.Implementation.Domain.Database;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Devon4Net.WebAPI.Implementation.Configure
@@ -19,7 +28,8 @@ namespace Devon4Net.WebAPI.Implementation.Configure
         /// Put your DI declarations here
         /// </summary>
         /// <param name="services"></param>
-        public static void SetupDevonDependencyInjection(this IServiceCollection services)
+        /// <param name="configuration"></param>
+        public static void SetupDevonDependencyInjection(this IServiceCollection services, IConfiguration configuration)
         {
             var assemblyToScan = Assembly.GetAssembly(typeof(DevonConfiguration));
 
@@ -31,11 +41,26 @@ namespace Devon4Net.WebAPI.Implementation.Configure
                 .Where(x => x.Name.EndsWith("Repository"))
                 .AsPublicImplementedInterfaces();
 
-            services.RegisterAssemblyPublicNonGenericClasses(assemblyToScan)
-                .Where(x => x.Name.EndsWith("CQRSHandler"))
-                .AsSingletonPublicImplementedClasses();
+            SetupDatabase(services,configuration);
+            SetupJwtPolicies(services);
+            SetupRabbitHandlers(services);
+        }
 
-            //services.AddSingleton<UserTestCqrsHandler>();
+        private static void SetupRabbitHandlers(IServiceCollection services)
+        {
+            services.AddRabbitMqHandler<UserSampleRabbitMqHandler>(true);
+        }
+
+        private static void SetupDatabase(IServiceCollection services, IConfiguration configuration)
+        {
+            services.SetupDatabase<TodoContext>(configuration, "Default", DatabaseType.InMemory);
+            services.SetupDatabase<EmployeeContext>(configuration, "Employee", DatabaseType.InMemory);
+            services.SetupDatabase<RabbitMqBackupContext>($"Data Source={FileOperations.GetFileFullPath("RabbitMqBackupSqLite.db")}", DatabaseType.Sqlite);
+        }
+
+        private static void SetupJwtPolicies(IServiceCollection services)
+        {
+            services.AddJwtPolicy(AuthConst.DevonSamplePolicy, ClaimTypes.Role, AuthConst.DevonSampleUserRole);
         }
     }
 }

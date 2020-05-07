@@ -4,7 +4,12 @@ using System.Linq;
 using System.Net.Security;
 using Devon4Net.Infrastructure.Common;
 using Devon4Net.Infrastructure.Common.Options.RabbitMq;
+using Devon4Net.Infrastructure.LiteDb.LiteDb;
+using Devon4Net.Infrastructure.LiteDb.Repository;
 using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.RabbitMQ.Data.Service;
+using Devon4Net.Infrastructure.RabbitMQ.Domain.Entities;
+using Devon4Net.Infrastructure.RabbitMQ.Domain.ServiceInterfaces;
 using EasyNetQ;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -13,7 +18,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
 {
     public static class RabbitMqConfiguration
     {
-        public static void SetupRabbitMq(this IServiceCollection services, RabbitMQOptions rabbitMqOptions)
+        public static void SetupRabbitMq(this IServiceCollection services, RabbitMqOptions rabbitMqOptions)
         {
             if (rabbitMqOptions?.Hosts == null || !rabbitMqOptions.Hosts.Any())
             {
@@ -22,6 +27,9 @@ namespace Devon4Net.Application.WebAPI.Configuration
 
             try
             {
+                ConfigureRabbitMqGenericDependencyInjection(services);
+                SetupRabbitMqBackupDatabase(services, rabbitMqOptions);
+
                 var prefetchCount = (ushort)(rabbitMqOptions.PrefetchCount != null ? (ushort)rabbitMqOptions.PrefetchCount.Value : 0);
                 var timeOut = (ushort)(rabbitMqOptions.Timeout != null ? (ushort)rabbitMqOptions.Timeout.Value : 0);
                 var requestedHeartbeat = (ushort)(rabbitMqOptions.RequestedHeartbeat != null ? (ushort)rabbitMqOptions.RequestedHeartbeat.Value : 0);
@@ -43,7 +51,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
 
                 connection.Validate();
 
-                services.AddSingleton<IBus>(RabbitHutch.CreateBus(connection, serviceRegister => serviceRegister.Register(serviceProvider => Log.Logger)));
+                services.AddSingleton(RabbitHutch.CreateBus(connection, serviceRegister => serviceRegister.Register(serviceProvider => Log.Logger)));
             }
             catch (ArgumentNullException ex) { Devon4NetLogger.Error(ex); }
             catch (EasyNetQException ex) { Devon4NetLogger.Error(ex); }
@@ -51,7 +59,24 @@ namespace Devon4Net.Application.WebAPI.Configuration
             catch (PathTooLongException ex ) { Devon4NetLogger.Error(ex); }
         }
 
-        private static HostConfiguration GetHostConfiguration(HostDefnition host)
+        private static void ConfigureRabbitMqGenericDependencyInjection(IServiceCollection services)
+        {
+            services.AddTransient(typeof(IRepository<RabbitBackup>), typeof(Repository<RabbitBackup>));
+            services.AddTransient(typeof(IRabbitMqBackupService), typeof(RabbitMqBackupService));
+        }
+
+        private static void SetupRabbitMqBackupDatabase(IServiceCollection services, RabbitMqOptions rabbitMqOptions)
+        {
+            Devon4NetLogger.Information("Please setup your database in order to have the RabbitMq messaging backup feature");
+            if (rabbitMqOptions.Backup == null || !rabbitMqOptions.Backup.UseLocalBackup) return;
+            Devon4NetLogger.Information("RabbitMq messaging backup feature is going to be used via LiteDb");
+            
+            services.AddTransient(typeof(IRabbitMqBackupLiteDbService), typeof(RabbitMqBackupLiteDbService));
+            services.AddSingleton<ILiteDbContext, RabbitMqBackupLiteDbContext>();
+            services.AddTransient(typeof(IRabbitMqBackupLiteDbService), typeof(RabbitMqBackupLiteDbService));
+        }
+
+        private static HostConfiguration GetHostConfiguration(HostDefinition host)
         {
             var hostConfiguration = new HostConfiguration { Host = host.Host };
             var port = (ushort) (host.Port != null ? (ushort) host.Port.Value : 0);

@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Devon4Net.Infrastructure.RabbitMQ.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Devon4Net.Infrastructure.RabbitMQ.Domain.Database
 {
-    public partial class RabbitMqBackupContext : DbContext
+    public class RabbitMqBackupContext : DbContext
     {
         public RabbitMqBackupContext()
         {
@@ -15,23 +16,14 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Domain.Database
 
         public virtual DbSet<RabbitBackup> RabbitBackup { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RabbitBackup>(entity =>
             {
-                entity.HasKey(e => e.InternalMessageIdentifier);
-
+                entity.HasKey(e => e.Id);
                 entity.Property(e => e.MessageType).IsRequired();
             });
-
-            OnModelCreatingPartial(modelBuilder);
         }
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

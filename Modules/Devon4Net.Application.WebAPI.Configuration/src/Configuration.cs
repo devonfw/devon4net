@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using Devon4Net.Domain.UnitOfWork.Repository;
 using Devon4Net.Domain.UnitOfWork.UnitOfWork;
 using Devon4Net.Infrastructure.Common.Options.CircuitBreaker;
@@ -15,11 +14,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Devon4Net.Infrastructure.Common.Options.Log;
 using Devon4Net.Application.WebAPI.Configuration.Application;
-using Devon4Net.Domain.UnitOfWork.Common;
-using Devon4Net.Domain.UnitOfWork.Enums;
-using Devon4Net.Infrastructure.Common;
+using Devon4Net.Infrastructure.Common.Options.LiteDb;
 using Devon4Net.Infrastructure.Common.Options.RabbitMq;
-using Devon4Net.Infrastructure.RabbitMQ.Domain.Database;
+using Devon4Net.Infrastructure.Extensions.Helpers;
+using Devon4Net.WebAPI.Implementation.Configure;
 
 namespace Devon4Net.Application.WebAPI.Configuration
 {
@@ -32,13 +30,16 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static  CorsOptions CorsOptions { get; set; }
         private static  CircuitBreakerOptions CircuitBreakerOptions { get; set; }
         private static LogOptions LogOptions { get; set; }
-        private static RabbitMQOptions RabbitMqOptions { get; set; }
+        private static RabbitMqOptions RabbitMqOptions { get; set; }
+        private static LiteDbOptions LiteDbOptions { get; set; }
 
         public static void ConfigureDevonFw(this IServiceCollection services, IConfiguration configuration)
         {
             services.ConfigureIIS(configuration);
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
+            services.AddTransient(typeof(IObjectTypeHelper), typeof(ObjectTypeHelper));
+            services.AddTransient(typeof(IJsonHelper), typeof(JsonHelper));
 
             services.Configure<DevonfwOptions>(configuration.GetSection("devonfw"));
             services.Configure<SwaggerOptions>(configuration.GetSection("Swagger"));
@@ -48,7 +49,9 @@ namespace Devon4Net.Application.WebAPI.Configuration
             services.SetupKillSwitch(ref configuration);
             services.Configure<KillSwitchOptions>(configuration.GetSection("KillSwitchConfiguration"));
             services.Configure<LogOptions>(configuration.GetSection("Log"));
-            services.Configure<RabbitMQOptions>(configuration.GetSection("RabbitMq"));
+            services.Configure<RabbitMqOptions>(configuration.GetSection("RabbitMq"));
+            services.Configure<LiteDbOptions>(configuration.GetSection("LiteDb"));
+            
 
             ServiceProvider = services.BuildServiceProvider();
             DevonfwOptions = ServiceProvider.GetService<IOptions<DevonfwOptions>>()?.Value;
@@ -59,7 +62,10 @@ namespace Devon4Net.Application.WebAPI.Configuration
             configuration.SetupHeaders();
             SetupLog(ref services);
             SetupJwt(ref services);
+            SetupLiteDb(ref services);
             SetupRabbitMq(ref services);
+
+            services.SetupDevonDependencyInjection(configuration);
         }
 
         public static void ConfigureDevonFw(this IApplicationBuilder app)
@@ -113,14 +119,16 @@ namespace Devon4Net.Application.WebAPI.Configuration
 
         private static void SetupRabbitMq(ref IServiceCollection services)
         {
-            RabbitMqOptions = ServiceProvider.GetService<IOptions<RabbitMQOptions>>()?.Value;
+            RabbitMqOptions = ServiceProvider.GetService<IOptions<RabbitMqOptions>>()?.Value;
             if (RabbitMqOptions?.Hosts == null || !RabbitMqOptions.Hosts.Any()) return;
             services.SetupRabbitMq(RabbitMqOptions);
-            if (!RabbitMqOptions.Backup.UseSqLite) return;
-            
-            var sqLiteFullPath =  FileOperations.GetFileFullPath("RabbitMqBackup.db");
-            if (!File.Exists(sqLiteFullPath)) throw new FileNotFoundException($"Error: The RabbitMq SqLite database file (RabbitMqBackup.db) was not found");
-            services.SetupDatabase<RabbitMqBackupContext>(sqLiteFullPath, DatabaseType.Sqlite);
+        }
+
+        private static void SetupLiteDb(ref IServiceCollection services)
+        {
+            LiteDbOptions = ServiceProvider.GetService<IOptions<LiteDbOptions>>()?.Value;
+            if (LiteDbOptions == null ||  string.IsNullOrEmpty(LiteDbOptions?.DatabaseLocation)) return;
+            services.SetupLiteDb();
         }
     }
 }

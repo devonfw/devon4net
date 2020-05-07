@@ -37,10 +37,5 @@ namespace Devon4Net.Application.WebAPI.Configuration
                 };
             });
         }
-        
-        public static void AddJwtPolicy(this IServiceCollection services, string policyName, string claimType, string claimValue)
-        {
-            services.AddAuthorization(options => options.AddPolicy(policyName, policy => policy.RequireClaim(claimType, claimValue)));
-        }
     }
 }

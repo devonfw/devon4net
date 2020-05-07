@@ -4,8 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 
-
-namespace Devon4Net.Infrastructure.Common.Extensions
+namespace Devon4Net.Infrastructure.Extensions
 {
     public static class HttpRequestExtension
     {

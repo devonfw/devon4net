@@ -35,10 +35,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Controller
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(List<EmployeeDto>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
+        [ProducesResponseType(typeof(List<EmployeeDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> GetEmployee()
         {
             Devon4NetLogger.Debug("Executing GetEmployee from controller EmployeeController");
@@ -50,10 +50,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [ProducesResponseType(typeof(EmployeeDto), 201)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
+        [ProducesResponseType(typeof(EmployeeDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Create(EmployeeDto employeeDto)
         {
             Devon4NetLogger.Debug("Executing GetEmployee from controller EmployeeController");
@@ -66,10 +66,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Controller
         /// </summary>
         /// <returns></returns>
         [HttpDelete]
-        [ProducesResponseType(typeof(long), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
+        [ProducesResponseType(typeof(EmployeeDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Delete([Required]long EmployeeId)
         {
             Devon4NetLogger.Debug("Executing GetEmployee from controller EmployeeController");
@@ -82,10 +82,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Controller
         /// </summary>
         /// <returns></returns>
         [HttpPut]
-        [ProducesResponseType(typeof(EmployeeDto), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
+        [ProducesResponseType(typeof(EmployeeDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> ModifyEmployee(EmployeeDto employeeDto)
         {
             Devon4NetLogger.Debug("Executing ModifyEmployee from controller EmployeeController");

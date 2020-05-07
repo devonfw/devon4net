@@ -281,6 +281,27 @@
             <param name="mail"></param>
             <returns></returns>
         </member>
+        <member name="T:Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Controllers.RabbitMqController">
+            <summary>
+            Controller sample to show how RabbitMq works
+            Please setup your RabbitMq server in the configuration file
+            </summary>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Controllers.RabbitMqController.#ctor(Devon4Net.Infrastructure.RabbitMQ.Samples.Handllers.UserSampleRabbitMqHandler,Microsoft.Extensions.Options.IOptions{Devon4Net.Infrastructure.Common.Options.RabbitMq.RabbitMqOptions})">
+            <summary>
+            Class constructor
+            </summary>
+            <param name="userSampleRabbitHandler">THe handler is injected via DI</param>
+            <param name="rabbitMqOptions">The RabbitMq options to check if there is any instance set up</param>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Controllers.RabbitMqController.SendRabbitMqMessage(System.String,System.String)">
+            <summary>
+            Sends a message to the RabbitMq server queue
+            </summary>
+            <param name="user"></param>
+            <param name="password"></param>
+            <returns></returns>
+        </member>
         <member name="T:Devon4Net.WebAPI.Implementation.Business.TodoManagement.Controllers.TodoController">
             <summary>
             TODOs controller
@@ -439,7 +460,7 @@
             DevonConfiguration
             </summary>
         </member>
-        <member name="M:Devon4Net.WebAPI.Implementation.Configure.DevonConfiguration.SetupDevonDependencyInjection(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Configure.DevonConfiguration.SetupDevonDependencyInjection(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Sets up the service dependency injection
             For example:
@@ -448,6 +469,7 @@
             Put your DI declarations here
             </summary>
             <param name="services"></param>
+            <param name="configuration"></param>
         </member>
         <member name="T:Devon4Net.WebAPI.Implementation.Data.Repositories.EmployeeRepository">
             <summary>
