@@ -29,6 +29,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Implementation", "Implement
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.WebAPI.Implementation", "Devon4Net.WebAPI.Implementation\Devon4Net.WebAPI.Implementation.csproj", "{47FCD679-11A6-4175-BAED-121965CACBF0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.RabbitMQ", "..\..\Modules\Devon4Net.Infrastructure.RabbitMQ\Devon4Net.Infrastructure.RabbitMQ.csproj", "{E020E405-8CBE-4E55-A562-73F2C61F4650}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devon4Net.Infrastructure.LiteDb", "..\..\Modules\Devon4Net.Infrastructure.LiteDb\Devon4Net.Infrastructure.LiteDb.csproj", "{E4791977-9524-4AF6-A669-1E6D7C833C5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +79,14 @@ Global
 		{47FCD679-11A6-4175-BAED-121965CACBF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47FCD679-11A6-4175-BAED-121965CACBF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47FCD679-11A6-4175-BAED-121965CACBF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E020E405-8CBE-4E55-A562-73F2C61F4650}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E020E405-8CBE-4E55-A562-73F2C61F4650}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E020E405-8CBE-4E55-A562-73F2C61F4650}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E020E405-8CBE-4E55-A562-73F2C61F4650}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4791977-9524-4AF6-A669-1E6D7C833C5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4791977-9524-4AF6-A669-1E6D7C833C5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4791977-9524-4AF6-A669-1E6D7C833C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4791977-9524-4AF6-A669-1E6D7C833C5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,6 +102,8 @@ Global
 		{78EE8854-83DC-4467-BD77-A1286EDD048D} = {68B87931-BF80-499A-816E-F6FF7B359443}
 		{A201CC1E-4225-4C4E-A030-AE9123E0600D} = {68B87931-BF80-499A-816E-F6FF7B359443}
 		{47FCD679-11A6-4175-BAED-121965CACBF0} = {2A64AE7D-8C34-4D27-8467-27B79585824B}
+		{E020E405-8CBE-4E55-A562-73F2C61F4650} = {68B87931-BF80-499A-816E-F6FF7B359443}
+		{E4791977-9524-4AF6-A669-1E6D7C833C5A} = {68B87931-BF80-499A-816E-F6FF7B359443}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B0967205-4814-4D3A-907B-2BC885FA488C}

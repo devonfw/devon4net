@@ -39,9 +39,9 @@ namespace Devon4Net.Application.WebAPI.Configuration
                 {
                     client.BaseAddress = new Uri(endPointEntity.BaseAddress);
 
-                    foreach (var header in endPointEntity.GetHeaders())
+                    foreach (var (key, value) in endPointEntity.GetHeaders())
                     {
-                        client.DefaultRequestHeaders.Add(header.Key, header.Value);
+                        client.DefaultRequestHeaders.Add(key, value);
                     }
 
                 }).ConfigurePrimaryHttpMessageHandler(() =>
@@ -53,25 +53,23 @@ namespace Devon4Net.Application.WebAPI.Configuration
                             ServerCertificateCustomValidationCallback = (m, c, a, e) => CheckCertificate,
                         };
                     }
-                    else
+
+                    if (endPointEntity.Certificate == null)
                     {
-                        if (endPointEntity.Certificate == null)
-                        {
-                            throw new ApplicationException($"The endpoint {endPointEntity.Name} has no certificate defined.");
-                        }
-
-                        var handler = new HttpClientHandler
-                        {
-                            ServerCertificateCustomValidationCallback = (m, c, a, e) => CheckCertificate,
-                        };
-
-                        var certificate = new X509Certificate2(FileOperations.GetFileFullPath(endPointEntity.Certificate), endPointEntity.CertificatePassword);
-                        handler.SslProtocols = string.IsNullOrEmpty(endPointEntity.SslProtocol) ? SslProtocols.Tls12 : (SslProtocols)(Convert.ToInt32(endPointEntity.SslProtocol));
-                        handler.ClientCertificates.Add(certificate);
-                        handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-                        return handler;
+                        throw new ApplicationException($"The endpoint {endPointEntity.Name} has no certificate defined.");
                     }
-                        
+
+                    var handler = new HttpClientHandler
+                    {
+                        ServerCertificateCustomValidationCallback = (m, c, a, e) => CheckCertificate,
+                    };
+
+                    var certificate = new X509Certificate2(FileOperations.GetFileFullPath(endPointEntity.Certificate), endPointEntity.CertificatePassword);
+                    handler.SslProtocols = string.IsNullOrEmpty(endPointEntity.SslProtocol) ? SslProtocols.Tls12 : (SslProtocols)(Convert.ToInt32(endPointEntity.SslProtocol));
+                    handler.ClientCertificates.Add(certificate);
+                    handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+                    return handler;
+
                 })
                 .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(waitAndSyncList, (result, timeSpan, retryCount, context) =>
                 {

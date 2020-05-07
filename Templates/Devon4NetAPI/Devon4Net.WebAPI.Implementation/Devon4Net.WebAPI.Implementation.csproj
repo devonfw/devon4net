@@ -17,6 +17,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="3.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization.Policy" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="3.1.3" />
@@ -30,6 +32,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.3" />
     <PackageReference Include="System.Text.Json" Version="4.7.1" />
   </ItemGroup>
 
@@ -37,6 +40,7 @@
     <ProjectReference Include="..\..\..\modules\Devon4Net.Domain.UnitOfWork\src\Devon4Net.Domain.UnitOfWork.csproj" />
     <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.JWT\src\Devon4Net.Infrastructure.JWT.csproj" />
     <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.Log\src\Devon4Net.Infrastructure.Log.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.RabbitMQ\Devon4Net.Infrastructure.RabbitMQ.csproj" />
   </ItemGroup>
 
   <ItemGroup>
