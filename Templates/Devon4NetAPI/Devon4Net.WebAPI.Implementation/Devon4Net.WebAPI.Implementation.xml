@@ -298,8 +298,8 @@
             <summary>
             Sends a message to the RabbitMq server queue
             </summary>
-            <param name="user"></param>
-            <param name="password"></param>
+            <param name="name">Name of the user</param>
+            <param name="surname">Surname of the user</param>
             <returns></returns>
         </member>
         <member name="T:Devon4Net.WebAPI.Implementation.Business.TodoManagement.Controllers.TodoController">

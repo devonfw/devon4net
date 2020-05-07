@@ -42,22 +42,24 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
             {
                 await ServiceBus.PublishAsync(command).ContinueWith(async task =>
                 {
+                    status = QueueActionsEnum.Sent;
+
+                    if (task.IsCompleted)
+                    {
                         status = QueueActionsEnum.Sent;
+                        Devon4NetLogger.Information(
+                            $"Message {command.MessageType} with identifier '{command.InternalMessageIdentifier}' published");
+                    }
 
-                        if (task.IsCompleted)
-                        {
-                            status = QueueActionsEnum.Sent;
-                            Devon4NetLogger.Information($"Message {command.MessageType} with identifier '{command.InternalMessageIdentifier}' published");
-                        }
+                    if (task.IsFaulted)
+                    {
+                        status = QueueActionsEnum.Error;
+                        Devon4NetLogger.Error(task.Exception);
+                    }
 
-                        if (task.IsFaulted)
-                        {
-                            status = QueueActionsEnum.Error;
-                            Devon4NetLogger.Error(task.Exception);
-                        }
-
-                        await BackUpMessage(command, status, false, string.Empty, $"{task.Exception?.Message} : {task.Exception?.InnerExceptions}").ConfigureAwait(false);
-                        return status == QueueActionsEnum.Sent;
+                    await BackUpMessage(command, status, false, string.Empty,
+                        $"{task.Exception?.Message} : {task.Exception?.InnerExceptions}").ConfigureAwait(false);
+                    return status == QueueActionsEnum.Sent;
 
                 }).ConfigureAwait(false);
 
@@ -74,7 +76,14 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
 
         private void BasicSetup(IBus serviceBus, bool subscribeToChannel, IRabbitMqBackupService rabbitMqBackupService = null, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService = null)
         {
-            ServiceBus = serviceBus ?? throw new ArgumentNullException(nameof(serviceBus), "The RabbitMQ bus is not present. Please check your configuration");
+            if (serviceBus == null)
+            {
+                Devon4NetLogger.Error("The RabbitMQ bus is not present. Please check your configuration");
+                return;
+            }
+
+            ServiceBus = serviceBus;
+
             RabbitMqBackupService = rabbitMqBackupService;
             RabbitMqBackupLiteDbService = rabbitMqBackupLiteDbService;
 
