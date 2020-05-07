@@ -49,7 +49,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Login(string user, string password)
+        public IActionResult Login(string user, string password)
         {
             Devon4NetLogger.Debug("Executing Login from controller AuthController");
 
@@ -60,9 +60,9 @@ namespace Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers
                 new Claim(ClaimTypes.NameIdentifier,Guid.NewGuid().ToString()),
             });
 
-            return Ok(new LoginResponse{Token = token});
+            return Ok(new LoginResponse { Token = token });
         }
-               
+
         /// <summary>
         /// Provides the information related to the logged user
         /// This is only a sample. Please never put any logic on a controller

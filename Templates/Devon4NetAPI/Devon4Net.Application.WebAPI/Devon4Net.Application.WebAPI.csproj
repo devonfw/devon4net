@@ -5,10 +5,6 @@
         <StartupObject>Devon4Net.Application.WebAPI.Program</StartupObject>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <DocumentationFile></DocumentationFile>
-    </PropertyGroup>
-
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
       <NoWarn>1701;1702;8034;1705;NU1605;NU1608;NU1701;CS1705</NoWarn>
       <TreatWarningsAsErrors>false</TreatWarningsAsErrors>

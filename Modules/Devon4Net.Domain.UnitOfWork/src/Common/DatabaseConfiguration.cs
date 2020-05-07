@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Devon4Net.Domain.UnitOfWork.Enums;
 using EntityFrameworkCore.Jet;
-using IBM.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -95,9 +94,6 @@ namespace Devon4Net.Domain.UnitOfWork.Common
                     break;
                 case DatabaseType.MSAccess:
                     services.AddDbContext<T>(options => options.UseJet(connectionString), ServiceLifetime);
-                    break;
-                case DatabaseType.Db2:
-                    services.AddDbContext<T>(options => options.UseDb2(connectionString, sqlOptions => { }), ServiceLifetime);
                     break;
                 default:
                     throw new ArgumentException("Not provided a database driver");

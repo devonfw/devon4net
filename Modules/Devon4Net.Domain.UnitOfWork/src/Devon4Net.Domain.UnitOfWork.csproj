@@ -17,7 +17,6 @@
         <PackageTags>devonfw devon4net UOW Capgemini</PackageTags>
         <PackageReleaseNotes>Netstandard 2.1 for devonfw net core 3.1 compatibility version</PackageReleaseNotes>
         <icon>https://avatars2.githubusercontent.com/u/7803029?s=200&amp;v=4</icon>
-        <LangVersion>8.0</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -29,7 +28,6 @@
     <ItemGroup>
       <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
       <PackageReference Include="EntityFrameworkCore.Jet" Version="2.2.0" />
-      <PackageReference Include="IBM.EntityFrameworkCore" Version="1.3.0.100" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.3" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="3.1.3" />
