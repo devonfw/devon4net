@@ -471,6 +471,15 @@
             <param name="services"></param>
             <param name="configuration"></param>
         </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Configure.DevonConfiguration.SetupDatabase(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Setup here your database connections.
+            To use RabbitMq message backup declare the 'RabbitMqBackupContext' database setup
+            PE: services.SetupDatabase&lt;RabbitMqBackupContext&gt;($"Data Source={FileOperations.GetFileFullPath("RabbitMqBackupSqLite.db")}", DatabaseType.Sqlite);
+            </summary>
+            <param name="services"></param>
+            <param name="configuration"></param>
+        </member>
         <member name="T:Devon4Net.WebAPI.Implementation.Data.Repositories.EmployeeRepository">
             <summary>
             Repository implementation for the Employee

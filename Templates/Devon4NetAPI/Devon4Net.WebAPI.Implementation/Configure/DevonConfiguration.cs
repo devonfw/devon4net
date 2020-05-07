@@ -2,12 +2,10 @@
 using System.Security.Claims;
 using Devon4Net.Domain.UnitOfWork.Common;
 using Devon4Net.Domain.UnitOfWork.Enums;
-using Devon4Net.Infrastructure.Common;
 using Devon4Net.Infrastructure.Common.Helpers;
 using Devon4Net.Infrastructure.JWT.Common;
 using Devon4Net.Infrastructure.JWT.Common.Const;
 using Devon4Net.Infrastructure.RabbitMQ.Common;
-using Devon4Net.Infrastructure.RabbitMQ.Domain.Database;
 using Devon4Net.Infrastructure.RabbitMQ.Samples.Handllers;
 using Devon4Net.WebAPI.Implementation.Domain.Database;
 using Microsoft.Extensions.Configuration;
@@ -51,11 +49,17 @@ namespace Devon4Net.WebAPI.Implementation.Configure
             services.AddRabbitMqHandler<UserSampleRabbitMqHandler>(true);
         }
 
+        /// <summary>
+        /// Setup here your database connections.
+        /// To use RabbitMq message backup declare the 'RabbitMqBackupContext' database setup
+        /// PE: services.SetupDatabase&lt;RabbitMqBackupContext&gt;($"Data Source={FileOperations.GetFileFullPath("RabbitMqBackupSqLite.db")}", DatabaseType.Sqlite);
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
         private static void SetupDatabase(IServiceCollection services, IConfiguration configuration)
         {
             services.SetupDatabase<TodoContext>(configuration, "Default", DatabaseType.InMemory);
             services.SetupDatabase<EmployeeContext>(configuration, "Employee", DatabaseType.InMemory);
-            services.SetupDatabase<RabbitMqBackupContext>($"Data Source={FileOperations.GetFileFullPath("RabbitMqBackupSqLite.db")}", DatabaseType.Sqlite);
         }
 
         private static void SetupJwtPolicies(IServiceCollection services)

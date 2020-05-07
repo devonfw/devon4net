@@ -1,4 +1,5 @@
 using Devon4Net.Application.WebAPI.Configuration;
+using Devon4Net.WebAPI.Implementation.Configure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -30,6 +31,7 @@ namespace Devon4Net.Application.WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigureDevonFw(Configuration);
+            services.SetupDevonDependencyInjection(Configuration);
             services.AddControllers();
             services.AddOptions();
             services.AddMvc(option => option.EnableEndpointRouting = false);
