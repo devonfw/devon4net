@@ -45,7 +45,6 @@ namespace Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Controller
         [HttpPost]
         [HttpOptions]
         [AllowAnonymous]
-        [Route("/v1/auth/sendrabbitmqmessage")]
         [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
