@@ -12,6 +12,10 @@ using Devon4Net.Infrastructure.MediatR.Samples.Query;
 using Devon4Net.Infrastructure.RabbitMQ.Common;
 using Devon4Net.Infrastructure.RabbitMQ.Domain.Database;
 using Devon4Net.Infrastructure.RabbitMQ.Samples.Handllers;
+using Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Commands;
+using Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Dto;
+using Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Handlers;
+using Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Queries;
 using Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Handlers;
 using Devon4Net.WebAPI.Implementation.Domain.Database;
 using MediatR;
@@ -61,6 +65,8 @@ namespace Devon4Net.WebAPI.Implementation.Configure
         private static void SetupMediatRHandlers(IServiceCollection services)
         {
             services.AddTransient(typeof(IRequestHandler<GetUserQuery, UserDto>), typeof(GetUserhandler));
+            services.AddTransient(typeof(IRequestHandler<GetTodoQuery, TodoResultDto>), typeof(GetTodoHandler));
+            services.AddTransient(typeof(IRequestHandler<CreateTodoCommand, TodoResultDto>), typeof(CreateTodoHandler));
         }
 
 
