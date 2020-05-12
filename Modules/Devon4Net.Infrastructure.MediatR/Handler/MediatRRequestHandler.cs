@@ -35,17 +35,21 @@ namespace Devon4Net.Infrastructure.MediatR.Handler
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
         {
+            MediatRActionsEnum status;
+            TResponse result = default;
             try
             {
-                var result = await HandleAction(request, cancellationToken);
-                await BackUpMessage(request, MediatRActionsEnum.Handled);
-                return result;
+                result = await HandleAction(request, cancellationToken).ConfigureAwait(false);
+                status = MediatRActionsEnum.Handled;
             }
             catch (Exception ex)
             {
                 Devon4NetLogger.Error(ex);
-                throw;
+                status = MediatRActionsEnum.Error;
             }
+            await BackUpMessage(request, status);
+            return result;
+
         }
 
         public abstract Task<TResponse> HandleAction(TRequest request, CancellationToken cancellationToken);
