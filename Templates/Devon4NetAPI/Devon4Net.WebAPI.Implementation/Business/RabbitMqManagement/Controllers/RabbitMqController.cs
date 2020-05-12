@@ -4,6 +4,8 @@ using Devon4Net.Infrastructure.Common.Options.RabbitMq;
 using Devon4Net.Infrastructure.Log;
 using Devon4Net.Infrastructure.RabbitMQ.Samples.Commads;
 using Devon4Net.Infrastructure.RabbitMQ.Samples.Handllers;
+using Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Commands;
+using Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Handlers;
 using Devon4Net.WebAPI.Implementation.Business.UserManagement.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -22,6 +24,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Controller
     [EnableCors("CorsPolicy")]
     public class RabbitMqController : ControllerBase
     {
+        private TodoRabbitMqHandler TodoRabbitMqHandler { get; set; }
         private UserSampleRabbitMqHandler UserSampleRabbitHandler { get; set; }
         private RabbitMqOptions RabbitMqOptions { get; set; }
 
@@ -30,17 +33,17 @@ namespace Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Controller
         /// </summary>
         /// <param name="userSampleRabbitHandler">THe handler is injected via DI</param>
         /// <param name="rabbitMqOptions">The RabbitMq options to check if there is any instance set up</param>
-        public RabbitMqController(UserSampleRabbitMqHandler userSampleRabbitHandler, IOptions<RabbitMqOptions> rabbitMqOptions)
+        public RabbitMqController(TodoRabbitMqHandler todoRabbitMqHandler, UserSampleRabbitMqHandler userSampleRabbitHandler, IOptions<RabbitMqOptions> rabbitMqOptions)
         {
+            TodoRabbitMqHandler = todoRabbitMqHandler;
             UserSampleRabbitHandler = userSampleRabbitHandler;
             RabbitMqOptions = rabbitMqOptions?.Value;
         }
 
         /// <summary>
-        /// Sends a message to the RabbitMq server queue
+        /// Creates a TO-DO command sending a RabbitMq message
         /// </summary>
-        /// <param name="name">Name of the user</param>
-        /// <param name="surname">Surname of the user</param>
+        /// <param name="todoDescription">The description of the TO-DO command. It cannot be empty</param>
         /// <returns></returns>
         [HttpPost]
         [HttpOptions]
@@ -49,15 +52,21 @@ namespace Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> SendRabbitMqMessage(string name, string surname)
+        [Route("/v1/RabbitMq/createtodo")]
+        public async Task<IActionResult> CreateTodoRabbitMessage(string todoDescription)
         {
-            Devon4NetLogger.Debug("Executing SendRabbitMqMessage from controller RabbitMqController");
+            Devon4NetLogger.Debug("Executing CreateTodoRabbitMessage from controller RabbitMqController");
 
             if (RabbitMqOptions?.Hosts == null || !RabbitMqOptions.Hosts.Any())
                 return StatusCode(StatusCodes.Status500InternalServerError, "No RabbitMq instance set up");
 
-            var userCommand = new UserSampleCommand {Name = name, SurName = surname};
-            var published = await UserSampleRabbitHandler.Publish(userCommand).ConfigureAwait(false);
+            if (string.IsNullOrEmpty(todoDescription))
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, "Please provide a valid description for the TO-DO");
+            }
+
+            var todoCommand = new TodoCommand { Description = todoDescription};
+            var published = await TodoRabbitMqHandler.Publish(todoCommand).ConfigureAwait(false);
             return Ok(published);
         }
     }

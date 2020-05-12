@@ -12,6 +12,7 @@ using Devon4Net.Infrastructure.MediatR.Samples.Query;
 using Devon4Net.Infrastructure.RabbitMQ.Common;
 using Devon4Net.Infrastructure.RabbitMQ.Domain.Database;
 using Devon4Net.Infrastructure.RabbitMQ.Samples.Handllers;
+using Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Handlers;
 using Devon4Net.WebAPI.Implementation.Domain.Database;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -54,6 +55,7 @@ namespace Devon4Net.WebAPI.Implementation.Configure
         private static void SetupRabbitHandlers(IServiceCollection services)
         {
             services.AddRabbitMqHandler<UserSampleRabbitMqHandler>(true);
+            services.AddRabbitMqHandler<TodoRabbitMqHandler>(true);
         }
 
         private static void SetupMediatRHandlers(IServiceCollection services)

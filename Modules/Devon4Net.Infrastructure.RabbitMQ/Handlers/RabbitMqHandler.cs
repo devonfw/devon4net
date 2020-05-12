@@ -5,6 +5,7 @@ using Devon4Net.Infrastructure.RabbitMQ.Commands;
 using Devon4Net.Infrastructure.RabbitMQ.Common;
 using Devon4Net.Infrastructure.RabbitMQ.Domain.ServiceInterfaces;
 using EasyNetQ;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
 {
@@ -13,25 +14,26 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
         private IBus ServiceBus { get; set; }
         private IRabbitMqBackupService RabbitMqBackupService { get; set; }
         private IRabbitMqBackupLiteDbService RabbitMqBackupLiteDbService { get; set; }
+        private IServiceCollection Services { get; set; }
 
-        protected RabbitMqHandler(IBus serviceBus, bool subscribeToChannel = false)
+        protected RabbitMqHandler(IServiceCollection services, IBus serviceBus, bool subscribeToChannel = false)
         {
-            BasicSetup(serviceBus, subscribeToChannel);
+            BasicSetup(services, serviceBus, subscribeToChannel);
         }
 
-        protected RabbitMqHandler(IBus serviceBus, IRabbitMqBackupService rabbitMqBackupService, bool subscribeToChannel = false)
+        protected RabbitMqHandler(IServiceCollection services, IBus serviceBus, IRabbitMqBackupService rabbitMqBackupService, bool subscribeToChannel = false)
         {
-            BasicSetup(serviceBus, subscribeToChannel, rabbitMqBackupService);
+            BasicSetup(services, serviceBus, subscribeToChannel, rabbitMqBackupService);
         }
 
-        protected RabbitMqHandler(IBus serviceBus, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService, bool subscribeToChannel = false)
+        protected RabbitMqHandler(IServiceCollection services, IBus serviceBus, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService, bool subscribeToChannel = false)
         {
-            BasicSetup(serviceBus, subscribeToChannel, null, rabbitMqBackupLiteDbService);
+            BasicSetup(services, serviceBus, subscribeToChannel, null, rabbitMqBackupLiteDbService);
         }
 
-        protected RabbitMqHandler(IBus serviceBus, IRabbitMqBackupService rabbitMqBackupService, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService, bool subscribeToChannel = false)
+        protected RabbitMqHandler(IServiceCollection services, IBus serviceBus, IRabbitMqBackupService rabbitMqBackupService, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService, bool subscribeToChannel = false)
         {
-            BasicSetup(serviceBus, subscribeToChannel, rabbitMqBackupService, rabbitMqBackupLiteDbService);
+            BasicSetup(services, serviceBus, subscribeToChannel, rabbitMqBackupService, rabbitMqBackupLiteDbService);
         }
 
         public async Task<bool> Publish(T command)
@@ -71,10 +73,16 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
             return status == QueueActionsEnum.Sent;
         }
 
+        public T GetInstance<T>()
+        {
+            var sp = Services.BuildServiceProvider();
+            return sp.GetService<T>();
+        }
+
         private async Task<bool> BackupAndHandleCommand(T message)
         {
             var status = QueueActionsEnum.SetUp;
-
+            var errorMessage = string.Empty;
             try
             {
                 await HandleCommand(message).ContinueWith(async task =>
@@ -88,12 +96,13 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
                     if (task.IsFaulted)
                     {
                         status = QueueActionsEnum.Error;
-                        Devon4NetLogger.Error($"Message {message.MessageType} with identifier '{message.InternalMessageIdentifier}' NOT published");
+                        errorMessage = $"Message {message.MessageType} with identifier '{message.InternalMessageIdentifier}' NOT published. {task.Exception?.Message} | {task.Exception?.InnerExceptions}";
+                        Devon4NetLogger.Error(errorMessage);
                         Devon4NetLogger.Error(task.Exception);
                     }
                 }).ConfigureAwait(false);
 
-                await BackUpMessage(message, status).ConfigureAwait(false);
+                await BackUpMessage(message, status,false,string.Empty, errorMessage).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -107,7 +116,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
             return status == QueueActionsEnum.Handled;
         }
 
-        private void BasicSetup(IBus serviceBus, bool subscribeToChannel, IRabbitMqBackupService rabbitMqBackupService = null, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService = null)
+        private void BasicSetup(IServiceCollection services, IBus serviceBus, bool subscribeToChannel, IRabbitMqBackupService rabbitMqBackupService = null, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService = null)
         {
             if (serviceBus == null)
             {
@@ -116,6 +125,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
             }
 
             ServiceBus = serviceBus;
+            Services = services;
 
             RabbitMqBackupService = rabbitMqBackupService;
             RabbitMqBackupLiteDbService = rabbitMqBackupLiteDbService;
