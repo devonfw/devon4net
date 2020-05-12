@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Devon4Net.Infrastructure.Common.Exceptions;
 using Devon4Net.Infrastructure.Common.Options.KillSwitch;
+using Devon4Net.Infrastructure.Log;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -55,6 +56,8 @@ namespace Devon4Net.Infrastructure.Middleware.Exception
 
         private Task HandleException(ref HttpContext context, ref System.Exception exception)
         {
+            Devon4NetLogger.Error(exception);
+
             var exceptionTypeValue = exception.GetType();
             List<string> exceptionInterfaces = exceptionTypeValue.GetInterfaces().Select(i => i.Name).ToList();
             exceptionInterfaces.Add(exceptionTypeValue.Name);
@@ -86,9 +89,7 @@ namespace Devon4Net.Infrastructure.Middleware.Exception
             if (string.IsNullOrEmpty(errorMessage)) return context.Response.WriteAsync(string.Empty);
             
             context.Response.ContentType = "application/json";
-            var result = JsonSerializer.Serialize(new { error = errorMessage });
-            return context.Response.WriteAsync(result);
-
+            return context.Response.WriteAsync(JsonSerializer.Serialize(new { error = errorMessage }));
         }
     }
 }

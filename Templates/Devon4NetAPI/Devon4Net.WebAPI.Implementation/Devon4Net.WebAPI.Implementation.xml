@@ -281,6 +281,24 @@
             <param name="mail"></param>
             <returns></returns>
         </member>
+        <member name="T:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController">
+            <summary>
+            Controller sample to implement the mediator pattern
+            </summary>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController.#ctor(Devon4Net.Infrastructure.MediatR.Handler.IMediatRHandler)">
+            <summary>
+            Mediator sample controller
+            </summary>
+            <param name="mediatRHandler"></param>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController.GetCustomerAsync(System.Guid)">
+            <summary>
+            Gets a User via a command
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="T:Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Controllers.RabbitMqController">
             <summary>
             Controller sample to show how RabbitMq works

@@ -5,9 +5,15 @@ using Devon4Net.Domain.UnitOfWork.Enums;
 using Devon4Net.Infrastructure.Common.Helpers;
 using Devon4Net.Infrastructure.JWT.Common;
 using Devon4Net.Infrastructure.JWT.Common.Const;
+using Devon4Net.Infrastructure.MediatR.Domain.Database;
+using Devon4Net.Infrastructure.MediatR.Samples.Handler;
+using Devon4Net.Infrastructure.MediatR.Samples.Model;
+using Devon4Net.Infrastructure.MediatR.Samples.Query;
 using Devon4Net.Infrastructure.RabbitMQ.Common;
+using Devon4Net.Infrastructure.RabbitMQ.Domain.Database;
 using Devon4Net.Infrastructure.RabbitMQ.Samples.Handllers;
 using Devon4Net.WebAPI.Implementation.Domain.Database;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -42,12 +48,19 @@ namespace Devon4Net.WebAPI.Implementation.Configure
             SetupDatabase(services,configuration);
             SetupJwtPolicies(services);
             SetupRabbitHandlers(services);
+            SetupMediatRHandlers(services);
         }
 
         private static void SetupRabbitHandlers(IServiceCollection services)
         {
             services.AddRabbitMqHandler<UserSampleRabbitMqHandler>(true);
         }
+
+        private static void SetupMediatRHandlers(IServiceCollection services)
+        {
+            services.AddTransient(typeof(IRequestHandler<GetUserQuery, UserDto>), typeof(GetUserhandler));
+        }
+
 
         /// <summary>
         /// Setup here your database connections.
@@ -60,6 +73,8 @@ namespace Devon4Net.WebAPI.Implementation.Configure
         {
             services.SetupDatabase<TodoContext>(configuration, "Default", DatabaseType.InMemory);
             services.SetupDatabase<EmployeeContext>(configuration, "Employee", DatabaseType.InMemory);
+            services.SetupDatabase<MediatRBackupContext>(configuration, "MediatRBackup", DatabaseType.PostgreSQL);
+            services.SetupDatabase<RabbitMqBackupContext>(configuration, "RabbitMqBackup", DatabaseType.PostgreSQL);
         }
 
         private static void SetupJwtPolicies(IServiceCollection services)

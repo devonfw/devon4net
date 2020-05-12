@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Devon4Net.Infrastructure.Extensions;
 using Devon4Net.Infrastructure.Extensions.Helpers;
 using Devon4Net.Infrastructure.Log;
@@ -20,7 +21,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
             RabbitMqBackupLiteDbRepository = rabbitMqBackupLiteDbRepository;
             JsonHelper = jsonHelper;
         }
-        public  BsonValue CreateMessageBackup(Command command, QueueActionsEnum action = QueueActionsEnum.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null) 
+        public async Task<BsonValue> CreateMessageBackup(Command command, QueueActionsEnum action = QueueActionsEnum.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null) 
         {
             try
             {
@@ -43,10 +44,13 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
                     Error = string.IsNullOrEmpty(errorData) ? string.Empty : errorData
                 };
 
-                return RabbitMqBackupLiteDbRepository.Create(backUp);
+                var result = RabbitMqBackupLiteDbRepository.Create(backUp);
+                
+                return result;
             }
             catch (Exception ex)
             {
+                Devon4NetLogger.Error($"Error storing data with LiteDb: {ex.Message} {ex.InnerException}");
                 Devon4NetLogger.Error(ex);
                 throw;
             }

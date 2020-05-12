@@ -1,16 +1,16 @@
 ﻿using Devon4Net.Infrastructure.Common;
-using Devon4Net.Infrastructure.Common.Options.RabbitMq;
+using Devon4Net.Infrastructure.Common.Options.MediatR;
 using Devon4Net.Infrastructure.LiteDb.LiteDb;
 using LiteDB;
 using Microsoft.Extensions.Options;
 
-namespace Devon4Net.Infrastructure.RabbitMQ.Domain.Database
+namespace Devon4Net.Infrastructure.MediatR.Domain.Database
 {
-    public class RabbitMqBackupLiteDbContext : ILiteDbContext
+    public class MediatRBackupLiteDbContext : ILiteDbContext
     {
         public LiteDatabase Database { get; }
 
-        public RabbitMqBackupLiteDbContext(IOptions<RabbitMqOptions> options)
+        public MediatRBackupLiteDbContext(IOptions<MediatROptions> options)
         {
             if (options?.Value?.Backup == null || !options.Value.Backup.UseLocalBackup)
             {
