@@ -49,9 +49,11 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
 
         public async Task<MediatRBackup> CreateMessageBackup<T>(ActionBase<T> command, MediatRActionsEnum action = MediatRActionsEnum.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null) where T : class
         {
+            MediatRBackupContext ctx = null;
+
             try
             {
-                var ctx = CreateContext();
+                ctx = CreateContext();
 
                 if (ctx == null)
                 {
@@ -91,6 +93,10 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
             {
                 Devon4NetLogger.Error(ex);
                 throw;
+            }
+            finally
+            {
+                if (ctx != null) await ctx.DisposeAsync().ConfigureAwait(false);
             }
         }
 

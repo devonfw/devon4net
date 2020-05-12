@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Devon4Net.Infrastructure.Log;
 using Devon4Net.Infrastructure.MediatR.Common;
 using Devon4Net.Infrastructure.MediatR.Domain.ServiceInterfaces;
 using MediatR;
@@ -53,11 +54,20 @@ namespace Devon4Net.Infrastructure.MediatR.Handler
 
         private async Task BackUpMessage<TResult>(ActionBase<TResult> command, MediatRActionsEnum queueAction = MediatRActionsEnum.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null) where TResult : class
         {
-            MediatRBackupLiteDbService?.CreateMessageBackup(command, queueAction, increaseRetryCounter, additionalData, errorData);
-
-            if (MediatRBackupService != null && MediatRBackupService.UseExternalDatabase)
+            try
             {
-                await MediatRBackupService.CreateMessageBackup(command, queueAction, increaseRetryCounter, additionalData, errorData).ConfigureAwait(false);
+                MediatRBackupLiteDbService?.CreateMessageBackup(command, queueAction, increaseRetryCounter, additionalData, errorData);
+
+                if (MediatRBackupService != null && MediatRBackupService.UseExternalDatabase)
+                {
+                    await MediatRBackupService.CreateMessageBackup(command, queueAction, increaseRetryCounter, additionalData, errorData).ConfigureAwait(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Devon4NetLogger.Error($"Error making the backup of the MediatR action base. {ex.Message} {ex.InnerException}");
+                Devon4NetLogger.Error(ex);
+                throw;
             }
         }
     }

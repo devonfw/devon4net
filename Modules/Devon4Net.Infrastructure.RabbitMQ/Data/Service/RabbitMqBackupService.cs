@@ -35,10 +35,12 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
 
         public async Task<RabbitBackup> CreateMessageBackup(Command command, QueueActionsEnum action = QueueActionsEnum.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null)
         {
-            var ctx = CreateContext();
+            RabbitMqBackupContext ctx = null;
 
             try
             {
+                ctx = CreateContext();
+
                 if (ctx == null)
                 {
                     throw new ArgumentException("The database provider is not supported to host threads");
@@ -70,7 +72,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
                 };
 
                 var result = await ctx.RabbitBackup.AddAsync(backUp).ConfigureAwait(false);
-                var commited = await ctx.SaveChangesAsync().ConfigureAwait(false);
+                await ctx.SaveChangesAsync().ConfigureAwait(false);
                 return result.Entity;
             }
             catch (Exception ex)
