@@ -12,7 +12,7 @@ namespace Devon4Net.Infrastructure.LiteDb.LiteDb
         public LiteDbContext(IOptions<LiteDbOptions> options)
         {
             var path = FileOperations.GetFileFullPath(options.Value.DatabaseLocation);
-            var connection = string.IsNullOrEmpty(path) ? "Filename=devon4netMessageBackup.db;Connection=shared" : $"Filename={path};Connection=shared";
+            var connection = string.IsNullOrEmpty(path) ? "Filename=devon4net.db;Connection=shared" : $"Filename={path};Connection=shared";
 
             Database = new LiteDatabase(connection);
         }
