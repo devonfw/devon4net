@@ -15,7 +15,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Common
             var repoLite = sp.GetService<IRabbitMqBackupLiteDbService>();
             var repo = sp.GetService<IRabbitMqBackupService>();
 
-            var obj = (T)Activator.CreateInstance(typeof(T), bus, repo, repoLite, subscribeToQueue);
+            var obj = (T)Activator.CreateInstance(typeof(T), services, bus, repo, repoLite, subscribeToQueue);
 
             services.AddSingleton(obj);
         }

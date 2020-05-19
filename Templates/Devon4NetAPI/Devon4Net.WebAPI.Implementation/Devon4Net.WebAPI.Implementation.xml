@@ -281,25 +281,109 @@
             <param name="mail"></param>
             <returns></returns>
         </member>
+        <member name="T:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Commands.CreateTodoCommand">
+            <summary>
+            THe command to create a TO-DO
+            </summary>
+        </member>
+        <member name="P:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Commands.CreateTodoCommand.Description">
+            <summary>
+            Description
+            </summary>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Commands.CreateTodoCommand.#ctor(System.String)">
+            <summary>
+            Constructor of the query 
+            </summary>
+            <param name="todoId"></param>
+        </member>
+        <member name="T:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController">
+            <summary>
+            Controller sample to implement the mediator pattern
+            </summary>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController.#ctor(Devon4Net.Infrastructure.MediatR.Handler.IMediatRHandler)">
+            <summary>
+            Mediator sample controller
+            </summary>
+            <param name="mediatRHandler"></param>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController.GetTodoById(System.Int64)">
+            <summary>
+            Gets a TO-DO item given the Id via CQRS pattern via a MediatR query
+            </summary>
+            <param name="todoDescription">The description of the TO-DO command. It cannot be empty</param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController.CreateTodo(System.String)">
+            <summary>
+            Creates a TO-DO item sending a MediatR via a message command
+            </summary>
+            <param name="todoDescription">The description of the TO-DO command. It cannot be empty</param>
+            <returns></returns>
+        </member>
+        <member name="T:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Dto.TodoResultDto">
+            <summary>
+            TodoDto definition
+            </summary>
+        </member>
+        <member name="P:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Dto.TodoResultDto.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Dto.TodoResultDto.Description">
+            <summary>
+            Description
+            </summary>
+        </member>
+        <member name="P:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Dto.TodoResultDto.Done">
+            <summary>
+            Done
+            </summary>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Handlers.GetTodoHandler.HandleAction(Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Queries.GetTodoQuery,System.Threading.CancellationToken)">
+            <summary>
+            Handles the received message to perform the query
+            </summary>
+            <param name="request"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Queries.GetTodoQuery.#ctor(System.Int64)">
+            <summary>
+            Constructor of the query 
+            </summary>
+            <param name="todoId"></param>
+        </member>
+        <member name="T:Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Commands.TodoCommand">
+            <summary>
+            TO-DO command creation via RabbitMq
+            </summary>
+        </member>
+        <member name="P:Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Commands.TodoCommand.Description">
+            <summary>
+            Description
+            </summary>
+        </member>
         <member name="T:Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Controllers.RabbitMqController">
             <summary>
             Controller sample to show how RabbitMq works
             Please setup your RabbitMq server in the configuration file
             </summary>
         </member>
-        <member name="M:Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Controllers.RabbitMqController.#ctor(Devon4Net.Infrastructure.RabbitMQ.Samples.Handllers.UserSampleRabbitMqHandler,Microsoft.Extensions.Options.IOptions{Devon4Net.Infrastructure.Common.Options.RabbitMq.RabbitMqOptions})">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Controllers.RabbitMqController.#ctor(Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Handlers.TodoRabbitMqHandler,Microsoft.Extensions.Options.IOptions{Devon4Net.Infrastructure.Common.Options.RabbitMq.RabbitMqOptions})">
             <summary>
             Class constructor
             </summary>
-            <param name="userSampleRabbitHandler">THe handler is injected via DI</param>
+            <param name="todoRabbitMqHandler">The main handler injected via DI</param>
             <param name="rabbitMqOptions">The RabbitMq options to check if there is any instance set up</param>
         </member>
-        <member name="M:Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Controllers.RabbitMqController.SendRabbitMqMessage(System.String,System.String)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.RabbitMqManagement.Controllers.RabbitMqController.CreateTodo(System.String)">
             <summary>
-            Sends a message to the RabbitMq server queue
+            Creates a TO-DO command sending a RabbitMq message
             </summary>
-            <param name="name">Name of the user</param>
-            <param name="surname">Surname of the user</param>
+            <param name="todoDescription">The description of the TO-DO command. It cannot be empty</param>
             <returns></returns>
         </member>
         <member name="T:Devon4Net.WebAPI.Implementation.Business.TodoManagement.Controllers.TodoController">

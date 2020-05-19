@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Devon4Net.Infrastructure.Extensions;
 using Devon4Net.Infrastructure.Extensions.Helpers;
 using Devon4Net.Infrastructure.Log;
@@ -20,7 +21,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
             RabbitMqBackupLiteDbRepository = rabbitMqBackupLiteDbRepository;
             JsonHelper = jsonHelper;
         }
-        public  BsonValue CreateMessageBackup(Command command, QueueActionsEnum action = QueueActionsEnum.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null) 
+        public async Task<BsonValue> CreateMessageBackup(Command command, QueueActionsEnum action = QueueActionsEnum.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null) 
         {
             try
             {
@@ -36,17 +37,20 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
                     Retries = increaseRetryCounter ? 1 : 0,
                     AdditionalData = string.IsNullOrEmpty(additionalData) ? string.Empty : additionalData,
                     IsError = false,
-                    MessageContent = GetSerializedContent(command), //System.Text.Json.JsonSerializer.Serialize(command),
+                    MessageContent = GetSerializedContent(command),
                     MessageType = command.MessageType,
                     TimeStampUTC = command.Timestamp.ToUniversalTime(),
                     Action = action.ToString(),
                     Error = string.IsNullOrEmpty(errorData) ? string.Empty : errorData
                 };
 
-                return RabbitMqBackupLiteDbRepository.Create(backUp);
+                var result = RabbitMqBackupLiteDbRepository.Create(backUp);
+                
+                return result;
             }
             catch (Exception ex)
             {
+                Devon4NetLogger.Error($"Error storing data with LiteDb: {ex.Message} {ex.InnerException}");
                 Devon4NetLogger.Error(ex);
                 throw;
             }
@@ -54,17 +58,9 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
 
         private string GetSerializedContent(Command command)
         {
-            var typedCommand = CovertObjectFromClassName(command, command.GetType().FullName);
+            var typedCommand = Convert.ChangeType(command, command.GetType());
             var serializedContent = JsonHelper.Serialize(typedCommand);
             return serializedContent;
-        }
-
-        private object CovertObjectFromClassName(object objectInstance, string fullClassName)
-        {
-            if (string.IsNullOrEmpty(fullClassName)) throw new ArgumentException("The class name cannot be null");
-            var classNameTarget = Type.GetType(fullClassName);
-            if (classNameTarget == null) throw new ArgumentException("Cannot get the type of the provided class name");
-            return Convert.ChangeType(objectInstance, classNameTarget);
         }
     }
 }

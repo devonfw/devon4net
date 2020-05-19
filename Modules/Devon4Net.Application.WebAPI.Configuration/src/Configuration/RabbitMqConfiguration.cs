@@ -8,6 +8,7 @@ using Devon4Net.Infrastructure.LiteDb.LiteDb;
 using Devon4Net.Infrastructure.LiteDb.Repository;
 using Devon4Net.Infrastructure.Log;
 using Devon4Net.Infrastructure.RabbitMQ.Data.Service;
+using Devon4Net.Infrastructure.RabbitMQ.Domain.Database;
 using Devon4Net.Infrastructure.RabbitMQ.Domain.Entities;
 using Devon4Net.Infrastructure.RabbitMQ.Domain.ServiceInterfaces;
 using EasyNetQ;
@@ -28,7 +29,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             try
             {
                 ConfigureRabbitMqGenericDependencyInjection(services);
-                SetupRabbitMqBackupDatabase(services, rabbitMqOptions);
+                SetupRabbitMqBackupLocalDatabase(services, rabbitMqOptions);
 
                 var prefetchCount = (ushort)(rabbitMqOptions.PrefetchCount != null ? (ushort)rabbitMqOptions.PrefetchCount.Value : 0);
                 var timeOut = (ushort)(rabbitMqOptions.Timeout != null ? (ushort)rabbitMqOptions.Timeout.Value : 0);
@@ -65,13 +66,12 @@ namespace Devon4Net.Application.WebAPI.Configuration
             services.AddTransient(typeof(IRabbitMqBackupService), typeof(RabbitMqBackupService));
         }
 
-        private static void SetupRabbitMqBackupDatabase(IServiceCollection services, RabbitMqOptions rabbitMqOptions)
+        private static void SetupRabbitMqBackupLocalDatabase(IServiceCollection services, RabbitMqOptions rabbitMqOptions)
         {
             Devon4NetLogger.Information("Please setup your database in order to have the RabbitMq messaging backup feature");
             if (rabbitMqOptions.Backup == null || !rabbitMqOptions.Backup.UseLocalBackup) return;
             Devon4NetLogger.Information("RabbitMq messaging backup feature is going to be used via LiteDb");
             
-            services.AddTransient(typeof(IRabbitMqBackupLiteDbService), typeof(RabbitMqBackupLiteDbService));
             services.AddSingleton<ILiteDbContext, RabbitMqBackupLiteDbContext>();
             services.AddTransient(typeof(IRabbitMqBackupLiteDbService), typeof(RabbitMqBackupLiteDbService));
         }

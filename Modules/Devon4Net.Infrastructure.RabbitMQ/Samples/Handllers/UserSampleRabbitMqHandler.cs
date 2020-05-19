@@ -4,42 +4,39 @@ using Devon4Net.Infrastructure.RabbitMQ.Domain.ServiceInterfaces;
 using Devon4Net.Infrastructure.RabbitMQ.Handlers;
 using Devon4Net.Infrastructure.RabbitMQ.Samples.Commads;
 using EasyNetQ;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Devon4Net.Infrastructure.RabbitMQ.Samples.Handllers
 {
     public class UserSampleRabbitMqHandler : RabbitMqHandler<UserSampleCommand>
     {
-        public UserSampleRabbitMqHandler(IBus serviceBus, IRabbitMqBackupService rabbitMqBackupService, bool subscribe) : base(serviceBus, rabbitMqBackupService, subscribe)
+        public UserSampleRabbitMqHandler(IServiceCollection services, IBus serviceBus, bool subscribeToChannel = false) : base(services, serviceBus, subscribeToChannel)
         {
         }
 
-        public UserSampleRabbitMqHandler(IBus serviceBus, IRabbitMqBackupService rabbitMqBackupService, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService, bool subscribe) : base(serviceBus, rabbitMqBackupService, rabbitMqBackupLiteDbService, subscribe)
+        public UserSampleRabbitMqHandler(IServiceCollection services, IBus serviceBus, IRabbitMqBackupService rabbitMqBackupService, bool subscribeToChannel = false) : base(services, serviceBus, rabbitMqBackupService, subscribeToChannel)
         {
         }
 
-        public UserSampleRabbitMqHandler(IBus serviceBus, IRabbitMqBackupService rabbitMqBackupService, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService) : base(serviceBus, rabbitMqBackupService, rabbitMqBackupLiteDbService, false)
+        public UserSampleRabbitMqHandler(IServiceCollection services, IBus serviceBus, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService, bool subscribeToChannel = false) : base(services, serviceBus, rabbitMqBackupLiteDbService, subscribeToChannel)
         {
         }
 
-        public UserSampleRabbitMqHandler(IBus serviceBus,  IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService, bool subscribe) : base(serviceBus, rabbitMqBackupLiteDbService, subscribe)
+        public UserSampleRabbitMqHandler(IServiceCollection services, IBus serviceBus, IRabbitMqBackupService rabbitMqBackupService, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService, bool subscribeToChannel = false) : base(services, serviceBus, rabbitMqBackupService, rabbitMqBackupLiteDbService, subscribeToChannel)
         {
         }
-
-        public UserSampleRabbitMqHandler(IBus serviceBus, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService) : base(serviceBus, rabbitMqBackupLiteDbService, false)
-        {
-        }
-
 
         /// <summary>
         /// Sample class. Put  your async methods in logic
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
-#pragma warning disable 1998 
-        public override async Task HandleCommand(UserSampleCommand command)
-#pragma warning restore 1998
+        public override async Task<bool> HandleCommand(UserSampleCommand command)
         {
             Devon4NetLogger.Debug($"User {command.Name} {command.SurName} handled!!");
+            return true;
         }
+
+
     }
 }

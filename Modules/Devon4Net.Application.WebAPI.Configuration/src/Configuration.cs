@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 using Devon4Net.Infrastructure.Common.Options.Log;
 using Devon4Net.Application.WebAPI.Configuration.Application;
 using Devon4Net.Infrastructure.Common.Options.LiteDb;
+using Devon4Net.Infrastructure.Common.Options.MediatR;
 using Devon4Net.Infrastructure.Common.Options.RabbitMq;
 using Devon4Net.Infrastructure.Extensions.Helpers;
 
@@ -30,6 +31,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static CircuitBreakerOptions CircuitBreakerOptions { get; set; }
         private static LogOptions LogOptions { get; set; }
         private static RabbitMqOptions RabbitMqOptions { get; set; }
+        private static MediatROptions MediatROptions { get; set; }
         private static LiteDbOptions LiteDbOptions { get; set; }
 
         public static void ConfigureDevonFw(this IServiceCollection services, IConfiguration configuration)
@@ -49,6 +51,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             services.Configure<KillSwitchOptions>(configuration.GetSection("KillSwitchConfiguration"));
             services.Configure<LogOptions>(configuration.GetSection("Log"));
             services.Configure<RabbitMqOptions>(configuration.GetSection("RabbitMq"));
+            services.Configure<MediatROptions>(configuration.GetSection("MediatR"));
             services.Configure<LiteDbOptions>(configuration.GetSection("LiteDb"));
             
 
@@ -63,6 +66,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             SetupJwt(ref services);
             SetupLiteDb(ref services);
             SetupRabbitMq(ref services);
+            SetupMediatR(ref services);
         }
 
         public static void ConfigureDevonFw(this IApplicationBuilder app)
@@ -126,6 +130,13 @@ namespace Devon4Net.Application.WebAPI.Configuration
             LiteDbOptions = ServiceProvider.GetService<IOptions<LiteDbOptions>>()?.Value;
             if (LiteDbOptions == null ||  string.IsNullOrEmpty(LiteDbOptions?.DatabaseLocation)) return;
             services.SetupLiteDb();
+        }
+
+        private static void SetupMediatR(ref IServiceCollection services)
+        {
+            MediatROptions = ServiceProvider.GetService<IOptions<MediatROptions>>()?.Value;
+            if (MediatROptions == null) return;
+            services.SetupMediatR(MediatROptions);
         }
     }
 }
