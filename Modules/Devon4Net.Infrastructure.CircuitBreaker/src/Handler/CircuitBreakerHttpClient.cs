@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Devon4Net.Infrastructure.Log;
 
 namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 {
@@ -40,7 +41,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                 {
                     SetHttpClientHeaders(headers, httpClient);
                     httpResponseMessage = await httpClient.GetAsync(httpClient.BaseAddress + Uri.EscapeUriString(url)).ConfigureAwait(false);
-
+                    LogHttpResponse(httpResponseMessage);
                     if (httpResponseMessage != null && httpResponseMessage.IsSuccessStatusCode)
                     {
                         result = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -83,7 +84,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                     SetHttpClientHeaders(headers, httpClient);
                     
                     httpResponseMessage = await httpClient.GetAsync(httpClient.BaseAddress + Uri.EscapeUriString(url)).ConfigureAwait(false);
-
+                    LogHttpResponse(httpResponseMessage);
                     if (httpResponseMessage?.IsSuccessStatusCode == true)
                     {
                         result = await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
@@ -130,7 +131,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                     SetHttpClientHeaders(headers, httpClient);
 
                     httpResponseMessage = await httpClient.PostAsync(httpClient.BaseAddress + Uri.EscapeUriString(url), new StringContent(dataToSend, Encoding.UTF8, mediaType)).ConfigureAwait(false);
-
+                    LogHttpResponse(httpResponseMessage);
                     if (httpResponseMessage?.IsSuccessStatusCode == true)
                     {
                         httpResult = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -182,7 +183,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                     httpContent = CreateJsonHttpContent(dataToSend, mediaType);
 
                     httpResponseMessage = await httpClient.PostAsync(httpClient.BaseAddress + Uri.EscapeUriString(url), httpContent).ConfigureAwait(false);
-
+                    LogHttpResponse(httpResponseMessage);
                     if (httpResponseMessage?.IsSuccessStatusCode == true)
                     {
                         httpResult = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -232,7 +233,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                     SetHttpClientHeaders(headers, httpClient);
                     httpContent = CreateJsonHttpContent(dataToSend, mediaType);
                     httpResponseMessage = await httpClient.PutAsync(httpClient.BaseAddress + Uri.EscapeUriString(url), httpContent).ConfigureAwait(false);
-
+                    LogHttpResponse(httpResponseMessage);
                     if (httpResponseMessage?.IsSuccessStatusCode == true)
                     {
                         httpResult = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -280,7 +281,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                 {
                     SetHttpClientHeaders(headers, httpClient);
                     httpResponseMessage = await httpClient.DeleteAsync(httpClient.BaseAddress + Uri.EscapeUriString(url)).ConfigureAwait(false);
-
+                    LogHttpResponse(httpResponseMessage);
                     if (httpResponseMessage?.IsSuccessStatusCode == true)
                     {
                         result = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -327,7 +328,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                     };
 
                     result = await httpClient.SendAsync(request).ConfigureAwait(false);
-
+                    LogHttpResponse(result);
                     httpClient = null;
                 }
             }
@@ -357,19 +358,9 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             return httpContent;
         }
 
-        private void LogErrorMessage(string message)
-        {
-            Console.WriteLine(message);
-
-            if (Logger != null)
-            {
-                Logger.LogError(message);
-            }
-        }
-
         private void LogException(ref Exception exception)
         {
-            LogErrorMessage($"{exception.Message} : {exception.InnerException}");
+            Devon4NetLogger.Error(exception);
         }
 
         private string Serialize(object toPrint)
@@ -389,6 +380,12 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             {
                 httpClient.DefaultRequestHeaders.Add(key, value);
             }
+        }
+
+        private void LogHttpResponse(HttpResponseMessage httpResponseMessage)
+        {
+            if (httpResponseMessage == null) return;
+            Devon4NetLogger.Information($" HttpRequest :{httpResponseMessage.RequestMessage} | httpresponse: {httpResponseMessage}");
         }
     }
 }

@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.Common\src\Devon4Net.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\..\Devon4Net.Infrastructure.Log\src\Devon4Net.Infrastructure.Log.csproj" />
   </ItemGroup>
 
 </Project>
