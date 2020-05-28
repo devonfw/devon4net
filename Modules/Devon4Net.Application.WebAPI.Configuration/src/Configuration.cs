@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Devon4Net.Domain.UnitOfWork.Repository;
 using Devon4Net.Domain.UnitOfWork.UnitOfWork;
 using Devon4Net.Infrastructure.Common.Options.CircuitBreaker;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Devon4Net.Infrastructure.Common.Options.Log;
 using Devon4Net.Application.WebAPI.Configuration.Application;
+using Devon4Net.Infrastructure.Common.Options.AnsibleTower;
 using Devon4Net.Infrastructure.Common.Options.LiteDb;
 using Devon4Net.Infrastructure.Common.Options.MediatR;
 using Devon4Net.Infrastructure.Common.Options.RabbitMq;
@@ -33,6 +35,8 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static RabbitMqOptions RabbitMqOptions { get; set; }
         private static MediatROptions MediatROptions { get; set; }
         private static LiteDbOptions LiteDbOptions { get; set; }
+        private static AnsibleTowerOptions AnsibleTowerOptions { get; set; }
+        
 
         public static void ConfigureDevonFw(this IServiceCollection services, IConfiguration configuration)
         {
@@ -53,7 +57,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             services.Configure<RabbitMqOptions>(configuration.GetSection("RabbitMq"));
             services.Configure<MediatROptions>(configuration.GetSection("MediatR"));
             services.Configure<LiteDbOptions>(configuration.GetSection("LiteDb"));
-            
+            services.Configure<AnsibleTowerOptions>(configuration.GetSection("AnsibleTower"));
 
             ServiceProvider = services.BuildServiceProvider();
             DevonfwOptions = ServiceProvider.GetService<IOptions<DevonfwOptions>>()?.Value;
@@ -67,6 +71,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             SetupLiteDb(ref services);
             SetupRabbitMq(ref services);
             SetupMediatR(ref services);
+            SetupAnsibleTower(ref services);
         }
 
         public static void ConfigureDevonFw(this IApplicationBuilder app)
@@ -137,6 +142,13 @@ namespace Devon4Net.Application.WebAPI.Configuration
             MediatROptions = ServiceProvider.GetService<IOptions<MediatROptions>>()?.Value;
             if (MediatROptions == null) return;
             services.SetupMediatR(MediatROptions);
+        }
+
+        private static void SetupAnsibleTower(ref IServiceCollection services)
+        {
+            AnsibleTowerOptions = ServiceProvider.GetService<IOptions<AnsibleTowerOptions>>()?.Value;
+            if (AnsibleTowerOptions?.Instances == null || !AnsibleTowerOptions.Instances.Any()) return;
+            services.SetupAnsibleTower(AnsibleTowerOptions);
         }
     }
 }
