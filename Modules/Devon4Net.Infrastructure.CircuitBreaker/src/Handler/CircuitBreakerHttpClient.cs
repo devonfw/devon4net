@@ -30,8 +30,37 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             {
                 using (httpClient = GetDefaultClient(endPointName, headers))
                 {
-                    httpResponseMessage = await httpClient.GetAsync(httpClient.BaseAddress + Uri.EscapeUriString(url)).ConfigureAwait(false);
+                    httpResponseMessage = await httpClient.GetAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url)).ConfigureAwait(false);
                     result = await ManageHttpResponse(httpResponseMessage, endPointName);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogException(ref ex);
+                throw;
+            }
+            finally
+            {
+                DisposeHttpObjects(ref httpClient, ref httpResponseMessage);
+            }
+
+            return result;
+        }
+
+        public async Task<T> Get<T>(string endPointName, string url, Dictionary<string, string> headers = null)
+        {
+            HttpClient httpClient = null;
+            HttpResponseMessage httpResponseMessage = null;
+            T result;
+
+            try
+            {
+                using (httpClient = GetDefaultClient(endPointName, headers))
+                {
+                    
+                    httpResponseMessage = await httpClient.GetAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url)).ConfigureAwait(false);
+                    var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName);
+                    result = Deserialize<T>(httpResult);
                 }
             }
             catch (Exception ex)
@@ -56,7 +85,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             {
                 using (httpClient = GetDefaultClient(endPointName, headers))
                 {
-                    httpResponseMessage = await httpClient.GetAsync(httpClient.BaseAddress + Uri.EscapeUriString(url)).ConfigureAwait(false);
+                    httpResponseMessage = await httpClient.GetAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url)).ConfigureAwait(false);
                     result = await ManageHttpResponseAsStream(httpResponseMessage, endPointName);
                 }
             }
@@ -83,7 +112,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             {
                 using (httpClient = GetDefaultClient(endPointName, headers))
                 {
-                    httpResponseMessage = await httpClient.PostAsync(httpClient.BaseAddress + Uri.EscapeUriString(url), new StringContent(dataToSend, Encoding.UTF8, mediaType)).ConfigureAwait(false);
+                    httpResponseMessage = await httpClient.PostAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url), new StringContent(dataToSend, Encoding.UTF8, mediaType)).ConfigureAwait(false);
                     var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName);
                     result = Deserialize<T>(httpResult);
                 }
@@ -114,7 +143,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                 {
                     httpContent = CreateJsonHttpContent(dataToSend, mediaType);
 
-                    httpResponseMessage = await httpClient.PostAsync(httpClient.BaseAddress + Uri.EscapeUriString(url), httpContent).ConfigureAwait(false);
+                    httpResponseMessage = await httpClient.PostAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url), httpContent).ConfigureAwait(false);
                     var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName);
                     result = Deserialize<T>(httpResult);
                 }
@@ -146,7 +175,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                 using (httpClient = GetDefaultClient(endPointName, headers))
                 {
                     httpContent = CreateJsonHttpContent(dataToSend, mediaType);
-                    httpResponseMessage = await httpClient.PutAsync(httpClient.BaseAddress + Uri.EscapeUriString(url), httpContent).ConfigureAwait(false);
+                    httpResponseMessage = await httpClient.PutAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url), httpContent).ConfigureAwait(false);
                     var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName);
 
                     result = Deserialize<T>(httpResult);
@@ -176,7 +205,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             {
                 using (httpClient = GetDefaultClient(endPointName, headers))
                 {
-                    httpResponseMessage = await httpClient.DeleteAsync(httpClient.BaseAddress + Uri.EscapeUriString(url)).ConfigureAwait(false);
+                    httpResponseMessage = await httpClient.DeleteAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url)).ConfigureAwait(false);
                     result = await ManageHttpResponse(httpResponseMessage, endPointName);
                 }
             }
@@ -203,7 +232,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
                 using (httpClient = GetDefaultClient(endPointName, headers))
                 {
-                    var request = new HttpRequestMessage(method, httpClient.BaseAddress + Uri.EscapeUriString(url))
+                    var request = new HttpRequestMessage(method, GetEncodedUrl(httpClient.BaseAddress.ToString(), url))
                     {
                         Content = content
                     };
@@ -302,6 +331,22 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
         {
             httpClient?.Dispose();
             httpResponseMessage?.Dispose();
+        }
+
+        private string GetEncodedUrl(string baseAddress, string endPoint)
+        {
+            var result = string.Empty;
+
+            if (string.IsNullOrEmpty(baseAddress)) throw new ArgumentException("The base address can not be null or empty");
+
+            if (baseAddress.EndsWith("/") && endPoint.StartsWith("/"))
+            {
+                result = baseAddress + endPoint.Substring(1);
+            }
+
+            return Uri.EscapeUriString(result);
+
+
         }
     }
 }

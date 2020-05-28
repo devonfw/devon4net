@@ -560,6 +560,7 @@
             Setup here your database connections.
             To use RabbitMq message backup declare the 'RabbitMqBackupContext' database setup
             PE: services.SetupDatabase&lt;RabbitMqBackupContext&gt;($"Data Source={FileOperations.GetFileFullPath("RabbitMqBackupSqLite.db")}", DatabaseType.Sqlite);
+            Please add the connection strings to enable the backup messaging for MediatR abd RabbitMq using MediatRBackupContext and RabbitMqBackupContext
             </summary>
             <param name="services"></param>
             <param name="configuration"></param>

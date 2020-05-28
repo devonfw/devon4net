@@ -74,6 +74,7 @@ namespace Devon4Net.WebAPI.Implementation.Configure
         /// Setup here your database connections.
         /// To use RabbitMq message backup declare the 'RabbitMqBackupContext' database setup
         /// PE: services.SetupDatabase&lt;RabbitMqBackupContext&gt;($"Data Source={FileOperations.GetFileFullPath("RabbitMqBackupSqLite.db")}", DatabaseType.Sqlite);
+        /// Please add the connection strings to enable the backup messaging for MediatR abd RabbitMq using MediatRBackupContext and RabbitMqBackupContext
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
@@ -81,8 +82,6 @@ namespace Devon4Net.WebAPI.Implementation.Configure
         {
             services.SetupDatabase<TodoContext>(configuration, "Default", DatabaseType.InMemory);
             services.SetupDatabase<EmployeeContext>(configuration, "Employee", DatabaseType.InMemory);
-            services.SetupDatabase<MediatRBackupContext>(configuration, "MediatRBackup", DatabaseType.PostgreSQL);
-            services.SetupDatabase<RabbitMqBackupContext>(configuration, "RabbitMqBackup", DatabaseType.PostgreSQL);
         }
 
         private static void SetupJwtPolicies(IServiceCollection services)

@@ -63,6 +63,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Templates\Devon4NetAPI\Devon4Net.WebAPI.Implementation\Devon4Net.WebAPI.Implementation.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Domain.UnitOfWork\src\Devon4Net.Domain.UnitOfWork.csproj" />
+    <ProjectReference Include="..\..\Devon4Net.Infrastructure.AnsibleTower\Devon4Net.Infrastructure.AnsibleTower.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.CircuitBreaker\src\Devon4Net.Infrastructure.CircuitBreaker.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.Common\src\Devon4Net.Infrastructure.Common.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.Extensions\src\Devon4Net.Infrastructure.Extensions.csproj" />
