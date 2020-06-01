@@ -5,6 +5,9 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Common
 {
     public interface IAnsibleTowerInstance
     {
-        void Setup(ApiRequestDto apiRequestDto);
+        string Name { get; }
+        string CircuitBreakerName { get; }
+        string ApiUrlBase { get; }
+        string Version { get; }
     }
 }

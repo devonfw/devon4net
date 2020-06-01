@@ -13,7 +13,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
     {
         private static ICircuitBreakerHttpClient CircuitBreakerHttpClient { get; set; }
         private static AnsibleTowerOptions AnsibleTowerOptions { get; set; }
-        
+
         public static void SetupAnsibleTower(this IServiceCollection services, AnsibleTowerOptions ansibleTowerOptions)
         {
 
@@ -21,31 +21,20 @@ namespace Devon4Net.Application.WebAPI.Configuration
             CircuitBreakerHttpClient = serviceProvider.GetService<ICircuitBreakerHttpClient>();
             AnsibleTowerOptions = ansibleTowerOptions;
 
-            var ansibleTowerInstances = GetAnsibleTowerInstances();
+            var ansibleTowerInstance = GetAnsibleTowerInstances();
 
-            if (ansibleTowerInstances==null || !ansibleTowerInstances.Any()) return;
+            if (ansibleTowerInstance == null ) return;
 
-            services.AddSingleton(typeof(IList<IAnsibleTowerInstance>), ansibleTowerInstances);
+            services.AddSingleton(typeof(IAnsibleTowerInstance), ansibleTowerInstance);
             services.AddTransient(typeof(IAnsibleTowerHandler), typeof(AnsibleTowerHandler));
         }
 
-        private static List<IAnsibleTowerInstance> GetAnsibleTowerInstances()
+        private static IAnsibleTowerInstance GetAnsibleTowerInstances()
         {
-            if (AnsibleTowerOptions?.Instances == null || !AnsibleTowerOptions.Instances.Any()) return new List<IAnsibleTowerInstance>();
+            if (AnsibleTowerOptions == null || string.IsNullOrEmpty(AnsibleTowerOptions.ApiUrlBase)) return null;
 
-            var ansibleInstanceHandlerList = new List<IAnsibleTowerInstance>();
-
-            foreach (var instance in AnsibleTowerOptions.Instances)
-            {
-                var handler = new AnsibleTowerInstance();
-
-                var apiRequestDto = CircuitBreakerHttpClient.Get<ApiRequestDto>(instance.CircuitBreakerName, instance.ApiUrlBase).Result;
-
-                handler.Setup(apiRequestDto);
-                ansibleInstanceHandlerList.Add(handler);
-            }
-
-            return ansibleInstanceHandlerList;
+            var apiRequestDto = CircuitBreakerHttpClient.Get<ApiRequestDto>(AnsibleTowerOptions.CircuitBreakerName, AnsibleTowerOptions.ApiUrlBase).Result;
+            return new AnsibleTowerInstance(AnsibleTowerOptions.Name, AnsibleTowerOptions.CircuitBreakerName, AnsibleTowerOptions.ApiUrlBase, AnsibleTowerOptions.Version, apiRequestDto);
         }
     }
 }

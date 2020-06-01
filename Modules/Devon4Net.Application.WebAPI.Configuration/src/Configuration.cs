@@ -147,7 +147,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static void SetupAnsibleTower(ref IServiceCollection services)
         {
             AnsibleTowerOptions = ServiceProvider.GetService<IOptions<AnsibleTowerOptions>>()?.Value;
-            if (AnsibleTowerOptions?.Instances == null || !AnsibleTowerOptions.Instances.Any()) return;
+            if (AnsibleTowerOptions == null || string.IsNullOrEmpty(AnsibleTowerOptions.ApiUrlBase)) return;
             services.SetupAnsibleTower(AnsibleTowerOptions);
         }
     }

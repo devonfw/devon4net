@@ -45,6 +45,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\modules\Devon4Net.Domain.UnitOfWork\src\Devon4Net.Domain.UnitOfWork.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AnsibleTower\Devon4Net.Infrastructure.AnsibleTower.csproj" />
     <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.JWT\src\Devon4Net.Infrastructure.JWT.csproj" />
     <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.Log\src\Devon4Net.Infrastructure.Log.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.MediatR\Devon4Net.Infrastructure.MediatR.csproj" />

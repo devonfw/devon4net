@@ -76,6 +76,25 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             return result;
         }
 
+        public async Task<HttpResponseMessage> GetResponseMessage(string endPointName, string url, Dictionary<string, string> headers = null)
+        {
+            HttpResponseMessage httpResponseMessage;
+
+            try
+            {
+                using var httpClient = GetDefaultClient(endPointName, headers);
+                httpResponseMessage = await httpClient.GetAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url)).ConfigureAwait(false);
+                await LogHttpResponseAsync(httpResponseMessage).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LogException(ref ex);
+                throw;
+            }
+
+            return httpResponseMessage;
+        }
+
         public async Task<Stream> GetAsStream(string endPointName, string url, Dictionary<string,string> headers = null)
         {
             Stream result;
@@ -144,7 +163,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                     httpContent = CreateJsonHttpContent(dataToSend, mediaType);
 
                     httpResponseMessage = await httpClient.PostAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url), httpContent).ConfigureAwait(false);
-                    var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName);
+                    var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName, httpContent);
                     result = Deserialize<T>(httpResult);
                 }
             }
@@ -160,8 +179,6 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
             return result;
         }
-
-
 
         public async Task<T> Put<T>(string endPointName, string url, object dataToSend, string mediaType, Dictionary<string,string> headers = null)
         {
@@ -238,7 +255,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                     };
 
                     result = await httpClient.SendAsync(request).ConfigureAwait(false);
-                    LogHttpResponse(result);
+                    await LogHttpResponseAsync(result).ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
@@ -291,34 +308,36 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             return JsonSerializer.Deserialize<T>(input);
         }
 
-        private void LogHttpResponse(HttpResponseMessage httpResponseMessage)
+        private async Task LogHttpResponseAsync(HttpResponseMessage httpResponseMessage, HttpContent httpContent = null)
         {
             if (httpResponseMessage == null) return;
             Devon4NetLogger.Information($" HttpRequest :{httpResponseMessage.RequestMessage} | httpResponse: {httpResponseMessage}");
+            if (httpContent == null) return;
+            Devon4NetLogger.Information($" HttpRequestBody :{await httpContent.ReadAsStringAsync().ConfigureAwait(false)}");
         }
 
-        private Task<string> ManageHttpResponse(HttpResponseMessage httpResponseMessage, string endPointName)
+        private async Task<string> ManageHttpResponse(HttpResponseMessage httpResponseMessage, string endPointName, HttpContent httpContent = null)
         {
-            LogHttpResponse(httpResponseMessage);
+            await LogHttpResponseAsync(httpResponseMessage, httpContent).ConfigureAwait(false);
 
             if (httpResponseMessage == null || !httpResponseMessage.IsSuccessStatusCode)
             {
                 throw new HttpRequestException($"The httprequest to {endPointName} was not successful.");
             }
 
-            return httpResponseMessage.Content.ReadAsStringAsync();
+            return await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
 
-        private Task<Stream> ManageHttpResponseAsStream(HttpResponseMessage httpResponseMessage, string endPointName)
+        private async Task<Stream> ManageHttpResponseAsStream(HttpResponseMessage httpResponseMessage, string endPointName)
         {
-            LogHttpResponse(httpResponseMessage);
+            await LogHttpResponseAsync(httpResponseMessage);
 
             if (httpResponseMessage == null || !httpResponseMessage.IsSuccessStatusCode)
             {
                 throw new HttpRequestException($"The httprequest to {endPointName} was not successful.");
             }
 
-            return httpResponseMessage.Content.ReadAsStreamAsync();
+            return await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
         }
         
         private void DisposeHttpObjects(ref HttpClient httpClient, ref HttpResponseMessage httpResponseMessage, ref HttpContent? httpContent)
