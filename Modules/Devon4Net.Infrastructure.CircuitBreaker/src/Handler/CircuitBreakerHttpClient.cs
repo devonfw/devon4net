@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Devon4Net.Infrastructure.Common.Exceptions;
 using Devon4Net.Infrastructure.Log;
 
 namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
@@ -121,7 +122,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             return result;
         }
         
-        public async Task<T> PostJson<T>(string endPointName, string url, string dataToSend, string mediaType, Dictionary<string,string> headers = null)
+        public async Task<T> PostJson<T>(string endPointName, string url, string jsonDataToSend, string mediaType, Dictionary<string,string> headers = null)
         {
             T result;
             HttpClient httpClient = null;
@@ -131,7 +132,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             {
                 using (httpClient = GetDefaultClient(endPointName, headers))
                 {
-                    httpResponseMessage = await httpClient.PostAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url), new StringContent(dataToSend, Encoding.UTF8, mediaType)).ConfigureAwait(false);
+                    httpResponseMessage = await httpClient.PostAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url), new StringContent(jsonDataToSend, Encoding.UTF8, mediaType)).ConfigureAwait(false);
                     var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName);
                     result = Deserialize<T>(httpResult);
                 }
@@ -310,19 +311,29 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
         private async Task LogHttpResponseAsync(HttpResponseMessage httpResponseMessage, HttpContent httpContent = null)
         {
-            if (httpResponseMessage == null) return;
-            Devon4NetLogger.Information($" HttpRequest :{httpResponseMessage.RequestMessage} | httpResponse: {httpResponseMessage}");
-            if (httpContent == null) return;
-            Devon4NetLogger.Information($" HttpRequestBody :{await httpContent.ReadAsStringAsync().ConfigureAwait(false)}");
+            if (httpResponseMessage != null)
+            {
+                Devon4NetLogger.Information($" HttpRequest :{httpResponseMessage.RequestMessage} | httpResponse: {httpResponseMessage}");
+            }
+
+            if (httpContent != null)
+            {
+                Devon4NetLogger.Information($" HttpRequestBody :{await httpContent.ReadAsStringAsync().ConfigureAwait(false)}");
+            }
         }
 
         private async Task<string> ManageHttpResponse(HttpResponseMessage httpResponseMessage, string endPointName, HttpContent httpContent = null)
         {
             await LogHttpResponseAsync(httpResponseMessage, httpContent).ConfigureAwait(false);
 
-            if (httpResponseMessage == null || !httpResponseMessage.IsSuccessStatusCode)
+            if (httpResponseMessage == null)
             {
                 throw new HttpRequestException($"The httprequest to {endPointName} was not successful.");
+            }
+
+            if (httpResponseMessage != null && !httpResponseMessage.IsSuccessStatusCode)
+            {
+                throw new HttpCustomRequestException($"The httprequest to {endPointName} was not successful.", (int) httpResponseMessage.StatusCode);
             }
 
             return await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
