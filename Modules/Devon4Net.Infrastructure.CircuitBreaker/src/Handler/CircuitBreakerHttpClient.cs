@@ -367,11 +367,16 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
         {
             var result = string.Empty;
 
-            if (string.IsNullOrEmpty(baseAddress)) throw new ArgumentException("The base address can not be null or empty");
+            if (string.IsNullOrEmpty(baseAddress)) throw new ArgumentException("The base address to perform the circuitbreaker call can not be null or empty");
 
             if (baseAddress.EndsWith("/") && endPoint.StartsWith("/"))
             {
                 result = baseAddress + endPoint.Substring(1);
+            }
+
+            if (!baseAddress.EndsWith("/") && !endPoint.StartsWith("/"))
+            {
+                result = $"{baseAddress}/{endPoint}";
             }
 
             return Uri.EscapeUriString(result);
