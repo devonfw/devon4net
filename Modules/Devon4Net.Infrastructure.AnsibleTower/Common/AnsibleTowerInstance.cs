@@ -14,15 +14,20 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Common
     {
         private ICircuitBreakerHttpClient CircuitBreakerHttpClient { get; set; }
         private ApiRequestDto ApiDefinition { get; set; }
+        public string Name { get; }
+        public string CircuitBreakerName { get; }
+        public string ApiUrlBase { get; }
+        public string Version { get; }
 
-        public AnsibleTowerInstance()
-        {
-            
-        }
-
-        public void Setup(ApiRequestDto apiRequestDto)
+        public AnsibleTowerInstance(string name, string circuitBreakerName, string apiUrlBase, string version, ApiRequestDto apiRequestDto)
         {
             ApiDefinition = apiRequestDto;
+            Name = name;
+            CircuitBreakerName = circuitBreakerName;
+            ApiUrlBase = apiUrlBase;
+            Version = version;
         }
+
+
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Devon4Net.Infrastructure.AnsibleTower.Handler;
 using Devon4Net.Infrastructure.Common.Options.JWT;
 using Devon4Net.Infrastructure.JWT.Common.Const;
 using Devon4Net.Infrastructure.JWT.Handlers;
@@ -25,15 +26,17 @@ namespace Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers
     public class AuthController: ControllerBase
     {
         private IJwtHandler JwtHandler { get; set; }
+        private IAnsibleTowerHandler AnsibleTowerHandler { get; set; }
 
         /// <summary>
         /// Constructor with DI
         /// </summary>
         /// <param name="jwtOptions"></param>
         /// <param name="jwtHandler"></param>
-        public AuthController(IOptions<JwtOptions> jwtOptions, IJwtHandler jwtHandler)
+        public AuthController(IOptions<JwtOptions> jwtOptions, IJwtHandler jwtHandler, IAnsibleTowerHandler ansibleTowerHandler)
         {
             JwtHandler = jwtHandler;
+            AnsibleTowerHandler = ansibleTowerHandler;
         }
 
         /// <summary>
@@ -52,7 +55,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers
         public IActionResult Login(string user, string password)
         {
             Devon4NetLogger.Debug("Executing Login from controller AuthController");
-
+            AnsibleTowerHandler.Login(user, password);
             var token = JwtHandler.CreateClientToken(new List<Claim>
             {
                 new Claim(ClaimTypes.Role, AuthConst.DevonSampleUserRole),
