@@ -13,7 +13,7 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
 {
     public static class SetupKestrel
     {
-        public static void Configure(ref IWebHostBuilder webBuilder, IConfigurationRoot configuration)
+        public static void Configure(ref IWebHostBuilder webBuilder, IConfiguration configuration)
         {
             var httpProtocol = configuration["devonfw:Kestrel:HttpProtocol"];
             var sslProtocol = configuration["devonfw:Kestrel:SslProtocol"];

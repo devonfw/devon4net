@@ -3,6 +3,7 @@ using System.IO;
 using Devon4Net.Infrastructure.Common;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
@@ -11,7 +12,7 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
     public static class Devonfw
     {
         private static IHostBuilder HostBuilder { get; set; }
-        private static IConfigurationRoot Configuration { get; set; }
+        private static IConfiguration Configuration { get; set; }
         private static ConfigurationBuilder ConfigurationBuilder { get; set; }
 
         public static void Configure<T>(string[] args) where T : class
@@ -42,6 +43,7 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
                 SetupKestrel.Configure(ref builder, Configuration);
             }
 
+            builder.ConfigureServices(services => services.AddSingleton(Configuration));
             return builder;
         }
 
