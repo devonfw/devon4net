@@ -9,5 +9,6 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Common
         string CircuitBreakerName { get; }
         string ApiUrlBase { get; }
         string Version { get; }
+        ApiRequestDto ApiDefinition { get; }
     }
 }
