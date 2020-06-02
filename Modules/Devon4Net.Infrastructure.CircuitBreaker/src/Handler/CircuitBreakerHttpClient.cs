@@ -375,8 +375,6 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             }
 
             return Uri.EscapeUriString(result);
-
-
         }
     }
 }
