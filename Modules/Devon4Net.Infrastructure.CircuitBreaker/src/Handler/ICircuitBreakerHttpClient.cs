@@ -15,7 +15,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
         Task<HttpResponseMessage> GetResponseMessage(string endPointName, string url, Dictionary<string, string> headers = null);
         Task<HttpResponseMessage> Patch(string endPointName, string url, HttpContent content, Dictionary<string,string> headers = null);
         Task<T> Post<T>(string endPointName, string url, object dataToSend, string mediaType, Dictionary<string, string> headers = null);
-        Task<T> PostJson<T>(string endPointName, string url, string dataToSend, string mediaType, Dictionary<string, string> headers = null);
+        Task<T> PostJson<T>(string endPointName, string url, string jsonDataToSend, string mediaType, Dictionary<string, string> headers = null);
         Task<T> Put<T>(string endPointName, string url, object dataToSend, string mediaType, Dictionary<string,string> headers = null);
     }
 }
