@@ -324,6 +324,13 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
         private async Task<string> ManageHttpResponse(HttpResponseMessage httpResponseMessage, string endPointName, HttpContent httpContent = null)
         {
+            await CheckHttpResponse(httpResponseMessage, endPointName, httpContent);
+
+            return await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
+
+        private async Task CheckHttpResponse(HttpResponseMessage httpResponseMessage, string endPointName, HttpContent httpContent)
+        {
             await LogHttpResponseAsync(httpResponseMessage, httpContent).ConfigureAwait(false);
 
             if (httpResponseMessage == null)
@@ -335,13 +342,12 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             {
                 throw new HttpCustomRequestException($"The httprequest to {endPointName} was not successful.", (int) httpResponseMessage.StatusCode);
             }
-
-            return await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
 
         private async Task<Stream> ManageHttpResponseAsStream(HttpResponseMessage httpResponseMessage, string endPointName)
         {
             await LogHttpResponseAsync(httpResponseMessage);
+            await CheckHttpResponse(httpResponseMessage, endPointName, null);
 
             if (httpResponseMessage == null || !httpResponseMessage.IsSuccessStatusCode)
             {
