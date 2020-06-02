@@ -288,6 +288,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
         private HttpContent CreateJsonHttpContent<T>(T requestContent, string mediaType)
         {
+            if (requestContent == null) return null;
             var requestBody = Serialize(requestContent);
             HttpContent httpContent = new StringContent(requestBody);
             httpContent.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
@@ -340,7 +341,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
             if (httpResponseMessage != null && !httpResponseMessage.IsSuccessStatusCode)
             {
-                throw new HttpCustomRequestException($"The httprequest to {endPointName} was not successful.", (int) httpResponseMessage.StatusCode);
+                throw new HttpCustomRequestException($"The httprequest to {endPointName} was not successful. HttpStatus Error: {httpResponseMessage.StatusCode} | {httpResponseMessage}", (int) httpResponseMessage.StatusCode);
             }
         }
 
@@ -359,14 +360,14 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
         
         private void DisposeHttpObjects(ref HttpClient httpClient, ref HttpResponseMessage httpResponseMessage, ref HttpContent? httpContent)
         {
-            httpContent?.Dispose();
-            DisposeHttpObjects(ref httpClient, ref httpResponseMessage);
+            //httpContent?.Dispose();
+            //DisposeHttpObjects(ref httpClient, ref httpResponseMessage);
         }
 
         private void DisposeHttpObjects(ref HttpClient httpClient, ref HttpResponseMessage httpResponseMessage)
         {
-            httpClient?.Dispose();
-            httpResponseMessage?.Dispose();
+            //httpClient?.Dispose();
+            //httpResponseMessage?.Dispose();
         }
 
         private string GetEncodedUrl(string baseAddress, string endPoint)

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Devon4Net.Infrastructure.AnsibleTower.Dto
+﻿namespace Devon4Net.Infrastructure.AnsibleTower.Dto
 {
     public class ApiRequestDto
     {
@@ -20,8 +16,10 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Dto
         public string teams { get; set; }
         public string credentials { get; set; }
         public string credential_types { get; set; }
+        public string credential_input_sources { get; set; }
         public string applications { get; set; }
         public string tokens { get; set; }
+        public string metrics { get; set; }
         public string inventory { get; set; }
         public string inventory_scripts { get; set; }
         public string inventory_sources { get; set; }
@@ -44,6 +42,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Dto
         public string activity_stream { get; set; }
         public string workflow_job_templates { get; set; }
         public string workflow_jobs { get; set; }
+        public string workflow_approvals { get; set; }
         public string workflow_job_template_nodes { get; set; }
         public string workflow_job_nodes { get; set; }
     }

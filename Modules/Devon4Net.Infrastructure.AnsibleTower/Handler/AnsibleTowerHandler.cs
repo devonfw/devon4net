@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Devon4Net.Infrastructure.AnsibleTower.Common;
 using Devon4Net.Infrastructure.AnsibleTower.Const;
+using Devon4Net.Infrastructure.AnsibleTower.Dto;
 using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
 using Devon4Net.Infrastructure.CircuitBreaker.Handler;
 
@@ -13,8 +16,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         private ICircuitBreakerHttpClient CircuitBreakerHttpClient { get; set; }
         private IAnsibleTowerInstance AnsibleTowerInstance { get; set; }
 
-        private string CsrfToken { get; set; }
-        private string Path { get; set; }
+        private string AuthToken { get; set; }
 
         public AnsibleTowerHandler(IAnsibleTowerInstance ansibleTowerInstance, ICircuitBreakerHttpClient circuitBreakerHttpClient)
         {
@@ -22,33 +24,21 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
             AnsibleTowerInstance = ansibleTowerInstance;
         }
 
+        /// <summary>
+        /// Performs the basic login authentication
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public async Task<string> Login(string userName, string password)
         {
-            var result = await CircuitBreakerHttpClient.GetResponseMessage(AnsibleTowerInstance.CircuitBreakerName, AnsibleConst.LoginUrl);
+            var authCredential = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{userName}:{password}"));
+            var headers = new Dictionary<string, string> {{ "Authorization", $"Basic {authCredential}"}};
 
-            var cookie = result.Headers.FirstOrDefault(header => header.Key == "Set-Cookie").Value.FirstOrDefault();
-            var cookieParams = cookie.Split(';').ToList();
-            var ansibleParams = new Dictionary<string, string>();
+            var login = await CircuitBreakerHttpClient.Post<LoginRequestDto>(AnsibleTowerInstance.CircuitBreakerName, AnsibleTowerInstance.ApiDefinition.tokens,null, MediaType.ApplicationJson, headers);
 
-            foreach (var value in cookieParams)
-            {
-                var pair = value.Split('=').ToList();
-                if (pair.Any() && pair.Count > 0)
-                {
-                    ansibleParams.Add(pair.FirstOrDefault(), pair.LastOrDefault());
-                }
-            }
-
-            CsrfToken = ansibleParams.FirstOrDefault(x => x.Key == AnsibleConst.LoginTokenName).Value;
-            Path = ansibleParams.FirstOrDefault(x => x.Key == AnsibleConst.LoginTokenPath).Value;
-
-            var headers = new Dictionary<string,string>{  };
-            //headers.Add("Content-Type", " application/x-www-form-urlencoded");
-
-            var login = await CircuitBreakerHttpClient.Post<string>(AnsibleTowerInstance.CircuitBreakerName, AnsibleConst.LoginUrl,$"username={userName}&password={password}&csrfmiddlewaretoken={CsrfToken}&next=%2fapi%2f", "application/x-www-form-urlencoded", headers);
-
-
-            return "";
+            AuthToken = login.token;
+            return login.token;
         }
     }
 }
