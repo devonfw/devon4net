@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Devon4Net.Infrastructure.AnsibleTower.Handler;
 using Devon4Net.Infrastructure.Common.Options.JWT;
 using Devon4Net.Infrastructure.JWT.Common.Const;
 using Devon4Net.Infrastructure.JWT.Handlers;
@@ -23,20 +22,18 @@ namespace Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    public class AuthController: ControllerBase
+    public class AuthController : ControllerBase
     {
         private IJwtHandler JwtHandler { get; set; }
-        private IAnsibleTowerHandler AnsibleTowerHandler { get; set; }
 
         /// <summary>
         /// Constructor with DI
         /// </summary>
         /// <param name="jwtOptions"></param>
         /// <param name="jwtHandler"></param>
-        public AuthController(IOptions<JwtOptions> jwtOptions, IJwtHandler jwtHandler, IAnsibleTowerHandler ansibleTowerHandler)
+        public AuthController(IOptions<JwtOptions> jwtOptions, IJwtHandler jwtHandler)
         {
             JwtHandler = jwtHandler;
-            AnsibleTowerHandler = ansibleTowerHandler;
         }
 
         /// <summary>
@@ -55,7 +52,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers
         public IActionResult Login(string user, string password)
         {
             Devon4NetLogger.Debug("Executing Login from controller AuthController");
-            AnsibleTowerHandler.Login(user, password);
+
             var token = JwtHandler.CreateClientToken(new List<Claim>
             {
                 new Claim(ClaimTypes.Role, AuthConst.DevonSampleUserRole),
@@ -85,19 +82,20 @@ namespace Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers
         {
             Devon4NetLogger.Debug("Executing CurrentUser from controller AuthController");
             //Get claims
-            var token = Request.Headers["Authorization"].ToString().Replace($"{AuthConst.AuthenticationScheme} ",string.Empty);
+            var token = Request.Headers["Authorization"].ToString().Replace($"{AuthConst.AuthenticationScheme} ", string.Empty);
 
             if (string.IsNullOrEmpty(token)) return Unauthorized();
 
             var userClaims = JwtHandler.GetUserClaims(token).ToList();
-            
+
             // Return result with claims values
-            var result = new CurrentUserResponse {
+            var result = new CurrentUserResponse
+            {
                 Id = JwtHandler.GetClaimValue(userClaims, ClaimTypes.NameIdentifier),
                 UserName = JwtHandler.GetClaimValue(userClaims, ClaimTypes.Name),
-                CorporateInfo = new List<CorporateBasicInfo>{ new CorporateBasicInfo { Id= ClaimTypes.Role, Value = JwtHandler.GetClaimValue(userClaims, ClaimTypes.Role), } }
+                CorporateInfo = new List<CorporateBasicInfo> { new CorporateBasicInfo { Id = ClaimTypes.Role, Value = JwtHandler.GetClaimValue(userClaims, ClaimTypes.Role), } }
             };
-            
+
             return Ok(result);
         }
     }
