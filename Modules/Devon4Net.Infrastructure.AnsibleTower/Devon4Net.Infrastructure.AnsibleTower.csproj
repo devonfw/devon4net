@@ -4,9 +4,19 @@
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>Devon4Net.Infrastructure.AnsibleTower.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Devon4Net.Infrastructure.CircuitBreaker\src\Devon4Net.Infrastructure.CircuitBreaker.csproj" />
     <ProjectReference Include="..\Devon4Net.Infrastructure.Log\src\Devon4Net.Infrastructure.Log.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Devon4Net.Infrastructure.AnsibleTower.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

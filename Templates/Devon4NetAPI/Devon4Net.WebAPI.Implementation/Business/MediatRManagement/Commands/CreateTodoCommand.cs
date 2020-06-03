@@ -19,8 +19,8 @@ namespace Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Commands
         /// <summary>
         /// Constructor of the query 
         /// </summary>
-        /// <param name="todoId"></param>
-        public CreateTodoCommand( string description)
+        /// <param name="description"></param>
+        public CreateTodoCommand(string description)
         {
             Description = description;
         }

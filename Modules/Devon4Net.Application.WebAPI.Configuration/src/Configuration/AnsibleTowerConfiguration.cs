@@ -31,7 +31,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
 
         private static IAnsibleTowerInstance GetAnsibleTowerInstances()
         {
-            if (AnsibleTowerOptions == null || string.IsNullOrEmpty(AnsibleTowerOptions.ApiUrlBase)) return null;
+            if (AnsibleTowerOptions == null || !AnsibleTowerOptions.EnableAnsible || string.IsNullOrEmpty(AnsibleTowerOptions.ApiUrlBase)) return null;
 
             var apiRequestDto = CircuitBreakerHttpClient.Get<ApiRequestDto>(AnsibleTowerOptions.CircuitBreakerName, AnsibleTowerOptions.ApiUrlBase).Result;
             return new AnsibleTowerInstance(AnsibleTowerOptions.Name, AnsibleTowerOptions.CircuitBreakerName, AnsibleTowerOptions.ApiUrlBase, AnsibleTowerOptions.Version, apiRequestDto);

@@ -33,7 +33,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Controllers
         /// <summary>
         /// Gets a TO-DO item given the Id via CQRS pattern via a MediatR query
         /// </summary>
-        /// <param name="todoDescription">The description of the TO-DO command. It cannot be empty</param>
+        /// <param name="todoId"></param>
         /// <returns></returns>
         [HttpPost]
         [HttpOptions]
