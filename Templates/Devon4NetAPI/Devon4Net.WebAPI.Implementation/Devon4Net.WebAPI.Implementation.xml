@@ -295,7 +295,7 @@
             <summary>
             Constructor of the query 
             </summary>
-            <param name="todoId"></param>
+            <param name="description"></param>
         </member>
         <member name="T:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController">
             <summary>
@@ -312,7 +312,7 @@
             <summary>
             Gets a TO-DO item given the Id via CQRS pattern via a MediatR query
             </summary>
-            <param name="todoDescription">The description of the TO-DO command. It cannot be empty</param>
+            <param name="todoId"></param>
             <returns></returns>
         </member>
         <member name="M:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController.CreateTodo(System.String)">

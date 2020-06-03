@@ -134,6 +134,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         /// Creates an organization
         /// Please check the OrganizationRolesConst and OrganizationRelatedLinksConst classes
         /// </summary>
+        /// <param name="authenticationToken"></param>
         /// <param name="organizationRequest"></param>
         /// <returns></returns>
         [HttpPost]
@@ -194,6 +195,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         /// Creates tan inventory
         /// </summary>
         /// <param name="authenticationToken"></param>
+        /// <param name="inventoryRequest"></param>
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
@@ -233,6 +235,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         /// Gets a Job Templates by the provided template job id
         /// </summary>
         /// <param name="authenticationToken"></param>
+        /// <param name="jobTemplateId"></param>
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
@@ -251,6 +254,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         /// Gets the list of Job Templates
         /// </summary>
         /// <param name="authenticationToken"></param>
+        /// <param name="createJobTemplateRequest"></param>
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]

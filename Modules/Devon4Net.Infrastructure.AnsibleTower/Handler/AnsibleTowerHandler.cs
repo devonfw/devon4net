@@ -49,49 +49,49 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
 
         #region Applications
 
-        public async Task<ApplicationsResponseDto> CreateApplication(ApplicationsRequestDto applicationstRequest, string authenticationToken)
+        public Task<ApplicationsResponseDto> CreateApplication(ApplicationsRequestDto applicationstRequest, string authenticationToken)
         {
-            return await PostAnsible<ApplicationsResponseDto>(authenticationToken,AnsibleTowerInstance.ApiDefinition.applications, applicationstRequest).ConfigureAwait(false);
+            return PostAnsible<ApplicationsResponseDto>(authenticationToken,AnsibleTowerInstance.ApiDefinition.applications, applicationstRequest);
         }
-        public async Task<GetApplicationsResponseDto> GetApplications(string authenticationToken)
+        public Task<GetApplicationsResponseDto> GetApplications(string authenticationToken)
         {
-            return await GetAnsible<GetApplicationsResponseDto>(authenticationToken, AnsibleTowerInstance.ApiDefinition.applications, null).ConfigureAwait(false);
+            return GetAnsible<GetApplicationsResponseDto>(authenticationToken, AnsibleTowerInstance.ApiDefinition.applications, null);
         }
 
         #endregion
 
         #region Organizations
 
-        public async Task<OrganizationsResponseDto> GetOrganizations(string authenticationToken)
+        public Task<OrganizationsResponseDto> GetOrganizations(string authenticationToken)
         {
-            return await GetAnsible<OrganizationsResponseDto>(authenticationToken, AnsibleTowerInstance.ApiDefinition.organizations, null).ConfigureAwait(false);
+            return GetAnsible<OrganizationsResponseDto>(authenticationToken, AnsibleTowerInstance.ApiDefinition.organizations, null);
         }
 
-        public async Task<ResultOrganizationDto> GetOrganizationById(string authenticationToken, string organizationId)
+        public Task<ResultOrganizationDto> GetOrganizationById(string authenticationToken, string organizationId)
         {
-            return await GetAnsible<ResultOrganizationDto>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.organizations}{organizationId}/", null).ConfigureAwait(false);
+            return GetAnsible<ResultOrganizationDto>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.organizations}{organizationId}/", null);
         }
 
-        public async Task<ResultOrganizationDto> CreateOrganization(string authenticationToken, CreateOrganizationRequestDto organizationRequest)
+        public Task<ResultOrganizationDto> CreateOrganization(string authenticationToken, CreateOrganizationRequestDto organizationRequest)
         {
-            return await PostAnsible<ResultOrganizationDto>(authenticationToken, AnsibleTowerInstance.ApiDefinition.organizations, organizationRequest).ConfigureAwait(false);
+            return PostAnsible<ResultOrganizationDto>(authenticationToken, AnsibleTowerInstance.ApiDefinition.organizations, organizationRequest);
         }
         #endregion
 
         #region Inventories
-        public async Task<GetInventoriesResponseDto> GetInventories(string authenticationToken)
+        public Task<GetInventoriesResponseDto> GetInventories(string authenticationToken)
         {
-            return await GetAnsible<GetInventoriesResponseDto>(authenticationToken,AnsibleTowerInstance.ApiDefinition.inventory, null).ConfigureAwait(false);
+            return GetAnsible<GetInventoriesResponseDto>(authenticationToken,AnsibleTowerInstance.ApiDefinition.inventory, null);
         }
 
-        public async Task<ResultInventoryDto> GetInventoryById(string authenticationToken, string inventoryId)
+        public Task<ResultInventoryDto> GetInventoryById(string authenticationToken, string inventoryId)
         {
-            return await GetAnsible<ResultInventoryDto>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.inventory}{inventoryId}/", null).ConfigureAwait(false);
+            return GetAnsible<ResultInventoryDto>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.inventory}{inventoryId}/", null);
         }
 
-        public async Task<ResultInventoryDto> PostInventories(string authenticationToken, CreateInventoryRequestDto inventoryRequest)
+        public Task<ResultInventoryDto> PostInventories(string authenticationToken, CreateInventoryRequestDto inventoryRequest)
         {
-            return await PostAnsible<ResultInventoryDto>(authenticationToken, AnsibleTowerInstance.ApiDefinition.inventory, inventoryRequest).ConfigureAwait(false);
+            return PostAnsible<ResultInventoryDto>(authenticationToken, AnsibleTowerInstance.ApiDefinition.inventory, inventoryRequest);
         }
 
 
@@ -99,19 +99,19 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         #endregion
 
         #region JobTemplates
-        public async Task<GetJobTemplatesResponseDto> GetJobTemplates(string authenticationToken)
+        public Task<GetJobTemplatesResponseDto> GetJobTemplates(string authenticationToken)
         {
-            return await GetAnsible<GetJobTemplatesResponseDto>(authenticationToken, AnsibleTowerInstance.ApiDefinition.job_templates, null).ConfigureAwait(false);
+            return GetAnsible<GetJobTemplatesResponseDto>(authenticationToken, AnsibleTowerInstance.ApiDefinition.job_templates, null);
         }
 
-        public async Task<ResultJobDto> GetJobTemplate(string authenticationToken, string jobTemplateId)
+        public Task<ResultJobDto> GetJobTemplate(string authenticationToken, string jobTemplateId)
         {
-            return await GetAnsible<ResultJobDto>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.job_templates}{jobTemplateId}/", null).ConfigureAwait(false);
+            return GetAnsible<ResultJobDto>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.job_templates}{jobTemplateId}/", null);
         }
 
-        public async Task<ResultJobDto> CreateJobTemplate(string authenticationToken, CreateJobTemplateRequestDto createJobTemplateRequest)
+        public Task<ResultJobDto> CreateJobTemplate(string authenticationToken, CreateJobTemplateRequestDto createJobTemplateRequest)
         {
-            return await PostAnsible<ResultJobDto>(authenticationToken, AnsibleTowerInstance.ApiDefinition.job_templates, createJobTemplateRequest).ConfigureAwait(false);
+            return PostAnsible<ResultJobDto>(authenticationToken, AnsibleTowerInstance.ApiDefinition.job_templates, createJobTemplateRequest);
         }
 
         #endregion
@@ -143,16 +143,16 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
 
         #region HttpMethods
 
-        private async Task<T> GetAnsible<T>(string authenticationToken, string endpoint, object input)
+        private Task<T> GetAnsible<T>(string authenticationToken, string endpoint, object input)
         {
             SetAutehnticationToken(authenticationToken);
-            return await CircuitBreakerHttpClient.Get<T>(AnsibleTowerInstance.CircuitBreakerName, endpoint, GetAuthorizationHeaders(), true).ConfigureAwait(false);
+            return CircuitBreakerHttpClient.Get<T>(AnsibleTowerInstance.CircuitBreakerName, endpoint, GetAuthorizationHeaders(), true);
         }
 
-        private async Task<T> PostAnsible<T>(string authenticationToken, string endpoint, object dataToSend)
+        private Task<T> PostAnsible<T>(string authenticationToken, string endpoint, object dataToSend)
         {
             SetAutehnticationToken(authenticationToken);
-            return await CircuitBreakerHttpClient.Post<T>(AnsibleTowerInstance.CircuitBreakerName, endpoint, dataToSend, MediaType.ApplicationJson, GetAuthorizationHeaders(), true).ConfigureAwait(false);
+            return CircuitBreakerHttpClient.Post<T>(AnsibleTowerInstance.CircuitBreakerName, endpoint, dataToSend, MediaType.ApplicationJson, GetAuthorizationHeaders(), true);
         }
 
         #endregion
