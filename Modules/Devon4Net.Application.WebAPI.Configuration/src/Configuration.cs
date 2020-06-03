@@ -126,7 +126,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static void SetupRabbitMq(ref IServiceCollection services)
         {
             RabbitMqOptions = ServiceProvider.GetService<IOptions<RabbitMqOptions>>()?.Value;
-            if (RabbitMqOptions?.Hosts == null || !RabbitMqOptions.Hosts.Any()) return;
+            if (RabbitMqOptions == null || !RabbitMqOptions.EnableRabbitMq || RabbitMqOptions?.Hosts == null || !RabbitMqOptions.Hosts.Any()) return;
             services.SetupRabbitMq(RabbitMqOptions);
         }
 
@@ -140,7 +140,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static void SetupMediatR(ref IServiceCollection services)
         {
             MediatROptions = ServiceProvider.GetService<IOptions<MediatROptions>>()?.Value;
-            if (MediatROptions == null) return;
+            if (MediatROptions == null || !MediatROptions.EnableMediatR) return;
             services.SetupMediatR(MediatROptions);
         }
 
