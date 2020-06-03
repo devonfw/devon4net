@@ -4,6 +4,7 @@ namespace Devon4Net.Infrastructure.Common.Options.RabbitMq
 {
     public class RabbitMqOptions
     {
+        public bool EnableRabbitMq { get; set; }
         public List<HostDefinition> Hosts { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }

@@ -2,6 +2,7 @@
 {
     public class MediatROptions
     {
+        public bool EnableMediatR { get; set; }
         public Backup Backup { get; set; }
     }
 }
