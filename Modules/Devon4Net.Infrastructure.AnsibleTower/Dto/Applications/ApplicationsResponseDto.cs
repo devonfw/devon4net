@@ -1,4 +1,5 @@
 ﻿using System;
+using Devon4Net.Infrastructure.AnsibleTower.Dto.Common;
 
 namespace Devon4Net.Infrastructure.AnsibleTower.Dto.Applications
 {
@@ -27,19 +28,6 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Dto.Applications
         public Tokens tokens { get; set; }
         public Organization organization { get; set; }
         public User_Capabilities user_capabilities { get; set; }
-    }
-
-    public class Tokens
-    {
-        public int count { get; set; }
-        public object[] results { get; set; }
-    }
-
-    public class Organization
-    {
-        public string description { get; set; }
-        public string name { get; set; }
-        public int id { get; set; }
     }
 
     public class RelatedApplicationsResponseDto

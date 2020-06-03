@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Devon4Net.Infrastructure.AnsibleTower.Dto.Common;
 
 namespace Devon4Net.Infrastructure.AnsibleTower.Dto.Organizations
 {
@@ -7,11 +8,11 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Dto.Organizations
     {
         public int count { get; set; }
         public object previous { get; set; }
-        public Result[] results { get; set; }
+        public ResultOrganizationDto[] results { get; set; }
         public object next { get; set; }
     }
 
-    public class Result
+    public class ResultOrganizationDto
     {
         public string description { get; set; }
         public int max_hosts { get; set; }

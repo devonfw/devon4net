@@ -313,9 +313,15 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
         private async Task LogHttpResponseAsync(HttpResponseMessage httpResponseMessage, HttpContent httpContent = null)
         {
+            var messageContent = string.Empty;
+            if (httpResponseMessage != null && httpResponseMessage.Content != null)
+            {
+                messageContent = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+            }
+
             if (httpResponseMessage != null)
             {
-                Devon4NetLogger.Information($" HttpRequest :{httpResponseMessage.RequestMessage} | httpResponse: {httpResponseMessage}");
+                Devon4NetLogger.Information($" HttpRequest :{httpResponseMessage.RequestMessage} | httpResponse: {httpResponseMessage} | message Content: {messageContent}");
             }
 
             if (httpContent != null)
@@ -337,12 +343,12 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
             if (httpResponseMessage == null)
             {
-                throw new HttpRequestException($"The httprequest to {endPointName} was not successful.");
+                throw new HttpRequestException($"The http request to {endPointName} was not successful.");
             }
 
             if (httpResponseMessage != null && !httpResponseMessage.IsSuccessStatusCode)
             {
-                throw new HttpCustomRequestException($"The httprequest to {endPointName} was not successful. HttpStatus Error: {(int) httpResponseMessage.StatusCode} | {httpResponseMessage}", (int) httpResponseMessage.StatusCode);
+                throw new HttpCustomRequestException($"The http request to {endPointName} was not successful. HttpStatus Error: {(int) httpResponseMessage.StatusCode} | {httpResponseMessage}", (int) httpResponseMessage.StatusCode);
             }
         }
 
