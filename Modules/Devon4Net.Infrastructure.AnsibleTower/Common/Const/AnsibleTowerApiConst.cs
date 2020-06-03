@@ -1,6 +1,6 @@
 ﻿namespace Devon4Net.Infrastructure.AnsibleTower.Const
 {
-    public class AnsibleConst
+    public static class AnsibleTowerApiConst
     {
         public const string LoginUrl = "/api/login/";
         public const string LoginTokenName = "csrftoken";

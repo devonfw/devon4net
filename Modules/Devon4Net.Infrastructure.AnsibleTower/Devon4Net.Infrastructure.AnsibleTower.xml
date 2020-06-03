@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Devon4Net.Infrastructure.AnsibleTower</name>
+    </assembly>
+    <members>
+        <member name="T:Devon4Net.Infrastructure.AnsibleTower.Common.AnsibleTowerInstance">
+            <summary>
+            Ansible handler manager
+            </summary>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Login(System.String,System.String)">
+            <summary>
+            Performs the basic Ansible Tower login
+            </summary>
+            <param name="user">User name</param>
+            <param name="password">User password</param>
+            <returns>The Ansible Tower login object result</returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Applications(Devon4Net.Infrastructure.AnsibleTower.Dto.Applications.ApplicationsRequestDto,System.String)">
+            <summary>
+            Gets the Ansible tower application endpoint
+            </summary>
+            <param name="applicationsRequest"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Organizations(System.String)">
+            <summary>
+            Gets the Ansible tower application endpoint
+            Please check the class OrganizationRelatedLinksConst class
+            </summary>
+            <param name="applicationsRequest"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.Login(System.String,System.String)">
+            <summary>
+            Performs the basic login on Ansible Tower
+            </summary>
+            <param name="userName">UserName</param>
+            <param name="password">Password</param>
+            <returns>Result object structure</returns>
+        </member>
+    </members>
+</doc>

@@ -15,6 +15,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
     public class CircuitBreakerHttpClient : ICircuitBreakerHttpClient
     {
         private IHttpClientFactory HttpClientFactory { get; set; }
+        private static readonly JsonSerializerOptions CamelJsonSerializerOptions = new JsonSerializerOptions{ PropertyNamingPolicy = JsonNamingPolicy.CamelCase, IgnoreNullValues = true};
 
         public CircuitBreakerHttpClient(IHttpClientFactory httpClientFactory)
         {
@@ -48,7 +49,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             return result;
         }
 
-        public async Task<T> Get<T>(string endPointName, string url, Dictionary<string, string> headers = null)
+        public async Task<T> Get<T>(string endPointName, string url, Dictionary<string, string> headers = null, bool useCamelCase = false)
         {
             HttpClient httpClient = null;
             HttpResponseMessage httpResponseMessage = null;
@@ -61,7 +62,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                     
                     httpResponseMessage = await httpClient.GetAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url)).ConfigureAwait(false);
                     var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName);
-                    result = Deserialize<T>(httpResult);
+                    result = Deserialize<T>(httpResult, useCamelCase);
                 }
             }
             catch (Exception ex)
@@ -122,7 +123,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             return result;
         }
         
-        public async Task<T> PostJson<T>(string endPointName, string url, string jsonDataToSend, string mediaType, Dictionary<string,string> headers = null)
+        public async Task<T> PostJson<T>(string endPointName, string url, string jsonDataToSend, string mediaType, Dictionary<string,string> headers = null, bool useCamelCase = false)
         {
             T result;
             HttpClient httpClient = null;
@@ -134,7 +135,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                 {
                     httpResponseMessage = await httpClient.PostAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url), new StringContent(jsonDataToSend, Encoding.UTF8, mediaType)).ConfigureAwait(false);
                     var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName);
-                    result = Deserialize<T>(httpResult);
+                    result = Deserialize<T>(httpResult, useCamelCase);
                 }
             }
             catch (Exception ex)
@@ -150,7 +151,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             return result;
         }        
 
-        public async Task<T> Post<T>(string endPointName, string url, object dataToSend, string mediaType, Dictionary<string,string> headers = null)
+        public async Task<T> Post<T>(string endPointName, string url, object dataToSend, string mediaType, Dictionary<string,string> headers = null, bool useCamelCase = false)
         {
             T result;
             HttpClient httpClient = null;
@@ -161,11 +162,11 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             {
                 using (httpClient = GetDefaultClient(endPointName, headers))
                 {
-                    httpContent = CreateJsonHttpContent(dataToSend, mediaType);
+                    httpContent = CreateJsonHttpContent(dataToSend, mediaType, useCamelCase);
 
                     httpResponseMessage = await httpClient.PostAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url), httpContent).ConfigureAwait(false);
                     var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName, httpContent);
-                    result = Deserialize<T>(httpResult);
+                    result = Deserialize<T>(httpResult, useCamelCase);
                 }
             }
             catch (Exception ex)
@@ -181,7 +182,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             return result;
         }
 
-        public async Task<T> Put<T>(string endPointName, string url, object dataToSend, string mediaType, Dictionary<string,string> headers = null)
+        public async Task<T> Put<T>(string endPointName, string url, object dataToSend, string mediaType, Dictionary<string,string> headers = null, bool useCamelCase = false)
         {
             T result;
             HttpClient httpClient = null;
@@ -192,11 +193,11 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             {
                 using (httpClient = GetDefaultClient(endPointName, headers))
                 {
-                    httpContent = CreateJsonHttpContent(dataToSend, mediaType);
+                    httpContent = CreateJsonHttpContent(dataToSend, mediaType, useCamelCase);
                     httpResponseMessage = await httpClient.PutAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url), httpContent).ConfigureAwait(false);
                     var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName);
 
-                    result = Deserialize<T>(httpResult);
+                    result = Deserialize<T>(httpResult, useCamelCase);
                 }
             }
             catch (Exception ex)
@@ -286,10 +287,10 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             return httpClient;
         }
 
-        private HttpContent CreateJsonHttpContent<T>(T requestContent, string mediaType)
+        private HttpContent CreateJsonHttpContent<T>(T requestContent, string mediaType, bool useCamelCase)
         {
             if (requestContent == null) return null;
-            var requestBody = Serialize(requestContent);
+            var requestBody = Serialize(requestContent, useCamelCase);
             HttpContent httpContent = new StringContent(requestBody);
             httpContent.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
             return httpContent;
@@ -300,14 +301,14 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             Devon4NetLogger.Error(exception);
         }
 
-        private string Serialize(object toPrint)
+        private string Serialize(object toPrint, bool useCamelCase)
         {
-            return JsonSerializer.Serialize(toPrint);
+            return JsonSerializer.Serialize(toPrint, useCamelCase ? CamelJsonSerializerOptions : null);
         }
 
-        private T Deserialize<T>(string input)
+        private T Deserialize<T>(string input, bool useCamelCase)
         {
-            return JsonSerializer.Deserialize<T>(input);
+            return JsonSerializer.Deserialize<T>(input, useCamelCase ? CamelJsonSerializerOptions : null);
         }
 
         private async Task LogHttpResponseAsync(HttpResponseMessage httpResponseMessage, HttpContent httpContent = null)
@@ -341,7 +342,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
             if (httpResponseMessage != null && !httpResponseMessage.IsSuccessStatusCode)
             {
-                throw new HttpCustomRequestException($"The httprequest to {endPointName} was not successful. HttpStatus Error: {httpResponseMessage.StatusCode} | {httpResponseMessage}", (int) httpResponseMessage.StatusCode);
+                throw new HttpCustomRequestException($"The httprequest to {endPointName} was not successful. HttpStatus Error: {(int) httpResponseMessage.StatusCode} | {httpResponseMessage}", (int) httpResponseMessage.StatusCode);
             }
         }
 
@@ -360,14 +361,14 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
         
         private void DisposeHttpObjects(ref HttpClient httpClient, ref HttpResponseMessage httpResponseMessage, ref HttpContent? httpContent)
         {
-            //httpContent?.Dispose();
-            //DisposeHttpObjects(ref httpClient, ref httpResponseMessage);
+            httpContent?.Dispose();
+            DisposeHttpObjects(ref httpClient, ref httpResponseMessage);
         }
 
         private void DisposeHttpObjects(ref HttpClient httpClient, ref HttpResponseMessage httpResponseMessage)
         {
-            //httpClient?.Dispose();
-            //httpResponseMessage?.Dispose();
+            httpClient?.Dispose();
+            httpResponseMessage?.Dispose();
         }
 
         private string GetEncodedUrl(string baseAddress, string endPoint)
