@@ -10,12 +10,6 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Dto.Applications
         public string activity_stream { get; set; }
     }
 
-    public class UserCapabilities
-    {
-        public bool edit { get; set; }
-        public bool delete { get; set; }
-    }
-
     public class SummaryFieldsApplication
     {
         public Organization organization { get; set; }
@@ -25,7 +19,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Dto.Applications
 
     public class ResultApplication
     {
-        public int id { get; set; }
+        public int? id { get; set; }
         public string type { get; set; }
         public string url { get; set; }
         public RelatedApplication related { get; set; }
@@ -39,15 +33,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Dto.Applications
         public string client_type { get; set; }
         public string redirect_uris { get; set; }
         public string authorization_grant_type { get; set; }
-        public bool skip_authorization { get; set; }
-        public int organization { get; set; }
-    }
-
-    public class GetApplicationsResponseDto
-    {
-        public int count { get; set; }
-        public object next { get; set; }
-        public object previous { get; set; }
-        public IList<ResultApplication> results { get; set; }
+        public bool? skip_authorization { get; set; }
+        public int? organization { get; set; }
     }
 }

@@ -4,37 +4,28 @@ using Devon4Net.Infrastructure.AnsibleTower.Dto.Common;
 
 namespace Devon4Net.Infrastructure.AnsibleTower.Dto.Inventories
 {
-
-    public class GetInventoriesResponseDto
-    {
-        public int count { get; set; }
-        public object next { get; set; }
-        public object previous { get; set; }
-        public ResultInventoryDto[] results { get; set; }
-    }
-
     public class ResultInventoryDto
     {
-        public int id { get; set; }
+        public int? id { get; set; }
         public string type { get; set; }
         public string url { get; set; }
         public RelatedInventories related { get; set; }
         public SummaryFieldsInventories summary_fields { get; set; }
-        public DateTime created { get; set; }
-        public DateTime modified { get; set; }
+        public DateTime? created { get; set; }
+        public DateTime? modified { get; set; }
         public string name { get; set; }
         public string description { get; set; }
-        public int organization { get; set; }
+        public int? organization { get; set; }
         public string kind { get; set; }
         public object host_filter { get; set; }
         public string variables { get; set; }
         public bool has_active_failures { get; set; }
-        public int total_hosts { get; set; }
-        public int hosts_with_active_failures { get; set; }
-        public int total_groups { get; set; }
+        public int? total_hosts { get; set; }
+        public int? hosts_with_active_failures { get; set; }
+        public int? total_groups { get; set; }
         public bool has_inventory_sources { get; set; }
-        public int total_inventory_sources { get; set; }
-        public int inventory_sources_with_failures { get; set; }
+        public int? total_inventory_sources { get; set; }
+        public int? inventory_sources_with_failures { get; set; }
         public object insights_credential { get; set; }
         public bool pending_deletion { get; set; }
     }
@@ -67,6 +58,6 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Dto.Inventories
         public Created_By created_by { get; set; }
         public Modified_By modified_by { get; set; }
         public Dictionary<string, RoleItems> object_roles { get; set; }
-        public User_Capabilities user_capabilities { get; set; }
+        public UserCapabilities user_capabilities { get; set; }
     }
 }

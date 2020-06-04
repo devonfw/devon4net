@@ -1,6 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Devon4Net.Infrastructure.AnsibleTower.Dto;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.Applications;
+using Devon4Net.Infrastructure.AnsibleTower.Dto.Common;
+using Devon4Net.Infrastructure.AnsibleTower.Dto.Credentials;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.Inventories;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.JobTemplates;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.Organizations;
@@ -57,7 +62,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("/v1/ansible/applications")]
-        [ProducesResponseType(typeof(GetApplicationsResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PaginatedResultDto<ResultApplication>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -95,18 +100,19 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         /// Please check the OrganizationRolesConst and OrganizationRelatedLinksConst classes
         /// </summary>
         /// <param name="authenticationToken"></param>
+        /// <param name="searchCriteria"></param>
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         [Route("/v1/ansible/organizations")]
-        [ProducesResponseType(typeof(OrganizationsResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PaginatedResultDto<ResultOrganizationDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Organizations([FromHeader] string authenticationToken)
+        public async Task<IActionResult> Organizations([FromHeader] string authenticationToken, string searchCriteria)
         {
             Devon4NetLogger.Debug("Executing Login from controller AnsibleTowerController");
-            return Ok(await AnsibleTowerHandler.GetOrganizations(authenticationToken));
+            return Ok(await AnsibleTowerHandler.GetOrganizations(authenticationToken,searchCriteria));
         }
 
         /// <summary>
@@ -162,7 +168,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("/v1/ansible/inventories")]
-        [ProducesResponseType(typeof(GetInventoriesResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PaginatedResultDto<ResultInventoryDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -220,8 +226,8 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
-        [Route("/v1/ansible/JobTemplates")]
-        [ProducesResponseType(typeof(GetJobTemplatesResponseDto), StatusCodes.Status200OK)]
+        [Route("/v1/ansible/jobtemplates")]
+        [ProducesResponseType(typeof(PaginatedResultDto<GetJobTemplatesResponseDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -239,8 +245,8 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
-        [Route("/v1/ansible/GetJobTemplate")]
-        [ProducesResponseType(typeof(ResultJobDto), StatusCodes.Status200OK)]
+        [Route("/v1/ansible/getjobtemplate")]
+        [ProducesResponseType(typeof(GetJobTemplatesResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -251,15 +257,15 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         }
 
         /// <summary>
-        /// Gets the list of Job Templates
+        /// Creates a Job Template
         /// </summary>
         /// <param name="authenticationToken"></param>
         /// <param name="createJobTemplateRequest"></param>
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        [Route("/v1/ansible/JobTemplates")]
-        [ProducesResponseType(typeof(ResultJobDto), StatusCodes.Status200OK)]
+        [Route("/v1/ansible/jobtemplates")]
+        [ProducesResponseType(typeof(GetJobTemplatesResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -268,6 +274,121 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
             Devon4NetLogger.Debug("Executing Login from controller AnsibleTowerController");
             return Ok(await AnsibleTowerHandler.CreateJobTemplate(authenticationToken, createJobTemplateRequest));
         }
+        #endregion
+
+        #region Credentials
+        /// <summary>
+        /// Gets the credentials list 
+        /// </summary>
+        /// <param name="authenticationToken"></param>
+        /// <param name="searchCriteria"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("/v1/ansible/credentials")]
+        [ProducesResponseType(typeof(PaginatedResultDto<GetCredentialsResponseDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Credentials([FromHeader] string authenticationToken, string searchCriteria)
+        {
+            Devon4NetLogger.Debug("Executing Login from controller AnsibleTowerController");
+            return Ok(await AnsibleTowerHandler.GetCredentials(authenticationToken, searchCriteria));
+        }
+
+        /// <summary>
+        /// Gets the credentials list 
+        /// </summary>
+        /// <param name="authenticationToken"></param>
+        /// <param name="searchCriteria"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/ansible/credentials")]
+        [ProducesResponseType(typeof(PaginatedResultDto<GetCredentialsResponseDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Credentials([FromHeader] string authenticationToken, CreateCredentialRequestDto createCredentialRequest)
+        {
+            Devon4NetLogger.Debug("Executing Login from controller AnsibleTowerController");
+            return Ok(await AnsibleTowerHandler.CreateCredential(authenticationToken, createCredentialRequest));
+        }
+
+        #endregion
+
+        #region FullFlowSample
+
+        /// <summary>
+        /// Performs a regular Ansible Tower workflow.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="password"></param>
+        /// <param name="organizationName"></param>
+        /// <param name="credentialName"></param>
+        /// <param name="credentialDescription"></param>
+        /// <param name="credentialUserName"></param>
+        /// <param name="credentialPassword"></param>
+        /// <param name="idOrganization"></param>
+        /// <param name="idCredentialType"></param>
+        /// <param name="idUser"></param>
+        /// <returns>Something</returns>
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/ansible/fullflowsample")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> FullFlow(string user, string password, string organizationName,
+            string credentialName, string credentialDescription,string credentialUserName, string credentialPassword,
+            int idOrganization, int idCredentialType, int idUser)
+        {
+            var result = new StringBuilder();
+
+            Devon4NetLogger.Debug("Executing FullFlow from controller AnsibleTowerController");
+            result.AppendLine($"");
+            result.AppendLine($"Perform login with the user; {user} and password: {password}");
+            var token = await AnsibleTowerHandler.Login(user, password);
+            result.AppendLine($"The user token is: {token.Token}");
+            var organizations = await AnsibleTowerHandler.GetOrganizations(token.Token);
+
+            // Organizations
+            Devon4NetLogger.Debug("Organization count: " + organizations.count);
+            if (organizations?.results != null && organizations.results.Any() && organizations.results.FirstOrDefault()?.name != organizationName)
+            {
+                return BadRequest();
+            }
+
+            var organization = organizations.results?.FirstOrDefault();
+            result.AppendLine($"The retreived organization is: name: {organization.name}, id: {organization.id}");
+
+            // Credentials
+            var credentialsList = await AnsibleTowerHandler.GetCredentials(token.Token, credentialName);
+            if (credentialsList != null && credentialsList.results != null && credentialsList.results.Any()|| credentialsList.results.FirstOrDefault()?.name != credentialName)
+            {
+                result.AppendLine($"The credentials with name {credentialName} has been retreived");
+                var credential = new CreateCredentialRequestDto
+                {
+                    name = credentialName, 
+                    description = credentialDescription, 
+                    organization = idOrganization, 
+                    credential_type = idCredentialType, 
+                    inputs = new Dictionary<string, string>{{ "username", credentialUserName }, {"password", credentialPassword }}, 
+                    user = idUser
+                };
+                result.AppendLine($"Storing the credential...");
+                var savedCredential = await AnsibleTowerHandler.CreateCredential(token.Token, credential);
+                result.AppendLine($"The credential has been created in Ansible Tower. id: {savedCredential.id}, name: {savedCredential.name}, created: {savedCredential.created}");
+            }
+            else
+            {
+                result.AppendLine($"ERROR! The credentials with name {credentialName} has NOT been retreived");
+            }
+
+            return Ok(result.ToString());
+        }
+
         #endregion
 
     }
