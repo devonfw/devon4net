@@ -251,7 +251,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         }
 
         /// <summary>
-        /// Gets the list of Job Templates
+        /// Creates a Job Template
         /// </summary>
         /// <param name="authenticationToken"></param>
         /// <param name="createJobTemplateRequest"></param>

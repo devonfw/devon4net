@@ -98,7 +98,7 @@
         </member>
         <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.JobTemplates(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.JobTemplates.CreateJobTemplateRequestDto)">
             <summary>
-            Gets the list of Job Templates
+            Creates a Job Template
             </summary>
             <param name="authenticationToken"></param>
             <param name="createJobTemplateRequest"></param>

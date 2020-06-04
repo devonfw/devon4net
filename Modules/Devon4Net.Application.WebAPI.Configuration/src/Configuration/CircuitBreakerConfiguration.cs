@@ -46,23 +46,17 @@ namespace Devon4Net.Application.WebAPI.Configuration
 
                 }).ConfigurePrimaryHttpMessageHandler(() =>
                 {
+                    var handler = GetHttpMessageHandler();
+
                     if (!endPointEntity.UseCertificate)
                     {
-                        return new HttpClientHandler
-                        {
-                            ServerCertificateCustomValidationCallback = (m, c, a, e) => CheckCertificate,
-                        };
+                        return handler;
                     }
 
                     if (endPointEntity.Certificate == null)
                     {
-                        throw new ApplicationException($"The endpoint {endPointEntity.Name} has no certificate defined.");
+                        throw new ApplicationException($"The endpoint {endPointEntity.Name} has the flag 'UseCertificate=true' but there is no certificate defined");
                     }
-
-                    var handler = new HttpClientHandler
-                    {
-                        ServerCertificateCustomValidationCallback = (m, c, a, e) => CheckCertificate,
-                    };
 
                     var certificate = new X509Certificate2(FileOperations.GetFileFullPath(endPointEntity.Certificate), endPointEntity.CertificatePassword);
                     handler.SslProtocols = string.IsNullOrEmpty(endPointEntity.SslProtocol) ? SslProtocols.Tls12 : (SslProtocols)(Convert.ToInt32(endPointEntity.SslProtocol));
@@ -82,7 +76,15 @@ namespace Devon4Net.Application.WebAPI.Configuration
                 );
         }
 
-        private static void AddHttpClient(this IServiceCollection services, List<Endpoint> endPointEntityList)
+        private static HttpClientHandler GetHttpMessageHandler()
+        {
+            return new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (m, c, a, e) => !CheckCertificate,
+            };
+        }
+
+        private static void AddHttpClient(this IServiceCollection services, IReadOnlyCollection<Endpoint> endPointEntityList)
         {
             if (endPointEntityList == null || !endPointEntityList.Any()) throw new ArgumentNullException("endPointEntityList", "The end point List provided does not have endpoints");
 
