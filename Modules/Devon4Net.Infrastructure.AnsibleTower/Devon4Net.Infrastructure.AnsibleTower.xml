@@ -32,12 +32,13 @@
             <param name="authenticationToken"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Organizations(System.String)">
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Organizations(System.String,System.String)">
             <summary>
             Gets the organizations list 
             Please check the OrganizationRolesConst and OrganizationRelatedLinksConst classes
             </summary>
             <param name="authenticationToken"></param>
+            <param name="searchCriteria"></param>
             <returns></returns>
         </member>
         <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.GetOrganization(System.String,System.String)">
@@ -103,6 +104,38 @@
             <param name="authenticationToken"></param>
             <param name="createJobTemplateRequest"></param>
             <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Credentials(System.String,System.String)">
+            <summary>
+            Gets the credentials list 
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Credentials(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Credentials.CreateCredentialRequestDto)">
+            <summary>
+            Gets the credentials list 
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.FullFlow(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Performs a regular Ansible Tower workflow.
+            </summary>
+            <param name="user"></param>
+            <param name="password"></param>
+            <param name="organizationName"></param>
+            <param name="credentialName"></param>
+            <param name="credentialDescription"></param>
+            <param name="credentialUserName"></param>
+            <param name="credentialPassword"></param>
+            <param name="idOrganization"></param>
+            <param name="idCredentialType"></param>
+            <param name="idUser"></param>
+            <returns>Something</returns>
         </member>
         <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.Login(System.String,System.String)">
             <summary>

@@ -1,6 +1,6 @@
 ﻿namespace Devon4Net.Infrastructure.AnsibleTower.Dto.Common
 {
-    public class User_Capabilities
+    public class UserCapabilities
     {
         public bool edit { get; set; }
         public bool delete { get; set; }
