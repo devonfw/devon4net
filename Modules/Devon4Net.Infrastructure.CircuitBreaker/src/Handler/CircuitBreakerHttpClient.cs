@@ -59,7 +59,6 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             {
                 using (httpClient = GetDefaultClient(endPointName, headers))
                 {
-                    
                     httpResponseMessage = await httpClient.GetAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url)).ConfigureAwait(false);
                     var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName);
                     result = Deserialize<T>(httpResult, useCamelCase);

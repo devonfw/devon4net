@@ -1,21 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using Devon4Net.Infrastructure.AnsibleTower.Dto.Applications;
+using System.Text;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.Common;
 
-namespace Devon4Net.Infrastructure.AnsibleTower.Dto.JobTemplates
+namespace Devon4Net.Infrastructure.AnsibleTower.Dto.Jobs
 {
-    public class GetJobTemplatesResponseDto
+
+    public class GetJobResponseDto
     {
         public int? id { get; set; }
         public string type { get; set; }
         public string url { get; set; }
-        public RelatedTemplate related { get; set; }
-        public SummaryFieldsJobTemplate summary_fields { get; set; }
+        public RelatedJob related { get; set; }
+        public SummaryFieldsJob summary_fields { get; set; }
         public DateTime created { get; set; }
         public DateTime modified { get; set; }
         public string name { get; set; }
         public string description { get; set; }
+        public int? unified_job_template { get; set; }
+        public string launch_type { get; set; }
+        public string status { get; set; }
+        public bool failed { get; set; }
+        public DateTime started { get; set; }
+        public object finished { get; set; }
+        public object canceled_on { get; set; }
+        public float? elapsed { get; set; }
+        public string job_explanation { get; set; }
+        public string execution_node { get; set; }
+        public string controller_node { get; set; }
         public string job_type { get; set; }
         public int? inventory { get; set; }
         public int? project { get; set; }
@@ -32,73 +44,56 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Dto.JobTemplates
         public int? timeout { get; set; }
         public bool use_fact_cache { get; set; }
         public int? organization { get; set; }
-        public object last_job_run { get; set; }
-        public bool last_job_failed { get; set; }
-        public object next_job_run { get; set; }
-        public string status { get; set; }
-        public string host_config_key { get; set; }
-        public bool ask_scm_branch_on_launch { get; set; }
-        public bool ask_diff_mode_on_launch { get; set; }
-        public bool ask_variables_on_launch { get; set; }
-        public bool ask_limit_on_launch { get; set; }
-        public bool ask_tags_on_launch { get; set; }
-        public bool ask_skip_tags_on_launch { get; set; }
-        public bool ask_job_type_on_launch { get; set; }
-        public bool ask_verbosity_on_launch { get; set; }
-        public bool ask_inventory_on_launch { get; set; }
-        public bool ask_credential_on_launch { get; set; }
-        public bool survey_enabled { get; set; }
-        public bool become_enabled { get; set; }
-        public bool diff_mode { get; set; }
+        public int? job_template { get; set; }
+        public object[] passwords_needed_to_start { get; set; }
         public bool allow_simultaneous { get; set; }
-        public object custom_virtualenv { get; set; }
+        public object artifacts { get; set; }
+        public string scm_revision { get; set; }
+        public int? instance_group { get; set; }
+        public bool diff_mode { get; set; }
+        public int? job_slice_number { get; set; }
         public int? job_slice_count { get; set; }
         public string webhook_service { get; set; }
         public object webhook_credential { get; set; }
+        public string webhook_guid { get; set; }
     }
 
-    public class RelatedTemplate
+    public class RelatedJob
     {
         public string created_by { get; set; }
-        public string modified_by { get; set; }
         public string labels { get; set; }
         public string inventory { get; set; }
         public string project { get; set; }
         public string organization { get; set; }
         public string extra_credentials { get; set; }
         public string credentials { get; set; }
-        public string jobs { get; set; }
-        public string schedules { get; set; }
+        public string unified_job_template { get; set; }
+        public string stdout { get; set; }
+        public string job_events { get; set; }
+        public string job_host_summaries { get; set; }
         public string activity_stream { get; set; }
-        public string launch { get; set; }
-        public string webhook_key { get; set; }
-        public string webhook_receiver { get; set; }
-        public string notification_templates_started { get; set; }
-        public string notification_templates_success { get; set; }
-        public string notification_templates_error { get; set; }
-        public string access_list { get; set; }
-        public string survey_spec { get; set; }
-        public string object_roles { get; set; }
-        public string instance_groups { get; set; }
-        public string slice_workflow_jobs { get; set; }
-        public string copy { get; set; }
+        public string notifications { get; set; }
+        public string create_schedule { get; set; }
+        public string job_template { get; set; }
+        public string cancel { get; set; }
+        public string relaunch { get; set; }
     }
 
-    public class SummaryFieldsJobTemplate
+    public class SummaryFieldsJob
     {
         public Organization organization { get; set; }
-        public Inventory inventory { get; set; }
-        public Project project { get; set; }
+        public InventorySubset inventory { get; set; }
+        public ProjectSubset project { get; set; }
+        public JobTemplateSubset job_template { get; set; }
+        public Unified_Job_Template unified_job_template { get; set; }
+        public InstanceGroup instance_group { get; set; }
         public Created_By created_by { get; set; }
-        public Modified_By modified_by { get; set; }
-        public Dictionary<string,RoleItems> object_roles { get; set; }
-        public UserCapabilitiesJobTemplate user_capabilities { get; set; }
+        public UserCapabilities user_capabilities { get; set; }
         public Labels labels { get; set; }
-        public object[] recent_jobs { get; set; }
         public List<CredentialSubset> credentials { get; set; }
     }
 
-    public class Inventory
+    public class InventorySubset
     {
         public int? id { get; set; }
         public string name { get; set; }
@@ -114,7 +109,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Dto.JobTemplates
         public string kind { get; set; }
     }
 
-    public class Project
+    public class ProjectSubset
     {
         public int? id { get; set; }
         public string name { get; set; }
@@ -123,13 +118,25 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Dto.JobTemplates
         public string scm_type { get; set; }
     }
 
-
-    public class UserCapabilitiesJobTemplate
+    public class JobTemplateSubset
     {
-        public bool edit { get; set; }
-        public bool delete { get; set; }
-        public bool start { get; set; }
-        public bool schedule { get; set; }
-        public bool copy { get; set; }
+        public int? id { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+    }
+
+    public class Unified_Job_Template
+    {
+        public int? id { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+        public string unified_job_type { get; set; }
+    }
+
+    public class InstanceGroup
+    {
+        public int? id { get; set; }
+        public string name { get; set; }
+        public bool is_containerized { get; set; }
     }
 }

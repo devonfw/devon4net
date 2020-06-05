@@ -9,6 +9,12 @@
             Ansible handler manager
             </summary>
         </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Ping">
+            <summary>
+            Ping Ansible Tower
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Login(System.String,System.String)">
             <summary>
             Performs the basic Ansible Tower login
@@ -115,18 +121,73 @@
         </member>
         <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Credentials(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Credentials.CreateCredentialRequestDto)">
             <summary>
-            Gets the credentials list 
+            Creates a credential 
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="createCredentialRequest">Please check the input params. Inputs sample: url (CyberArk cojur), api_key, account, username, cacert</param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Projects(System.String,System.String)">
+            <summary>
+            Gets the projects list 
             </summary>
             <param name="authenticationToken"></param>
             <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Projects(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Projects.CreateProjectRequestDto)">
+            <summary>
+            Creates a project
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Jobs(System.String,System.String)">
+            <summary>
+            Gets the list of Job Templates
+            </summary>
+            <param name="authenticationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.AskJobCancel(System.String,System.Int32)">
+            <summary>
+            Returns if a Job can be canceled
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="idJob"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.JobCancel(System.String,System.Int32)">
+            <summary>
+            Cancels a job
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="idJob"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.JobEvents(System.String,System.Int32)">
+            <summary>
+            Gets the event list of a Job 
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="idJob"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.JobSchedule(System.String,System.Int32)">
+            <summary>
+            Gets the event list of a Job 
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="idJob"></param>
             <returns></returns>
         </member>
         <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.FullFlow(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.Int32)">
             <summary>
             Performs a regular Ansible Tower workflow.
             </summary>
-            <param name="user"></param>
-            <param name="password"></param>
+            <param name="ansibleUser"></param>
+            <param name="ansiblePassword"></param>
             <param name="organizationName"></param>
             <param name="credentialName"></param>
             <param name="credentialDescription"></param>
