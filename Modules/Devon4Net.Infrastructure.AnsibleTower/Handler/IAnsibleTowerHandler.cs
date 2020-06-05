@@ -28,5 +28,6 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         Task<GetCredentialsResponseDto> CreateCredential(string authenticationToken, CreateCredentialRequestDto credentialRequest);
         Task<PaginatedResultDto<GetProjectsRequestDto>> GetProjects(string authenticationToken, string searchCriteria = null);
         Task<GetProjectsRequestDto> CreateProject(string authenticationToken, CreateProjectRequestDto credentialRequest);
+        Task<PingResponseDto> Ping();
     }
 }

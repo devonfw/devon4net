@@ -51,6 +51,23 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
             return Ok(await AnsibleTowerHandler.Login(user, password));
         }
 
+        /// <summary>
+        /// Ping Ansible Tower
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("/v1/ansible/ping")]
+        [ProducesResponseType(typeof(PaginatedResultDto<PingResponseDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Ping()
+        {
+            Devon4NetLogger.Debug("Executing Login from controller AnsibleTowerController");
+            return Ok(await AnsibleTowerHandler.Ping());
+        }
+
         #endregion
 
         #region Applications
@@ -362,8 +379,8 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         /// <summary>
         /// Performs a regular Ansible Tower workflow.
         /// </summary>
-        /// <param name="user"></param>
-        /// <param name="password"></param>
+        /// <param name="ansibleUser"></param>
+        /// <param name="ansiblePassword"></param>
         /// <param name="organizationName"></param>
         /// <param name="credentialName"></param>
         /// <param name="credentialDescription"></param>
@@ -380,7 +397,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> FullFlow(string user, string password, string organizationName,
+        public async Task<IActionResult> FullFlow(string ansibleUser, string ansiblePassword, string organizationName,
             string credentialName, string credentialDescription,string credentialUserName, string credentialPassword,
             int idOrganization, int idCredentialType, int idUser)
         {
@@ -388,8 +405,8 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
 
             Devon4NetLogger.Debug("Executing FullFlow from controller AnsibleTowerController");
             result.AppendLine($"");
-            result.AppendLine($"Perform login with the user; {user} and password: {password}");
-            var token = await AnsibleTowerHandler.Login(user, password);
+            result.AppendLine($"Perform login with the user; {ansibleUser} and password: {ansiblePassword}");
+            var token = await AnsibleTowerHandler.Login(ansibleUser, ansiblePassword);
             result.AppendLine($"The user token is: {token.Token}");
             var organizations = await AnsibleTowerHandler.GetOrganizations(token.Token);
 

@@ -143,6 +143,10 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         #endregion
 
         #region Security
+        public Task<PingResponseDto> Ping()
+        {
+            return CircuitBreakerHttpClient.Get<PingResponseDto>(AnsibleTowerInstance.CircuitBreakerName, AnsibleTowerInstance.ApiDefinition.ping, null, true);
+        }
 
         private void SetAutehnticationToken(string authenticationToken)
         {

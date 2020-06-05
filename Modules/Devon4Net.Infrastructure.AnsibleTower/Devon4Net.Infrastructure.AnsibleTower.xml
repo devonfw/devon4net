@@ -17,6 +17,12 @@
             <param name="password">User password</param>
             <returns>The Ansible Tower login object result</returns>
         </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Ping">
+            <summary>
+            Ping Ansible Tower
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Applications(System.String)">
             <summary>
             Gets the list of applications
