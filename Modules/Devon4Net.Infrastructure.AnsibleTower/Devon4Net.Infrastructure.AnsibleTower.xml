@@ -115,7 +115,23 @@
         </member>
         <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Credentials(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Credentials.CreateCredentialRequestDto)">
             <summary>
-            Gets the credentials list 
+            Creates a credential 
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Projects(System.String,System.String)">
+            <summary>
+            Gets the projects list 
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Projects(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Projects.CreateProjectRequestDto)">
+            <summary>
+            Creates a project
             </summary>
             <param name="authenticationToken"></param>
             <param name="searchCriteria"></param>

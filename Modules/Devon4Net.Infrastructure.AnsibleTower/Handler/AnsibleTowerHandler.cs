@@ -10,6 +10,7 @@ using Devon4Net.Infrastructure.AnsibleTower.Dto.Credentials;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.Inventories;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.JobTemplates;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.Organizations;
+using Devon4Net.Infrastructure.AnsibleTower.Dto.Projects;
 using Devon4Net.Infrastructure.AnsibleTower.Exceptions;
 using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
 using Devon4Net.Infrastructure.CircuitBreaker.Handler;
@@ -126,6 +127,18 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         public Task<GetCredentialsResponseDto> CreateCredential(string authenticationToken, CreateCredentialRequestDto credentialRequest)
         {
             return PostAnsible<GetCredentialsResponseDto>(authenticationToken, AnsibleTowerInstance.ApiDefinition.credentials, credentialRequest);
+        }
+        #endregion
+
+        #region Projects
+        public Task<PaginatedResultDto<GetProjectsRequestDto>> GetProjects(string authenticationToken, string searchCriteria = null)
+        {
+            return GetAnsible<PaginatedResultDto<GetProjectsRequestDto>>(authenticationToken, AnsibleTowerInstance.ApiDefinition.projects + (searchCriteria != null ? "?search=" + searchCriteria : ""), null);
+        }
+
+        public Task<GetProjectsRequestDto> CreateProject(string authenticationToken, CreateProjectRequestDto credentialRequest)
+        {
+            return PostAnsible<GetProjectsRequestDto>(authenticationToken, AnsibleTowerInstance.ApiDefinition.credentials, credentialRequest);
         }
         #endregion
 

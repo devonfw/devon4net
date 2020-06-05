@@ -6,6 +6,7 @@ using Devon4Net.Infrastructure.AnsibleTower.Dto.Credentials;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.Inventories;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.JobTemplates;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.Organizations;
+using Devon4Net.Infrastructure.AnsibleTower.Dto.Projects;
 
 namespace Devon4Net.Infrastructure.AnsibleTower.Handler
 {
@@ -25,5 +26,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         Task<GetJobTemplatesResponseDto> CreateJobTemplate(string authenticationToken, CreateJobTemplateRequestDto createJobTemplateRequest);
         Task<PaginatedResultDto<GetCredentialsResponseDto>> GetCredentials(string authenticationToken, string searchCriteria = null);
         Task<GetCredentialsResponseDto> CreateCredential(string authenticationToken, CreateCredentialRequestDto credentialRequest);
+        Task<PaginatedResultDto<GetProjectsRequestDto>> GetProjects(string authenticationToken, string searchCriteria = null);
+        Task<GetProjectsRequestDto> CreateProject(string authenticationToken, CreateProjectRequestDto credentialRequest);
     }
 }

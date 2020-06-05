@@ -6,5 +6,7 @@
         public bool delete { get; set; }
         public bool copy { get; set; }
         public bool adhoc { get; set; }
+        public bool schedule { get; set; }
+        public bool start { get; set; }
     }
 }

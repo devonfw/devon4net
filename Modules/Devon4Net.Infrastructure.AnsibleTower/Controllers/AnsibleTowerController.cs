@@ -9,6 +9,7 @@ using Devon4Net.Infrastructure.AnsibleTower.Dto.Credentials;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.Inventories;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.JobTemplates;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.Organizations;
+using Devon4Net.Infrastructure.AnsibleTower.Dto.Projects;
 using Devon4Net.Infrastructure.AnsibleTower.Handler;
 using Devon4Net.Infrastructure.Log;
 using Microsoft.AspNetCore.Authorization;
@@ -297,7 +298,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         }
 
         /// <summary>
-        /// Gets the credentials list 
+        /// Creates a credential 
         /// </summary>
         /// <param name="authenticationToken"></param>
         /// <param name="searchCriteria"></param>
@@ -314,7 +315,46 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
             Devon4NetLogger.Debug("Executing Login from controller AnsibleTowerController");
             return Ok(await AnsibleTowerHandler.CreateCredential(authenticationToken, createCredentialRequest));
         }
+        #endregion
 
+        #region Projects
+        /// <summary>
+        /// Gets the projects list 
+        /// </summary>
+        /// <param name="authenticationToken"></param>
+        /// <param name="searchCriteria"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("/v1/ansible/projects")]
+        [ProducesResponseType(typeof(PaginatedResultDto<GetProjectsRequestDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Projects([FromHeader] string authenticationToken, string searchCriteria)
+        {
+            Devon4NetLogger.Debug("Executing Login from controller AnsibleTowerController");
+            return Ok(await AnsibleTowerHandler.GetProjects(authenticationToken, searchCriteria));
+        }
+
+        /// <summary>
+        /// Creates a project
+        /// </summary>
+        /// <param name="authenticationToken"></param>
+        /// <param name="searchCriteria"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/ansible/projects")]
+        [ProducesResponseType(typeof(PaginatedResultDto<GetProjectsRequestDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Projects([FromHeader] string authenticationToken, CreateProjectRequestDto createCredentialRequest)
+        {
+            Devon4NetLogger.Debug("Executing Login from controller AnsibleTowerController");
+            return Ok(await AnsibleTowerHandler.CreateProject(authenticationToken, createCredentialRequest));
+        }
         #endregion
 
         #region FullFlowSample
