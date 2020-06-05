@@ -4,6 +4,7 @@ using Devon4Net.Infrastructure.AnsibleTower.Dto.Applications;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.Common;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.Credentials;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.Inventories;
+using Devon4Net.Infrastructure.AnsibleTower.Dto.Jobs;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.JobTemplates;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.Organizations;
 using Devon4Net.Infrastructure.AnsibleTower.Dto.Projects;
@@ -12,6 +13,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
 {
     public interface IAnsibleTowerHandler
     {
+        Task<PingResponseDto> Ping();
         Task<LoginRequestDto> Login(string userName, string password);
         Task<PaginatedResultDto<ResultApplication>> GetApplications(string authenticationToken);
         Task<ApplicationsResponseDto> CreateApplication(ApplicationsRequestDto applicationstRequest, string authenticationToken);
@@ -28,6 +30,10 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         Task<GetCredentialsResponseDto> CreateCredential(string authenticationToken, CreateCredentialRequestDto credentialRequest);
         Task<PaginatedResultDto<GetProjectsRequestDto>> GetProjects(string authenticationToken, string searchCriteria = null);
         Task<GetProjectsRequestDto> CreateProject(string authenticationToken, CreateProjectRequestDto credentialRequest);
-        Task<PingResponseDto> Ping();
+        Task<PaginatedResultDto<GetJobResponseDto>> GetJobs(string authenticationToken, string searchCriteria);
+        Task<string> CancelJob(string authenticationToken, int idJob);
+        Task<PaginatedResultDto<GetJobEventsResponseDto>> GetJobEvents(string authenticationToken, int idJob);
+        Task<GetCanCancelResponseDto> CanCancelJob(string authenticationToken, int idJob);
+        Task<GetCanCancelResponseDto> GetCanJobSchedule(string authenticationToken, int jobId);
     }
 }
