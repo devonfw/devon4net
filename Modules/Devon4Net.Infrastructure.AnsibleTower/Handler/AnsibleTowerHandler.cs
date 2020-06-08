@@ -58,7 +58,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         }
         public Task<PaginatedResultDto<ResultApplication>> GetApplications(string authenticationToken)
         {
-            return GetAnsible<PaginatedResultDto<ResultApplication>>(authenticationToken, AnsibleTowerInstance.ApiDefinition.applications, null);
+            return GetAnsible<PaginatedResultDto<ResultApplication>>(authenticationToken, AnsibleTowerInstance.ApiDefinition.applications);
         }
 
         #endregion
@@ -67,7 +67,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
 
         public Task<ResultOrganizationDto> GetOrganizationById(string authenticationToken, string organizationId)
         {
-            return GetAnsible<ResultOrganizationDto>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.organizations}{organizationId}/", null);
+            return GetAnsible<ResultOrganizationDto>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.organizations}{organizationId}/");
         }
 
         public Task<ResultOrganizationDto> CreateOrganization(string authenticationToken, CreateOrganizationRequestDto organizationRequest)
@@ -77,19 +77,19 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
 
         public Task<PaginatedResultDto<ResultOrganizationDto>> GetOrganizations(string authenticationToken, string searchCriteria = null)
         {
-            return GetAnsible<PaginatedResultDto<ResultOrganizationDto>>(authenticationToken, AnsibleTowerInstance.ApiDefinition.organizations + (searchCriteria != null ? "?search=" + searchCriteria : string.Empty), null);
+            return GetAnsible<PaginatedResultDto<ResultOrganizationDto>>(authenticationToken, AnsibleTowerInstance.ApiDefinition.organizations , searchCriteria);
         }
         #endregion
 
         #region Inventories
         public Task<PaginatedResultDto<ResultInventoryDto>> GetInventories(string authenticationToken)
         {
-            return GetAnsible<PaginatedResultDto<ResultInventoryDto>>(authenticationToken,AnsibleTowerInstance.ApiDefinition.inventory, null);
+            return GetAnsible<PaginatedResultDto<ResultInventoryDto>>(authenticationToken,AnsibleTowerInstance.ApiDefinition.inventory);
         }
 
         public Task<ResultInventoryDto> GetInventoryById(string authenticationToken, string inventoryId)
         {
-            return GetAnsible<ResultInventoryDto>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.inventory}{inventoryId}/", null);
+            return GetAnsible<ResultInventoryDto>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.inventory}{inventoryId}/");
         }
 
         public Task<ResultInventoryDto> PostInventories(string authenticationToken, CreateInventoryRequestDto inventoryRequest)
@@ -104,12 +104,12 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         #region JobTemplates
         public Task<PaginatedResultDto<GetJobTemplatesResponseDto>> GetJobTemplates(string authenticationToken)
         {
-            return GetAnsible<PaginatedResultDto<GetJobTemplatesResponseDto>>(authenticationToken, AnsibleTowerInstance.ApiDefinition.job_templates, null);
+            return GetAnsible<PaginatedResultDto<GetJobTemplatesResponseDto>>(authenticationToken, AnsibleTowerInstance.ApiDefinition.job_templates);
         }
 
         public Task<GetJobTemplatesResponseDto> GetJobTemplate(string authenticationToken, string jobTemplateId)
         {
-            return GetAnsible<GetJobTemplatesResponseDto>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.job_templates}{jobTemplateId}/", null);
+            return GetAnsible<GetJobTemplatesResponseDto>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.job_templates}{jobTemplateId}/");
         }
 
         public Task<GetJobTemplatesResponseDto> CreateJobTemplate(string authenticationToken, CreateJobTemplateRequestDto createJobTemplateRequest)
@@ -121,7 +121,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         #region Credentials
         public Task<PaginatedResultDto<GetCredentialsResponseDto>> GetCredentials(string authenticationToken, string searchCriteria = null)
         {
-            return GetAnsible<PaginatedResultDto<GetCredentialsResponseDto>>(authenticationToken, AnsibleTowerInstance.ApiDefinition.credentials + (searchCriteria != null ? "?search=" + searchCriteria : string.Empty), null);        }
+            return GetAnsible<PaginatedResultDto<GetCredentialsResponseDto>>(authenticationToken, AnsibleTowerInstance.ApiDefinition.credentials , searchCriteria);        }
 
         public Task<GetCredentialsResponseDto> CreateCredential(string authenticationToken, CreateCredentialRequestDto credentialRequest)
         {
@@ -132,7 +132,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         #region Projects
         public Task<PaginatedResultDto<GetProjectsRequestDto>> GetProjects(string authenticationToken, string searchCriteria = null)
         {
-            return GetAnsible<PaginatedResultDto<GetProjectsRequestDto>>(authenticationToken, AnsibleTowerInstance.ApiDefinition.projects + (searchCriteria != null ? "?search=" + searchCriteria : string.Empty), null);
+            return GetAnsible<PaginatedResultDto<GetProjectsRequestDto>>(authenticationToken, AnsibleTowerInstance.ApiDefinition.projects , searchCriteria);
         }
 
         public Task<GetProjectsRequestDto> CreateProject(string authenticationToken, CreateProjectRequestDto credentialRequest)
@@ -145,7 +145,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
 
         public Task<PaginatedResultDto<GetJobResponseDto>> GetJobs(string authenticationToken, string searchCriteria = null)
         {
-            return GetAnsible<PaginatedResultDto<GetJobResponseDto>>(authenticationToken, AnsibleTowerInstance.ApiDefinition.jobs + (searchCriteria != null ? "?search=" + searchCriteria : string.Empty), null);
+            return GetAnsible<PaginatedResultDto<GetJobResponseDto>>(authenticationToken, AnsibleTowerInstance.ApiDefinition.jobs , searchCriteria);
         }
 
         public Task<string> CancelJob(string authenticationToken, int idJob)
@@ -155,17 +155,17 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
 
         public Task<GetCanCancelResponseDto> CanCancelJob(string authenticationToken, int idJob)
         {
-            return GetAnsible<GetCanCancelResponseDto>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.jobs}{idJob}/cancel/", null);
+            return GetAnsible<GetCanCancelResponseDto>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.jobs}{idJob}/cancel/");
         }
 
         public Task<PaginatedResultDto<GetJobEventsResponseDto>> GetJobEvents(string authenticationToken, int idJob)
         {
-            return GetAnsible<PaginatedResultDto<GetJobEventsResponseDto>>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.jobs}{idJob}/job_events/", null);
+            return GetAnsible<PaginatedResultDto<GetJobEventsResponseDto>>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.jobs}{idJob}/job_events/");
         }
 
         public Task<GetCanCancelResponseDto> GetCanJobSchedule(string authenticationToken, int jobId)
         {
-            return GetAnsible<GetCanCancelResponseDto>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.jobs}{jobId}/create_schedule/", null);
+            return GetAnsible<GetCanCancelResponseDto>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.jobs}{jobId}/create_schedule/");
         }
         #endregion
 
@@ -200,10 +200,11 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
 
         #region HttpMethods
 
-        private Task<T> GetAnsible<T>(string authenticationToken, string endpoint, object input)
+        private Task<T> GetAnsible<T>(string authenticationToken, string endpoint, string searchCriteria = null)
         {
             SetAutehnticationToken(authenticationToken);
-            return CircuitBreakerHttpClient.Get<T>(AnsibleTowerInstance.CircuitBreakerName, endpoint, GetAuthorizationHeaders(), true);
+            var searchCriteriaUri = (searchCriteria != null ? "?search=" + searchCriteria : string.Empty);
+            return CircuitBreakerHttpClient.Get<T>(AnsibleTowerInstance.CircuitBreakerName, endpoint + searchCriteriaUri, GetAuthorizationHeaders(), true);
         }
 
         private Task<T> PostAnsible<T>(string authenticationToken, string endpoint, object dataToSend)
