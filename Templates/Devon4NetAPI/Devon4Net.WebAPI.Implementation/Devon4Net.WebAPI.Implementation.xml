@@ -4,6 +4,206 @@
         <name>Devon4Net.WebAPI.Implementation</name>
     </assembly>
     <members>
+        <member name="T:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController">
+            <summary>
+            Ansible Tower Controller
+            </summary>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.#ctor(Devon4Net.Infrastructure.AnsibleTower.Handler.IAnsibleTowerHandler)">
+            <summary>
+            Ansible Tower Controller constructor
+            </summary>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Ping">
+            <summary>
+            Ping Ansible Tower
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Login(System.String,System.String)">
+            <summary>
+            Performs the basic Ansible Tower login
+            </summary>
+            <param name="user">User name</param>
+            <param name="password">User password</param>
+            <returns>The Ansible Tower login object result</returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Applications(System.String)">
+            <summary>
+            Gets the list of applications
+            </summary>
+            <param name="authenticationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Applications(Devon4Net.Infrastructure.AnsibleTower.Dto.Applications.ApplicationsRequestDto,System.String)">
+            <summary>
+            Creates an application
+            </summary>
+            <param name="applicationsRequest"></param>
+            <param name="authenticationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Organizations(System.String,System.String)">
+            <summary>
+            Gets the organizations list 
+            Please check the OrganizationRolesConst and OrganizationRelatedLinksConst classes
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.GetOrganization(System.String,System.String)">
+            <summary>
+            Gets the organization given the organization identifier
+            Please check the OrganizationRolesConst and OrganizationRelatedLinksConst classes
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="organizationId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.PostOrganization(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Organizations.CreateOrganizationRequestDto)">
+            <summary>
+            Creates an organization
+            Please check the OrganizationRolesConst and OrganizationRelatedLinksConst classes
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="organizationRequest"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Inventories(System.String)">
+            <summary>
+            Gets the list of inventories
+            </summary>
+            <param name="authenticationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Inventories(System.String,System.String)">
+            <summary>
+            Gets the inventory by the provided inventory Id
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="inventoryId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Inventories(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Inventories.CreateInventoryRequestDto)">
+            <summary>
+            Creates tan inventory
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="inventoryRequest"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.JobTemplates(System.String)">
+            <summary>
+            Gets the list of Job Templates
+            </summary>
+            <param name="authenticationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.JobTemplates(System.String,System.String)">
+            <summary>
+            Gets a Job Templates by the provided template job id
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="jobTemplateId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.JobTemplates(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.JobTemplates.CreateJobTemplateRequestDto)">
+            <summary>
+            Creates a Job Template
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="createJobTemplateRequest"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Credentials(System.String,System.String)">
+            <summary>
+            Gets the credentials list 
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Credentials(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Credentials.CreateCredentialRequestDto)">
+            <summary>
+            Creates a credential 
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="createCredentialRequest">Please check the input params. Inputs sample: url (CyberArk cojur), api_key, account, username, cacert</param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Projects(System.String,System.String)">
+            <summary>
+            Gets the projects list 
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Projects(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Projects.CreateProjectRequestDto)">
+            <summary>
+            Creates a project
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="createCredentialRequest"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Jobs(System.String,System.String)">
+            <summary>
+            Gets the list of Job Templates
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.AskJobCancel(System.String,System.Int32)">
+            <summary>
+            Returns if a Job can be canceled
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="idJob"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.JobCancel(System.String,System.Int32)">
+            <summary>
+            Cancels a job
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="idJob"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.JobEvents(System.String,System.Int32)">
+            <summary>
+            Gets the event list of a Job 
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="idJob"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.JobSchedule(System.String,System.Int32)">
+            <summary>
+            Gets the event list of a Job 
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="idJob"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.FullFlow(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Performs a regular Ansible Tower workflow.
+            </summary>
+            <param name="ansibleUser"></param>
+            <param name="ansiblePassword"></param>
+            <param name="organizationName"></param>
+            <param name="credentialName"></param>
+            <param name="credentialDescription"></param>
+            <param name="credentialUserName"></param>
+            <param name="credentialPassword"></param>
+            <param name="idOrganization"></param>
+            <param name="idCredentialType"></param>
+            <param name="idUser"></param>
+            <returns>Something</returns>
+        </member>
         <member name="T:Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers.AuthController">
             <summary>
             Auth controller sample.
