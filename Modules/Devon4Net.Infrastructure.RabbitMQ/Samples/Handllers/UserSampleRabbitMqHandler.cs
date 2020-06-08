@@ -31,7 +31,9 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Samples.Handllers
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public override async Task<bool> HandleCommand(UserSampleCommand command)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             Devon4NetLogger.Debug($"User {command.Name} {command.SurName} handled!!");
             return true;

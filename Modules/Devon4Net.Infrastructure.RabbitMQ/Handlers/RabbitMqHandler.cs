@@ -44,28 +44,12 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
             {
                 status = QueueActionsEnum.SetUp;
 
-                await ServiceBus.PublishAsync(command).ContinueWith(async task =>
-                {
-                    if (task.IsCompleted)
-                    {
-                        status = QueueActionsEnum.Sent;
-                        Devon4NetLogger.Information($"Message {command.MessageType} with identifier '{command.InternalMessageIdentifier}' published");
-                    }
-
-                    if (task.IsFaulted)
-                    {
-                        status = QueueActionsEnum.Error;
-                        Devon4NetLogger.Error($"Message {command.MessageType} with identifier '{command.InternalMessageIdentifier}' NOT published");
-                        Devon4NetLogger.Error(task.Exception);
-                    }
-
-                }).ConfigureAwait(false);
-
+                await ServiceBus.PublishAsync(command).ContinueWith(task => { status = PublishCommandTaskResult(command, task);}).ConfigureAwait(false);
                 await BackUpMessage(command, status).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                await BackUpMessage(command, QueueActionsEnum.Error, false, string.Empty, $"{ex?.Message} : {ex?.InnerException}").ConfigureAwait(false);
+                await BackUpMessage(command, QueueActionsEnum.Error, false, string.Empty, $"{ex.Message} : {ex.InnerException}").ConfigureAwait(false);
                 Devon4NetLogger.Error($"Error publishing message: {ex.Message}/{ex.InnerException}");
                 Devon4NetLogger.Error(ex);
             }
@@ -73,10 +57,12 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
             return status == QueueActionsEnum.Sent;
         }
 
-        public T GetInstance<T>()
+
+
+        public TS GetInstance<TS>()
         {
             var sp = Services.BuildServiceProvider();
-            return sp.GetService<T>();
+            return sp.GetService<TS>();
         }
 
         private async Task<bool> BackupAndHandleCommand(T message)
@@ -85,35 +71,58 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
             var errorMessage = string.Empty;
             try
             {
-                await HandleCommand(message).ContinueWith(async task =>
-                {
-                    if (task.IsCompleted)
-                    {
-                        status = QueueActionsEnum.Handled;
-                        Devon4NetLogger.Information($"Message {message.MessageType} with identifier '{message.InternalMessageIdentifier}' published");
-                    }
-
-                    if (task.IsFaulted)
-                    {
-                        status = QueueActionsEnum.Error;
-                        errorMessage = $"Message {message.MessageType} with identifier '{message.InternalMessageIdentifier}' NOT published. {task.Exception?.Message} | {task.Exception?.InnerExceptions}";
-                        Devon4NetLogger.Error(errorMessage);
-                        Devon4NetLogger.Error(task.Exception);
-                    }
-                }).ConfigureAwait(false);
-
+                await HandleCommand(message).ContinueWith(task => { status = HandleCommandTaskResult(message, task, out errorMessage);}).ConfigureAwait(false);
                 await BackUpMessage(message, status,false,string.Empty, errorMessage).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                await BackUpMessage(message, QueueActionsEnum.Error, false, string.Empty,
-                    $"{ex.Message} : {ex.InnerException}").ConfigureAwait(false);
+                await BackUpMessage(message, QueueActionsEnum.Error, false, string.Empty, $"{ex.Message} : {ex.InnerException}").ConfigureAwait(false);
                 Devon4NetLogger.Error($"Error handling message: {ex.Message}/{ex.InnerException}");
                 Devon4NetLogger.Error(ex);
                 return false;
             }
 
             return status == QueueActionsEnum.Handled;
+        }
+
+        private static QueueActionsEnum HandleCommandTaskResult(T message, Task<bool> task, out string errorMessage)
+        {
+            var status = QueueActionsEnum.SetUp;
+            errorMessage = string.Empty;
+
+            if (task.IsCompleted)
+            {
+                status = QueueActionsEnum.Handled;
+                Devon4NetLogger.Information($"Message {message.MessageType} with identifier '{message.InternalMessageIdentifier}' published");
+            }
+
+            if (!task.IsFaulted) return status;
+
+            status = QueueActionsEnum.Error;
+            errorMessage = $"Message {message.MessageType} with identifier '{message.InternalMessageIdentifier}' NOT published. {task.Exception?.Message} | {task.Exception?.InnerExceptions}";
+            Devon4NetLogger.Error(errorMessage);
+            Devon4NetLogger.Error(task.Exception);
+
+            return status;
+        }
+
+        private static QueueActionsEnum PublishCommandTaskResult(T command, Task task)
+        {
+            var status = QueueActionsEnum.SetUp;
+
+            if (task.IsCompleted)
+            {
+                status = QueueActionsEnum.Sent;
+                Devon4NetLogger.Information($"Message {command.MessageType} with identifier '{command.InternalMessageIdentifier}' published");
+            }
+
+            if (!task.IsFaulted) return status;
+
+            status = QueueActionsEnum.Error;
+            Devon4NetLogger.Error($"Message {command.MessageType} with identifier '{command.InternalMessageIdentifier}' NOT published");
+            Devon4NetLogger.Error(task.Exception);
+
+            return status;
         }
 
         private void BasicSetup(IServiceCollection services, IBus serviceBus, bool subscribeToChannel, IRabbitMqBackupService rabbitMqBackupService = null, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService = null)
