@@ -22,7 +22,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         Task<ResultOrganizationDto> CreateOrganization(string authenticationToken, CreateOrganizationRequestDto organizationRequest);
         Task<PaginatedResultDto<ResultInventoryDto>> GetInventories(string authenticationToken);
         Task<ResultInventoryDto> GetInventoryById(string authenticationToken, string inventoryId);
-        Task<ResultInventoryDto> PostInventories(string authenticationToken, CreateInventoryRequestDto inventoryRequest);
+        Task<ResultInventoryDto> CreateInventory(string authenticationToken, CreateInventoryRequestDto inventoryRequest);
         Task<PaginatedResultDto<GetJobTemplatesResponseDto>> GetJobTemplates(string authenticationToken);
         Task<GetJobTemplatesResponseDto> GetJobTemplate(string authenticationToken, string jobTemplateId);
         Task<GetJobTemplatesResponseDto> CreateJobTemplate(string authenticationToken, CreateJobTemplateRequestDto createJobTemplateRequest);
