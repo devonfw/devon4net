@@ -10,14 +10,14 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;8034;1705;NU1605;NU1608;NU1701;CS1705</NoWarn>
+    <NoWarn>1591,1572,1571,1573,1587,1570,1701,1702,8034,1705,NU1605,NU1608,NU1701,CS1705</NoWarn>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <DocumentationFile>Devon4Net.WebAPI.Implementation.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;8034;1705;NU1605;NU1608;NU1701;CS1705</NoWarn>
+    <NoWarn>1591,1572,1571,1573,1587,1570,1701,1702,8034,1705,NU1605,NU1608,NU1701,CS1705</NoWarn>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <DocumentationFile>Devon4Net.WebAPI.Implementation.xml</DocumentationFile>
@@ -46,9 +46,14 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\modules\Devon4Net.Domain.UnitOfWork\src\Devon4Net.Domain.UnitOfWork.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AnsibleTower\Devon4Net.Infrastructure.AnsibleTower.csproj" />
+    <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.CircuitBreaker\src\Devon4Net.Infrastructure.CircuitBreaker.csproj" />
+    <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.Common\src\Devon4Net.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.Extensions\src\Devon4Net.Infrastructure.Extensions.csproj" />
     <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.JWT\src\Devon4Net.Infrastructure.JWT.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.LiteDb\Devon4Net.Infrastructure.LiteDb.csproj" />
     <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.Log\src\Devon4Net.Infrastructure.Log.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.MediatR\Devon4Net.Infrastructure.MediatR.csproj" />
+    <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.Middleware\src\Devon4Net.Infrastructure.Middleware.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.RabbitMQ\Devon4Net.Infrastructure.RabbitMQ.csproj" />
   </ItemGroup>
 

@@ -19,12 +19,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
 {
+    /// <summary>
+    /// Ansible Tower Controller
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class AnsibleTowerController : ControllerBase
     {
         private IAnsibleTowerHandler AnsibleTowerHandler { get; set; }
 
+        /// <summary>
+        /// Ansible Tower Controller constructor
+        /// </summary>
         public AnsibleTowerController(IAnsibleTowerHandler ansibleTowerHandler)
         {
             AnsibleTowerHandler = ansibleTowerHandler;
@@ -230,7 +236,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         public async Task<IActionResult> Inventories([FromHeader] string authenticationToken, CreateInventoryRequestDto inventoryRequest)
         {
             Devon4NetLogger.Debug("Executing Login from controller AnsibleTowerController");
-            return Ok(await AnsibleTowerHandler.PostInventories(authenticationToken, inventoryRequest));
+            return Ok(await AnsibleTowerHandler.CreateInventory(authenticationToken, inventoryRequest));
         }
         #endregion
 
@@ -357,7 +363,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         /// Creates a project
         /// </summary>
         /// <param name="authenticationToken"></param>
-        /// <param name="searchCriteria"></param>
+        /// <param name="createCredentialRequest"></param>
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
@@ -374,10 +380,12 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
         #endregion
 
         #region Jobs
+
         /// <summary>
         /// Gets the list of Job Templates
         /// </summary>
         /// <param name="authenticationToken"></param>
+        /// <param name="searchCriteria"></param>
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
@@ -507,17 +515,17 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
 
             // Organizations
             Devon4NetLogger.Debug("Organization count: " + organizations.count);
-            if (organizations?.results != null && organizations.results.Any() && organizations.results.FirstOrDefault()?.name != organizationName)
+            if (organizations.results != null && organizations.results.Any() && organizations.results.FirstOrDefault()?.name != organizationName)
             {
                 return BadRequest();
             }
 
             var organization = organizations.results?.FirstOrDefault();
-            result.AppendLine($"The retreived organization is: name: {organization.name}, id: {organization.id}");
+            result.AppendLine($"The retreived organization is: name: {organization?.name}, id: {organization?.id}");
 
             // Credentials
             var credentialsList = await AnsibleTowerHandler.GetCredentials(token.Token, credentialName);
-            if (credentialsList != null && credentialsList.results != null && credentialsList.results.Any()|| credentialsList.results.FirstOrDefault()?.name != credentialName)
+            if (credentialsList?.results != null && credentialsList.results.Any()|| credentialsList?.results?.FirstOrDefault()?.name != credentialName)
             {
                 result.AppendLine($"The credentials with name {credentialName} has been retreived");
                 var credential = new CreateCredentialRequestDto

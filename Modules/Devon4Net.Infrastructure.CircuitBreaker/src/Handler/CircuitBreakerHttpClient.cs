@@ -364,7 +364,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             return await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
         }
         
-        private void DisposeHttpObjects(ref HttpClient httpClient, ref HttpResponseMessage httpResponseMessage, ref HttpContent? httpContent)
+        private void DisposeHttpObjects(ref HttpClient httpClient, ref HttpResponseMessage httpResponseMessage, ref HttpContent httpContent)
         {
             httpContent?.Dispose();
             DisposeHttpObjects(ref httpClient, ref httpResponseMessage);
