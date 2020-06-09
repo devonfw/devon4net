@@ -2,6 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Version>3.1.4</Version>
+    <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
+    <Company>Capgemini S.A.</Company>
+    <Description>Ansible Tower API manager</Description>
+    <Copyright>Copyright © Capgemini</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://www.devonfw.com</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
+    <RepositoryType />
+    <license>http://www.devonfw.com/terms-of-use/</license>
+    <PackageTags>devonfw devon4net Ansible Tower Capgemini</PackageTags>
+    <PackageReleaseNotes>Netstandard 2.1 for devonfw net core 3.1 compatibility version</PackageReleaseNotes>
+    <icon>https://avatars2.githubusercontent.com/u/7803029?s=200&amp;v=4</icon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
