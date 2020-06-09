@@ -14,7 +14,7 @@
     <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
     <RepositoryType />
     <license>http://www.devonfw.com/terms-of-use/</license>
-    <PackageTags>devonfw devon4net Capgemini jwt encription jwts</PackageTags>
+    <PackageTags>devonfw devon4net Capgemini LiteDB</PackageTags>
     <PackageReleaseNotes>Netstandard 2.1 for devonfw net core 3.1.3 compatibility version</PackageReleaseNotes>
     <icon>https://avatars2.githubusercontent.com/u/7803029?s=200&amp;v=4</icon>
   </PropertyGroup>
