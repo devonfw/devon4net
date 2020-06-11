@@ -159,7 +159,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         {
             CyberArkOptions = ServiceProvider.GetService<IOptions<CyberArkOptions>>()?.Value;
             if (CyberArkOptions == null || string.IsNullOrEmpty(CyberArkOptions.CircuitBreakerName) || string.IsNullOrEmpty(CyberArkOptions.UserName) || string.IsNullOrEmpty(CyberArkOptions.Password)) return;
-            services.SetupCyberArk(CyberArkOptions);
+            services.SetupCyberArk();
         }
     }
 }
