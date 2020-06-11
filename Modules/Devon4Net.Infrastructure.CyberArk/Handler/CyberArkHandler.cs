@@ -28,12 +28,12 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
 
         #region Safe
 
-        public Task<GetSafesResponseDto> GetSafes()
+        public Task<GetSafesResponseDto> GetSafes(string authToken = null)
         {
-            return GetCyberArk<GetSafesResponseDto>(CyberArkEndpointConst.Safes, false);
+            return GetCyberArk<GetSafesResponseDto>(CyberArkEndpointConst.Safes, false, authToken);
         }
 
-        public Task<GetSafeResponseDto> GetSafe(string idSafe)
+        public Task<GetSafeResponseDto> GetSafe(string idSafe, string authToken = null)
         {
             if (string.IsNullOrEmpty(idSafe))
             {
@@ -41,164 +41,158 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
             }
 
             var searchCriteria = string.IsNullOrEmpty(idSafe) ? string.Empty : $"/{idSafe}";
-            return GetCyberArk<GetSafeResponseDto>($"{CyberArkEndpointConst.Safes}{searchCriteria}", false);
+            return GetCyberArk<GetSafeResponseDto>($"{CyberArkEndpointConst.Safes}{searchCriteria}", false, authToken);
         }
 
-        public Task<AddSafeResponseDto> AddSafe(AddSafeRequestDto safeRequest)
+        public Task<AddSafeResponseDto> AddSafe(AddSafeRequestDto safeRequest, string authToken = null)
         {
             if (safeRequest?.safe == null)
             {
                 throw new ArgumentException("The safeRequest can not be null");
             }
 
-            return PostCyberArk<AddSafeResponseDto>(CyberArkEndpointConst.Safes, safeRequest, false);
+            return PostCyberArk<AddSafeResponseDto>(CyberArkEndpointConst.Safes, safeRequest, false, authToken);
         }
 
 
-        public Task<UpdateSafeResponseDto> UpdateSafe(UpdateSafeRequestDto updateSafeRequest)
+        public Task<UpdateSafeResponseDto> UpdateSafe(UpdateSafeRequestDto updateSafeRequest, string authToken = null)
         {
             if (updateSafeRequest?.GetSafeResult == null || string.IsNullOrEmpty(updateSafeRequest.GetSafeResult.SafeName))
             {
                 throw new ArgumentException("The updateSafeRequest is not correct");
             }
 
-            return PutCyberArk<UpdateSafeResponseDto>($"{CyberArkEndpointConst.Safes}/{updateSafeRequest.GetSafeResult.SafeName}", updateSafeRequest, false);
+            return PutCyberArk<UpdateSafeResponseDto>($"{CyberArkEndpointConst.Safes}/{updateSafeRequest.GetSafeResult.SafeName}", updateSafeRequest, false, authToken);
         }
 
         #endregion
 
         #region Account
-        public Task<GetAccountsResponseDto> GetAccounts()
+        public Task<GetAccountsResponseDto> GetAccounts(string authToken = null)
         {
-            return GetCyberArk<GetAccountsResponseDto>(CyberArkEndpointConst.Accounts, false);
+            return GetCyberArk<GetAccountsResponseDto>(CyberArkEndpointConst.Accounts, false, authToken);
         }
 
-        public Task<AccountDetail> GetAccount(string idAccount)
-        {
-            if (string.IsNullOrEmpty(idAccount))
-            {
-                throw new ArgumentException("The idAccount can not be null");
-            }
-
-            return GetCyberArk<AccountDetail>($"{CyberArkEndpointConst.Accounts}/{idAccount}", false);
-        }
-
-        public Task<string> RetrieveAccount(string idAccount)
+        public Task<AccountDetail> GetAccount(string idAccount, string authToken = null)
         {
             if (string.IsNullOrEmpty(idAccount))
             {
                 throw new ArgumentException("The idAccount can not be null");
             }
 
-            return PostCyberArk<string>($"{CyberArkEndpointConst.Accounts}/{idAccount}/{CyberArkEndpointConst.AccountRetrieveSuffix}",null, false);
+            return GetCyberArk<AccountDetail>($"{CyberArkEndpointConst.Accounts}/{idAccount}", false, authToken);
         }
 
-        public Task<AddAccountResponseDto> AddAccount(AddAccountRequestDto addAccountRequest)
+        public Task<string> RetrieveAccount(string idAccount, string authToken = null)
+        {
+            if (string.IsNullOrEmpty(idAccount))
+            {
+                throw new ArgumentException("The idAccount can not be null");
+            }
+
+            return PostCyberArk<string>($"{CyberArkEndpointConst.Accounts}/{idAccount}/{CyberArkEndpointConst.AccountRetrieveSuffix}",null, false, authToken);
+        }
+
+        public Task<AddAccountResponseDto> AddAccount(AddAccountRequestDto addAccountRequest, string authToken = null)
         {
             if (addAccountRequest == null)
             {
                 throw new ArgumentException("The addAccountRequest can not be null");
             }
 
-            return PostCyberArk<AddAccountResponseDto>(CyberArkEndpointConst.Accounts, addAccountRequest, false);
+            return PostCyberArk<AddAccountResponseDto>(CyberArkEndpointConst.Accounts, addAccountRequest, false, authToken);
         }
 
-        public Task<AddAccountResponseDto> DeleteAccount(string accountName)
+        public Task<AddAccountResponseDto> DeleteAccount(string accountName, string authToken = null)
         {
             if (string.IsNullOrEmpty(accountName))
             {
                 throw new ArgumentException("The accountName can not be null");
             }
 
-            return DeleteCyberArk<AddAccountResponseDto>($"{CyberArkEndpointConst.Accounts}/{accountName}", false);
+            return DeleteCyberArk<AddAccountResponseDto>($"{CyberArkEndpointConst.Accounts}/{accountName}", false, authToken);
         }
 
         #endregion
 
         #region User
-
-        public Task<GetUserResponseDto> GetUsers()
-        {
-            return GetCyberArk<GetUserResponseDto>($"{CyberArkEndpointConst.Users}", false);
-        }
-
-        public Task<GetUserResponseDto> GetUser(string userName)
+        public Task<GetUserResponseDto> GetUser(string userName, string authToken = null)
         {
             if (string.IsNullOrEmpty(userName))
             {
                 throw new ArgumentException("The userName can not be null");
             }
 
-            return GetCyberArk<GetUserResponseDto>($"{CyberArkEndpointConst.Users}/{userName}", false);
+            return GetCyberArk<GetUserResponseDto>($"{CyberArkEndpointConst.Users}/{userName}", false, authToken);
         }
 
-        public Task<GetUserResponseDto> AddUser(AddUserRequestDto userRequest)
+        public Task<GetUserResponseDto> AddUser(AddUserRequestDto userRequest, string authToken = null)
         {
             if (userRequest == null || string.IsNullOrEmpty(userRequest.UserName))
             {
                 throw new ArgumentException("The userName can not be null");
             }
 
-            return PostCyberArk<GetUserResponseDto>(CyberArkEndpointConst.Users, userRequest, false);
+            return PostCyberArk<GetUserResponseDto>(CyberArkEndpointConst.Users, userRequest, false, authToken);
         }
 
 
-        public Task<DeletedUser> DeleteUser(string userName)
+        public Task<DeletedUser> DeleteUser(string userName, string authToken = null)
         {
             if (string.IsNullOrEmpty(userName))
             {
                 throw new ArgumentException("The userName can not be null");
             }
 
-            return DeleteCyberArk<DeletedUser>($"{CyberArkEndpointConst.Users}/{userName}", false);
+            return DeleteCyberArk<DeletedUser>($"{CyberArkEndpointConst.Users}/{userName}", false, authToken);
         }
         #endregion
 
         #region HttpMethods
 
-        private async Task<T> GetCyberArk<T>(string endpoint, bool useCamelCase)
+        private async Task<T> GetCyberArk<T>(string endpoint, bool useCamelCase, string authToken = null)
         {
-            await Logon();
+            await Logon(authToken);
             return await CircuitBreakerHttpClient.Get<T>(CyberArkOptions.CircuitBreakerName, endpoint, GetAuthorizationHeaders(), useCamelCase);
         }
 
-        private async Task<T> PostCyberArk<T>(string endpoint, object dataToSend, bool useCamelCase)
+        private async Task<T> PostCyberArk<T>(string endpoint, object dataToSend, bool useCamelCase, string authToken = null)
         {
-            await Logon();
+            await Logon(authToken);
             return await CircuitBreakerHttpClient.Post<T>(CyberArkOptions.CircuitBreakerName, endpoint, dataToSend, MediaType.ApplicationJson, GetAuthorizationHeaders(), useCamelCase);
         }
 
-        private async Task<T> PutCyberArk<T>(string endpoint, object dataToSend, bool useCamelCase)
+        private async Task<T> PutCyberArk<T>(string endpoint, object dataToSend, bool useCamelCase, string authToken = null)
         {
-            await Logon();
+            await Logon(authToken);
             return await CircuitBreakerHttpClient.Put<T>(CyberArkOptions.CircuitBreakerName, endpoint, dataToSend, MediaType.ApplicationJson, GetAuthorizationHeaders(), useCamelCase);
         }
 
-        private async Task<T> DeleteCyberArk<T>(string endpoint,  bool useCamelCase)
+        private async Task<T> DeleteCyberArk<T>(string endpoint,  bool useCamelCase, string authToken = null)
         {
-            await Logon();
+            await Logon(authToken);
             return await CircuitBreakerHttpClient.Delete<T>(CyberArkOptions.CircuitBreakerName, endpoint, GetAuthorizationHeaders(), useCamelCase);
         }
 
-        public async Task<string> Logon(string userName, string password)
+        private async Task Logon(string authToken = null)
         {
-            AuthToken = await CircuitBreakerHttpClient.Post<string>(CyberArkOptions.CircuitBreakerName,
-                CyberArkEndpointConst.Logon,
-                new LogonRequestDto{Username = userName, Password = password},MediaType.ApplicationJson, null, true);
+            if (!string.IsNullOrEmpty(authToken))
+            {
+                AuthToken = authToken;
+                return;
+            }
 
-            return AuthToken;
-        }
-
-        public async Task<string> Logon()
-        {
             if (CyberArkOptions == null || string.IsNullOrEmpty(CyberArkOptions.UserName) || string.IsNullOrEmpty(CyberArkOptions.Password))
             {
                 throw new CyberArkUnauthorizedException("No CyberArk authorization credentials provided");
             }
 
-            AuthToken = await CircuitBreakerHttpClient.Post<string>(CyberArkOptions.CircuitBreakerName,
-                CyberArkEndpointConst.Logon,
-                new LogonRequestDto { Username = CyberArkOptions.UserName, Password = CyberArkOptions.Password}, MediaType.ApplicationJson, null, true);
+            await Logon(CyberArkOptions.UserName, CyberArkOptions.Password).ConfigureAwait(false);
+        }
+
+        public async Task<string> Logon(string userName, string password)
+        {
+            AuthToken = await CircuitBreakerHttpClient.Post<string>(CyberArkOptions.CircuitBreakerName, CyberArkEndpointConst.Logon, new LogonRequestDto { Username = userName, Password = password }, MediaType.ApplicationJson, null, true);
 
             return AuthToken;
         }

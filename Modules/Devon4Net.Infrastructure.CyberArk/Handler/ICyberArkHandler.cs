@@ -8,18 +8,17 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
     public interface ICyberArkHandler
     {
         Task<string> Logon(string userName, string password);
-        Task<string> Logon();
-        Task<GetSafesResponseDto> GetSafes();
-        Task<GetSafeResponseDto> GetSafe(string idSafe);
-        Task<AddSafeResponseDto> AddSafe(AddSafeRequestDto safeRequest);
-        Task<UpdateSafeResponseDto> UpdateSafe(UpdateSafeRequestDto updateSafeRequest);
-        Task<GetAccountsResponseDto> GetAccounts();
-        Task<AccountDetail> GetAccount(string idAccount);
-        Task<AddAccountResponseDto> AddAccount(AddAccountRequestDto addAccountRequest);
-        Task<AddAccountResponseDto> DeleteAccount(string accountName);
-        Task<string> RetrieveAccount(string idAccount);
-        Task<GetUserResponseDto> GetUser(string userName);
-        Task<GetUserResponseDto> AddUser(AddUserRequestDto userRequest);
-        Task<DeletedUser> DeleteUser(string userName);
+        Task<GetSafesResponseDto> GetSafes(string authToken = null);
+        Task<GetSafeResponseDto> GetSafe(string idSafe, string authToken = null);
+        Task<AddSafeResponseDto> AddSafe(AddSafeRequestDto safeRequest, string authToken = null);
+        Task<UpdateSafeResponseDto> UpdateSafe(UpdateSafeRequestDto updateSafeRequest, string authToken = null);
+        Task<GetAccountsResponseDto> GetAccounts(string authToken = null);
+        Task<AccountDetail> GetAccount(string idAccount, string authToken = null);
+        Task<AddAccountResponseDto> AddAccount(AddAccountRequestDto addAccountRequest, string authToken = null);
+        Task<AddAccountResponseDto> DeleteAccount(string accountName, string authToken = null);
+        Task<string> RetrieveAccount(string idAccount, string authToken = null);
+        Task<GetUserResponseDto> GetUser(string userName, string authToken = null);
+        Task<GetUserResponseDto> AddUser(AddUserRequestDto userRequest, string authToken = null);
+        Task<DeletedUser> DeleteUser(string userName, string authToken = null);
     }
 }
