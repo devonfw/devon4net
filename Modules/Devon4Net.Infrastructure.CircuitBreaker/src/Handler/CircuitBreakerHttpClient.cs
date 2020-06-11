@@ -387,7 +387,9 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                 return;
             }
 
-            Devon4NetLogger.Information($"HttpResponse message for endpoint call {endPointName} : HttpRequest :{httpResponseMessage.RequestMessage} | httpResponse: {httpResponseMessage} | message Content: {await LogHttpContent(httpResponseMessage.Content,endPointName)}");
+            var contentResult = httpResponseMessage.IsSuccessStatusCode ? "The Http response is success" : await LogHttpContent(httpResponseMessage.Content, endPointName);
+
+            Devon4NetLogger.Information($"HttpResponse message for endpoint call {endPointName} : HttpRequest :{httpResponseMessage.RequestMessage} | httpResponse: {httpResponseMessage} | message Content: {contentResult}");
         }
 
         private async Task<string> LogHttpContent(HttpContent httpContent, string endPointName)
