@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Devon4Net.Infrastructure.AnsibleTower.Dto;
-using Devon4Net.Infrastructure.CircuitBreaker.Handler;
+﻿using Devon4Net.Infrastructure.AnsibleTower.Dto;
 
 namespace Devon4Net.Infrastructure.AnsibleTower.Common
 {
@@ -12,7 +7,6 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Common
     /// </summary>
     public class AnsibleTowerInstance : IAnsibleTowerInstance
     {
-        private ICircuitBreakerHttpClient CircuitBreakerHttpClient { get; set; }
         public ApiRequestDto ApiDefinition { get; set; }
         public string Name { get; }
         public string CircuitBreakerName { get; }
@@ -27,7 +21,5 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Common
             ApiUrlBase = apiUrlBase;
             Version = version;
         }
-
-
     }
 }

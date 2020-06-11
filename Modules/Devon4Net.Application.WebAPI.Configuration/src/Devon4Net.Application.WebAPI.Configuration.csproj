@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <Version>3.1.4</Version>
+        <Version>3.1.5</Version>
         <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
         <Company>Capgemini S.A.</Company>
         <Description>Configuration library for devon4net webapi template</Description>
@@ -66,6 +66,7 @@
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.AnsibleTower\Devon4Net.Infrastructure.AnsibleTower.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.CircuitBreaker\src\Devon4Net.Infrastructure.CircuitBreaker.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.Common\src\Devon4Net.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\..\Devon4Net.Infrastructure.CyberArk\Devon4Net.Infrastructure.CyberArk.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.Extensions\src\Devon4Net.Infrastructure.Extensions.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.JWT\src\Devon4Net.Infrastructure.JWT.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.LiteDb\Devon4Net.Infrastructure.LiteDb.csproj" />

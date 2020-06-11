@@ -16,6 +16,7 @@ using Microsoft.Extensions.Options;
 using Devon4Net.Infrastructure.Common.Options.Log;
 using Devon4Net.Application.WebAPI.Configuration.Application;
 using Devon4Net.Infrastructure.Common.Options.AnsibleTower;
+using Devon4Net.Infrastructure.Common.Options.CyberArk;
 using Devon4Net.Infrastructure.Common.Options.LiteDb;
 using Devon4Net.Infrastructure.Common.Options.MediatR;
 using Devon4Net.Infrastructure.Common.Options.RabbitMq;
@@ -36,7 +37,8 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static MediatROptions MediatROptions { get; set; }
         private static LiteDbOptions LiteDbOptions { get; set; }
         private static AnsibleTowerOptions AnsibleTowerOptions { get; set; }
-        
+        private static CyberArkOptions CyberArkOptions { get; set; }
+
 
         public static void ConfigureDevonFw(this IServiceCollection services, IConfiguration configuration)
         {
@@ -58,6 +60,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             services.Configure<MediatROptions>(configuration.GetSection("MediatR"));
             services.Configure<LiteDbOptions>(configuration.GetSection("LiteDb"));
             services.Configure<AnsibleTowerOptions>(configuration.GetSection("AnsibleTower"));
+            services.Configure<CyberArkOptions>(configuration.GetSection("CyberArk"));
 
             ServiceProvider = services.BuildServiceProvider();
             DevonfwOptions = ServiceProvider.GetService<IOptions<DevonfwOptions>>()?.Value;
@@ -72,6 +75,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             SetupRabbitMq(ref services);
             SetupMediatR(ref services);
             SetupAnsibleTower(ref services);
+            SetupCyberArk(ref services);
         }
 
         public static void ConfigureDevonFw(this IApplicationBuilder app)
@@ -149,6 +153,13 @@ namespace Devon4Net.Application.WebAPI.Configuration
             AnsibleTowerOptions = ServiceProvider.GetService<IOptions<AnsibleTowerOptions>>()?.Value;
             if (AnsibleTowerOptions == null || string.IsNullOrEmpty(AnsibleTowerOptions.ApiUrlBase)) return;
             services.SetupAnsibleTower(AnsibleTowerOptions);
+        }
+
+        private static void SetupCyberArk(ref IServiceCollection services)
+        {
+            CyberArkOptions = ServiceProvider.GetService<IOptions<CyberArkOptions>>()?.Value;
+            if (CyberArkOptions == null || string.IsNullOrEmpty(CyberArkOptions.CircuitBreakerName) || string.IsNullOrEmpty(CyberArkOptions.UserName) || string.IsNullOrEmpty(CyberArkOptions.Password)) return;
+            services.SetupCyberArk(CyberArkOptions);
         }
     }
 }
