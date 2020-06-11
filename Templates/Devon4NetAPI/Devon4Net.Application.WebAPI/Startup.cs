@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 
 namespace Devon4Net.Application.WebAPI
 {
@@ -34,7 +35,8 @@ namespace Devon4Net.Application.WebAPI
             services.SetupDevonDependencyInjection(Configuration);
             services.AddControllers();
             services.AddOptions();
-            services.AddMvc(option => option.EnableEndpointRouting = false);
+            services.AddMvc(option => option.EnableEndpointRouting = false)
+                .AddJsonOptions(options => {options.JsonSerializerOptions.IgnoreNullValues = true;});
         }
 
         /// <summary>

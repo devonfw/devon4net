@@ -9,6 +9,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
     public interface ICircuitBreakerHttpClient
     {
         Task<string> Delete(string endPointName, string url, Dictionary<string,string> headers = null);
+        Task<T> Delete<T>(string endPointName, string url, Dictionary<string, string> headers = null, bool useCamelCase = false);
         Task<Stream> GetAsStream(string endPointName, string url, Dictionary<string,string> headers = null);
         Task<string> Get(string endPointName, string url, Dictionary<string,string> headers = null);
         Task<T> Get<T>(string endPointName, string url, Dictionary<string, string> headers = null, bool useCamelCase = false);
