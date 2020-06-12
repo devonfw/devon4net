@@ -33,12 +33,12 @@
 
   <ItemGroup>
     <PackageReference Include="EasyNetQ" Version="5.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.4" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.4" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.5" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
       <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
       <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.4.1" />
