@@ -3,14 +3,14 @@ using System.Security.Claims;
 using Devon4Net.Domain.UnitOfWork.Common;
 using Devon4Net.Domain.UnitOfWork.Enums;
 using Devon4Net.Infrastructure.Common.Helpers;
+using Devon4Net.Infrastructure.Common.Options.MediatR;
+using Devon4Net.Infrastructure.Common.Options.RabbitMq;
 using Devon4Net.Infrastructure.JWT.Common;
 using Devon4Net.Infrastructure.JWT.Common.Const;
-using Devon4Net.Infrastructure.MediatR.Domain.Database;
 using Devon4Net.Infrastructure.MediatR.Samples.Handler;
 using Devon4Net.Infrastructure.MediatR.Samples.Model;
 using Devon4Net.Infrastructure.MediatR.Samples.Query;
 using Devon4Net.Infrastructure.RabbitMQ.Common;
-using Devon4Net.Infrastructure.RabbitMQ.Domain.Database;
 using Devon4Net.Infrastructure.RabbitMQ.Samples.Handllers;
 using Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Commands;
 using Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Dto;
@@ -21,6 +21,7 @@ using Devon4Net.WebAPI.Implementation.Domain.Database;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Devon4Net.WebAPI.Implementation.Configure
 {
@@ -49,11 +50,24 @@ namespace Devon4Net.WebAPI.Implementation.Configure
             services.RegisterAssemblyPublicNonGenericClasses(assemblyToScan)
                 .Where(x => x.Name.EndsWith("Repository"))
                 .AsPublicImplementedInterfaces();
-
-            SetupDatabase(services,configuration);
+            
+            SetupDatabase(services, configuration);
             SetupJwtPolicies(services);
-            SetupRabbitHandlers(services);
-            SetupMediatRHandlers(services);
+
+            using var serviceProvider = services.BuildServiceProvider();
+
+            var mediatR = serviceProvider.GetService<IOptions<MediatROptions>>();
+            var rabbitMq = serviceProvider.GetService<IOptions<RabbitMqOptions>>();
+
+            if (rabbitMq?.Value != null && rabbitMq.Value.EnableRabbitMq)
+            {
+                SetupRabbitHandlers(services);
+            }
+
+            if (mediatR?.Value != null && mediatR.Value.EnableMediatR)
+            {
+                SetupMediatRHandlers(services);
+            }
         }
 
         private static void SetupRabbitHandlers(IServiceCollection services)
