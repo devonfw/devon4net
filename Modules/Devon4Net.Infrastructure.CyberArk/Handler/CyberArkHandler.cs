@@ -6,6 +6,7 @@ using Devon4Net.Infrastructure.CircuitBreaker.Handler;
 using Devon4Net.Infrastructure.Common.Options.CyberArk;
 using Devon4Net.Infrastructure.CyberArk.Common.Const;
 using Devon4Net.Infrastructure.CyberArk.Dto.Account;
+using Devon4Net.Infrastructure.CyberArk.Dto.Group;
 using Devon4Net.Infrastructure.CyberArk.Dto.Logon;
 using Devon4Net.Infrastructure.CyberArk.Dto.Safe;
 using Devon4Net.Infrastructure.CyberArk.Dto.User;
@@ -63,6 +64,15 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
             }
 
             return PutCyberArk<UpdateSafeResponseDto>($"{CyberArkEndpointConst.Safes}/{updateSafeRequest.GetSafeResult.SafeName}", updateSafeRequest, false, authToken);
+        }
+
+        public Task<string> UpdateSafeMember(string safeName, string memberName,  AddSafeMemberRequestDto updateSafeMember, string authToken = null)
+        {
+            if (updateSafeMember?.member == null || string.IsNullOrEmpty(safeName) || string.IsNullOrEmpty(memberName))
+            {
+                throw new ArgumentException("Please check the updateSafeMember, safe name and the member name");
+            }
+            return PutCyberArk<string>(string.Format(CyberArkEndpointConst.UpdateSafes, safeName, memberName), updateSafeMember, false, authToken);
         }
 
         #endregion
@@ -145,6 +155,40 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
             }
 
             return DeleteCyberArk<DeletedUser>($"{CyberArkEndpointConst.Users}/{userName}", false, authToken);
+        }
+
+        public Task<string> ResetUserPassword(string idUser, string newPassword, string authToken = null)
+        {
+            if (string.IsNullOrEmpty(idUser) || string.IsNullOrEmpty(newPassword) ||!int.TryParse(idUser, out _))
+            {
+                throw new ArgumentException("The newPassword can not be null or the id user is not correct");
+            }
+
+            return PostCyberArk<string>(CyberArkEndpointConst.ResetPassword, new RestePasswordRequestDto{Id = idUser, Password = newPassword}, false, authToken);
+        }
+
+        #endregion
+
+        #region Group
+
+        public Task<GetGroupsResponseDto> GetUserGroups(string authToken = null)
+        {
+            return GetCyberArk<GetGroupsResponseDto>(CyberArkEndpointConst.GetUserGroups, false, authToken);
+        }
+
+        public Task<string> CreateUserGroup(CreateGroupRequestDto createGroupRequest, string authToken = null)
+        {
+            return PostCyberArk<string>(CyberArkEndpointConst.GetUserGroups, createGroupRequest, false, authToken);
+        }
+
+        public Task<string> AddUserToGroup(AddUserToGroupRequestDto addUserToGroupRequest, string authToken = null)
+        {
+            return PostCyberArk<string>(CyberArkEndpointConst.AddUserToGroup, addUserToGroupRequest, false, authToken);
+        }
+
+        public Task<string> AddUserToGroup(AddUserToGroupOldRequestDto addUserToGroupOldRequest, string authToken = null)
+        {
+            return PostCyberArk<string>(CyberArkEndpointConst.AddUserToGroup, addUserToGroupOldRequest, false, authToken);
         }
         #endregion
 

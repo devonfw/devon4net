@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Devon4Net.Infrastructure.CyberArk.Dto.Account;
+using Devon4Net.Infrastructure.CyberArk.Dto.Group;
 using Devon4Net.Infrastructure.CyberArk.Dto.Safe;
 using Devon4Net.Infrastructure.CyberArk.Dto.User;
 
@@ -20,5 +21,11 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
         Task<GetUserResponseDto> GetUser(string userName, string authToken = null);
         Task<GetUserResponseDto> AddUser(AddUserRequestDto userRequest, string authToken = null);
         Task<DeletedUser> DeleteUser(string userName, string authToken = null);
+        Task<string> UpdateSafeMember(string safeName, string memberName, AddSafeMemberRequestDto updateSafeMember, string authToken = null);
+        Task<string> ResetUserPassword(string idUser, string newPassword, string authToken = null);
+        Task<GetGroupsResponseDto> GetUserGroups(string authToken = null);
+        Task<string> CreateUserGroup(CreateGroupRequestDto createGroupRequest, string authToken = null);
+        Task<string> AddUserToGroup(AddUserToGroupRequestDto addUserToGroupRequest, string authToken = null);
+        Task<string> AddUserToGroup(AddUserToGroupOldRequestDto addUserToGroupOldRequest, string authToken = null);
     }
 }
