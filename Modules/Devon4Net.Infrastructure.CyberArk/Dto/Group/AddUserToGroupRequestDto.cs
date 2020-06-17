@@ -2,8 +2,6 @@
 {
     public class AddUserToGroupRequestDto
     {
-        public string memberId { get; set; }
-        public string memberType { get; set; }
-        public string domainName { get; set; }
+        public string UserName { get; set; }
     }
 }

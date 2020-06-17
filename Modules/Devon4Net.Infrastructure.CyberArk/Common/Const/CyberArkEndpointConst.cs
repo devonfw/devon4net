@@ -10,6 +10,6 @@
         public const string Users = "/PasswordVault/WebServices/PIMServices.svc/Users";
         public const string ResetPassword = "/PasswordVault/api/Users/ResetPassword";
         public const string GetUserGroups = "/PasswordVault/api/UserGroups";
-        public const string AddUserToGroup = "/PasswordVault/api/UserGroups/Members";
+        public const string AddUserToGroup = "/PasswordVault/WebServices/PIMServices.svc/Groups/{0}/Users";
     }
 }

@@ -66,13 +66,22 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
             return PutCyberArk<UpdateSafeResponseDto>($"{CyberArkEndpointConst.Safes}/{updateSafeRequest.GetSafeResult.SafeName}", updateSafeRequest, false, authToken);
         }
 
-        public Task<string> UpdateSafeMember(string safeName, string memberName,  AddSafeMemberRequestDto updateSafeMember, string authToken = null)
+        public Task<string> UpdateSafeMember(string safeName, AddSafeMemberRequestDto updateSafeMember, string authToken = null)
         {
-            if (updateSafeMember?.member == null || string.IsNullOrEmpty(safeName) || string.IsNullOrEmpty(memberName))
+            if (updateSafeMember?.member == null || string.IsNullOrEmpty(safeName) || string.IsNullOrEmpty(updateSafeMember?.member.MemberName))
             {
                 throw new ArgumentException("Please check the updateSafeMember, safe name and the member name");
             }
-            return PutCyberArk<string>(string.Format(CyberArkEndpointConst.UpdateSafes, safeName, memberName), updateSafeMember, false, authToken);
+            return PutCyberArk<string>(string.Format(CyberArkEndpointConst.UpdateSafes, safeName, updateSafeMember.member.MemberName), updateSafeMember, false, authToken);
+        }
+
+        public Task<AddSafeMemberRequestDto> AddSafeMember(string safeName, AddSafeMemberRequestDto updateSafeMember, string authToken = null)
+        {
+            if (updateSafeMember?.member == null || string.IsNullOrEmpty(safeName))
+            {
+                throw new ArgumentException("Please check the updateSafeMember and safe name");
+            }
+            return PostCyberArk<AddSafeMemberRequestDto>(string.Format(CyberArkEndpointConst.UpdateSafes, safeName, string.Empty), updateSafeMember, false, authToken);
         }
 
         #endregion
@@ -176,19 +185,20 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
             return GetCyberArk<GetGroupsResponseDto>(CyberArkEndpointConst.GetUserGroups, false, authToken);
         }
 
+        /// <summary>
+        /// This method is only available in version 11+
+        /// </summary>
+        /// <param name="createGroupRequest"></param>
+        /// <param name="authToken"></param>
+        /// <returns></returns>
         public Task<string> CreateUserGroup(CreateGroupRequestDto createGroupRequest, string authToken = null)
         {
             return PostCyberArk<string>(CyberArkEndpointConst.GetUserGroups, createGroupRequest, false, authToken);
         }
 
-        public Task<string> AddUserToGroup(AddUserToGroupRequestDto addUserToGroupRequest, string authToken = null)
+        public Task<string> AddUserToGroup(string userName, string groupName, string authToken = null)
         {
-            return PostCyberArk<string>(CyberArkEndpointConst.AddUserToGroup, addUserToGroupRequest, false, authToken);
-        }
-
-        public Task<string> AddUserToGroup(AddUserToGroupOldRequestDto addUserToGroupOldRequest, string authToken = null)
-        {
-            return PostCyberArk<string>(CyberArkEndpointConst.AddUserToGroup, addUserToGroupOldRequest, false, authToken);
+            return PostCyberArk<string>(string.Format(CyberArkEndpointConst.AddUserToGroup, groupName), new AddUserToGroupRequestDto{ UserName = userName } , false, authToken);
         }
         #endregion
 

@@ -286,6 +286,14 @@
             Token
             </summary>
         </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.CyberArkManagement.CyberArkController.CreateUserGroup(Devon4Net.Infrastructure.CyberArk.Dto.Group.CreateGroupRequestDto,System.String)">
+            <summary>
+            This method is only available in version 11+
+            </summary>
+            <param name="createGroupRequest"></param>
+            <param name="authToken"></param>
+            <returns></returns>
+        </member>
         <member name="T:Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Controllers.EmployeeController">
             <summary>
             Employees controller
