@@ -13,7 +13,7 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
         Task<GetSafeResponseDto> GetSafe(string idSafe, string authToken = null);
         Task<AddSafeResponseDto> AddSafe(AddSafeRequestDto safeRequest, string authToken = null);
         Task<UpdateSafeResponseDto> UpdateSafe(UpdateSafeRequestDto updateSafeRequest, string authToken = null);
-        Task<GetAccountsResponseDto> GetAccounts(string authToken = null);
+        Task<GetAccountsResponseDto> GetAccounts(string searchCriteria = null, string authToken = null);
         Task<AccountDetail> GetAccount(string idAccount, string authToken = null);
         Task<AddAccountResponseDto> AddAccount(AddAccountRequestDto addAccountRequest, string authToken = null);
         Task<AddAccountResponseDto> DeleteAccount(string accountName, string authToken = null);
@@ -21,11 +21,11 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
         Task<GetUserResponseDto> GetUser(string userName, string authToken = null);
         Task<GetUserResponseDto> AddUser(AddUserRequestDto userRequest, string authToken = null);
         Task<DeletedUser> DeleteUser(string userName, string authToken = null);
-        Task<string> UpdateSafeMember(string safeName, string memberName, AddSafeMemberRequestDto updateSafeMember, string authToken = null);
+        Task<string> UpdateSafeMember(string safeName, AddSafeMemberRequestDto updateSafeMember, string authToken = null);
         Task<string> ResetUserPassword(string idUser, string newPassword, string authToken = null);
         Task<GetGroupsResponseDto> GetUserGroups(string authToken = null);
         Task<string> CreateUserGroup(CreateGroupRequestDto createGroupRequest, string authToken = null);
-        Task<string> AddUserToGroup(AddUserToGroupRequestDto addUserToGroupRequest, string authToken = null);
-        Task<string> AddUserToGroup(AddUserToGroupOldRequestDto addUserToGroupOldRequest, string authToken = null);
+        Task<string> AddUserToGroup(string userName, string groupName, string authToken = null);
+        Task<AddSafeMemberRequestDto> AddSafeMember(string safeName, AddSafeMemberRequestDto updateSafeMember, string authToken = null);
     }
 }

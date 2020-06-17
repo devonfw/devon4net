@@ -24,6 +24,6 @@ namespace Devon4Net.Infrastructure.CyberArk.Dto.Safe
     public class Permission
     {
         public string Key { get; set; }
-        public bool Value { get; set; }
+        public object Value { get; set; }
     }
 }
