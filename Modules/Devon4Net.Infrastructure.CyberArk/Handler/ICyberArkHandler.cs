@@ -13,7 +13,7 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
         Task<GetSafeResponseDto> GetSafe(string idSafe, string authToken = null);
         Task<AddSafeResponseDto> AddSafe(AddSafeRequestDto safeRequest, string authToken = null);
         Task<UpdateSafeResponseDto> UpdateSafe(UpdateSafeRequestDto updateSafeRequest, string authToken = null);
-        Task<GetAccountsResponseDto> GetAccounts(string authToken = null);
+        Task<GetAccountsResponseDto> GetAccounts(string searchCriteria = null, string authToken = null);
         Task<AccountDetail> GetAccount(string idAccount, string authToken = null);
         Task<AddAccountResponseDto> AddAccount(AddAccountRequestDto addAccountRequest, string authToken = null);
         Task<AddAccountResponseDto> DeleteAccount(string accountName, string authToken = null);

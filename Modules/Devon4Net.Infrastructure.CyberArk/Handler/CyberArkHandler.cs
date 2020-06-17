@@ -87,9 +87,10 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
         #endregion
 
         #region Account
-        public Task<GetAccountsResponseDto> GetAccounts(string authToken = null)
+        public Task<GetAccountsResponseDto> GetAccounts(string searchCriteria = null, string authToken = null)
         {
-            return GetCyberArk<GetAccountsResponseDto>(CyberArkEndpointConst.Accounts, false, authToken);
+            var url = string.IsNullOrEmpty(searchCriteria) ? CyberArkEndpointConst.Accounts : CyberArkEndpointConst.Accounts + string.Format(CyberArkEndpointConst.AccountsSearch, searchCriteria);
+            return GetCyberArk<GetAccountsResponseDto>(url, false, authToken);
         }
 
         public Task<AccountDetail> GetAccount(string idAccount, string authToken = null)

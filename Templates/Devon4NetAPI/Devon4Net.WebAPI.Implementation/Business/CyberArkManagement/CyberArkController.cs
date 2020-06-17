@@ -95,10 +95,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.CyberArkManagement
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAccounts(string authToken = null)
+        public async Task<IActionResult> GetAccounts(string searchCriteria = null, string authToken = null)
         {
             Devon4NetLogger.Debug("Executing Login from controller CyberArk");
-            return Ok(await CyberArkHandler.GetAccounts(authToken));
+            return Ok(await CyberArkHandler.GetAccounts(searchCriteria, authToken));
         }
 
         [HttpGet]
