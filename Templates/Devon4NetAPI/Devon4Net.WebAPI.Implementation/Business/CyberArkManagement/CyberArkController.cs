@@ -95,10 +95,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.CyberArkManagement
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAccounts(string searchCriteria = null, string authToken = null)
+        public async Task<IActionResult> GetAccounts(string searchCriteria = null, string filterCriteria = null, bool useSafeFilter = true,  string authToken = null)
         {
             Devon4NetLogger.Debug("Executing Login from controller CyberArk");
-            return Ok(await CyberArkHandler.GetAccounts(searchCriteria, authToken));
+            return Ok(await CyberArkHandler.GetAccounts(searchCriteria, filterCriteria, useSafeFilter, authToken));
         }
 
         [HttpGet]
@@ -178,6 +178,19 @@ namespace Devon4Net.WebAPI.Implementation.Business.CyberArkManagement
         {
             Devon4NetLogger.Debug("Executing Login from controller CyberArk");
             return Ok(await CyberArkHandler.AddUser(userRequest, authToken));
+        }
+
+        [HttpPut]
+        [AllowAnonymous]
+        [Route("/v1/cyberark/user")]
+        [ProducesResponseType(typeof(GetUserResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateUser(UpdateUserRequestDto userRequest, string userName, string authToken = null)
+        {
+            Devon4NetLogger.Debug("Executing Login from controller CyberArk");
+            return Ok(await CyberArkHandler.UpdateUser(userRequest, userName, authToken));
         }
 
         [HttpDelete]
