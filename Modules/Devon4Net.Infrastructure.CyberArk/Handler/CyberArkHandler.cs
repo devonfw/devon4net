@@ -87,9 +87,13 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
         #endregion
 
         #region Account
-        public Task<GetAccountsResponseDto> GetAccounts(string searchCriteria = null, string authToken = null)
+        public Task<GetAccountsResponseDto> GetAccounts(string searchCriteria = null, string filterCriteria = null, bool useSafeFilter = true, string authToken = null)
         {
-            var url = string.IsNullOrEmpty(searchCriteria) ? CyberArkEndpointConst.Accounts : CyberArkEndpointConst.Accounts + string.Format(CyberArkEndpointConst.AccountsSearch, searchCriteria);
+            var urlFilterSearch = useSafeFilter ? CyberArkEndpointConst.AccountsSafeNameFilter : CyberArkEndpointConst.AccountsFilter;
+            var search = string.IsNullOrEmpty(searchCriteria) ? string.Empty : $"?{string.Format(CyberArkEndpointConst.AccountsSearch, searchCriteria)}";
+            var filter = string.IsNullOrEmpty(filterCriteria) ? string.Empty : $"{(string.IsNullOrEmpty(search) ? '?' : '&')}{string.Format(urlFilterSearch, filterCriteria)}";
+            var url = $"{CyberArkEndpointConst.Accounts}{search}{filter}";
+
             return GetCyberArk<GetAccountsResponseDto>(url, false, authToken);
         }
 
@@ -155,6 +159,17 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
 
             return PostCyberArk<GetUserResponseDto>(CyberArkEndpointConst.Users, userRequest, false, authToken);
         }
+
+        public Task<GetUserResponseDto> UpdateUser(UpdateUserRequestDto userRequest, string userName, string authToken = null)
+        {
+            if (userRequest == null || string.IsNullOrEmpty(userName))
+            {
+                throw new ArgumentException("The userName can not be null");
+            }
+
+            return PutCyberArk<GetUserResponseDto>($"{CyberArkEndpointConst.Users}/{userName}", userRequest, false, authToken);
+        }
+
 
 
         public Task<DeletedUser> DeleteUser(string userName, string authToken = null)

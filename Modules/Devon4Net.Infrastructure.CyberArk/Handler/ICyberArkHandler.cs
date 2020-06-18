@@ -13,13 +13,14 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
         Task<GetSafeResponseDto> GetSafe(string idSafe, string authToken = null);
         Task<AddSafeResponseDto> AddSafe(AddSafeRequestDto safeRequest, string authToken = null);
         Task<UpdateSafeResponseDto> UpdateSafe(UpdateSafeRequestDto updateSafeRequest, string authToken = null);
-        Task<GetAccountsResponseDto> GetAccounts(string searchCriteria = null, string authToken = null);
+        Task<GetAccountsResponseDto> GetAccounts(string searchCriteria = null, string filterCriteria = null, bool useSafeFilter = true, string authToken = null);
         Task<AccountDetail> GetAccount(string idAccount, string authToken = null);
         Task<AddAccountResponseDto> AddAccount(AddAccountRequestDto addAccountRequest, string authToken = null);
         Task<AddAccountResponseDto> DeleteAccount(string accountName, string authToken = null);
         Task<string> RetrieveAccount(string idAccount, string authToken = null);
         Task<GetUserResponseDto> GetUser(string userName, string authToken = null);
         Task<GetUserResponseDto> AddUser(AddUserRequestDto userRequest, string authToken = null);
+        Task<GetUserResponseDto> UpdateUser(UpdateUserRequestDto userRequest, string userName, string authToken = null);
         Task<DeletedUser> DeleteUser(string userName, string authToken = null);
         Task<string> UpdateSafeMember(string safeName, AddSafeMemberRequestDto updateSafeMember, string authToken = null);
         Task<string> ResetUserPassword(string idUser, string newPassword, string authToken = null);
