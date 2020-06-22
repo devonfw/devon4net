@@ -37,7 +37,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.Me
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.AnsibleTower", "..\..\Modules\Devon4Net.Infrastructure.AnsibleTower\Devon4Net.Infrastructure.AnsibleTower.csproj", "{56B07239-235B-41D2-BAF9-8D0C7CDF833C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devon4Net.Infrastructure.CyberArk", "..\..\Modules\Devon4Net.Infrastructure.CyberArk\Devon4Net.Infrastructure.CyberArk.csproj", "{269019A6-A64E-4ED2-B144-26F5EC354651}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.CyberArk", "..\..\Modules\Devon4Net.Infrastructure.CyberArk\Devon4Net.Infrastructure.CyberArk.csproj", "{269019A6-A64E-4ED2-B144-26F5EC354651}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devon4Net.Infrastructure.SmaxHcm", "..\..\Modules\Devon4Net.Infrastructure.SmaxHcm\Devon4Net.Infrastructure.SmaxHcm.csproj", "{8AD209E5-81E7-4189-B65C-47F15EA7EB76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +107,10 @@ Global
 		{269019A6-A64E-4ED2-B144-26F5EC354651}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{269019A6-A64E-4ED2-B144-26F5EC354651}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{269019A6-A64E-4ED2-B144-26F5EC354651}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AD209E5-81E7-4189-B65C-47F15EA7EB76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AD209E5-81E7-4189-B65C-47F15EA7EB76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AD209E5-81E7-4189-B65C-47F15EA7EB76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AD209E5-81E7-4189-B65C-47F15EA7EB76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,6 +131,7 @@ Global
 		{D21A99CD-33BB-4C1E-BBE3-8875F27C5114} = {68B87931-BF80-499A-816E-F6FF7B359443}
 		{56B07239-235B-41D2-BAF9-8D0C7CDF833C} = {68B87931-BF80-499A-816E-F6FF7B359443}
 		{269019A6-A64E-4ED2-B144-26F5EC354651} = {68B87931-BF80-499A-816E-F6FF7B359443}
+		{8AD209E5-81E7-4189-B65C-47F15EA7EB76} = {68B87931-BF80-499A-816E-F6FF7B359443}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B0967205-4814-4D3A-907B-2BC885FA488C}
