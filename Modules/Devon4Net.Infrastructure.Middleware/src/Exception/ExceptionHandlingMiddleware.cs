@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -59,31 +58,29 @@ namespace Devon4Net.Infrastructure.Middleware.Exception
             var exceptionInterfaces = exceptionTypeValue.GetInterfaces().Select(i => i.Name).ToList();
             exceptionInterfaces.Add(exceptionTypeValue.Name);
 
-            switch (exceptionInterfaces)
+            return exceptionInterfaces switch
             {
-                case { } exceptionType when exceptionType.Contains("InvalidDataException"):
-                    return HandleContext(ref context, StatusCodes.Status422UnprocessableEntity);
-
-                case { } exceptionType when exceptionType.Contains("ArgumentException")
-                                                || exceptionType.Contains("ArgumentNullException")
-                                                || exceptionType.Contains("NotFoundException")
-                                                || exceptionType.Contains("FileNotFoundException"):
-                    return HandleContext(ref context, StatusCodes.Status400BadRequest);
-
-                case { } exceptionType when exceptionType.Contains("IWebApiException"):
-                    return HandleContext(ref context, ((IWebApiException)exception).StatusCode, ((IWebApiException)exception).ShowMessage ? exception.Message : null);
-
-                default:
-                    return HandleContext(ref context, StatusCodes.Status500InternalServerError);
-            }
+                { } exceptionType when exceptionType.Contains("InvalidDataException") => HandleContext(ref context,
+                    StatusCodes.Status422UnprocessableEntity),
+                { } exceptionType when exceptionType.Contains("ArgumentException") ||
+                                       exceptionType.Contains("ArgumentNullException") ||
+                                       exceptionType.Contains("NotFoundException") ||
+                                       exceptionType.Contains("FileNotFoundException") => HandleContext(ref context,
+                    StatusCodes.Status400BadRequest),
+                { } exceptionType when exceptionType.Contains("IWebApiException") => HandleContext(ref context,
+                    ((IWebApiException) exception).StatusCode, exception.Message,
+                    ((IWebApiException) exception).ShowMessage),
+                _ => HandleContext(ref context, StatusCodes.Status500InternalServerError, exception.Message,
+                    ((IWebApiException) exception).ShowMessage)
+            };
         }
 
-        private static Task HandleContext(ref HttpContext context, int? statusCode = null, string errorMessage = null)
+        private static Task HandleContext(ref HttpContext context, int? statusCode = null, string errorMessage = null, bool showMessage = false)
         {
             context.Response.Headers.Clear();
             context.Response.StatusCode = statusCode ?? StatusCodes.Status500InternalServerError;
 
-            if (string.IsNullOrEmpty(errorMessage)) return context.Response.WriteAsync(string.Empty);
+            if (!showMessage  || statusCode == StatusCodes.Status204NoContent || string.IsNullOrEmpty(errorMessage) ) return Task.CompletedTask;
             
             context.Response.ContentType = "application/json";
             return context.Response.WriteAsync(JsonSerializer.Serialize(new { error = errorMessage }));
