@@ -68,7 +68,7 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
 
         public Task<string> UpdateSafeMember(string safeName, AddSafeMemberRequestDto updateSafeMember, string authToken = null)
         {
-            if (updateSafeMember?.member == null || string.IsNullOrEmpty(safeName) || string.IsNullOrEmpty(updateSafeMember?.member.MemberName))
+            if (updateSafeMember?.member == null || string.IsNullOrEmpty(safeName) || string.IsNullOrEmpty(updateSafeMember.member.MemberName))
             {
                 throw new ArgumentException("Please check the updateSafeMember, safe name and the member name");
             }
@@ -150,6 +150,11 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
             return GetCyberArk<GetUserResponseDto>($"{CyberArkEndpointConst.Users}/{userName}", false, authToken);
         }
 
+        public Task<GetUserResponseDto> GetUsers(GetUsersRequestDto usersRequestDto, string authToken = null)
+        {
+            return GetCyberArk<GetUserResponseDto>($"{CyberArkEndpointConst.GetUsers}/", usersRequestDto, false, authToken);
+        }
+
         public Task<GetUserResponseDto> AddUser(AddUserRequestDto userRequest, string authToken = null)
         {
             if (userRequest == null || string.IsNullOrEmpty(userRequest.UserName))
@@ -224,6 +229,12 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
         {
             await Logon(authToken);
             return await CircuitBreakerHttpClient.Get<T>(CyberArkOptions.CircuitBreakerName, endpoint, GetAuthorizationHeaders(), useCamelCase);
+        }
+
+        private async Task<T> GetCyberArk<T>(string endpoint, object content, bool useCamelCase, string authToken = null)
+        {
+            await Logon(authToken);
+            return await CircuitBreakerHttpClient.Get<T>(CyberArkOptions.CircuitBreakerName, endpoint, content, GetAuthorizationHeaders(), useCamelCase);
         }
 
         private async Task<T> PostCyberArk<T>(string endpoint, object dataToSend, bool useCamelCase, string authToken = null)

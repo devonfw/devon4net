@@ -70,8 +70,7 @@ namespace Devon4Net.Infrastructure.Middleware.Exception
                 { } exceptionType when exceptionType.Contains("IWebApiException") => HandleContext(ref context,
                     ((IWebApiException) exception).StatusCode, exception.Message,
                     ((IWebApiException) exception).ShowMessage),
-                _ => HandleContext(ref context, StatusCodes.Status500InternalServerError, exception.Message,
-                    ((IWebApiException) exception).ShowMessage)
+                _ => HandleContext(ref context, StatusCodes.Status500InternalServerError, exception.Message)
             };
         }
 

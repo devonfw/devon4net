@@ -18,6 +18,7 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
         Task<AddAccountResponseDto> AddAccount(AddAccountRequestDto addAccountRequest, string authToken = null);
         Task<AddAccountResponseDto> DeleteAccount(string accountName, string authToken = null);
         Task<string> RetrieveAccount(string idAccount, string authToken = null);
+        Task<GetUserResponseDto> GetUsers(GetUsersRequestDto usersRequestDto, string authToken = null);
         Task<GetUserResponseDto> GetUser(string userName, string authToken = null);
         Task<GetUserResponseDto> AddUser(AddUserRequestDto userRequest, string authToken = null);
         Task<GetUserResponseDto> UpdateUser(UpdateUserRequestDto userRequest, string userName, string authToken = null);

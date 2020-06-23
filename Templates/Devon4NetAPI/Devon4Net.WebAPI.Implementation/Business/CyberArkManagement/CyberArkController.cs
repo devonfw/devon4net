@@ -154,6 +154,19 @@ namespace Devon4Net.WebAPI.Implementation.Business.CyberArkManagement
             return Ok(await CyberArkHandler.RetrieveAccount(idAccount, authToken));
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/cyberark/users")]
+        [ProducesResponseType(typeof(GetUserResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetUsers(GetUsersRequestDto usersRequest, string authToken = null)
+        {
+            Devon4NetLogger.Debug("Executing Login from controller CyberArk");
+            return Ok(await CyberArkHandler.GetUsers(usersRequest, authToken));
+        }
+
         [HttpGet]
         [AllowAnonymous]
         [Route("/v1/cyberark/user")]

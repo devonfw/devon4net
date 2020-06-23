@@ -1,13 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Common\" />
-    <Folder Include="Dto\" />
-    <Folder Include="Exceptions\" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.CircuitBreaker\src\Devon4Net.Infrastructure.CircuitBreaker.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Log\src\Devon4Net.Infrastructure.Log.csproj" />
   </ItemGroup>
 
 </Project>

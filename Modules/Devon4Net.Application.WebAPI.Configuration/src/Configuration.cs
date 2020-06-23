@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
 using Devon4Net.Domain.UnitOfWork.Repository;
 using Devon4Net.Domain.UnitOfWork.UnitOfWork;
 using Devon4Net.Infrastructure.Common.Options.CircuitBreaker;
@@ -20,6 +19,7 @@ using Devon4Net.Infrastructure.Common.Options.CyberArk;
 using Devon4Net.Infrastructure.Common.Options.LiteDb;
 using Devon4Net.Infrastructure.Common.Options.MediatR;
 using Devon4Net.Infrastructure.Common.Options.RabbitMq;
+using Devon4Net.Infrastructure.Common.Options.SmaxHcm;
 using Devon4Net.Infrastructure.Extensions.Helpers;
 
 namespace Devon4Net.Application.WebAPI.Configuration
@@ -38,6 +38,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static LiteDbOptions LiteDbOptions { get; set; }
         private static AnsibleTowerOptions AnsibleTowerOptions { get; set; }
         private static CyberArkOptions CyberArkOptions { get; set; }
+        private static SmaxHcmOptions SmaxHcmOptions { get; set; }
 
 
         public static void ConfigureDevonFw(this IServiceCollection services, IConfiguration configuration)
@@ -61,6 +62,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             services.Configure<LiteDbOptions>(configuration.GetSection("LiteDb"));
             services.Configure<AnsibleTowerOptions>(configuration.GetSection("AnsibleTower"));
             services.Configure<CyberArkOptions>(configuration.GetSection("CyberArk"));
+            services.Configure<SmaxHcmOptions>(configuration.GetSection("SmaxHcm"));
 
             ServiceProvider = services.BuildServiceProvider();
             DevonfwOptions = ServiceProvider.GetService<IOptions<DevonfwOptions>>()?.Value;
@@ -76,6 +78,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             SetupMediatR(ref services);
             SetupAnsibleTower(ref services);
             SetupCyberArk(ref services);
+            SetupSmaxHcm(ref services);
         }
 
         public static void ConfigureDevonFw(this IApplicationBuilder app)
@@ -160,6 +163,13 @@ namespace Devon4Net.Application.WebAPI.Configuration
             CyberArkOptions = ServiceProvider.GetService<IOptions<CyberArkOptions>>()?.Value;
             if (CyberArkOptions == null || string.IsNullOrEmpty(CyberArkOptions.CircuitBreakerName) || string.IsNullOrEmpty(CyberArkOptions.UserName) || string.IsNullOrEmpty(CyberArkOptions.Password)) return;
             services.SetupCyberArk();
+        }
+
+        private static void SetupSmaxHcm(ref IServiceCollection services)
+        {
+            SmaxHcmOptions = ServiceProvider.GetService<IOptions<SmaxHcmOptions>>()?.Value;
+            if (SmaxHcmOptions == null || string.IsNullOrEmpty(SmaxHcmOptions.CircuitBreakerName) || string.IsNullOrEmpty(SmaxHcmOptions.UserName) || string.IsNullOrEmpty(SmaxHcmOptions.Password)) return;
+            services.SetupSmaxHcm();
         }
     }
 }
