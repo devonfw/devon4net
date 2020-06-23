@@ -17,7 +17,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         Task<LoginRequestDto> Login(string userName, string password);
         Task<PaginatedResultDto<ResultApplication>> GetApplications(string authenticationToken);
         Task<ApplicationsResponseDto> CreateApplication(ApplicationsRequestDto applicationstRequest, string authenticationToken);
-        Task<PaginatedResultDto<ResultOrganizationDto>> GetOrganizations(string authenticationToken, string search = null);
+        Task<PaginatedResultDto<ResultOrganizationDto>> GetOrganizations(string authenticationToken, string searchCriteria = null);
         Task<ResultOrganizationDto> GetOrganizationById(string authenticationToken, string organizationId);
         Task<ResultOrganizationDto> CreateOrganization(string authenticationToken, CreateOrganizationRequestDto organizationRequest);
         Task<PaginatedResultDto<ResultInventoryDto>> GetInventories(string authenticationToken);
@@ -30,7 +30,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         Task<GetCredentialsResponseDto> CreateCredential(string authenticationToken, CreateCredentialRequestDto credentialRequest);
         Task<PaginatedResultDto<GetProjectsRequestDto>> GetProjects(string authenticationToken, string searchCriteria = null);
         Task<GetProjectsRequestDto> CreateProject(string authenticationToken, CreateProjectRequestDto credentialRequest);
-        Task<PaginatedResultDto<GetJobResponseDto>> GetJobs(string authenticationToken, string searchCriteria);
+        Task<PaginatedResultDto<GetJobResponseDto>> GetJobs(string authenticationToken, string searchCriteria = null);
         Task<string> CancelJob(string authenticationToken, int idJob);
         Task<PaginatedResultDto<GetJobEventsResponseDto>> GetJobEvents(string authenticationToken, int idJob);
         Task<GetCanCancelResponseDto> CanCancelJob(string authenticationToken, int idJob);

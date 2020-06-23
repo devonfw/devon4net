@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Devon4Net.Infrastructure.MediatR.Domain.ServiceInterfaces;
 using Devon4Net.Infrastructure.MediatR.Handler;
 using Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Dto;
+using Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Exceptions;
 using Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Queries;
 using Devon4Net.WebAPI.Implementation.Business.TodoManagement.Service;
 
@@ -50,6 +51,11 @@ namespace Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Handlers
             }
 
             var result = await TodoService.GetTodoById(request.TodoId).ConfigureAwait(false);
+
+            if (result == null)
+            {
+                throw new TodoNotFoundException("The TODO item was not found");
+            }
 
             return new TodoResultDto
             {

@@ -74,6 +74,7 @@
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.MediatR\Devon4Net.Infrastructure.MediatR.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.Middleware\src\Devon4Net.Infrastructure.Middleware.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.RabbitMQ\Devon4Net.Infrastructure.RabbitMQ.csproj" />
+    <ProjectReference Include="..\..\Devon4Net.Infrastructure.SmaxHcm\Devon4Net.Infrastructure.SmaxHcm.csproj" />
   </ItemGroup>
 
   <ItemGroup>

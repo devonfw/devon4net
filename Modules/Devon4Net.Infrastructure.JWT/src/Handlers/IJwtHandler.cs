@@ -7,8 +7,8 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
     public interface IJwtHandler
     {
         string CreateClientToken(List<Claim> clientClaims);
-        IEnumerable<Claim> GetUserClaims(string jwtToken);
-        string GetClaimValue(IEnumerable<Claim> claimList, string claim);
+        List<Claim> GetUserClaims(string jwtToken);
+        string GetClaimValue(List<Claim> claimList, string claim);
         string GetClaimValue(string token, string claim);
         SecurityKey GetIssuerSigningKey();
     }

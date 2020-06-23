@@ -25,12 +25,11 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
             }
             else
             {
-                throw new ArgumentNullException("Cannot create the JWT Handler. JWTOptions are null.");
+                throw new ArgumentNullException($"Cannot create the JWT Handler. JWTOptions are null");
             }
         }
 
         private SecurityKey IssuerSigningKey { get; set; }
-        private EncryptingCredentials EncryptingCredentials { get; set; }
         private SigningCredentials SigningCredentials { get; set; }
         private X509Certificate2 Certificate { get; set; }
         private static SecurityKey SecurityKey { get; set; }
@@ -45,11 +44,13 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
                 GetSigningCredentialsFromKey(JwtOptions.Security.SecretKey);
             }
             else
-            if (!string.IsNullOrEmpty(JwtOptions.Security.Certificate) &&
-                !string.IsNullOrEmpty(JwtOptions.Security.CertificatePassword))
             {
-                GetSigningCredentialsFromCertificate(JwtOptions.Security.Certificate,
-                    JwtOptions.Security.CertificatePassword);
+                if (!string.IsNullOrEmpty(JwtOptions.Security.Certificate) &&
+                !string.IsNullOrEmpty(JwtOptions.Security.CertificatePassword))
+                {
+                    GetSigningCredentialsFromCertificate(JwtOptions.Security.Certificate,
+                        JwtOptions.Security.CertificatePassword);
+                }
             }
         }
 
@@ -69,7 +70,7 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
             return new JwtSecurityTokenHandler().CreateEncodedJwt(tokenDescriptor);
         }
 
-        public IEnumerable<Claim> GetUserClaims(string jwtToken)
+        public List<Claim> GetUserClaims(string jwtToken)
         {
             var handler = new JwtSecurityTokenHandler();
 
@@ -83,10 +84,10 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
                     IssuerSigningKey = SecurityKey
                 }, out _);
 
-            return claimsPrincipal.Claims;
+            return claimsPrincipal.Claims.ToList();
         }
 
-        public string GetClaimValue(IEnumerable<Claim> claimList, string claim)
+        public string GetClaimValue(List<Claim> claimList, string claim)
         {
             if (claimList == null || !claimList.Any()) return string.Empty;
             return claimList.FirstOrDefault(x => x.Type == claim)?.Value;
@@ -106,13 +107,10 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
 
         private void GetSigningCredentialsFromKey(string secretKey)
         {
-            var lengthAlgorithm = JwtOptions.Security.SecretKeyLengthAlgorithm ?? SecurityAlgorithms.Aes256KW;
-            var secretKeyEncryptionAlgorithm = JwtOptions.Security.SecretKeyEncryptionAlgorithm ?? SecurityAlgorithms.Aes128CbcHmacSha256;
             var key = new SymmetricSecurityKey(Encoding.Default.GetBytes(secretKey));
             SecurityKey = key;
             IssuerSigningKey = new SymmetricSecurityKey(key.Key);
             SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            EncryptingCredentials = new EncryptingCredentials(IssuerSigningKey, lengthAlgorithm, secretKeyEncryptionAlgorithm);
         }
 
         private void GetSigningCredentialsFromCertificate(string certificate, string password)
@@ -123,7 +121,6 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
                 Certificate = new X509Certificate2(File.ReadAllBytes(FileOperations.GetFileFullPath(certificate)), password,  X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
                 SecurityKey = new X509SecurityKey(Certificate);
                 IssuerSigningKey = new X509SecurityKey(Certificate);
-                EncryptingCredentials = new X509EncryptingCredentials(Certificate);
                 SigningCredentials = new SigningCredentials(IssuerSigningKey, certificateEncryptionAlgorithm);
             }
             catch (CryptographicException ex)

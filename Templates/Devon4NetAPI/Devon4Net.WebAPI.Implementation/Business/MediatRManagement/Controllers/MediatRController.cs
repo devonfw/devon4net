@@ -35,7 +35,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Controllers
         /// </summary>
         /// <param name="todoId"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         [HttpOptions]
         [AllowAnonymous]
         [ProducesResponseType(typeof(TodoResultDto), StatusCodes.Status200OK)]

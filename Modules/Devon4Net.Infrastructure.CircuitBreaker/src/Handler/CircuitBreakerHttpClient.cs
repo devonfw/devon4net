@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
 using Devon4Net.Infrastructure.Common.Exceptions;
 using Devon4Net.Infrastructure.Log;
 
@@ -60,6 +61,41 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                 using (httpClient = GetDefaultClient(endPointName, headers))
                 {
                     httpResponseMessage = await httpClient.GetAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url)).ConfigureAwait(false);
+                    var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName);
+                    result = Deserialize<T>(httpResult, useCamelCase);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogException(ref ex);
+                throw;
+            }
+            finally
+            {
+                DisposeHttpObjects(ref httpClient, ref httpResponseMessage);
+            }
+
+            return result;
+        }
+
+        public async Task<T> Get<T>(string endPointName, string url, object content, Dictionary<string, string> headers = null, bool useCamelCase = false)
+        {
+            HttpClient httpClient = null;
+            HttpResponseMessage httpResponseMessage = null;
+            T result;
+
+            try
+            {
+                using (httpClient = GetDefaultClient(endPointName, headers))
+                {
+                    var request = new HttpRequestMessage
+                    {
+                        Method = HttpMethod.Get,
+                        RequestUri = new Uri(GetEncodedUrl(httpClient.BaseAddress.ToString(), url)),
+                        Content = new StringContent(Serialize(content, useCamelCase), Encoding.UTF8, MediaType.ApplicationJson),
+                    };
+
+                    httpResponseMessage = await httpClient.SendAsync(request).ConfigureAwait(false);
                     var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName);
                     result = Deserialize<T>(httpResult, useCamelCase);
                 }
@@ -164,7 +200,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
                     httpContent = CreateJsonHttpContent(dataToSend, mediaType, useCamelCase);
 
                     httpResponseMessage = await httpClient.PostAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url), httpContent).ConfigureAwait(false);
-                    var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName, httpContent);
+                    var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName);
                     result = Deserialize<T>(httpResult, useCamelCase);
                 }
             }
@@ -180,6 +216,34 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
             return result;
         }
+
+        public async Task<string> Post(string endPointName, string url, object dataToSend, string mediaType, Dictionary<string, string> headers = null, bool useCamelCase = false)
+        {
+            HttpClient httpClient = null;
+            HttpContent httpContent = null;
+            HttpResponseMessage httpResponseMessage = null;
+
+            try
+            {
+                using (httpClient = GetDefaultClient(endPointName, headers))
+                {
+                    httpContent = CreateJsonHttpContent(dataToSend, mediaType, useCamelCase);
+
+                    httpResponseMessage = await httpClient.PostAsync(GetEncodedUrl(httpClient.BaseAddress.ToString(), url), httpContent).ConfigureAwait(false);
+                    return await ManageHttpResponse(httpResponseMessage, endPointName);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogException(ref ex);
+                throw;
+            }
+            finally
+            {
+                DisposeHttpObjects(ref httpClient, ref httpResponseMessage, ref httpContent);
+            }
+        }
+
 
         public async Task<T> Put<T>(string endPointName, string url, object dataToSend, string mediaType, Dictionary<string,string> headers = null, bool useCamelCase = false)
         {
@@ -338,7 +402,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             return string.IsNullOrEmpty(input) ? default : JsonSerializer.Deserialize<T>(input, useCamelCase ? CamelJsonSerializerOptions : null);
         }
 
-        private async Task CheckHttpResponse(HttpResponseMessage httpResponseMessage, string endPointName, HttpContent httpContent)
+        private async Task CheckHttpResponse(HttpResponseMessage httpResponseMessage, string endPointName)
         {
             await LogHttpResponse(httpResponseMessage, endPointName);
 
@@ -354,16 +418,16 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             }
         }
 
-        private async Task<string> ManageHttpResponse(HttpResponseMessage httpResponseMessage, string endPointName, HttpContent httpContent = null)
+        private async Task<string> ManageHttpResponse(HttpResponseMessage httpResponseMessage, string endPointName)
         {
-            await CheckHttpResponse(httpResponseMessage, endPointName, httpContent);
+            await CheckHttpResponse(httpResponseMessage, endPointName);
 
             return await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
 
         private async Task<Stream> ManageHttpResponseAsStream(HttpResponseMessage httpResponseMessage, string endPointName)
         {
-            await CheckHttpResponse(httpResponseMessage, endPointName, null);
+            await CheckHttpResponse(httpResponseMessage, endPointName);
 
             if (httpResponseMessage == null)
             {
@@ -429,6 +493,11 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
             if (!baseAddress.EndsWith("/") && !endPoint.StartsWith("/"))
             {
                 result = $"{baseAddress}/{endPoint}";
+            }
+
+            if (!endPoint.StartsWith("/") || baseAddress.EndsWith("/") && !endPoint.StartsWith("/") || !baseAddress.EndsWith("/") && endPoint.StartsWith("/"))
+            {
+                result = $"{baseAddress}{endPoint}";
             }
 
             return Uri.EscapeUriString(result);

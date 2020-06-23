@@ -56,12 +56,18 @@
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.MediatR\Devon4Net.Infrastructure.MediatR.csproj" />
     <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.Middleware\src\Devon4Net.Infrastructure.Middleware.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.RabbitMQ\Devon4Net.Infrastructure.RabbitMQ.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.SmaxHcm\Devon4Net.Infrastructure.SmaxHcm.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Devon4Net.WebAPI.Implementation.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Business\SmaxHcmrManagement\Dto\" />
+    <Folder Include="Business\SmaxHcmrManagement\Exceptions\" />
   </ItemGroup>
 
 </Project>

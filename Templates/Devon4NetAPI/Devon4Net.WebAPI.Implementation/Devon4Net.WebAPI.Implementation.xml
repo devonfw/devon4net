@@ -550,6 +550,32 @@
             Done
             </summary>
         </member>
+        <member name="T:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Exceptions.TodoNotFoundException">
+            <summary>
+            Custom exception TodoNotFoundException
+            </summary>
+        </member>
+        <member name="P:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Exceptions.TodoNotFoundException.StatusCode">
+            <summary>
+            The forced http status code to be fired on the exception manager
+            </summary>
+        </member>
+        <member name="P:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Exceptions.TodoNotFoundException.ShowMessage">
+            <summary>
+            Show the message on the response?
+            </summary>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Exceptions.TodoNotFoundException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Exceptions.TodoNotFoundException"/> class.
+            </summary>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Exceptions.TodoNotFoundException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Exceptions.TodoNotFoundException"/> class.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
         <member name="M:Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Handlers.GetTodoHandler.HandleAction(Devon4Net.WebAPI.Implementation.Business.MediatRManagement.Queries.GetTodoQuery,System.Threading.CancellationToken)">
             <summary>
             Handles the received message to perform the query

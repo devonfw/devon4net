@@ -13,8 +13,10 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
         Task<Stream> GetAsStream(string endPointName, string url, Dictionary<string,string> headers = null);
         Task<string> Get(string endPointName, string url, Dictionary<string,string> headers = null);
         Task<T> Get<T>(string endPointName, string url, Dictionary<string, string> headers = null, bool useCamelCase = false);
+        Task<T> Get<T>(string endPointName, string url, object content, Dictionary<string, string> headers = null, bool useCamelCase = false);
         Task<HttpResponseMessage> GetResponseMessage(string endPointName, string url, Dictionary<string, string> headers = null);
         Task<HttpResponseMessage> Patch(string endPointName, string url, HttpContent content, Dictionary<string,string> headers = null);
+        Task<string> Post(string endPointName, string url, object dataToSend, string mediaType, Dictionary<string, string> headers = null, bool useCamelCase = false);
         Task<T> Post<T>(string endPointName, string url, object dataToSend, string mediaType, Dictionary<string, string> headers = null, bool useCamelCase = false);
         Task<T> PostJson<T>(string endPointName, string url, string jsonDataToSend, string mediaType, Dictionary<string, string> headers = null, bool useCamelCase = false);
         Task<T> Put<T>(string endPointName, string url, object dataToSend, string mediaType, Dictionary<string,string> headers = null, bool useCamelCase = false);
