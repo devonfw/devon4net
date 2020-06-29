@@ -161,7 +161,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static void SetupCyberArk(ref IServiceCollection services)
         {
             CyberArkOptions = ServiceProvider.GetService<IOptions<CyberArkOptions>>()?.Value;
-            if (CyberArkOptions == null || string.IsNullOrEmpty(CyberArkOptions.CircuitBreakerName) || string.IsNullOrEmpty(CyberArkOptions.UserName) || string.IsNullOrEmpty(CyberArkOptions.Password)) return;
+            if (CyberArkOptions == null || CyberArkOptions.EnableCyberArk == false ||  string.IsNullOrEmpty(CyberArkOptions.CircuitBreakerName) || string.IsNullOrEmpty(CyberArkOptions.UserName) || string.IsNullOrEmpty(CyberArkOptions.Password)) return;
             services.SetupCyberArk();
         }
 

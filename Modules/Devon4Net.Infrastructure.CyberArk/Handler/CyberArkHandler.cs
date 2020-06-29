@@ -227,30 +227,35 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
 
         private async Task<T> GetCyberArk<T>(string endpoint, bool useCamelCase, string authToken = null)
         {
+            if (!CyberArkOptions.EnableCyberArk) return default;
             await Logon(authToken);
             return await CircuitBreakerHttpClient.Get<T>(CyberArkOptions.CircuitBreakerName, endpoint, GetAuthorizationHeaders(), useCamelCase);
         }
 
         private async Task<T> GetCyberArk<T>(string endpoint, object content, bool useCamelCase, string authToken = null)
         {
+            if (!CyberArkOptions.EnableCyberArk) return default;
             await Logon(authToken);
             return await CircuitBreakerHttpClient.Get<T>(CyberArkOptions.CircuitBreakerName, endpoint, content, GetAuthorizationHeaders(), useCamelCase);
         }
 
         private async Task<T> PostCyberArk<T>(string endpoint, object dataToSend, bool useCamelCase, string authToken = null)
         {
+            if (!CyberArkOptions.EnableCyberArk) return default;
             await Logon(authToken);
             return await CircuitBreakerHttpClient.Post<T>(CyberArkOptions.CircuitBreakerName, endpoint, dataToSend, MediaType.ApplicationJson, GetAuthorizationHeaders(), useCamelCase);
         }
 
         private async Task<T> PutCyberArk<T>(string endpoint, object dataToSend, bool useCamelCase, string authToken = null)
         {
+            if (!CyberArkOptions.EnableCyberArk) return default;
             await Logon(authToken);
             return await CircuitBreakerHttpClient.Put<T>(CyberArkOptions.CircuitBreakerName, endpoint, dataToSend, MediaType.ApplicationJson, GetAuthorizationHeaders(), useCamelCase);
         }
 
         private async Task<T> DeleteCyberArk<T>(string endpoint,  bool useCamelCase, string authToken = null)
         {
+            if (!CyberArkOptions.EnableCyberArk) return default;
             await Logon(authToken);
             return await CircuitBreakerHttpClient.Delete<T>(CyberArkOptions.CircuitBreakerName, endpoint, GetAuthorizationHeaders(), useCamelCase);
         }
