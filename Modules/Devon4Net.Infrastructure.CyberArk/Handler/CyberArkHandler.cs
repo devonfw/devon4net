@@ -262,6 +262,8 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
 
         private async Task Logon(string authToken = null)
         {
+            if (!CyberArkOptions.EnableCyberArk) return;
+
             if (!string.IsNullOrEmpty(authToken))
             {
                 AuthToken = authToken;
@@ -278,6 +280,8 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
 
         public async Task<string> Logon(string userName, string password)
         {
+            if (!CyberArkOptions.EnableCyberArk) return default;
+
             AuthToken = await CircuitBreakerHttpClient.Post<string>(CyberArkOptions.CircuitBreakerName, CyberArkEndpointConst.Logon, new LogonRequestDto { Username = userName, Password = password }, MediaType.ApplicationJson, null, true);
 
             return AuthToken;
