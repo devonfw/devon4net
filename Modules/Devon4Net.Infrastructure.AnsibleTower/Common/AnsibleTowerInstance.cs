@@ -12,14 +12,18 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Common
         public string CircuitBreakerName { get; }
         public string ApiUrlBase { get; }
         public string Version { get; }
+        public string Username { get; set; }
+        public string Password { get; set; }
 
-        public AnsibleTowerInstance(string name, string circuitBreakerName, string apiUrlBase, string version, ApiRequestDto apiRequestDto)
+        public AnsibleTowerInstance(string name, string circuitBreakerName, string apiUrlBase, string version, ApiRequestDto apiRequestDto, string username, string password)
         {
             ApiDefinition = apiRequestDto;
             Name = name;
             CircuitBreakerName = circuitBreakerName;
             ApiUrlBase = apiUrlBase;
             Version = version;
+            Username = username;
+            Password = password;
         }
     }
 }

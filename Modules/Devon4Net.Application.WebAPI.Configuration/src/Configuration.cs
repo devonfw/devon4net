@@ -168,7 +168,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static void SetupSmaxHcm(ref IServiceCollection services)
         {
             SmaxHcmOptions = ServiceProvider.GetService<IOptions<SmaxHcmOptions>>()?.Value;
-            if (SmaxHcmOptions == null || string.IsNullOrEmpty(SmaxHcmOptions.CircuitBreakerName) || string.IsNullOrEmpty(SmaxHcmOptions.UserName) || string.IsNullOrEmpty(SmaxHcmOptions.Password)) return;
+            if (SmaxHcmOptions == null || SmaxHcmOptions.EnableSmax == false || string.IsNullOrEmpty(SmaxHcmOptions.CircuitBreakerName) || string.IsNullOrEmpty(SmaxHcmOptions.UserName) || string.IsNullOrEmpty(SmaxHcmOptions.Password)) return;
             services.SetupSmaxHcm();
         }
     }

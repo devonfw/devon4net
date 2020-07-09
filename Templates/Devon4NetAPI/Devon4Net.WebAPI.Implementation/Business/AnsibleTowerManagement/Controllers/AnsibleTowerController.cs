@@ -377,6 +377,24 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
             Devon4NetLogger.Debug("Executing Login from controller AnsibleTowerController");
             return Ok(await AnsibleTowerHandler.CreateProject(authenticationToken, createCredentialRequest));
         }
+
+        /// <summary>
+        /// Deletes a project by its Id
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        [AllowAnonymous]
+        [Route("/v1/ansible/projects")]
+        [ProducesResponseType(typeof(PaginatedResultDto<string>), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteProject([FromHeader] string authenticationToken, string projectId)
+        {
+            Devon4NetLogger.Debug("Executing Login from controller AnsibleTowerController");
+            return Ok(await AnsibleTowerHandler.DeleteProject(authenticationToken, projectId));
+        }
         #endregion
 
         #region Jobs
@@ -475,6 +493,29 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
             Devon4NetLogger.Debug("Executing Login from controller AnsibleTowerController");
             return Ok(await AnsibleTowerHandler.GetCanJobSchedule(authenticationToken, idJob));
         }
+        #endregion
+
+        #region JobTemplates
+
+        /// <summary>
+        /// Deletes a project by its Id
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        [AllowAnonymous]
+        [Route("/v1/ansible/jobtemplates")]
+        [ProducesResponseType(typeof(PaginatedResultDto<string>), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteJobTemplate([FromHeader] string authenticationToken, string jobtemplateId)
+        {
+            Devon4NetLogger.Debug("Executing Login from controller AnsibleTowerController");
+            return Ok(await AnsibleTowerHandler.DeleteJobTemplate(authenticationToken, jobtemplateId));
+        }
+
         #endregion
 
         #region FullFlowSample

@@ -77,7 +77,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
             if (SmaxHcmOptions == null || string.IsNullOrEmpty(SmaxHcmOptions.UserName) || string.IsNullOrEmpty(SmaxHcmOptions.Password))
             {
-                throw new SmaxHcmUnauthorizedException("No CyberArk authorization credentials provided");
+                throw new SmaxHcmUnauthorizedException("No Smax authorization credentials provided");
             }
 
             AuthToken = await Login(SmaxHcmOptions.UserName, SmaxHcmOptions.Password).ConfigureAwait(false);
@@ -127,20 +127,6 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             {
                 {"Cookie", $"{SmaxHcmEndpointConst.AuthorizationHeaderTokenkey}={AuthToken}"}
             };
-        }
-
-        /// <summary>
-        /// Sets the internal Auth token variable value
-        /// </summary>
-        /// <param name="authenticationToken"></param>
-        private void SetAutehnticationToken(string authenticationToken)
-        {
-            if (string.IsNullOrEmpty(authenticationToken))
-            {
-                throw new SmaxHcmUnauthorizedException("No authorization token provided");
-            }
-
-            AuthToken = authenticationToken;
         }
         #endregion
     }
