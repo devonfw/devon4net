@@ -10,5 +10,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Common
         string ApiUrlBase { get; }
         string Version { get; }
         ApiRequestDto ApiDefinition { get; }
+        string Username { get; set; }
+        string Password { get; set; }
     }
 }

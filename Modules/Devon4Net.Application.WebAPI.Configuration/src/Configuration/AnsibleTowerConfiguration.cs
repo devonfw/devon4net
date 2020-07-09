@@ -16,7 +16,6 @@ namespace Devon4Net.Application.WebAPI.Configuration
 
         public static void SetupAnsibleTower(this IServiceCollection services, AnsibleTowerOptions ansibleTowerOptions)
         {
-
             var serviceProvider = services.BuildServiceProvider();
             CircuitBreakerHttpClient = serviceProvider.GetService<ICircuitBreakerHttpClient>();
             AnsibleTowerOptions = ansibleTowerOptions;
@@ -32,9 +31,8 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static IAnsibleTowerInstance GetAnsibleTowerInstances()
         {
             if (AnsibleTowerOptions == null || !AnsibleTowerOptions.EnableAnsible || string.IsNullOrEmpty(AnsibleTowerOptions.ApiUrlBase)) return null;
-
             var apiRequestDto = CircuitBreakerHttpClient.Get<ApiRequestDto>(AnsibleTowerOptions.CircuitBreakerName, AnsibleTowerOptions.ApiUrlBase).Result;
-            return new AnsibleTowerInstance(AnsibleTowerOptions.Name, AnsibleTowerOptions.CircuitBreakerName, AnsibleTowerOptions.ApiUrlBase, AnsibleTowerOptions.Version, apiRequestDto);
+            return new AnsibleTowerInstance(AnsibleTowerOptions.Name, AnsibleTowerOptions.CircuitBreakerName, AnsibleTowerOptions.ApiUrlBase, AnsibleTowerOptions.Version, apiRequestDto, AnsibleTowerOptions.Username, AnsibleTowerOptions.Password);
         }
     }
 }

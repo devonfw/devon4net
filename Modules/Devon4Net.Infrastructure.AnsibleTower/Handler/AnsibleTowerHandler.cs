@@ -232,6 +232,23 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         {
             return PostAnsible<GetProjectsRequestDto>(authenticationToken, AnsibleTowerInstance.ApiDefinition.credentials, credentialRequest);
         }
+
+        /// <summary>
+        /// Deletes a Project in Ansible Tower by Id
+        /// </summary>
+        /// <param name="authenticationToken"></param>
+        /// <param name="credentialRequest"></param>
+        /// <returns></returns>
+        public Task<string> DeleteProject(string authenticationToken, string projectId)
+        {
+            if (string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentException("The project id cannot be null");
+            }
+
+
+            return DeleteAnsible<string>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.projects}/{projectId}", false);
+        }
         #endregion
 
         #region Jobs
@@ -291,6 +308,26 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         }
         #endregion
 
+        #region JobTemplates
+
+        /// <summary>
+        /// Deletes a Project in Ansible Tower by Id
+        /// </summary>
+        /// <param name="authenticationToken"></param>
+        /// <param name="credentialRequest"></param>
+        /// <returns></returns>
+        public Task<string> DeleteJobTemplate(string authenticationToken, string jobTemplateId)
+        {
+            if (string.IsNullOrEmpty(jobTemplateId))
+            {
+                throw new ArgumentException("The project id cannot be null");
+            }
+
+            return DeleteAnsible<string>(authenticationToken, $"{AnsibleTowerInstance.ApiDefinition.job_templates}/{jobTemplateId}");
+        }
+
+        #endregion
+
         #region Security
         /// <summary>
         /// Performs the ping command in Ansible Tower
@@ -305,14 +342,24 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         /// Sets the internal Auth token variable value
         /// </summary>
         /// <param name="authenticationToken"></param>
-        private void SetAutehnticationToken(string authenticationToken)
+        private async Task SetAutehnticationTokenAsync(string authenticationToken)
         {
-            if (string.IsNullOrEmpty(authenticationToken))
+
+            if (!string.IsNullOrEmpty(authenticationToken))
             {
-                throw new AnsibleTowerUnauthorizedException("No authorization token provided");
+                AuthToken = authenticationToken;
+                return;
             }
 
-            AuthToken = authenticationToken;
+
+            if (string.IsNullOrEmpty(AnsibleTowerInstance.Username) || string.IsNullOrEmpty(AnsibleTowerInstance.Password))
+            {
+                throw new AnsibleTowerUnauthorizedException("No Ansible Tower authorization credentials provided");
+            }
+
+            var credentials = await Login(AnsibleTowerInstance.Username, AnsibleTowerInstance.Password);
+
+            AuthToken = credentials.Token;
         }
 
         /// <summary>
@@ -347,11 +394,11 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         /// <param name="endpoint"></param>
         /// <param name="searchCriteria"></param>
         /// <returns></returns>
-        private Task<T> GetAnsible<T>(string authenticationToken, string endpoint, string searchCriteria = null)
+        private async Task<T> GetAnsible<T>(string authenticationToken, string endpoint, string searchCriteria = null)
         {
-            SetAutehnticationToken(authenticationToken);
+            await SetAutehnticationTokenAsync(authenticationToken);
             var searchCriteriaUri = (searchCriteria != null ? "?search=" + searchCriteria : string.Empty);
-            return CircuitBreakerHttpClient.Get<T>(AnsibleTowerInstance.CircuitBreakerName, endpoint + searchCriteriaUri, GetAuthorizationHeaders(), true);
+            return await CircuitBreakerHttpClient.Get<T>(AnsibleTowerInstance.CircuitBreakerName, endpoint + searchCriteriaUri, GetAuthorizationHeaders(), true);
         }
 
         /// <summary>
@@ -362,12 +409,25 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         /// <param name="endpoint"></param>
         /// <param name="dataToSend"></param>
         /// <returns></returns>
-        private Task<T> PostAnsible<T>(string authenticationToken, string endpoint, object dataToSend)
+        private async Task<T> PostAnsible<T>(string authenticationToken, string endpoint, object dataToSend)
         {
-            SetAutehnticationToken(authenticationToken);
-            return CircuitBreakerHttpClient.Post<T>(AnsibleTowerInstance.CircuitBreakerName, endpoint, dataToSend, MediaType.ApplicationJson, GetAuthorizationHeaders(), true);
+            await SetAutehnticationTokenAsync(authenticationToken);
+            return await CircuitBreakerHttpClient.Post<T>(AnsibleTowerInstance.CircuitBreakerName, endpoint, dataToSend, MediaType.ApplicationJson, GetAuthorizationHeaders(), true);
         }
 
+        /// <summary>
+        /// Performs the generic API Delete call to Ansible Tower
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="authenticationToken"></param>
+        /// <param name="endpoint"></param>
+        /// <param name="dataToSend"></param>
+        /// <returns></returns>
+        private async Task<T> DeleteAnsible<T>(string authenticationToken, string endpoint, bool useCamelCase = true)
+        {
+            await SetAutehnticationTokenAsync(authenticationToken);
+            return await CircuitBreakerHttpClient.Delete<T>(AnsibleTowerInstance.CircuitBreakerName, endpoint, GetAuthorizationHeaders(), useCamelCase);
+        }
         #endregion
     }
 }

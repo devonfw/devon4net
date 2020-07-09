@@ -483,6 +483,11 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
         {
             var result = string.Empty;
 
+            if (endPoint.Contains("//"))
+            {
+                endPoint = endPoint.Replace("//", "/");
+            }
+
             if (string.IsNullOrEmpty(baseAddress)) throw new ArgumentException("The base address to perform the circuitbreaker call can not be null or empty");
 
             if (baseAddress.EndsWith("/") && endPoint.StartsWith("/"))

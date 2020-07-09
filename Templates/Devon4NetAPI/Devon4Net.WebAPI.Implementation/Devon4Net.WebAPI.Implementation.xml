@@ -148,6 +148,13 @@
             <param name="createCredentialRequest"></param>
             <returns></returns>
         </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.DeleteProject(System.String,System.String)">
+            <summary>
+            Deletes a project by its Id
+            </summary>
+            <param name="projectId"></param>
+            <returns></returns>
+        </member>
         <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Jobs(System.String,System.String)">
             <summary>
             Gets the list of Job Templates
@@ -186,6 +193,13 @@
             </summary>
             <param name="authenticationToken"></param>
             <param name="idJob"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.DeleteJobTemplate(System.String,System.String)">
+            <summary>
+            Deletes a project by its Id
+            </summary>
+            <param name="projectId"></param>
             <returns></returns>
         </member>
         <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.FullFlow(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.Int32)">

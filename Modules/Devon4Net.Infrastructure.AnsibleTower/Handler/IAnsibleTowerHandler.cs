@@ -35,5 +35,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         Task<PaginatedResultDto<GetJobEventsResponseDto>> GetJobEvents(string authenticationToken, int idJob);
         Task<GetCanCancelResponseDto> CanCancelJob(string authenticationToken, int idJob);
         Task<GetCanCancelResponseDto> GetCanJobSchedule(string authenticationToken, int jobId);
+        Task<string> DeleteProject(string authenticationToken, string projectId);
+        Task<string> DeleteJobTemplate(string authenticationToken, string jobTemplateId);
     }
 }

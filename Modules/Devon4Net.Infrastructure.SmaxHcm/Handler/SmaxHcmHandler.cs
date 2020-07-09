@@ -6,6 +6,8 @@ using Devon4Net.Infrastructure.CircuitBreaker.Handler;
 using Devon4Net.Infrastructure.Common.Options.SmaxHcm;
 using Devon4Net.Infrastructure.SmaxHcm.Common;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Login;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Tenants;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Users;
 using Devon4Net.Infrastructure.SmaxHcm.Exceptions;
 using Microsoft.Extensions.Options;
 
@@ -23,6 +25,45 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             SmaxHcmOptions = smaxHcmOptions?.Value ?? throw new ArgumentException("No SmaxHcm options provided");
         }
 
+        #region Users
+
+        public async Task<GetUsersResponseDto> GetUsers(string authToken = null)
+        {
+            await Login(AuthToken);
+
+            return await CircuitBreakerHttpClient.Get<GetUsersResponseDto>(SmaxHcmOptions.CircuitBreakerName, SmaxHcmEndpointConst.Users, GetAuthorizationHeaders());
+        }
+
+        public async Task<SmaxGetUserResponseDto> GetUserById(string userId, string authToken = null)
+        {
+            await Login(authToken);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new ArgumentException("The userId can not be null");
+            }
+
+            
+            return await CircuitBreakerHttpClient.Get<SmaxGetUserResponseDto>(SmaxHcmOptions.CircuitBreakerName, string.Format(SmaxHcmEndpointConst.User,userId,DateTime.Now.Ticks.ToString()), GetAuthorizationHeaders());
+        }
+
+        #endregion
+
+        #region Tenants
+
+        public async Task<GetUserTenantsResponseDto> GetUserTenants(string userId, string authToken = null)
+        {
+            await Login(AuthToken);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new ArgumentException("The userId can not be null");
+            }
+
+            return await CircuitBreakerHttpClient.Get<GetUserTenantsResponseDto>(SmaxHcmOptions.CircuitBreakerName, string.Format(SmaxHcmEndpointConst.UserTenants,userId, DateTime.Now.Ticks.ToString()), GetAuthorizationHeaders());
+        }
+
+        #endregion
 
         #region Http
 
@@ -36,10 +77,10 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
             if (SmaxHcmOptions == null || string.IsNullOrEmpty(SmaxHcmOptions.UserName) || string.IsNullOrEmpty(SmaxHcmOptions.Password))
             {
-                throw new SmaxHcmUnauthorizedException("No CyberArk authorization credentials provided");
+                throw new SmaxHcmUnauthorizedException("No Smax authorization credentials provided");
             }
 
-            await Login(SmaxHcmOptions.UserName, SmaxHcmOptions.Password).ConfigureAwait(false);
+            AuthToken = await Login(SmaxHcmOptions.UserName, SmaxHcmOptions.Password).ConfigureAwait(false);
         }
 
         public async Task<string> Login(string userName, string password)
@@ -77,12 +118,15 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
         private string GetUrlWithTenant(string originalUrl, string tenantId)
         {
-            return $"{originalUrl}&TENANTID={tenantId}";
+            return string.IsNullOrEmpty(tenantId) ? originalUrl : $"{originalUrl}&TENANTID={tenantId}";
         }
 
         private Dictionary<string, string> GetAuthorizationHeaders()
         {
-            return new Dictionary<string, string> { { "Cookie", $"XSRF-TOKEN={AuthToken}"} };
+            return new Dictionary<string, string>
+            {
+                {"Cookie", $"{SmaxHcmEndpointConst.AuthorizationHeaderTokenkey}={AuthToken}"}
+            };
         }
         #endregion
     }
