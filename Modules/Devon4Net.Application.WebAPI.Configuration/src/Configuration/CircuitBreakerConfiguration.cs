@@ -9,6 +9,7 @@ using Devon4Net.Infrastructure.Common;
 using Devon4Net.Infrastructure.Common.Options.CircuitBreaker;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
+using HttpClientHandler = Devon4Net.Infrastructure.CircuitBreaker.Handler.HttpClientHandler;
 
 namespace Devon4Net.Application.WebAPI.Configuration
 {
@@ -26,6 +27,8 @@ namespace Devon4Net.Application.WebAPI.Configuration
             CheckCertificate = circuitBreakerOptions.CheckCertificate;
             services.AddHttpClient(circuitBreakerOptions.Endpoints);
             services.AddTransient<ICircuitBreakerHttpClient, CircuitBreakerHttpClient>();
+            services.AddTransient<IHttpClientHandler, HttpClientHandler>();
+            
         }
 
         private static void AddHttpClient(this IServiceCollection services, Endpoint endPointEntity)
@@ -76,9 +79,9 @@ namespace Devon4Net.Application.WebAPI.Configuration
                 );
         }
 
-        private static HttpClientHandler GetHttpMessageHandler()
+        private static System.Net.Http.HttpClientHandler GetHttpMessageHandler()
         {
-            return new HttpClientHandler
+            return new System.Net.Http.HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (m, c, a, e) => !CheckCertificate,
             };
