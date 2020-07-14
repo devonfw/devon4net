@@ -14,7 +14,7 @@
             Ansible Tower API manager
             </summary>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.#ctor(Devon4Net.Infrastructure.CircuitBreaker.Handler.IHttpClientHandler,Devon4Net.Infrastructure.AnsibleTower.Common.IAnsibleTowerInstance,Devon4Net.Infrastructure.CircuitBreaker.Handler.ICircuitBreakerHttpClient)">
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.#ctor(Devon4Net.Infrastructure.AnsibleTower.Common.IAnsibleTowerInstance,Devon4Net.Infrastructure.CircuitBreaker.Handler.ICircuitBreakerHttpClient)">
             <summary>
             Ansible Tower handler constructor
             </summary>
