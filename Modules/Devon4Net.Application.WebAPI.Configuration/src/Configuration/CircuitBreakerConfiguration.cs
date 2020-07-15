@@ -36,7 +36,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             if (endPointEntity == null) throw new ArgumentNullException("endPointEntity", "The end point provided is null");
 
             var waitAndSync = endPointEntity.GetWaitAndRetry();
-            var waitAndSyncList = waitAndSync.Select(w => new TimeSpan(Convert.ToInt32(w)));
+            var waitAndSyncList = waitAndSync.Select(w => new TimeSpan(Convert.ToInt32(w))).ToList();
 
             services.AddHttpClient(endPointEntity.Name, client =>
                 {
@@ -74,8 +74,8 @@ namespace Devon4Net.Application.WebAPI.Configuration
                     throw new HttpRequestException($"Error getting {endPointEntity.Name} ({endPointEntity.BaseAddress})", result.Exception);
                 }))
                 .AddTransientHttpErrorPolicy(builder => builder.CircuitBreakerAsync(
-                    handledEventsAllowedBeforeBreaking: waitAndSync.Count,
-                    durationOfBreak: TimeSpan.FromMilliseconds(endPointEntity.DurationOfBreak))
+                     waitAndSync.Count,
+                     TimeSpan.FromMilliseconds(endPointEntity.DurationOfBreak))
                 );
         }
 

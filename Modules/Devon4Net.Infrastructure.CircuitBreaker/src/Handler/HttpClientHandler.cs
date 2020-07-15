@@ -39,15 +39,21 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
         public async Task<Stream> Send(HttpMethod httpMethod, string endPointName, string url, object content, string mediaType, Dictionary<string, string> headers = null, bool contentAsJson = true, bool useCamelCase = false)
         {
+            HttpResponseMessage httpResponseMessage = null;
+
             try
             {
-                var httpResponseMessage = await SendCommand(httpMethod, endPointName, url, content, mediaType, headers, contentAsJson, useCamelCase);
+                httpResponseMessage = await SendCommand(httpMethod, endPointName, url, content, mediaType, headers, contentAsJson, useCamelCase);
                 return await ManageHttpResponseAsStream(httpResponseMessage, endPointName);
             }
             catch (Exception ex)
             {
                 LogException(ref ex);
                 throw;
+            }
+            finally
+            {
+                httpResponseMessage?.Dispose();
             }
         }
 
