@@ -192,9 +192,11 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
         private T Deserialize<T>(string input, bool useCamelCase)
         {
+            var typeObject = typeof(T).Name.ToLower();
+
             return string.IsNullOrEmpty(input)
                 ? default
-                : JsonSerializer.Deserialize<T>(input, useCamelCase ? CamelJsonSerializerOptions : null);
+                : typeObject == "string" ? (T)Convert.ChangeType(input, typeof(T)) : JsonSerializer.Deserialize<T>(input, useCamelCase ? CamelJsonSerializerOptions : null);
         }
 
         private async Task CheckHttpResponse(HttpResponseMessage httpResponseMessage, string endPointName)

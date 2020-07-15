@@ -7,7 +7,7 @@
         public const string Users = "/bo/rest/entities/user";
         public const string User = "/bo/rest/entities/user/{0}?timeStamp={1}"; //UserId, time stamp
         public const string UserTenants = "/bo/rest/entities/tenant?timeStamp={0}&filter=(user+eq+\"{1}\")";
-        public const string Offerings = "/rest/{0}/ems/Offering"; //tenant Id
-        public const string OfferingDetail = "/rest/{0}/ems/Offering/{1}"; //tenant ID, offering Id
+        public const string Offerings = "/rest/{0}/ems/Offering/?layout=Id,DisplayLabel,OfferingType,Service,Status,Service.DisplayLabel,Service.IsDeleted&meta=totalCount&skip=0"; //tenant Id
+        public const string OfferingDetail = "/rest/{0}/entity-page/initializationData/Offering/{1}"; //tenant ID, offering Id
     }
 }
