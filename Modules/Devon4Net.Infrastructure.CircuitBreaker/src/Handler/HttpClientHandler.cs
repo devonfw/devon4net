@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
+using Devon4Net.Infrastructure.Common.Common;
 using Devon4Net.Infrastructure.Common.Exceptions;
 using Devon4Net.Infrastructure.Log;
 
@@ -16,12 +17,14 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
     public class HttpClientHandler : IHttpClientHandler
     {
         private IHttpClientFactory HttpClientFactory { get; set; }
+        private IBuiltInTypes BuiltInTypes { get; set; }
         private const string SoapAction = "SOAPAction";
         private static readonly JsonSerializerOptions CamelJsonSerializerOptions = new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase, IgnoreNullValues = true};
 
-        public HttpClientHandler(IHttpClientFactory httpClientFactory)
+        public HttpClientHandler(IHttpClientFactory httpClientFactory, IBuiltInTypes builtInTypes)
         {
             HttpClientFactory = httpClientFactory;
+            BuiltInTypes = builtInTypes;
         }
 
         public async Task<HttpResponseMessage> Send(HttpMethod httpMethod, string endPointName, string url, object content, string mediaType, bool contentAsJson = true, bool useCamelCase = false, Dictionary<string, string> headers = null)
@@ -192,11 +195,9 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
         private T Deserialize<T>(string input, bool useCamelCase)
         {
-            var typeObject = typeof(T).Name.ToLower();
-
             return string.IsNullOrEmpty(input)
                 ? default
-                : typeObject == "string" ? (T)Convert.ChangeType(input, typeof(T)) : JsonSerializer.Deserialize<T>(input, useCamelCase ? CamelJsonSerializerOptions : null);
+                : BuiltInTypes.GetBuiltInTypeObjecNames().Contains(typeof(T).Name)  ? (T)Convert.ChangeType(input, typeof(T)) : JsonSerializer.Deserialize<T>(input, useCamelCase ? CamelJsonSerializerOptions : null);
         }
 
         private async Task CheckHttpResponse(HttpResponseMessage httpResponseMessage, string endPointName)

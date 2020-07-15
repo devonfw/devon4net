@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Devon4Net.Infrastructure.Common.Options.Log;
 using Devon4Net.Application.WebAPI.Configuration.Application;
+using Devon4Net.Infrastructure.Common.Common;
 using Devon4Net.Infrastructure.Common.Options.AnsibleTower;
 using Devon4Net.Infrastructure.Common.Options.CyberArk;
 using Devon4Net.Infrastructure.Common.Options.LiteDb;
@@ -79,6 +80,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             SetupAnsibleTower(ref services);
             SetupCyberArk(ref services);
             SetupSmaxHcm(ref services);
+            SetupBuiltInTypes(ref services);
         }
 
         public static void ConfigureDevonFw(this IApplicationBuilder app)
@@ -170,6 +172,11 @@ namespace Devon4Net.Application.WebAPI.Configuration
             SmaxHcmOptions = ServiceProvider.GetService<IOptions<SmaxHcmOptions>>()?.Value;
             if (SmaxHcmOptions == null || SmaxHcmOptions.EnableSmax == false || string.IsNullOrEmpty(SmaxHcmOptions.CircuitBreakerName) || string.IsNullOrEmpty(SmaxHcmOptions.UserName) || string.IsNullOrEmpty(SmaxHcmOptions.Password)) return;
             services.SetupSmaxHcm();
+        }
+
+        private static void SetupBuiltInTypes(ref IServiceCollection services)
+        {
+            services.AddSingleton(typeof(IBuiltInTypes), typeof(BuiltInTypes));
         }
     }
 }
