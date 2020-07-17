@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Tenants;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Users;
 using Devon4Net.Infrastructure.SMAXHCM.Handler;
@@ -34,6 +36,19 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         {
             Devon4NetLogger.Debug("Executing Login from controller SmaxHcm");
             return Ok(await SmaxHcmHandler.Login(user, password));
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/cookielogin")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CookieLogin(string tenantId, string user, string password)
+        {
+            Devon4NetLogger.Debug("Executing Login from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.CookieLogin(tenantId, user, password));
         }
 
         [HttpGet]
@@ -101,6 +116,31 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
             return Ok(await SmaxHcmHandler.GetOffering(tenantId, offeringId, authToken));
         }
 
-        
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/providers")]
+        [ProducesResponseType(typeof(GetProvidersResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetProviders(string tenantId, string authToken = null)
+        {
+            Devon4NetLogger.Debug("Executing Login from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.GetProviders(tenantId,  authToken));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/design")]
+        [ProducesResponseType(typeof(GetDesignResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetDesign(string tenantId, string designId, string authToken = null)
+        {
+            Devon4NetLogger.Debug("Executing Login from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.GetDesign(tenantId, designId, authToken));
+        }
     }
 }

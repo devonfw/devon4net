@@ -115,10 +115,12 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
                 using (httpClient = GetDefaultClient(endPointName, headers))
                 {
-                    var request = new HttpRequestMessage(method, GetEncodedUrl(httpClient.BaseAddress.ToString(), url))
+                    var request = new HttpRequestMessage(method, GetEncodedUrl(httpClient.BaseAddress.ToString(), url));
+
+                    if (content != null)
                     {
-                        Content = CreateHttpContent(content, mediaType, contentAsJson, useCamelCase)
-                    };
+                        request.Content = CreateHttpContent(content, mediaType, contentAsJson, useCamelCase);
+                    }
 
                     httpResponseMessage = await httpClient.SendAsync(request).ConfigureAwait(false);
                     await LogHttpResponse(httpResponseMessage, endPointName).ConfigureAwait(false);
@@ -155,33 +157,38 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
         {
             if (requestContent == null) return null;
 
-            var requestBody = contentAsJson ? Serialize(requestContent, useCamelCase) : SerializeToXml(requestContent);
+            var requestBody = contentAsJson ? Serialize(requestContent, useCamelCase) : requestContent.ToString(); /*SerializeToXml(requestContent);*/
 
             HttpContent httpContent = new StringContent(requestBody);
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
+            
+            if (mediaType != null)
+            {
+                httpContent.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
+            }
+
             return httpContent;
         }
 
-        private string SerializeToXml<T>(T content)
-        {
-            string result;
-            try
-            {
-                var xmlSerializer = new XmlSerializer(content.GetType());
+        //private string SerializeToXml<T>(T content)
+        //{
+        //    string result;
+        //    try
+        //    {
+        //        var xmlSerializer = new XmlSerializer(content.GetType());
 
-                using var textWriter = new StringWriter();
-                xmlSerializer.Serialize(textWriter, content);
-                result = textWriter.ToString();
-            }
-            catch (Exception ex)
-            {
-                Devon4NetLogger.Error($"Error trying to serialize object to XML to perform the HTTP Call");
-                Devon4NetLogger.Error(ex);
-                throw;
-            }
+        //        using var textWriter = new StringWriter();
+        //        xmlSerializer.Serialize(textWriter, content);
+        //        result = textWriter.ToString();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Devon4NetLogger.Error($"Error trying to serialize object to XML to perform the HTTP Call");
+        //        Devon4NetLogger.Error(ex);
+        //        throw;
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
         private void LogException(ref Exception exception)
         {
@@ -270,6 +277,11 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
         private string GetEncodedUrl(string baseAddress, string endPoint)
         {
             var result = string.Empty;
+
+            if (endPoint.Contains(baseAddress))
+            {
+                endPoint = endPoint.Replace(baseAddress, "/");
+            }
 
             if (endPoint.Contains("//"))
             {
