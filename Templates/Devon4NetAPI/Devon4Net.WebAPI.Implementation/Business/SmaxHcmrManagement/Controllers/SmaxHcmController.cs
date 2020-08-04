@@ -38,19 +38,6 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
             return Ok(await SmaxHcmHandler.Login(user, password));
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        [Route("/v1/smaxhcm/cookielogin")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CookieLogin(string tenantId, string user, string password)
-        {
-            Devon4NetLogger.Debug("Executing Login from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.CookieLogin(tenantId, user, password));
-        }
-
         [HttpGet]
         [AllowAnonymous]
         [Route("/v1/smaxhcm/users")]
@@ -141,6 +128,33 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         {
             Devon4NetLogger.Debug("Executing Login from controller SmaxHcm");
             return Ok(await SmaxHcmHandler.GetDesign(tenantId, designId, authToken));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/catalogproviders")]
+        public async Task<IActionResult> GetCatalogProviders(string category, bool includeArticles, bool includeOfferings, string query, string tenantId, string authToken = null)
+        {
+            Devon4NetLogger.Debug("Getting catalog providers from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.GetCatalogProviders(category, includeArticles, includeOfferings, query, authToken, tenantId));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/servicedefinitions")]
+        public async Task<IActionResult> GetServiceDefinitions(string tenantId, string authToken = null)
+        {
+            Devon4NetLogger.Debug("Getting service definitions from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.GetServiceDefinitions(authToken, tenantId));
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/createoffering")]
+        public async Task<IActionResult> CreateNewOffering(CreateOfferingDto offeringRequestDto, string tenantId, string authToken = null)
+        {
+            Devon4NetLogger.Debug("Getting service definitions from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.CreateNewOffering(offeringRequestDto, authToken, tenantId));
         }
     }
 }

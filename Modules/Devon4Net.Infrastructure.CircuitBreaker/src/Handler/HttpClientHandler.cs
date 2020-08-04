@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
 using Devon4Net.Infrastructure.Common.Common;
 using Devon4Net.Infrastructure.Common.Exceptions;
@@ -168,27 +167,6 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
             return httpContent;
         }
-
-        //private string SerializeToXml<T>(T content)
-        //{
-        //    string result;
-        //    try
-        //    {
-        //        var xmlSerializer = new XmlSerializer(content.GetType());
-
-        //        using var textWriter = new StringWriter();
-        //        xmlSerializer.Serialize(textWriter, content);
-        //        result = textWriter.ToString();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Devon4NetLogger.Error($"Error trying to serialize object to XML to perform the HTTP Call");
-        //        Devon4NetLogger.Error(ex);
-        //        throw;
-        //    }
-
-        //    return result;
-        //}
 
         private void LogException(ref Exception exception)
         {

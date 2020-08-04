@@ -23,8 +23,14 @@
         public const string Providers= "/{0}/dnd/api/resource/provider"; //tenant ID
 
         #region Design
-        public const string GetDesign = "{0}/dnd/api/service/design/{1}"; //tenantId, designId
+        public const string GetDesign = "/{0}/dnd/api/service/design/{1}"; //tenantId, designId
 
+        #endregion
+
+        #region Catalog
+        public const string GetCatalogFeaturedProviders = "/rest/{0}/ess/catalog/category/featured-list"; // tenantId
+        public const string GetServiceDefinitions = "/rest/{0}/ems/ServiceDefinition?&layout=Id,DisplayLabel,Category,Subtype,PhaseId,Category.DisplayLabel,Category.IsDeleted,Subtype&meta=totalCount&size=250&skip=0"; // tenantId
+        public const string CreateNewOffering = "/rest/{0}/cloud-service/createOffering";
         #endregion
     }
 }
