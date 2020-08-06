@@ -20,13 +20,13 @@
 
   <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-      <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.5" />
-      <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.5" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.5" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.5" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.5" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.6" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.6" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.6" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.6" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.6" />
       <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.2" />
-      <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.5" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.6" />
       <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
       <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.5.1" />
       <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.1.2" />

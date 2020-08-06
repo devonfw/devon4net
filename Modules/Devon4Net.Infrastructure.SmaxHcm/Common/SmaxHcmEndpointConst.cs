@@ -2,16 +2,18 @@
 {
     public static class SmaxHcmEndpointConst
     {
+        #region AuthCookie
+        public const string BoTenant = "/idm-service/idm/v0/api/public/tenant?id={0}";
+        public const string BoUserTenant = "idm-service/idm/v0/api/public/tenant?id=sysbo";
+        public const string BoLogin = "/bo/boLogin";
+        public const string BoAuthenticate = "/idm-service/idm/v0/api/public/authenticate";
+        public const string BoLoginTenant = "/idm-service/idm/v0/login?tenant={0}&local=true"; //tenantId
+        public const string BoLoginToken = "/idm-service/idm/v0/api/public/token";
+        public const string BoUserLogin = "/idm-service/idm/v0/api/public/authenticate/localUser";
+        #endregion
 
         #region Auth
-
         public const string Logon = "/auth/authentication-endpoint/authenticate/login";
-        public const string Authenticate = "/idm-service/idm/v0/api/public/authenticate";
-        public const string BoLogin = "/bo/boLogin";
-        public const string LoginTenant = "/idm-service/idm/v0/login?tenant={0}&local=true"; //tenantId
-        public const string BoLoginToken = "/idm-service/idm/v0/api/public/token";
-        public const string BoTenant = "/idm-service/idm/v0/api/public/tenant?id={0}";
-        public const string UserLogin= "/idm-service/idm/v0/api/public/authenticate/localUser";
         #endregion
 
         public const string AuthorizationHeaderTokenkey = "LWSSO_COOKIE_KEY";
@@ -24,13 +26,16 @@
 
         #region Design
         public const string GetDesign = "/{0}/dnd/api/service/design/{1}"; //tenantId, designId
-
         #endregion
 
         #region Catalog
         public const string GetCatalogFeaturedProviders = "/rest/{0}/ess/catalog/category/featured-list"; // tenantId
         public const string GetServiceDefinitions = "/rest/{0}/ems/ServiceDefinition?&layout=Id,DisplayLabel,Category,Subtype,PhaseId,Category.DisplayLabel,Category.IsDeleted,Subtype&meta=totalCount&size=250&skip=0"; // tenantId
         public const string CreateNewOffering = "/rest/{0}/cloud-service/createOffering";
+        #endregion
+
+        #region Request
+        public const string GetAllRequest= "/rest/{0}/ems/Request?filter=(RequestType+%3D+%27ServiceRequest%27+and+RegisteredForActualService+%3D+null)&layout=Id,DisplayLabel,Priority,SLT.TargetDate,RequestedForPerson,ChatStatus,CurrentAssignment,AssignedToGroup,AssignedToPerson,PhaseId,ProcessId,SLT.SLATargetDate,SLT.OLATargetDate,RequestedForPerson.Name,RequestedForPerson.Avatar,RequestedForPerson.Location,RequestedForPerson.IsVIP,RequestedForPerson.OrganizationalGroup,RequestedForPerson.Upn,RequestedForPerson.IsDeleted,AssignedToGroup.Name,AssignedToGroup.IsDeleted,AssignedToPerson.Name,AssignedToPerson.Avatar,AssignedToPerson.Location,AssignedToPerson.IsVIP,AssignedToPerson.OrganizationalGroup,AssignedToPerson.Upn,AssignedToPerson.IsDeleted&meta=totalCount&size=250&skip=0"; // tenantId
         #endregion
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
 using Devon4Net.Infrastructure.CircuitBreaker.Handler;
@@ -12,6 +14,7 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Login;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Request;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Tenants;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Users;
 using Devon4Net.Infrastructure.SmaxHcm.Exceptions;
@@ -31,8 +34,6 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             HttpClientHandler = httpClientHandler;
             SmaxHcmOptions = smaxHcmOptions?.Value ?? throw new ArgumentException("No SmaxHcm options provided");
         }
-
-
 
         #region Designer
 
@@ -141,7 +142,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         {
             return new Dictionary<string, string>
             {
-                {"Cookie", $"{SmaxHcmEndpointConst.AuthorizationHeaderTokenkey}={AuthToken};TENANTID={SmaxHcmOptions.TenantId}"}
+                {"Cookie", $"{SmaxHcmEndpointConst.AuthorizationHeaderTokenkey}={AuthToken};TENANTID={SmaxHcmOptions.TenantId};Path=/; Domain=.smax.capgemiflix.net; Expires=Sat, 31 Jul 2021 09:00:36 GMT;"}
             };
         }
 
@@ -174,6 +175,8 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
         public Task<object> GetCatalogProviders(string category, bool includeArticles, bool includeOfferings, string query, string authToken = null, string tenantId = null)
         {
+            SetTenantId(tenantId);
+
             var data = new QueryCatalogRequest
             {
                 categoryId = category,
@@ -187,11 +190,15 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
         public Task<GetOfferingsResponseDto> GetServiceDefinitions(string authToken = null, string tenantId = null)
         {
+            SetTenantId(tenantId);
+
             return SendSmaxHcm<GetOfferingsResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetServiceDefinitions, TenantId), TenantId, null,false, authToken);
         }
 
         public Task<object> CreateNewOffering(CreateOfferingDto createOfferingDto, string authToken = null, string tenantId = null)
         {
+            SetTenantId(tenantId);
+
             var data = new CreateOfferingRequest
             {
                 providerId = string.IsNullOrEmpty(createOfferingDto.providerId) ? SmaxHcmOptions.ProviderId : createOfferingDto.providerId,
@@ -202,6 +209,109 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
             return SendSmaxHcm<Object>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateNewOffering, TenantId), TenantId, data, false, authToken);
         }
+        #endregion
+
+        #region Request
+
+        public Task<GetAllRequestDto> GetAllRequest(string authToken = null, string tenantId = null)
+        {
+            SetTenantId(tenantId);
+
+            return SendSmaxHcm<GetAllRequestDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetAllRequest, TenantId), TenantId, null, false, authToken);
+        }
+        #endregion
+
+        #region Cookie under_development!
+        /// <summary>
+        /// This method does not work. Microfocus help needed.
+        /// Steps:
+        /// GET /idm-service/idm/v0/login?tenant=903361753&tryLocal=true HTTP/1.1
+        /// GET /idm-service/idm/v0/api/public/tenant?id=903361753 HTTP/1.1
+        /// GET /idm-service/idm/v0/api/public/token HTTP/1.1
+        /// /idm-service/idm/v0/api/public/authenticate
+        ///  /bo/postBoLogin?LWREQ=X_...
+        /// GET /idm-service/idm/v0/api/public/token HTTP/1.1
+        /// GET /bo/userProfile?timeStamp=1595004859963 HTTP/1.1
+        /// userprofile obtains the needed XSRF-TOKEN, IDM_REFRESH_TOKEN, IDM_X_AUTH_TOKEN
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public async Task<string> CookieLogin(string tenantId, string userName, string password)
+        {
+            var headers = new Dictionary<string, string>
+            {
+                {"Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"}
+            };
+
+            SetTenantId(tenantId);
+
+            //1 - set bo login to get the cookies
+            var boLogin = await HttpClientHandler.Send(HttpMethod.Post, SmaxHcmOptions.CircuitBreakerName, SmaxHcmEndpointConst.BoLogin, "returnContext=%2Fbo", MediaType.ApplicationXwww, false, false, headers);
+            var boCookies = boLogin.Headers.FirstOrDefault(k => k.Key == "Set-Cookie").Value;
+            var cookiesFormatted = string.Join(";", boCookies).Replace("Secure", string.Empty).Replace("HttpOnly", string.Empty).Replace("Path=/idm-service", string.Empty).Replace(" ", string.Empty).Replace(";;;;", ";").Replace(";;", ";");
+
+            //2 - Call to token
+            headers.Add("Cookie", cookiesFormatted);
+            var tokenRequest = await HttpClientHandler.Send(HttpMethod.Get, SmaxHcmOptions.CircuitBreakerName, SmaxHcmEndpointConst.BoLoginToken, null, MediaType.ApplicationXwww, false, false, headers);
+            //obtenemos {"expired":false,"supportErrorCallback":false}
+            headers.Add("Referer", tokenRequest.RequestMessage.RequestUri.OriginalString.Replace(tokenRequest.RequestMessage.RequestUri.PathAndQuery, string.Empty) + string.Format(SmaxHcmEndpointConst.BoLoginTenant, TenantId));
+
+            cookiesFormatted = string.Join(";", boCookies).Replace("Secure", string.Empty).Replace("HttpOnly", string.Empty).Replace("Path=/idm-service", string.Empty).Replace(" ", string.Empty).Replace(";;;;", ";").Replace(";;", ";");
+
+            //3 -User Login (url2)
+
+            var userLoginContent = new UserLoginRequestDto { passwordCredentials = new Passwordcredentials { password = password, username = userName }, tenantName = TenantId, token = tokenRequest.RequestMessage.RequestUri.AbsoluteUri + string.Format(SmaxHcmEndpointConst.BoLoginTenant, TenantId) };
+            var userLogin = await HttpClientHandler.Send<AuthenticateResponseDto>(HttpMethod.Post, SmaxHcmOptions.CircuitBreakerName, SmaxHcmEndpointConst.BoUserLogin, userLoginContent, MediaType.ApplicationJson, headers);
+
+            //4 Authenticate
+            var authenticateResponse = await Authenticate(tenantId, userName, password, cookiesFormatted).ConfigureAwait(false);
+
+            //5 - Return URL from userLogin ???
+            //var returnUrl = await HttpClientHandler.Send(HttpMethod.Get, SmaxHcmOptions.CircuitBreakerName, SmaxHcmEndpointConst.BoLoginToken, null, MediaType.ApplicationXwww, false, false, headers);
+
+            var lwsso = authenticateResponse.CookieResult.FirstOrDefault(c => c.Contains("LWSSO_COOKIE_KEY"));
+            var refe = $"https://smax.capgemiflix.net/idm-service/idm/v0/login?tenant={TenantId}&local=true";
+            var cookie = lwsso;
+
+            headers.Clear();
+            headers.Add("Accept", "text/html, application/xhtml+xml, application/xml; q=0.9, image/webp, */*; q=0.8");
+            headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0");
+            headers.Add("Accept-Language", "en-US,en;q=0.5");
+            headers.Add("Upgrade-Insecure-Requests", "1");
+            headers.Add("Connection", "keep-alive");
+            headers.Add("Accept-Encoding", "gzip, deflate, br");
+            headers.Add("Referer", refe);
+            headers.Add("Cookie", cookie);
+
+            var PostLogin = await HttpClientHandler.Send(HttpMethod.Get, SmaxHcmOptions.CircuitBreakerName, authenticateResponse.AuthenticateResponseDto.returnUri.return_uri, null, MediaType.ApplicationXwww, true, false, headers);
+
+
+
+            return string.Empty;
+        }
+
+        private async Task<ResultAuthenticateResponseDto> Authenticate(string tenantId, string userName, string password, string cookieValue = null)
+        {
+            var user = !string.IsNullOrEmpty(userName) ? userName : SmaxHcmOptions.UserName;
+            var userPassword = !string.IsNullOrEmpty(password) ? password : SmaxHcmOptions.Password;
+            SetTenantId(tenantId);
+
+            var request = new AuthenticateRequestDto
+            {
+                passwordCredentials = new Passwordcredentials { username = user, password = userPassword },
+                tenantName = TenantId
+            };
+
+            var result = await HttpClientHandler.Send(HttpMethod.Post, SmaxHcmOptions.CircuitBreakerName,
+                SmaxHcmEndpointConst.BoAuthenticate, request, MediaType.ApplicationJson, true, false,
+                new Dictionary<string, string> { { "Cookie", cookieValue } });
+
+            var authenticateResponse = JsonSerializer.Deserialize<AuthenticateResponseDto>(await result.Content.ReadAsStringAsync().ConfigureAwait(false));
+            return new ResultAuthenticateResponseDto { AuthenticateResponseDto = authenticateResponse, CookieResult = result.Headers.FirstOrDefault(k => k.Key == "Set-Cookie").Value.ToList() };
+        }
+
         #endregion
     }
 }
