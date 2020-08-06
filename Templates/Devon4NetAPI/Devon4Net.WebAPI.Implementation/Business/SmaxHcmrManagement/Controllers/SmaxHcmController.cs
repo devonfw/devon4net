@@ -171,6 +171,19 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
             return Ok(await SmaxHcmHandler.CreateNewOffering(offeringRequestDto, authToken, tenantId));
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/activateOffering")]
+        public async Task<IActionResult> CreateNewOffering(string offeringId, string tenantId, string authToken = null)
+        {
+            var activateOfferingDto = new ActivateOfferingDto
+            {
+                offeringId = offeringId
+            };
+
+            return Ok(await SmaxHcmHandler.ActivateOffering(activateOfferingDto, authToken, tenantId));
+        }
+
         [HttpGet]
         [AllowAnonymous]
         [Route("/v1/smaxhcm/request")]

@@ -33,6 +33,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         {
             HttpClientHandler = httpClientHandler;
             SmaxHcmOptions = smaxHcmOptions?.Value ?? throw new ArgumentException("No SmaxHcm options provided");
+            SetTenantId();
         }
 
         #region Designer
@@ -120,7 +121,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
         public async Task<string> Login(string userName, string password)
         {
-            AuthToken = await HttpClientHandler.Send<string>(HttpMethod.Post, SmaxHcmOptions.CircuitBreakerName, SmaxHcmEndpointConst.Logon, new LoginRequestDto {Login = userName, Password = password}, MediaType.ApplicationJson);
+            AuthToken = await HttpClientHandler.Send<string>(HttpMethod.Post, SmaxHcmOptions.CircuitBreakerName, string.Format(SmaxHcmEndpointConst.Logon, TenantId), new LoginRequestDto {Login = userName, Password = password}, MediaType.ApplicationJson);
             return AuthToken;
         }
 
@@ -208,6 +209,29 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             };
 
             return SendSmaxHcm<Object>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateNewOffering, TenantId), TenantId, data, false, authToken);
+        }
+
+        public Task<ActivateOfferingResponse> ActivateOffering(ActivateOfferingDto activateOfferingDto, string authToken = null, string tenantId = null)
+        {
+            SetTenantId(tenantId);
+
+            var request = new ActivateOfferingRequest()
+            {
+                entities = new Entity[] {
+                    new Entity()
+                    {
+                        entity_type = "Offering",
+                        properties = new Properties()
+                        {
+                            Id = activateOfferingDto.offeringId,
+                            Status = "Active"
+                        }
+                    }
+                },
+                operation = "UPDATE"
+            };
+
+            return SendSmaxHcm<ActivateOfferingResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.ActivateOffering, TenantId), TenantId, request, false, authToken);
         }
         #endregion
 

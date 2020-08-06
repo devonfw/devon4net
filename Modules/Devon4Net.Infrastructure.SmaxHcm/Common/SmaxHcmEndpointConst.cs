@@ -13,7 +13,7 @@
         #endregion
 
         #region Auth
-        public const string Logon = "/auth/authentication-endpoint/authenticate/login";
+        public const string Logon = "/auth/authentication-endpoint/authenticate/login?TENANTID={0}"; // tenantId
         #endregion
 
         public const string AuthorizationHeaderTokenkey = "LWSSO_COOKIE_KEY";
@@ -32,6 +32,7 @@
         public const string GetCatalogFeaturedProviders = "/rest/{0}/ess/catalog/category/featured-list"; // tenantId
         public const string GetServiceDefinitions = "/rest/{0}/ems/ServiceDefinition?&layout=Id,DisplayLabel,Category,Subtype,PhaseId,Category.DisplayLabel,Category.IsDeleted,Subtype&meta=totalCount&size=250&skip=0"; // tenantId
         public const string CreateNewOffering = "/rest/{0}/cloud-service/createOffering";
+        public const string ActivateOffering = "/rest/{0}/ems/bulk"; // tenantId
         #endregion
 
         #region Request
