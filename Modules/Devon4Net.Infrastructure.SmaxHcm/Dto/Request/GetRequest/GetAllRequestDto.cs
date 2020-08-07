@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Request
+namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Request.GetRequest
 {
 
     public class GetAllRequestDto

@@ -39,19 +39,6 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         }
 
 
-        [HttpPost]
-        [AllowAnonymous]
-        [Route("/v1/smaxhcm/cookielogin")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CookieLogin(string tenantId, string user, string password)
-        {
-            Devon4NetLogger.Debug("Executing Login from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.CookieLogin(tenantId, user, password));
-        }
-
         [HttpGet]
         [AllowAnonymous]
         [Route("/v1/smaxhcm/users")]
@@ -59,10 +46,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetUsers(string authToken = null)
+        public async Task<IActionResult> GetUsers()
         {
             Devon4NetLogger.Debug("Executing Login from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.GetUsers(authToken));
+            return Ok(await SmaxHcmHandler.GetUsers());
         }
 
         [HttpGet]
@@ -72,10 +59,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetUserById(string userId, string authToken = null)
+        public async Task<IActionResult> GetUserById(string userId)
         {
             Devon4NetLogger.Debug("Executing Login from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.GetUserById(userId, authToken));
+            return Ok(await SmaxHcmHandler.GetUserById(userId));
         }
 
         [HttpGet]
@@ -85,10 +72,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetUserTenants(string userId, string authToken = null)
+        public async Task<IActionResult> GetUserTenants(string userId)
         {
             Devon4NetLogger.Debug("Executing Login from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.GetUserTenants(userId, authToken));
+            return Ok(await SmaxHcmHandler.GetUserTenants(userId));
         }
 
         [HttpGet]
@@ -98,10 +85,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetOfferings(string tenantId, string authToken = null)
+        public async Task<IActionResult> GetOfferings()
         {
             Devon4NetLogger.Debug("Executing Login from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.GetOfferings(tenantId, authToken));
+            return Ok(await SmaxHcmHandler.GetOfferings());
         }
 
         [HttpGet]
@@ -111,10 +98,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Offering(string tenantId, string offeringId, string authToken = null)
+        public async Task<IActionResult> Offering(string offeringId)
         {
             Devon4NetLogger.Debug("Executing Login from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.GetOffering(tenantId, offeringId, authToken));
+            return Ok(await SmaxHcmHandler.GetOffering(offeringId));
         }
 
 
@@ -125,10 +112,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetProviders(string tenantId, string authToken = null)
+        public async Task<IActionResult> GetProviders()
         {
             Devon4NetLogger.Debug("Executing Login from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.GetProviders(tenantId,  authToken));
+            return Ok(await SmaxHcmHandler.GetProviders());
         }
 
         [HttpGet]
@@ -138,50 +125,50 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetDesign(string tenantId, string designId, string authToken = null)
+        public async Task<IActionResult> GetDesign(string designId)
         {
             Devon4NetLogger.Debug("Executing Login from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.GetDesign(tenantId, designId, authToken));
+            return Ok(await SmaxHcmHandler.GetDesign(designId));
         }
 
         [HttpGet]
         [AllowAnonymous]
         [Route("/v1/smaxhcm/catalogproviders")]
-        public async Task<IActionResult> GetCatalogProviders(string category, bool includeArticles, bool includeOfferings, string query, string tenantId, string authToken = null)
+        public async Task<IActionResult> GetCatalogProviders(string category, bool includeArticles, bool includeOfferings, string query)
         {
             Devon4NetLogger.Debug("Getting catalog providers from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.GetCatalogProviders(category, includeArticles, includeOfferings, query, authToken, tenantId));
+            return Ok(await SmaxHcmHandler.GetCatalogProviders(category, includeArticles, includeOfferings, query));
         }
 
         [HttpGet]
         [AllowAnonymous]
         [Route("/v1/smaxhcm/servicedefinitions")]
-        public async Task<IActionResult> GetServiceDefinitions(string tenantId, string authToken = null)
+        public async Task<IActionResult> GetServiceDefinitions()
         {
             Devon4NetLogger.Debug("Getting service definitions from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.GetServiceDefinitions(authToken, tenantId));
+            return Ok(await SmaxHcmHandler.GetServiceDefinitions());
         }
 
         [HttpPost]
         [AllowAnonymous]
         [Route("/v1/smaxhcm/createoffering")]
-        public async Task<IActionResult> CreateNewOffering(CreateOfferingDto offeringRequestDto, string tenantId, string authToken = null)
+        public async Task<IActionResult> CreateNewOffering(CreateOfferingDto offeringRequestDto)
         {
             Devon4NetLogger.Debug("Getting service definitions from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.CreateNewOffering(offeringRequestDto, authToken, tenantId));
+            return Ok(await SmaxHcmHandler.CreateNewOffering(offeringRequestDto));
         }
 
         [HttpPost]
         [AllowAnonymous]
         [Route("/v1/smaxhcm/activateOffering")]
-        public async Task<IActionResult> CreateNewOffering(string offeringId, string tenantId, string authToken = null)
+        public async Task<IActionResult> CreateNewOffering(string offeringId)
         {
             var activateOfferingDto = new ActivateOfferingDto
             {
                 offeringId = offeringId
             };
 
-            return Ok(await SmaxHcmHandler.ActivateOffering(activateOfferingDto, authToken, tenantId));
+            return Ok(await SmaxHcmHandler.ActivateOffering(activateOfferingDto));
         }
 
         [HttpGet]
@@ -191,10 +178,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllRequest(string tenantId, string authToken = null)
+        public async Task<IActionResult> GetAllRequest()
         {
             Devon4NetLogger.Debug("Executing Login from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.GetAllRequest( authToken, tenantId));
+            return Ok(await SmaxHcmHandler.GetAllRequest());
         }
     }
 }

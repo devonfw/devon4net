@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Request
+namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Request.GetRequest
 {
     public class RequestMeta
     {
