@@ -191,20 +191,20 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
         public Task<ActivateOfferingResponse> ActivateOffering(ActivateOfferingDto activateOfferingDto)
         {
+            var data = new ActivateOfferingEntity
+            {
+                entity_type = BulkEntityConst.Offering,
+                properties = new Properties()
+                {
+                    Id = activateOfferingDto.offeringId,
+                    Status = OfferingStatusConst.Active
+                }
+            };
+
             var request = new ActivateOfferingRequest()
             {
-                entities = new Entity[] {
-                    new Entity()
-                    {
-                        entity_type = "Offering",
-                        properties = new Properties()
-                        {
-                            Id = activateOfferingDto.offeringId,
-                            Status = "Active"
-                        }
-                    }
-                },
-                operation = "UPDATE"
+                entities = new List<ActivateOfferingEntity>{data},
+                operation = BulkOperationConst.Update
             };
 
             return SendSmaxHcm<ActivateOfferingResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.ActivateOffering, SmaxHcmOptions.TenantId), request);
