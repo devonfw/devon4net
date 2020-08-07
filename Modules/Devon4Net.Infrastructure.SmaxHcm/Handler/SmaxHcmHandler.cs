@@ -11,11 +11,14 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Login;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.GetRequest;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.UserOptions;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Tenants;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Users;
 using Devon4Net.Infrastructure.SmaxHcm.Exceptions;
 using Microsoft.Extensions.Options;
+using Properties = Devon4Net.Infrastructure.SmaxHcm.Dto.Offering.Properties;
 
 namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 {
@@ -218,10 +221,45 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<GetAllRequestDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetAllRequest, SmaxHcmOptions.TenantId));
         }
 
-        public Task<GetAllRequestDto> CreateRequest()
+        public Task<CreateRequestResponse> CreateRequest(CreateNewRequestDto createNewRequestDto)
         {
-            return SendSmaxHcm<GetAllRequestDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetAllRequest, SmaxHcmOptions.TenantId));
+            if (createNewRequestDto == null || createNewRequestDto.entity == null ||
+                string.IsNullOrEmpty(createNewRequestDto.operation))
+            {
+                throw new ArgumentException(
+                    "Please check the create NewRequest Dto object properties. Object can not be null or empty");
+            }
+
+            var data = new CreateRequestEntity
+            {
+                entity_type = BulkEntityConst.Request,
+                properties = new CreateRequestProperties
+                {
+                    Description = createNewRequestDto.entity.properties.Description,
+                    DisplayLabel = createNewRequestDto.entity.properties.DisplayLabel,
+                    StartDate = createNewRequestDto.entity.properties.StartDate,
+                    EndDate = createNewRequestDto.entity.properties.EndDate,
+                    RequestedByPerson = createNewRequestDto.entity.properties.RequestedByPerson,
+                    RequestsOffering = createNewRequestDto.entity.properties.RequestsOffering,
+                    ImpactScope = BulkImpactScopeConst.Enterprise,
+                    Urgency = BulkUrgencyConst.NoDisruption,
+                    //UserOptions = createNewRequestDto.entity.properties.UserOptions != null ? createNewRequestDto.entity.properties.UserOptions : new UserOptionsDto{complexTypeProperties = new List<Complextypeproperty>()},
+                    UserOptions = createNewRequestDto.entity.properties.UserOptions,
+                    DataDomains = new List<string> {BulkDataDomainsConst.Public},
+                    RequestAttachments = createNewRequestDto.entity.properties.RequestAttachments
+                }
+            };
+
+            var request = new CreateRequestDto
+            {
+                operation = BulkOperationConst.Create,
+                entities = new List<CreateRequestEntity> {data}
+            };
+
+            return SendSmaxHcm<CreateRequestResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateRequest, SmaxHcmOptions.TenantId), request);
+
         }
+
         #endregion
     }
 }

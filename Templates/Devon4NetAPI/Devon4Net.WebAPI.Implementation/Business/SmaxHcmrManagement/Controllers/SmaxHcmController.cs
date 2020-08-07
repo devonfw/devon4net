@@ -3,6 +3,7 @@ using Devon4Net.Infrastructure.Log;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Tenants;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Users;
 using Devon4Net.Infrastructure.SMAXHCM.Handler;
@@ -180,8 +181,21 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllRequest()
         {
-            Devon4NetLogger.Debug("Executing Login from controller SmaxHcm");
+            Devon4NetLogger.Debug("Executing GetAllRequest from controller SmaxHcm");
             return Ok(await SmaxHcmHandler.GetAllRequest());
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/request")]
+        [ProducesResponseType(typeof(CreateRequestResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateRequest(CreateNewRequestDto createNewRequestDto)
+        {
+            Devon4NetLogger.Debug("Executing CreateRequest from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.CreateRequest(createNewRequestDto));
         }
     }
 }

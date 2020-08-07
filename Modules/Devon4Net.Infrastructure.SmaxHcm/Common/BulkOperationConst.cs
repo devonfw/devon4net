@@ -2,7 +2,7 @@
 {
     public static class BulkOperationConst
     {
-        public const string Create = "Request";
+        public const string Create = "CREATE";
         public const string Update = "UPDATE";
     }
 }
