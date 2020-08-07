@@ -634,6 +634,7 @@
             <param name="todoDescription">The description of the TO-DO command. It cannot be empty</param>
             <returns></returns>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.CreateRequest(Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest.CreateNewRequestDto)" -->
         <member name="T:Devon4Net.WebAPI.Implementation.Business.TodoManagement.Controllers.TodoController">
             <summary>
             TODOs controller
