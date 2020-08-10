@@ -152,11 +152,11 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
 
         [HttpPost]
         [AllowAnonymous]
-        [Route("/v1/smaxhcm/createoffering")]
-        public async Task<IActionResult> CreateNewOffering(CreateOfferingDto offeringRequestDto)
+        [Route("/v1/smaxhcm/updateoffering")]
+        public async Task<IActionResult> updateOffering(UpdateOfferingDto offeringRequestDto)
         {
             Devon4NetLogger.Debug("Getting service definitions from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.CreateNewOffering(offeringRequestDto));
+            return Ok(await SmaxHcmHandler.UpdateOffering(offeringRequestDto));
         }
 
         [HttpPost]

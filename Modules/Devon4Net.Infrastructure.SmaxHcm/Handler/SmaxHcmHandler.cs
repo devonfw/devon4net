@@ -13,7 +13,6 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.GetRequest;
-using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.UserOptions;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Tenants;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Users;
 using Devon4Net.Infrastructure.SmaxHcm.Exceptions;
@@ -179,14 +178,21 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<GetOfferingsResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetServiceDefinitions, SmaxHcmOptions.TenantId));
         }
 
-        public Task<object> CreateNewOffering(CreateOfferingDto createOfferingDto)
+        public Task<object> UpdateOffering(UpdateOfferingDto updateOfferingDto)
         {
+
+            if (updateOfferingDto == null || string.IsNullOrEmpty(updateOfferingDto.offeringId))
+            {
+                throw new ArgumentException(
+                    "Please check the offering object properties. Object can not be null or empty");
+            }
+
             var data = new CreateOfferingRequest
             {
-                providerId = string.IsNullOrEmpty(createOfferingDto.providerId) ? SmaxHcmOptions.ProviderId : createOfferingDto.providerId,
-                service = createOfferingDto.service,
-                offeringDisplayName = createOfferingDto.offeringDisplayName,
-                offeringId = string.IsNullOrEmpty(createOfferingDto.offeringId) ? Guid.NewGuid().ToString() : createOfferingDto.offeringId
+                providerId = string.IsNullOrEmpty(updateOfferingDto.providerId) ? SmaxHcmOptions.ProviderId : updateOfferingDto.providerId,
+                service = updateOfferingDto.service,
+                offeringDisplayName = updateOfferingDto.offeringDisplayName,
+                offeringId = updateOfferingDto.offeringId
             };
 
             return SendSmaxHcm<Object>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateNewOffering, SmaxHcmOptions.TenantId), data);

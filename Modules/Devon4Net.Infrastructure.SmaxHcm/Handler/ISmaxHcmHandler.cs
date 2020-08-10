@@ -22,7 +22,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         Task<GetDesignResponseDto> GetDesign(string designId);
         Task<object> GetCatalogProviders(string category, bool includeArticles, bool includeOfferings, string query);
         Task<GetOfferingsResponseDto> GetServiceDefinitions();
-        Task<object> CreateNewOffering(CreateOfferingDto createOfferingDto);
+        Task<object> UpdateOffering(UpdateOfferingDto updateOfferingDto);
         Task<ActivateOfferingResponse> ActivateOffering(ActivateOfferingDto activateOfferingDto);
         Task<GetAllRequestDto> GetAllRequest();
         Task<CreateRequestResponse> CreateRequest(CreateNewRequestDto createNewRequestDto);
