@@ -25,6 +25,6 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         Task<ActivateOfferingResponse> ActivateOffering(ActivateOfferingDto activateOfferingDto);
         Task<GetAllRequestDto> GetAllRequest();
         Task<CreateRequestResponse> CreateRequest(CreateNewRequestDto createNewRequestDto);
-        Task<CreateBulkOfferingRequestDto> CreateOffering(CreateOfferingRequestDto createOfferingRequestDto);
+        Task<CreateOfferingResponseDto> CreateOffering(CreateOfferingRequestDto createOfferingRequestDto);
     }
 }

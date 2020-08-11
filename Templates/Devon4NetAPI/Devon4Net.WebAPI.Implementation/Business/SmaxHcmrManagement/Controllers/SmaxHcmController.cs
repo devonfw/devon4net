@@ -4,6 +4,7 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.GetRequest;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Tenants;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Users;
 using Devon4Net.Infrastructure.SMAXHCM.Handler;
@@ -151,14 +152,14 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         }
 
         /// <summary>
-        /// sample: {"entities":[{"entity_type":"Offering","properties":{"NumOfRequests":0,"IsPopularity":false,"Service":"11427","OfferingType":"ServiceOffering","Status":"Active","SubscriptionActionType":"All","RequireAssetInfo":"InfrastructurePeripheral","DisplayLabel":"New offering from SMAX UI","IsBundle":true,"IsDefault":true,"Description":"<p>New offering from SMAX UI Description</p>"}}],"operation":"CREATE"}
+        /// sample: { "NumOfRequests":0, "IsPopularity":false, "Service":"11427", "RequireAssetInfo":"InfrastructurePeripheral", "DisplayLabel":"New offering from SMAX UI", "IsBundle":true, "IsDefault":true, "Description":"<p>New offering from SMAX UI Description</p>"}
         /// </summary>
         /// <param name="createNewRequestDto"></param>
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         [Route("/v1/smaxhcm/offering")]
-        [ProducesResponseType(typeof(CreateRequestResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CreateOfferingResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -180,7 +181,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [HttpPost]
         [AllowAnonymous]
         [Route("/v1/smaxhcm/activateOffering")]
-        public async Task<IActionResult> CreateNewOffering(string offeringId)
+        public async Task<IActionResult> ActivateOffering(string offeringId)
         {
             var activateOfferingDto = new ActivateOfferingDto
             {
@@ -193,7 +194,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [HttpGet]
         [AllowAnonymous]
         [Route("/v1/smaxhcm/request")]
-        [ProducesResponseType(typeof(GetOfferingResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetAllRequestDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

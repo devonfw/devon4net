@@ -636,7 +636,7 @@
         </member>
         <member name="M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.CreateOffering(Devon4Net.Infrastructure.SmaxHcm.Dto.Offering.CreateOfferingRequestDto)">
             <summary>
-            sample: {"entities":[{"entity_type":"Offering","properties":{"NumOfRequests":0,"IsPopularity":false,"Service":"11427","OfferingType":"ServiceOffering","Status":"Active","SubscriptionActionType":"All","RequireAssetInfo":"InfrastructurePeripheral","DisplayLabel":"New offering from SMAX UI","IsBundle":true,"IsDefault":true,"Description":"<p>New offering from SMAX UI Description</p>"}}],"operation":"CREATE"}
+            sample: { "NumOfRequests":0, "IsPopularity":false, "Service":"11427", "RequireAssetInfo":"InfrastructurePeripheral", "DisplayLabel":"New offering from SMAX UI", "IsBundle":true, "IsDefault":true, "Description":"<p>New offering from SMAX UI Description</p>"}
             </summary>
             <param name="createNewRequestDto"></param>
             <returns></returns>

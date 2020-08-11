@@ -78,7 +78,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<GetOfferingResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.OfferingDetail, SmaxHcmOptions.TenantId, offeringId));
         }
 
-        public Task<CreateBulkOfferingRequestDto> CreateOffering(CreateOfferingRequestDto createOfferingRequestDto)
+        public Task<CreateOfferingResponseDto> CreateOffering(CreateOfferingRequestDto createOfferingRequestDto)
         {
             var data = new CreateOfferingEntity
             {
@@ -105,7 +105,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
                 entities = new List<CreateOfferingEntity> { data }
             };
 
-            return SendSmaxHcm<CreateBulkOfferingRequestDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateOffering, SmaxHcmOptions.TenantId), request);
+            return SendSmaxHcm<CreateOfferingResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateOffering, SmaxHcmOptions.TenantId), request);
 
 
         }
