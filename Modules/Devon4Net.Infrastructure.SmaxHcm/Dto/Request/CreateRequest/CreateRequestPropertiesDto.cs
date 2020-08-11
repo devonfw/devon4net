@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest
 {
-    public class CreateRequestProperties
+    public class CreateRequestPropertiesDto
     {
         public string ImpactScope { get; set; }
         public string Urgency { get; set; }
@@ -12,8 +14,8 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest
         public string Description { get; set; }
         public string UserOptions { get; set; }
         public List<string> DataDomains { get; set; }
-        public double StartDate { get; set; }
-        public double EndDate { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public string RequestAttachments { get; set; }
     }
 }

@@ -265,9 +265,9 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         /// </summary>
         /// <param name="createNewRequestDto">The response of the API please check the status provided at "completion_status" node</param>
         /// <returns></returns>
-        public Task<CreateRequestResponse> CreateRequest(CreateNewRequestDto createNewRequestDto)
+        public Task<CreateRequestResponse> CreateRequest(CreateRequestPropertiesDto createNewRequestDto)
         {
-            if (createNewRequestDto?.entity == null || string.IsNullOrEmpty(createNewRequestDto.operation))
+            if (createNewRequestDto == null )
             {
                 throw new ArgumentException(
                     "Please check the create NewRequest Dto object properties. Object can not be null or empty");
@@ -278,18 +278,18 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
                 entity_type = BulkEntityConst.Request,
                 properties = new CreateRequestProperties
                 {
-                    Description = createNewRequestDto.entity.properties.Description,
-                    DisplayLabel = createNewRequestDto.entity.properties.DisplayLabel,
-                    StartDate = createNewRequestDto.entity.properties.StartDate,
-                    EndDate = createNewRequestDto.entity.properties.EndDate,
-                    RequestedByPerson = createNewRequestDto.entity.properties.RequestedByPerson,
-                    RequestsOffering = createNewRequestDto.entity.properties.RequestsOffering,
+                    Description = createNewRequestDto.Description,
+                    DisplayLabel = createNewRequestDto.DisplayLabel,
+                    StartDate = (new TimeSpan(createNewRequestDto.StartDate.Ticks)).TotalMilliseconds,
+                    EndDate = (new TimeSpan(createNewRequestDto.EndDate.Ticks)).TotalMilliseconds,
+                    RequestedByPerson = createNewRequestDto.RequestedByPerson,
+                    RequestsOffering = createNewRequestDto.RequestsOffering,
                     ImpactScope = BulkImpactScopeConst.Enterprise,
                     Urgency = BulkUrgencyConst.NoDisruption,
                     //UserOptions = createNewRequestDto.entity.properties.UserOptions != null ? createNewRequestDto.entity.properties.UserOptions : new UserOptionsDto{complexTypeProperties = new List<Complextypeproperty>()},
-                    UserOptions = createNewRequestDto.entity.properties.UserOptions,
+                    UserOptions = createNewRequestDto.UserOptions,
                     DataDomains = new List<string> {BulkDataDomainsConst.Public},
-                    RequestAttachments = createNewRequestDto.entity.properties.RequestAttachments
+                    RequestAttachments = createNewRequestDto.RequestAttachments
                 }
             };
 

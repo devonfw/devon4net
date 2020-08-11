@@ -216,7 +216,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateRequest(CreateNewRequestDto createNewRequestDto)
+        public async Task<IActionResult> CreateRequest(CreateRequestPropertiesDto createNewRequestDto)
         {
             Devon4NetLogger.Debug("Executing CreateRequest from controller SmaxHcm");
             return Ok(await SmaxHcmHandler.CreateRequest(createNewRequestDto));

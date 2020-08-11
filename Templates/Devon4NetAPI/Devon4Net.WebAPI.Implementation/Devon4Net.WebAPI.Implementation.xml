@@ -641,7 +641,7 @@
             <param name="createNewRequestDto"></param>
             <returns></returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.CreateRequest(Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest.CreateNewRequestDto)" -->
+        <!-- Badly formed XML comment ignored for member "M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.CreateRequest(Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest.CreateRequestPropertiesDto)" -->
         <member name="T:Devon4Net.WebAPI.Implementation.Business.TodoManagement.Controllers.TodoController">
             <summary>
             TODOs controller
