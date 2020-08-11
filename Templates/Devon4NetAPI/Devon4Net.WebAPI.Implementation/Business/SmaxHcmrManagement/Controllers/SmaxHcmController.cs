@@ -150,10 +150,28 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
             return Ok(await SmaxHcmHandler.GetServiceDefinitions());
         }
 
+        /// <summary>
+        /// sample: {"entities":[{"entity_type":"Offering","properties":{"NumOfRequests":0,"IsPopularity":false,"Service":"11427","OfferingType":"ServiceOffering","Status":"Active","SubscriptionActionType":"All","RequireAssetInfo":"InfrastructurePeripheral","DisplayLabel":"New offering from SMAX UI","IsBundle":true,"IsDefault":true,"Description":"<p>New offering from SMAX UI Description</p>"}}],"operation":"CREATE"}
+        /// </summary>
+        /// <param name="createNewRequestDto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/offering")]
+        [ProducesResponseType(typeof(CreateRequestResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateOffering(CreateOfferingRequestDto createNewRequestDto)
+        {
+            Devon4NetLogger.Debug("Executing CreateOffering from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.CreateOffering(createNewRequestDto));
+        }
+
         [HttpPost]
         [AllowAnonymous]
         [Route("/v1/smaxhcm/updateoffering")]
-        public async Task<IActionResult> updateOffering(UpdateOfferingDto offeringRequestDto)
+        public async Task<IActionResult> UpdateOffering(UpdateOfferingDto offeringRequestDto)
         {
             Devon4NetLogger.Debug("Getting service definitions from controller SmaxHcm");
             return Ok(await SmaxHcmHandler.UpdateOffering(offeringRequestDto));

@@ -2,7 +2,6 @@
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
-using Devon4Net.Infrastructure.SmaxHcm.Dto.Request;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.GetRequest;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Tenants;
@@ -26,5 +25,6 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         Task<ActivateOfferingResponse> ActivateOffering(ActivateOfferingDto activateOfferingDto);
         Task<GetAllRequestDto> GetAllRequest();
         Task<CreateRequestResponse> CreateRequest(CreateNewRequestDto createNewRequestDto);
+        Task<CreateBulkOfferingRequestDto> CreateOffering(CreateOfferingRequestDto createOfferingRequestDto);
     }
 }

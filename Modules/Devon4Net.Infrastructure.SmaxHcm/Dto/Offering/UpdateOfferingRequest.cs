@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Offering
+﻿namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Offering
 {
-    public class CreateOfferingRequest
+    public class UpdateOfferingRequest
     {
         public string providerId { get; set; }
         public string offeringId { get; set; }

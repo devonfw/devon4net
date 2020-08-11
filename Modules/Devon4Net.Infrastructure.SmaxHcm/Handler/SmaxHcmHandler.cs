@@ -77,6 +77,39 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
             return SendSmaxHcm<GetOfferingResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.OfferingDetail, SmaxHcmOptions.TenantId, offeringId));
         }
+
+        public Task<CreateBulkOfferingRequestDto> CreateOffering(CreateOfferingRequestDto createOfferingRequestDto)
+        {
+            var data = new CreateOfferingEntity
+            {
+                entity_type = BulkEntityConst.Offering,
+                properties = new CreateOfferingProperties
+                {
+                    Description = createOfferingRequestDto.Description,
+                    DisplayLabel = createOfferingRequestDto.DisplayLabel,
+                    IsBundle = createOfferingRequestDto.IsBundle,
+                    IsDefault = createOfferingRequestDto.IsDefault,
+                    IsPopularity = createOfferingRequestDto.IsPopularity,
+                    NumOfRequests = createOfferingRequestDto.NumOfRequests,
+                    OfferingType = OfferingTypeConst.ServiceOffering,
+                    RequireAssetInfo = createOfferingRequestDto.RequireAssetInfo,
+                    Service = createOfferingRequestDto.Service,
+                    Status = OfferingStatusConst.Active,
+                    SubscriptionActionType = SubscriptionActionTypeConst.All
+                }
+            };
+
+            var request = new CreateBulkOfferingRequestDto
+            {
+                operation = BulkOperationConst.Create,
+                entities = new List<CreateOfferingEntity> { data }
+            };
+
+            return SendSmaxHcm<CreateBulkOfferingRequestDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateOffering, SmaxHcmOptions.TenantId), request);
+
+
+        }
+
         #endregion
 
         #region Providers
@@ -187,7 +220,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
                     "Please check the offering object properties. Object can not be null or empty");
             }
 
-            var data = new CreateOfferingRequest
+            var data = new UpdateOfferingRequest
             {
                 providerId = string.IsNullOrEmpty(updateOfferingDto.providerId) ? SmaxHcmOptions.ProviderId : updateOfferingDto.providerId,
                 service = updateOfferingDto.service,
@@ -234,8 +267,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         /// <returns></returns>
         public Task<CreateRequestResponse> CreateRequest(CreateNewRequestDto createNewRequestDto)
         {
-            if (createNewRequestDto == null || createNewRequestDto.entity == null ||
-                string.IsNullOrEmpty(createNewRequestDto.operation))
+            if (createNewRequestDto?.entity == null || string.IsNullOrEmpty(createNewRequestDto.operation))
             {
                 throw new ArgumentException(
                     "Please check the create NewRequest Dto object properties. Object can not be null or empty");
@@ -268,7 +300,6 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             };
 
             return SendSmaxHcm<CreateRequestResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateRequest, SmaxHcmOptions.TenantId), request);
-
         }
 
         #endregion
