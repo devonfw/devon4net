@@ -28,6 +28,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         Task<CreateOfferingResponseDto> CreateOffering(CreateOfferingRequestDto createOfferingRequestDto);
         Task<GetDesignTagsResponseDto> GetDesignTags();
         Task<GetIconsResponseDto> GetIcons();
-        Task<CreateDesignContainerResponseDto> CreateDesignContainer(CreateDesignContainerDto createDesignDto);
+        Task<CreateDesignContainerResponseDto> CreateDesignContainer(CreateDesignContainerDto createDesignContainerDto);
+        Task<CreateDesignVersionResponseDto> CreateDesignVersion(CreateDesignVersionDto createVersionDto);
     }
 }

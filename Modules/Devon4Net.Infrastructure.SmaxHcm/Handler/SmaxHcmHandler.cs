@@ -57,34 +57,53 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             {
                 scopes = new string[]
                 {
-                    SequenceArtifactConst.Sequence_Artifact_Container
+                    DesignConst.Sequence_Artifact_Container
                 }
             };
 
             return SendSmaxHcm<GetDesignTagsResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.GetDesignTags, SmaxHcmOptions.TenantId), data, false, true);
         }
 
-        public Task<CreateDesignContainerResponseDto> CreateDesignContainer(CreateDesignContainerDto createDesignDto)
+        public Task<CreateDesignContainerResponseDto> CreateDesignContainer(CreateDesignContainerDto createDesignContainerDto)
         {
-            var tags = new CreateDesignContainerRequestDto_Tag[createDesignDto.Tags.Length];
-            for (var i = 0; i < createDesignDto.Tags.Length; i++)
+            var tags = new CreateDesignContainerRequestDto_Tag[createDesignContainerDto.Tags.Length];
+            for (var i = 0; i < createDesignContainerDto.Tags.Length; i++)
             {
                 tags[i] = new CreateDesignContainerRequestDto_Tag
                 {
-                    self = createDesignDto.Tags[i]
+                    self = createDesignContainerDto.Tags[i]
                 };
             }
 
             var data = new CreateDesignContainerRequestDto
             {
-                container_type = SequenceArtifactConst.Sequence_Artifact_Container,
-                description = createDesignDto.Description,
-                name = createDesignDto.Name,
+                container_type = DesignConst.Sequence_Artifact_Container,
+                description = createDesignContainerDto.Description,
+                name = createDesignContainerDto.Name,
                 tags = tags,
-                icon = createDesignDto.Icon
+                icon = createDesignContainerDto.Icon
             };
 
             return SendSmaxHcm<CreateDesignContainerResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateDesignContainer, SmaxHcmOptions.TenantId), data, false, true);
+        }
+
+        public Task<CreateDesignVersionResponseDto> CreateDesignVersion(CreateDesignVersionDto createVersionDto)
+        {
+            var data = new CreateDesignVersionRequestDto
+            {
+                containerId = createVersionDto.containerId,
+                description = createVersionDto.description,
+                icon = createVersionDto.icon,
+                name = createVersionDto.name,
+                published = createVersionDto.published,
+                type = DesignConst.Version_Type,
+                upgrades_from = new string[0],
+                upgrades_to = new string[0],
+                url = createVersionDto.url,
+                version = createVersionDto.version
+            };
+
+            return SendSmaxHcm<CreateDesignVersionResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateDesignVersion, SmaxHcmOptions.TenantId), data, false, true);
         }
 
         #endregion

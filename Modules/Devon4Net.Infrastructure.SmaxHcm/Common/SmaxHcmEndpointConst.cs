@@ -27,6 +27,7 @@
         public const string GetIcons = "/{0}/dnd/api/blobstore?tag=library"; // tenantId
         public const string GetDesignTags = "/{0}/dnd/api/tag/filter"; // tenantId
         public const string CreateDesignContainer = "/{0}/dnd/api/container"; // tenantId
+        public const string CreateDesignVersion = "/{0}/dnd/api/service/design"; // tenantId
         #endregion
 
         #region Catalog

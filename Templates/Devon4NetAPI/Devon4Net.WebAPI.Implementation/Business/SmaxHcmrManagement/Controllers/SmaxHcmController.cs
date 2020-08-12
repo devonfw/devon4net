@@ -249,6 +249,11 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
             return Ok(await SmaxHcmHandler.GetDesignTags());
         }
 
+        /// <summary>
+        /// Sample: {"name":"Test Create Design BE","description":"Test Create Design BE desc","icon":"/903361753/dnd/api/blobstore/amazon_ec2.png?tag=library","tags":["/903361753/dnd/api/tag/8a809efe73146d590173147414bd05e1"]}
+        /// </summary>
+        /// <param name="createDesignContainerDto"></param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         [Route("/v1/smaxhcm/createDesignContainer")]
@@ -256,10 +261,28 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateDesignerContainer(CreateDesignContainerDto createDesignDto)
+        public async Task<IActionResult> CreateDesignContainer(CreateDesignContainerDto createDesignContainerDto)
         {
-            Devon4NetLogger.Debug("Executing CreateDesigner from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.CreateDesignContainer(createDesignDto));
+            Devon4NetLogger.Debug("Executing CreateDesignContainer from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.CreateDesignContainer(createDesignContainerDto));
+        }
+
+        /// <summary>
+        /// Sample: {"containerId":"8a808a9c73d970f80173e2fa990b1590","description":"Version description","icon":"/903361753/dnd/api/blobstore/amazon_ec2.png?tag=library","name":"Version name","published":false,"url":"","version":"1.0.0"}
+        /// </summary>
+        /// <param name="createDesignVersionDto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/createDesignVersion")]
+        [ProducesResponseType(typeof(CreateDesignVersionResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateDesignVersion(CreateDesignVersionDto createDesignVersionDto)
+        {
+            Devon4NetLogger.Debug("Executing CreateDesignVersion from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.CreateDesignVersion(createDesignVersionDto));
         }
     }
 }
