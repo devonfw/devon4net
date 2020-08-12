@@ -224,6 +224,20 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
 
         [HttpGet]
         [AllowAnonymous]
+        [Route("/v1/smaxhcm/designIcons")]
+        [ProducesResponseType(typeof(GetIconsResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetDesignIcons()
+        {
+            Devon4NetLogger.Debug("Executing GetDesignIcons from controller SmaxHcm");
+            var response = await SmaxHcmHandler.GetIcons();
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
         [Route("/v1/smaxhcm/designerTags")]
         [ProducesResponseType(typeof(CreateRequestResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
