@@ -28,6 +28,7 @@
         public const string GetDesignTags = "/{0}/dnd/api/tag/filter"; // tenantId
         public const string CreateDesignContainer = "/{0}/dnd/api/container"; // tenantId
         public const string CreateDesignVersion = "/{0}/dnd/api/service/design"; // tenantId
+        public const string DeleteDesignVersion = "/{0}/dnd/api/service/design/{1}"; // tenantId, versionId
         #endregion
 
         #region Catalog

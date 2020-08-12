@@ -286,5 +286,19 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
             Devon4NetLogger.Debug("Executing CreateDesignVersion from controller SmaxHcm");
             return Ok(await SmaxHcmHandler.CreateDesignVersion(createDesignVersionDto));
         }
+
+        [HttpDelete]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/deleteDesignVersion")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteDesignVersion(string versionId)
+        {
+            Devon4NetLogger.Debug("Executing DeleteDesignVersion from controller SmaxHcm");
+            await SmaxHcmHandler.DeleteDesignVersion(versionId);
+            return Ok();
+        }
     }
 }
