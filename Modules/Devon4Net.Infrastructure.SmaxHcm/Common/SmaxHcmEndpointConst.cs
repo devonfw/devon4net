@@ -31,6 +31,9 @@
         public const string DeleteDesignContainer = "/{0}/dnd/api/container/{1}"; // tenantId, versionId
         public const string DeleteDesignVersion = "/{0}/dnd/api/service/design/{1}"; // tenantId, versionId
         public const string PublishDesign = "{0}/dnd/api/service/design/{1}/publish"; // tenantId, designId
+
+        // Service designer
+        public const string GetServiceDesignerMetamodel = "{0}/dnd/api/designs/design/{1}/metamodel"; // tenantId, versionId
         #endregion
 
         #region Catalog

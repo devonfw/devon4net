@@ -11,6 +11,7 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignContainer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignVersion;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.GetDesignTags;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Login;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
@@ -122,6 +123,13 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         public Task<PublishDesignResponseDto> PublishDesignVersion(string versionId)
         {
             return SendSmaxHcm<PublishDesignResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.PublishDesign, SmaxHcmOptions.TenantId, versionId), null, false, true);
+        }
+
+        // Service designer
+
+        public Task<GetServiceDesignerMetamodelResponseDto> GetServiceDesignerMetamodel(string versionId)
+        {
+            return SendSmaxHcm<GetServiceDesignerMetamodelResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetServiceDesignerMetamodel, SmaxHcmOptions.TenantId, versionId), null, false, true);
         }
 
         #endregion

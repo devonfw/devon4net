@@ -3,6 +3,7 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignContainer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignVersion;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.GetDesignTags;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest;
@@ -36,5 +37,6 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         Task DeleteDesignContainer(string containerId);
         Task DeleteDesignVersion(string versionId);
         Task<PublishDesignResponseDto> PublishDesignVersion(string versionId);
+        Task<GetServiceDesignerMetamodelResponseDto> GetServiceDesignerMetamodel(string versionId);
     }
 }

@@ -3,6 +3,7 @@ using Devon4Net.Infrastructure.Log;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignContainer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignVersion;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest;
@@ -326,6 +327,19 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         {
             Devon4NetLogger.Debug("Executing PublishDesignVersion from controller SmaxHcm");
             return Ok(await SmaxHcmHandler.PublishDesignVersion(versionId));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/getServiceDesignerMetamodel")]
+        [ProducesResponseType(typeof(GetServiceDesignerMetamodelResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetServiceDesignerMetamodelResponse(string versionId)
+        {
+            Devon4NetLogger.Debug("Executing GetServiceDesignerMetamodelResponse from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.GetServiceDesignerMetamodel(versionId));
         }
     }
 }
