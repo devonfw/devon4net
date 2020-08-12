@@ -45,6 +45,19 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
             return SendSmaxHcm<GetDesignResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetDesign, SmaxHcmOptions.TenantId, designId), null, false, true);
         }
+
+        public Task<GetDesignTagsResponseDto> GetDesignTags()
+        {
+            var data = new GetDesignTagsRequestDto
+            {
+                scopes = new string[]
+                {
+                    SequenceArtifactConst.Sequence_Artifact_Container
+                }
+            };
+
+            return SendSmaxHcm<GetDesignTagsResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.GetDesignTags, SmaxHcmOptions.TenantId), data, false, true);
+        }
         #endregion
 
         #region Tenants

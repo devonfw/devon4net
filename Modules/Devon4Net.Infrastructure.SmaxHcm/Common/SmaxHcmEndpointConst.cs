@@ -24,6 +24,7 @@
 
         #region Design
         public const string GetDesign = "/{0}/dnd/api/service/design/{1}"; //tenantId, designId
+        public const string GetDesignTags = "/{0}/dnd/api/tag/filter"; // tenantId
         #endregion
 
         #region Catalog

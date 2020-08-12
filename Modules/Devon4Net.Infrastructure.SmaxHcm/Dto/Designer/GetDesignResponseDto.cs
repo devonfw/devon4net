@@ -1,6 +1,5 @@
 ﻿using System;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Common;
-using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
 
 namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer
 {
