@@ -300,5 +300,19 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
             await SmaxHcmHandler.DeleteDesignVersion(versionId);
             return Ok();
         }
+
+        [HttpDelete]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/deleteDesignContainer")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteDesignContainer(string containerId)
+        {
+            Devon4NetLogger.Debug("Executing DeleteDesignContainer from controller SmaxHcm");
+            await SmaxHcmHandler.DeleteDesignContainer(containerId);
+            return Ok();
+        }
     }
 }

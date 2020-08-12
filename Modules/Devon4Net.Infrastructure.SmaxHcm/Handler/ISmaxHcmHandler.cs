@@ -33,6 +33,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         Task<GetIconsResponseDto> GetIcons();
         Task<CreateDesignContainerResponseDto> CreateDesignContainer(CreateDesignContainerDto createDesignContainerDto);
         Task<CreateDesignVersionResponseDto> CreateDesignVersion(CreateDesignVersionDto createVersionDto);
+        Task DeleteDesignContainer(string containerId);
         Task DeleteDesignVersion(string versionId);
     }
 }
