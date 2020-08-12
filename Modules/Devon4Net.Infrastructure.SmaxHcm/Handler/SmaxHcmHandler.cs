@@ -63,6 +63,30 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
             return SendSmaxHcm<GetDesignTagsResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.GetDesignTags, SmaxHcmOptions.TenantId), data, false, true);
         }
+
+        public Task<CreateDesignContainerResponseDto> CreateDesignContainer(CreateDesignContainerDto createDesignDto)
+        {
+            var tags = new CreateDesignContainerRequestDto_Tag[createDesignDto.Tags.Length];
+            for (var i = 0; i < createDesignDto.Tags.Length; i++)
+            {
+                tags[i] = new CreateDesignContainerRequestDto_Tag
+                {
+                    self = createDesignDto.Tags[i]
+                };
+            }
+
+            var data = new CreateDesignContainerRequestDto
+            {
+                container_type = SequenceArtifactConst.Sequence_Artifact_Container,
+                description = createDesignDto.Description,
+                name = createDesignDto.Name,
+                tags = tags,
+                icon = createDesignDto.Icon
+            };
+
+            return SendSmaxHcm<CreateDesignContainerResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateDesignContainer, SmaxHcmOptions.TenantId), data, false, true);
+        }
+
         #endregion
 
         #region Tenants

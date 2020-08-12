@@ -248,5 +248,18 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
             Devon4NetLogger.Debug("Executing GetDesignerTags from controller SmaxHcm");
             return Ok(await SmaxHcmHandler.GetDesignTags());
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/createDesignContainer")]
+        [ProducesResponseType(typeof(CreateDesignContainerResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateDesignerContainer(CreateDesignContainerDto createDesignDto)
+        {
+            Devon4NetLogger.Debug("Executing CreateDesigner from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.CreateDesignContainer(createDesignDto));
+        }
     }
 }
