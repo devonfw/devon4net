@@ -30,6 +30,7 @@
         public const string CreateDesignVersion = "/{0}/dnd/api/service/design"; // tenantId
         public const string DeleteDesignContainer = "/{0}/dnd/api/container/{1}"; // tenantId, versionId
         public const string DeleteDesignVersion = "/{0}/dnd/api/service/design/{1}"; // tenantId, versionId
+        public const string PublishDesign = "{0}/dnd/api/service/design/{1}/publish"; // tenantId, designId
         #endregion
 
         #region Catalog

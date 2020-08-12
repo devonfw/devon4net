@@ -119,6 +119,11 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<object>(HttpMethod.Delete, string.Format(SmaxHcmEndpointConst.DeleteDesignVersion, SmaxHcmOptions.TenantId, versionId), null, false, true);
         }
 
+        public Task<PublishDesignResponseDto> PublishDesignVersion(string versionId)
+        {
+            return SendSmaxHcm<PublishDesignResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.PublishDesign, SmaxHcmOptions.TenantId, versionId), null, false, true);
+        }
+
         #endregion
 
         #region Tenants
