@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer
+namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignVersion
 {
     public class CreateDesignVersionResponseDto
     {

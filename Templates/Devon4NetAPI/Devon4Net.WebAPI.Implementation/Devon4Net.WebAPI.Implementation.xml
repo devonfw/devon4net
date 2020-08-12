@@ -642,14 +642,14 @@
             <returns></returns>
         </member>
         <!-- Badly formed XML comment ignored for member "M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.CreateRequest(Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest.CreateRequestPropertiesDto)" -->
-        <member name="M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.CreateDesignContainer(Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignContainerDto)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.CreateDesignContainer(Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignContainer.CreateDesignContainerDto)">
             <summary>
             Sample: {"name":"Test Create Design BE","description":"Test Create Design BE desc","icon":"/903361753/dnd/api/blobstore/amazon_ec2.png?tag=library","tags":["/903361753/dnd/api/tag/8a809efe73146d590173147414bd05e1"]}
             </summary>
             <param name="createDesignContainerDto"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.CreateDesignVersion(Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignVersionDto)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.CreateDesignVersion(Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignVersion.CreateDesignVersionDto)">
             <summary>
             Sample: {"containerId":"8a808a9c73d970f80173e2fa990b1590","description":"Version description","icon":"/903361753/dnd/api/blobstore/amazon_ec2.png?tag=library","name":"Version name","published":false,"url":"","version":"1.0.0"}
             </summary>

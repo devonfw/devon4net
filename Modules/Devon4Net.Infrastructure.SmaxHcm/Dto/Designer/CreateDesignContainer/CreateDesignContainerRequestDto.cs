@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer
+namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignContainer
 {
     public class CreateDesignContainerRequestDto
     {

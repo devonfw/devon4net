@@ -1,4 +1,4 @@
-﻿namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer
+﻿namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.GetDesignTags
 {
     public class GetDesignTagsRequestDto
     {

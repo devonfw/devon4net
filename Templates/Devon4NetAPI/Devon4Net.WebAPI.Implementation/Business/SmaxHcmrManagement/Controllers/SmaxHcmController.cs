@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Devon4Net.Infrastructure.Log;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignContainer;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignVersion;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest;
