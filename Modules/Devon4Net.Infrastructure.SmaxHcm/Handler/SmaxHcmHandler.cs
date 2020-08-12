@@ -106,8 +106,47 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             };
 
             return SendSmaxHcm<CreateOfferingResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateOffering, SmaxHcmOptions.TenantId), request);
+        }
 
+        public Task<object> UpdateOffering(UpdateOfferingDto updateOfferingDto)
+        {
 
+            if (updateOfferingDto == null || string.IsNullOrEmpty(updateOfferingDto.offeringId))
+            {
+                throw new ArgumentException(
+                    "Please check the offering object properties. Object can not be null or empty");
+            }
+
+            var data = new UpdateOfferingRequest
+            {
+                providerId = string.IsNullOrEmpty(updateOfferingDto.providerId) ? SmaxHcmOptions.ProviderId : updateOfferingDto.providerId,
+                service = updateOfferingDto.service,
+                offeringDisplayName = updateOfferingDto.offeringDisplayName,
+                offeringId = updateOfferingDto.offeringId
+            };
+
+            return SendSmaxHcm<Object>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateNewOffering, SmaxHcmOptions.TenantId), data);
+        }
+
+        public Task<ActivateOfferingResponse> ActivateOffering(ActivateOfferingDto activateOfferingDto)
+        {
+            var data = new ActivateOfferingEntity
+            {
+                entity_type = BulkEntityConst.Offering,
+                properties = new Properties()
+                {
+                    Id = activateOfferingDto.offeringId,
+                    Status = OfferingStatusConst.Active
+                }
+            };
+
+            var request = new ActivateOfferingRequest()
+            {
+                entities = new List<ActivateOfferingEntity> { data },
+                operation = BulkOperationConst.Update
+            };
+
+            return SendSmaxHcm<ActivateOfferingResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.ActivateOffering, SmaxHcmOptions.TenantId), request);
         }
 
         #endregion
@@ -209,47 +248,6 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         public Task<GetOfferingsResponseDto> GetServiceDefinitions()
         {
             return SendSmaxHcm<GetOfferingsResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetServiceDefinitions, SmaxHcmOptions.TenantId));
-        }
-
-        public Task<object> UpdateOffering(UpdateOfferingDto updateOfferingDto)
-        {
-
-            if (updateOfferingDto == null || string.IsNullOrEmpty(updateOfferingDto.offeringId))
-            {
-                throw new ArgumentException(
-                    "Please check the offering object properties. Object can not be null or empty");
-            }
-
-            var data = new UpdateOfferingRequest
-            {
-                providerId = string.IsNullOrEmpty(updateOfferingDto.providerId) ? SmaxHcmOptions.ProviderId : updateOfferingDto.providerId,
-                service = updateOfferingDto.service,
-                offeringDisplayName = updateOfferingDto.offeringDisplayName,
-                offeringId = updateOfferingDto.offeringId
-            };
-
-            return SendSmaxHcm<Object>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateNewOffering, SmaxHcmOptions.TenantId), data);
-        }
-
-        public Task<ActivateOfferingResponse> ActivateOffering(ActivateOfferingDto activateOfferingDto)
-        {
-            var data = new ActivateOfferingEntity
-            {
-                entity_type = BulkEntityConst.Offering,
-                properties = new Properties()
-                {
-                    Id = activateOfferingDto.offeringId,
-                    Status = OfferingStatusConst.Active
-                }
-            };
-
-            var request = new ActivateOfferingRequest()
-            {
-                entities = new List<ActivateOfferingEntity>{data},
-                operation = BulkOperationConst.Update
-            };
-
-            return SendSmaxHcm<ActivateOfferingResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.ActivateOffering, SmaxHcmOptions.TenantId), request);
         }
         #endregion
 
