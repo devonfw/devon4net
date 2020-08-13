@@ -359,7 +359,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         }
 
         /// <summary>
-        /// Sample: {"nodes":[{"name":"Test server group","displayName":"Test server group","description":"This is a test server group description.","icon":"/903361753/dnd/api/blobstore/server_group.png?tag=library","orderIndex":1,"typeId":"8a809efe73146dd30173146df8d50043","tags":["CONSUMER_VISIBLE"],"x":11,"y":80,"statusMessages":[]},{"name":"Test node","displayName":"Test node","description":"This is a test node description.","icon":"/903361753/dnd/api/blobstore/amazon_ec2.png?tag=library","orderIndex":1,"typeId":"8a809efe73146dd30173146df248002e","tags":["CONSUMER_VISIBLE"],"x":511,"y":80,"statusMessages":[]}],"relationships":[{"name":"Test relationship","displayName":"Test relation","relationshipTypeId":"8a809efe73146dd30173146f211d02e3","source":{"name":"Test server group"},"target":{"name":"Test node"}}],"groups":[]}
+        /// Sample: {"nodes":[{"name":"Test Capgemini server group","displayName":"Test Capgemini server group","description":"Test Capgemini server group description","icon":"/903361753/dnd/api/blobstore/server_group.png?tag=library","orderIndex":1,"typeId":"8a808a9c73d970f80173e345c3ba1811","x":11,"y":80},{"name":"Test Capgemini AWS server","displayName":"Test Capgemini AWS server","description":"Test Capgemini AWS server description","icon":"/903361753/dnd/api/blobstore/amazon_ec2.png?tag=library","orderIndex":1,"typeId":"8a808a9c73d970f80173e36043c61868","x":511,"y":80}],"relationships":[{"name":"Relationship test","displayName":"Child","relationshipTypeId":"8a808a9c73d970f80173e3d42c931cd0","sourceName":"Test Capgemini server group","targetName":"Test Capgemini AWS server"}]}
         /// </summary>
         /// <param name="versionId"></param>
         /// <param name="request"></param>
@@ -371,10 +371,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateComponentsAndRelations(string versionId, CreateComponentsAndRelationsRequestDto request)
+        public async Task<IActionResult> CreateComponentsAndRelations(string versionId, CreateComponentsAndRelationsDto createComponentsAndRelationsDto)
         {
             Devon4NetLogger.Debug("Executing CreateComponentsAndRelations from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.CreateComponentsAndRelations(versionId, request));
+            return Ok(await SmaxHcmHandler.CreateComponentsAndRelations(versionId, createComponentsAndRelationsDto));
         }
 
         [HttpPut]

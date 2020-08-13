@@ -140,9 +140,57 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<GetComponentTemplatesFromComponentTypeResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetComponentTemplatesFromComponentType, SmaxHcmOptions.TenantId, componentTypeId), null, false, true);
         }
 
-        public Task<CreateComponentsAndRelationsResponseDto> CreateComponentsAndRelations(string versionId, CreateComponentsAndRelationsRequestDto request)
+        public Task<CreateComponentsAndRelationsResponseDto> CreateComponentsAndRelations(string versionId, CreateComponentsAndRelationsDto createComponentsAndRelationsDto)
         {
-            return SendSmaxHcm<CreateComponentsAndRelationsResponseDto>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.CreateComponentsAndRelations, SmaxHcmOptions.TenantId, versionId), request, false, true);
+            var nodes = new List<CreateComponentsAndRelationsRequestDto_Node>();
+            var relationships = new List<CreateComponentsAndRelationsRequestDto_Relationship>();
+
+            foreach(var node in createComponentsAndRelationsDto.nodes)
+            {
+                nodes.Add(new CreateComponentsAndRelationsRequestDto_Node
+                {
+                    name = node.name,
+                    description = node.description,
+                    displayName = node.displayName,
+                    icon = node.icon,
+                    orderIndex = node.orderIndex,
+                    statusMessages = new object[0],
+                    tags = new string[]
+                    {
+                        DesignConst.Create_Component_Tag_Consumer_Visible
+                    },
+                    typeId = node.typeId,
+                    x = node.x,
+                    y = node.y
+                });
+            }
+
+            foreach(var relationship in createComponentsAndRelationsDto.relationships)
+            {
+                relationships.Add(new CreateComponentsAndRelationsRequestDto_Relationship
+                {
+                    name = relationship.name,
+                    displayName = relationship.displayName,
+                    relationshipTypeId = relationship.relationshipTypeId,
+                    source = new CreateComponentsAndRelationsRequestDto_Source
+                    {
+                        name = relationship.sourceName
+                    },
+                    target = new CreateComponentsAndRelationsRequestDto_Target
+                    {
+                        name = relationship.targetName
+                    }
+                });
+            }
+
+            var data = new CreateComponentsAndRelationsRequestDto
+            {
+                groups = new object[0],
+                nodes = nodes.ToArray(),
+                relationships = relationships.ToArray()
+            };
+
+            return SendSmaxHcm<CreateComponentsAndRelationsResponseDto>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.CreateComponentsAndRelations, SmaxHcmOptions.TenantId, versionId), data, false, true);
         }
 
         public Task<ApplyComponentTemplateToComponentResponseDto> ApplyComponentTemplateToComponent(ApplyComponentTemplateToComponentDto applyComponentTemplateToComponentDto)

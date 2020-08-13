@@ -42,7 +42,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         Task<PublishDesignResponseDto> PublishDesignVersion(string versionId);
         Task<GetServiceDesignerMetamodelResponseDto> GetServiceDesignerMetamodel(string versionId);
         Task<GetComponentTemplatesFromComponentTypeResponseDto> GetComponentTemplatesFromComponentType(string componentTypeId);
-        Task<CreateComponentsAndRelationsResponseDto> CreateComponentsAndRelations(string versionId, CreateComponentsAndRelationsRequestDto request);
+        Task<CreateComponentsAndRelationsResponseDto> CreateComponentsAndRelations(string versionId, CreateComponentsAndRelationsDto createComponentsAndRelationsDto);
         Task<ApplyComponentTemplateToComponentResponseDto> ApplyComponentTemplateToComponent(ApplyComponentTemplateToComponentDto applyComponentTemplateToComponentDto);
         Task<GetComponentsResponseDto> GetComponentsFromServiceDesigner(string versionId);
         Task<GetPropertiesFromComponentResponseDto> GetPropertiesFromComponent(string versionId, string componentId);
