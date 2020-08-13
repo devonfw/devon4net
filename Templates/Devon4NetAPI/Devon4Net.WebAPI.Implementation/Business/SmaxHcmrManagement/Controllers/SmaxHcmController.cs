@@ -4,6 +4,7 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignContainer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignVersion;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.CreateComponentsAndRelations;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest;
@@ -353,6 +354,25 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         {
             Devon4NetLogger.Debug("Executing GetComponentTemplatesFromComponentType from controller SmaxHcm");
             return Ok(await SmaxHcmHandler.GetComponentTemplatesFromComponentType(componentTypeId));
+        }
+
+        /// <summary>
+        /// Sample: {"nodes":[{"name":"Test server group","displayName":"Test server group","description":"This is a test server group description.","icon":"/903361753/dnd/api/blobstore/server_group.png?tag=library","orderIndex":1,"typeId":"8a809efe73146dd30173146df8d50043","tags":["CONSUMER_VISIBLE"],"x":11,"y":80,"statusMessages":[]},{"name":"Test node","displayName":"Test node","description":"This is a test node description.","icon":"/903361753/dnd/api/blobstore/amazon_ec2.png?tag=library","orderIndex":1,"typeId":"8a809efe73146dd30173146df248002e","tags":["CONSUMER_VISIBLE"],"x":511,"y":80,"statusMessages":[]}],"relationships":[{"name":"Test relationship","displayName":"Test relation","relationshipTypeId":"8a809efe73146dd30173146f211d02e3","source":{"name":"Test server group"},"target":{"name":"Test node"}}],"groups":[]}
+        /// </summary>
+        /// <param name="versionId"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/createComponentsAndRelations")]
+        [ProducesResponseType(typeof(CreateComponentsAndRelationsResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateComponentsAndRelations(string versionId, CreateComponentsAndRelationsRequestDto request)
+        {
+            Devon4NetLogger.Debug("Executing CreateComponentsAndRelations from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.CreateComponentsAndRelations(versionId, request));
         }
     }
 }

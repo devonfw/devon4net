@@ -656,6 +656,14 @@
             <param name="createDesignVersionDto"></param>
             <returns></returns>
         </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.CreateComponentsAndRelations(System.String,Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.CreateComponentsAndRelations.CreateComponentsAndRelationsRequestDto)">
+            <summary>
+            Sample: {"nodes":[{"name":"Test server group","displayName":"Test server group","description":"This is a test server group description.","icon":"/903361753/dnd/api/blobstore/server_group.png?tag=library","orderIndex":1,"typeId":"8a809efe73146dd30173146df8d50043","tags":["CONSUMER_VISIBLE"],"x":11,"y":80,"statusMessages":[]},{"name":"Test node","displayName":"Test node","description":"This is a test node description.","icon":"/903361753/dnd/api/blobstore/amazon_ec2.png?tag=library","orderIndex":1,"typeId":"8a809efe73146dd30173146df248002e","tags":["CONSUMER_VISIBLE"],"x":511,"y":80,"statusMessages":[]}],"relationships":[{"name":"Test relationship","displayName":"Test relation","relationshipTypeId":"8a809efe73146dd30173146f211d02e3","source":{"name":"Test server group"},"target":{"name":"Test node"}}],"groups":[]}
+            </summary>
+            <param name="versionId"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="T:Devon4Net.WebAPI.Implementation.Business.TodoManagement.Controllers.TodoController">
             <summary>
             TODOs controller
