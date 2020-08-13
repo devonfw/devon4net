@@ -9,4 +9,8 @@
     <ProjectReference Include="..\Devon4Net.Infrastructure.Log\src\Devon4Net.Infrastructure.Log.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dto\Designer\ServiceDesigner\GetPropertiesFromNode\" />
+  </ItemGroup>
+
 </Project>

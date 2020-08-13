@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.GetNodeProperties
+namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner
 {
     public class GetComponentsResponseDto
     {

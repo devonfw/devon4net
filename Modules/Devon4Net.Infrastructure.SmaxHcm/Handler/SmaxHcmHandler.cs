@@ -14,7 +14,6 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.GetDesignTags;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.ApplyComponentTemplateToComponent;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.CreateComponentsAndRelations;
-using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.GetNodeProperties;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Login;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
