@@ -6,6 +6,7 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.GetDesignTags;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.ApplyComponentTemplateToComponent;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.CreateComponentsAndRelations;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdateComponent;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdatePropertyFromComponent;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
@@ -47,5 +48,6 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         Task<GetComponentsResponseDto> GetComponentsFromServiceDesigner(string versionId);
         Task<GetPropertiesFromComponentResponseDto> GetPropertiesFromComponent(string versionId, string componentId);
         Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(UpdatePropertyFromComponentDto updatePropertyFromComponentDto);
+        Task UpdateComponent(UpdateComponentDto updateComponentDto);
     }
 }

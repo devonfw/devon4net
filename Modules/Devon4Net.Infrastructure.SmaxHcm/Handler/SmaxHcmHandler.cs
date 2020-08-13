@@ -14,6 +14,7 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.GetDesignTags;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.ApplyComponentTemplateToComponent;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.CreateComponentsAndRelations;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdateComponent;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdatePropertyFromComponent;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Login;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
@@ -191,6 +192,23 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             };
 
             return SendSmaxHcm<CreateComponentsAndRelationsResponseDto>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.CreateComponentsAndRelations, SmaxHcmOptions.TenantId, versionId), data, false, true);
+        }
+
+        public Task UpdateComponent(UpdateComponentDto updateComponentDto)
+        {
+            var data = new UpdateComponentRequestDto
+            {
+                global_id = updateComponentDto.component_id,
+                name = updateComponentDto.name,
+                displayName = updateComponentDto.displayName,
+                description = updateComponentDto.description,
+                icon = updateComponentDto.icon,
+                processingOrder = updateComponentDto.processingOrder,
+                isConsumerVisible = updateComponentDto.isConsumerVisible,
+                isPattern = updateComponentDto.isPattern
+            };
+
+            return SendSmaxHcm<object>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.UpdateComponent, SmaxHcmOptions.TenantId, updateComponentDto.component_id), data, false, true);
         }
 
         public Task<ApplyComponentTemplateToComponentResponseDto> ApplyComponentTemplateToComponent(ApplyComponentTemplateToComponentDto applyComponentTemplateToComponentDto)

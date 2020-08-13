@@ -6,6 +6,7 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignVersion;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.ApplyComponentTemplateToComponent;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.CreateComponentsAndRelations;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdateComponent;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdatePropertyFromComponent;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
@@ -375,6 +376,20 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         {
             Devon4NetLogger.Debug("Executing CreateComponentsAndRelations from controller SmaxHcm");
             return Ok(await SmaxHcmHandler.CreateComponentsAndRelations(versionId, createComponentsAndRelationsDto));
+        }
+
+        [HttpPut]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/updateComponent")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateComponent(UpdateComponentDto updateComponentDto)
+        {
+            Devon4NetLogger.Debug("Executing UpdateComponent from controller SmaxHcm");
+            await SmaxHcmHandler.UpdateComponent(updateComponentDto);
+            return Ok();
         }
 
         [HttpPut]
