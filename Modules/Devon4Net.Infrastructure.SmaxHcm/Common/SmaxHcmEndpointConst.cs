@@ -37,6 +37,7 @@
         public const string GetComponentTemplatesFromComponentType = "/{0}/dnd/api/node/type/{1}/template"; // tenantId, componentTypeId
         public const string CreateComponentsAndRelations = "/{0}/dnd/api/designs/graph/{1}"; // tenantId, versionId
         public const string ApplyComponentTemplateToComponent = "/{0}/dnd/api/designs/graph/{1}/component/{2}/applytemplate"; // tenantId, versionId, componentId
+        public const string GetComponentsFromServiceDesigner = "/{0}/dnd/api/designs/graph/{1}"; // tenantId, versionId
         #endregion
 
         #region Catalog
