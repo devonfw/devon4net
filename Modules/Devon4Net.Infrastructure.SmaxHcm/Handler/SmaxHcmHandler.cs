@@ -12,6 +12,7 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignContainer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignVersion;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.GetDesignTags;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.ApplyComponentTemplateToComponent;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.CreateComponentsAndRelations;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Login;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
@@ -141,6 +142,16 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         public Task<CreateComponentsAndRelationsResponseDto> CreateComponentsAndRelations(string versionId, CreateComponentsAndRelationsRequestDto request)
         {
             return SendSmaxHcm<CreateComponentsAndRelationsResponseDto>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.CreateComponentsAndRelations, SmaxHcmOptions.TenantId, versionId), request, false, true);
+        }
+
+        public Task<ApplyComponentTemplateToComponentResponseDto> ApplyComponentTemplateToComponent(ApplyComponentTemplateToComponentDto applyComponentTemplateToComponentDto)
+        {
+            var data = new ApplyComponentTemplateToComponentRequestDto
+            {
+                componentTemplateId = applyComponentTemplateToComponentDto.componentTemplateId
+            };
+
+            return SendSmaxHcm<ApplyComponentTemplateToComponentResponseDto>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.ApplyComponentTemplateToComponent, SmaxHcmOptions.TenantId, applyComponentTemplateToComponentDto.versionId, applyComponentTemplateToComponentDto.componentId), data, false, true);
         }
 
         #endregion

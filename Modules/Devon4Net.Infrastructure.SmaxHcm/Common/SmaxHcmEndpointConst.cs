@@ -36,6 +36,7 @@
         public const string GetServiceDesignerMetamodel = "{0}/dnd/api/designs/design/{1}/metamodel"; // tenantId, versionId
         public const string GetComponentTemplatesFromComponentType = "/{0}/dnd/api/node/type/{1}/template"; // tenantId, componentTypeId
         public const string CreateComponentsAndRelations = "/{0}/dnd/api/designs/graph/{1}"; // tenantId, versionId
+        public const string ApplyComponentTemplateToComponent = "/{0}/dnd/api/designs/graph/{1}/component/{2}/applytemplate"; // tenantId, versionId, componentId
         #endregion
 
         #region Catalog
