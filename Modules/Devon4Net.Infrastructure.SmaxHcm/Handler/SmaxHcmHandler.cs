@@ -14,6 +14,7 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.GetDesignTags;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.ApplyComponentTemplateToComponent;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.CreateComponentsAndRelations;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdatePropertyFromComponent;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Login;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
@@ -162,6 +163,50 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         public Task<GetPropertiesFromComponentResponseDto> GetPropertiesFromComponent(string versionId, string componentId)
         {
             return SendSmaxHcm<GetPropertiesFromComponentResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetPropertiesFromComponent, SmaxHcmOptions.TenantId, versionId, componentId), null, false, true);
+        }
+
+        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(UpdatePropertyFromComponentDto updatePropertyFromComponentDto)
+        {
+            object property_value;
+            switch (updatePropertyFromComponentDto.valueType)
+            {
+                case ComponentPropertyTypesConst.NUMBER:
+                    property_value = updatePropertyFromComponentDto.valueNumber;
+                    break;
+                case ComponentPropertyTypesConst.STRING:
+                    property_value = updatePropertyFromComponentDto.valueString;
+                    break;
+                case ComponentPropertyTypesConst.BOOLEAN:
+                    property_value = updatePropertyFromComponentDto.valueBoolean;
+                    break;
+                case ComponentPropertyTypesConst.LIST:
+                    var property_list = new List<PropertyListTypeRequest>();
+                    
+                    foreach(var item in updatePropertyFromComponentDto.valueList)
+                    {
+                        property_list.Add(new PropertyListTypeRequest
+                        {
+                            name = item.name,
+                            description = item.description,
+                            value_type = ComponentPropertyTypesConst.STRING.ToString(),
+                            value = item.value
+                        });
+                    }
+
+                    property_value = property_list;
+
+                    break;
+                default:
+                    throw new ArgumentException("The valueType is not valid", nameof(updatePropertyFromComponentDto.valueType));
+            }
+
+            var data = new UpdatePropertyFromComponentRequestDto
+            {
+                property_type = updatePropertyFromComponentDto.valueType.ToString(),
+                property_value = property_value
+            };
+
+            return SendSmaxHcm<UpdatePropertyFromComponentResponseDto>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.UpdatePropertyFromComponent, SmaxHcmOptions.TenantId, updatePropertyFromComponentDto.propertyId), data, false, true);
         }
 
         #endregion
