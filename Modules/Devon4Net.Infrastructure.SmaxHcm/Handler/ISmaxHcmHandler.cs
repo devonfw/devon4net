@@ -38,5 +38,6 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         Task DeleteDesignVersion(string versionId);
         Task<PublishDesignResponseDto> PublishDesignVersion(string versionId);
         Task<GetServiceDesignerMetamodelResponseDto> GetServiceDesignerMetamodel(string versionId);
+        Task<GetComponentTemplatesFromComponentTypeResponseDto> GetComponentTemplatesFromComponentType(string componentTypeId);
     }
 }

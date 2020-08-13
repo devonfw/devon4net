@@ -132,6 +132,11 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<GetServiceDesignerMetamodelResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetServiceDesignerMetamodel, SmaxHcmOptions.TenantId, versionId), null, false, true);
         }
 
+        public Task<GetComponentTemplatesFromComponentTypeResponseDto> GetComponentTemplatesFromComponentType(string componentTypeId)
+        {
+            return SendSmaxHcm<GetComponentTemplatesFromComponentTypeResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetComponentTemplatesFromComponentType, SmaxHcmOptions.TenantId, componentTypeId), null, false, true);
+        }
+
         #endregion
 
         #region Tenants

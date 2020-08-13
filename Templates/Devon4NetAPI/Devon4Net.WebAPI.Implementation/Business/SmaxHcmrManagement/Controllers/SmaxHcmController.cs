@@ -336,10 +336,23 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetServiceDesignerMetamodelResponse(string versionId)
+        public async Task<IActionResult> GetServiceDesignerMetamodel(string versionId)
         {
-            Devon4NetLogger.Debug("Executing GetServiceDesignerMetamodelResponse from controller SmaxHcm");
+            Devon4NetLogger.Debug("Executing GetServiceDesignerMetamodel from controller SmaxHcm");
             return Ok(await SmaxHcmHandler.GetServiceDesignerMetamodel(versionId));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/getComponentTemplateForComponentType")]
+        [ProducesResponseType(typeof(GetComponentTemplatesFromComponentTypeResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetComponentTemplatesFromComponentType(string componentTypeId)
+        {
+            Devon4NetLogger.Debug("Executing GetComponentTemplatesFromComponentType from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.GetComponentTemplatesFromComponentType(componentTypeId));
         }
     }
 }
