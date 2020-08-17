@@ -19,8 +19,8 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdateProper
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Login;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Request;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest;
-using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.GetRequest;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Tenants;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Users;
 using Devon4Net.Infrastructure.SmaxHcm.Exceptions;
@@ -483,9 +483,9 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
         #region Request
 
-        public Task<GetAllRequestDto> GetAllRequest()
+        public Task<GetAllRequestsResponseDto> GetAllRequest()
         {
-            return SendSmaxHcm<GetAllRequestDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetAllRequest, SmaxHcmOptions.TenantId));
+            return SendSmaxHcm<GetAllRequestsResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetAllRequest, SmaxHcmOptions.TenantId));
         }
 
         /// <summary>

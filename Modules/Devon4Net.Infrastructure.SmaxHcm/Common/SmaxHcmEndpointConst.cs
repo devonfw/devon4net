@@ -51,7 +51,7 @@
         #endregion
 
         #region Request
-        public const string GetAllRequest= "/rest/{0}/ems/Request?filter=(RequestType+%3D+%27ServiceRequest%27+and+RegisteredForActualService+%3D+null)&layout=Id,DisplayLabel,Priority,SLT.TargetDate,RequestedForPerson,ChatStatus,CurrentAssignment,AssignedToGroup,AssignedToPerson,PhaseId,ProcessId,SLT.SLATargetDate,SLT.OLATargetDate,RequestedForPerson.Name,RequestedForPerson.Avatar,RequestedForPerson.Location,RequestedForPerson.IsVIP,RequestedForPerson.OrganizationalGroup,RequestedForPerson.Upn,RequestedForPerson.IsDeleted,AssignedToGroup.Name,AssignedToGroup.IsDeleted,AssignedToPerson.Name,AssignedToPerson.Avatar,AssignedToPerson.Location,AssignedToPerson.IsVIP,AssignedToPerson.OrganizationalGroup,AssignedToPerson.Upn,AssignedToPerson.IsDeleted&meta=totalCount&size=250&skip=0"; // tenantId
+        public const string GetAllRequest= "/rest/{0}/ess/request/allRequestsWithBundles"; // tenantId
         public const string CreateRequest = "/rest/{0}/ems/bulk"; // tenantId
         #endregion
 

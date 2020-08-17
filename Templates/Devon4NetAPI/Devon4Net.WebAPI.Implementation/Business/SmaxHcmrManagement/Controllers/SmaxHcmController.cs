@@ -10,8 +10,8 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdateCompon
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdatePropertyFromComponent;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Request;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest;
-using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.GetRequest;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Tenants;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Users;
 using Devon4Net.Infrastructure.SMAXHCM.Handler;
@@ -201,7 +201,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [HttpGet]
         [AllowAnonymous]
         [Route("/v1/smaxhcm/request")]
-        [ProducesResponseType(typeof(GetAllRequestDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetAllRequestsResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
