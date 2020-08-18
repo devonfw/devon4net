@@ -389,6 +389,27 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<ActivateOfferingResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.ActivateOffering, SmaxHcmOptions.TenantId), request);
         }
 
+        public Task<DeactivateOfferingResponse> DeactivateOffering(DeactivateOfferingDto deactivateOfferingDto)
+        {
+            var data = new DeactivateOfferingEntity
+            {
+                entity_type = BulkEntityConst.Offering,
+                properties = new Properties()
+                {
+                    Id = deactivateOfferingDto.offeringId,
+                    Status = OfferingStatusConst.Inactive
+                }
+            };
+
+            var request = new DeactivateOfferingRequest()
+            {
+                entities = new List<DeactivateOfferingEntity> { data },
+                operation = BulkOperationConst.Update
+            };
+
+            return SendSmaxHcm<DeactivateOfferingResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.DeactivateOffering, SmaxHcmOptions.TenantId), request);
+        }
+
         #endregion
 
         #region Providers

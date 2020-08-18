@@ -48,6 +48,7 @@
         public const string GetServiceDefinitions = "/rest/{0}/ems/ServiceDefinition?&layout=Id,DisplayLabel,Category,Subtype,PhaseId,Category.DisplayLabel,Category.IsDeleted,Subtype&meta=totalCount&size=250&skip=0"; // tenantId
         public const string CreateNewOffering = "/rest/{0}/cloud-service/createOffering";
         public const string ActivateOffering = "/rest/{0}/ems/bulk"; // tenantId
+        public const string DeactivateOffering = "/rest/{0}/ems/bulk"; // tenantId
         #endregion
 
         #region Request
