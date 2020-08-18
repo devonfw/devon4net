@@ -30,8 +30,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         Task<object> GetCatalogProviders(string category, bool includeArticles, bool includeOfferings, string query);
         Task<GetOfferingsResponseDto> GetServiceDefinitions();
         Task<object> UpdateOffering(UpdateOfferingDto updateOfferingDto);
-        Task<ActivateOfferingResponse> ActivateOffering(ActivateOfferingDto activateOfferingDto);
-        Task<DeactivateOfferingResponse> DeactivateOffering(DeactivateOfferingDto desactivateOfferingDto);
+        Task<SwitchActivationOfferingResponse> SwitchActivationOffering(string offeringId, bool activate = true);
         Task<GetAllRequestsResponseDto> GetAllRequest();
         Task<CreateRequestResponse> CreateRequest(CreateRequestPropertiesDto createNewRequestDto);
         Task<CreateOfferingResponseDto> CreateOffering(CreateOfferingRequestDto createOfferingRequestDto);

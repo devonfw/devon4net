@@ -205,28 +205,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
 
         [HttpPost]
         [AllowAnonymous]
-        [Route("/v1/smaxhcm/activateOffering")]
-        public async Task<IActionResult> ActivateOffering(string offeringId)
+        [Route("/v1/smaxhcm/switchActivationOffering")]
+        public async Task<IActionResult> SwitchActivationOffering(string offeringId, bool activate)
         {
-            var activateOfferingDto = new ActivateOfferingDto
-            {
-                offeringId = offeringId
-            };
-
-            return Ok(await SmaxHcmHandler.ActivateOffering(activateOfferingDto));
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [Route("/v1/smaxhcm/deactivateOffering")]
-        public async Task<IActionResult> DeactivateOffering(string offeringId)
-        {
-            var deactivateOfferingDto = new DeactivateOfferingDto
-            {
-                offeringId = offeringId
-            };
-
-            return Ok(await SmaxHcmHandler.DeactivateOffering(deactivateOfferingDto));
+            return Ok(await SmaxHcmHandler.SwitchActivationOffering(offeringId, activate));
         }
 
         [HttpGet]

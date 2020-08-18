@@ -25,7 +25,6 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Tenants;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Users;
 using Devon4Net.Infrastructure.SmaxHcm.Exceptions;
 using Microsoft.Extensions.Options;
-using Properties = Devon4Net.Infrastructure.SmaxHcm.Dto.Offering.Properties;
 
 namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 {
@@ -368,46 +367,26 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<Object>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateNewOffering, SmaxHcmOptions.TenantId), data);
         }
 
-        public Task<ActivateOfferingResponse> ActivateOffering(ActivateOfferingDto activateOfferingDto)
+        public Task<SwitchActivationOfferingResponse> SwitchActivationOffering(string offeringId, bool activate = true)
         {
-            var data = new ActivateOfferingEntity
+            var data = new SwitchActivationOfferingRequest
             {
-                entity_type = BulkEntityConst.Offering,
-                properties = new Properties()
+                entities = new List<SwitchActivationOfferingRequest_Entity>
                 {
-                    Id = activateOfferingDto.offeringId,
-                    Status = OfferingStatusConst.Active
-                }
-            };
-
-            var request = new ActivateOfferingRequest()
-            {
-                entities = new List<ActivateOfferingEntity> { data },
+                    new SwitchActivationOfferingRequest_Entity
+                    {
+                        entity_type = BulkEntityConst.Offering,
+                        properties = new SwitchActivationOfferingRequest_Properties()
+                        {
+                            Id = offeringId,
+                            Status = activate ? OfferingStatusConst.Active : OfferingStatusConst.Inactive
+                        }
+                    }
+                },
                 operation = BulkOperationConst.Update
             };
 
-            return SendSmaxHcm<ActivateOfferingResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.ActivateOffering, SmaxHcmOptions.TenantId), request);
-        }
-
-        public Task<DeactivateOfferingResponse> DeactivateOffering(DeactivateOfferingDto deactivateOfferingDto)
-        {
-            var data = new DeactivateOfferingEntity
-            {
-                entity_type = BulkEntityConst.Offering,
-                properties = new Properties()
-                {
-                    Id = deactivateOfferingDto.offeringId,
-                    Status = OfferingStatusConst.Inactive
-                }
-            };
-
-            var request = new DeactivateOfferingRequest()
-            {
-                entities = new List<DeactivateOfferingEntity> { data },
-                operation = BulkOperationConst.Update
-            };
-
-            return SendSmaxHcm<DeactivateOfferingResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.DeactivateOffering, SmaxHcmOptions.TenantId), request);
+            return SendSmaxHcm<SwitchActivationOfferingResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.SwitchActivationOffering, SmaxHcmOptions.TenantId), data);
         }
 
         #endregion
