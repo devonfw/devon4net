@@ -338,6 +338,16 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<CreateOfferingResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateOffering, SmaxHcmOptions.TenantId), request);
         }
 
+        public Task<AddAgregatedOfferingResponseDto> AddAggregatedOffering(AddAgregatedOfferingRequestDto addAgregatedOfferingRequestDto)
+        {
+            if (addAgregatedOfferingRequestDto == null || string.IsNullOrEmpty(addAgregatedOfferingRequestDto.offeringId) || string.IsNullOrEmpty(addAgregatedOfferingRequestDto.offeringDisplayName))
+            {
+                throw new ArgumentException("The offeringId or the display name can not be null");
+            }
+
+            return SendSmaxHcm<AddAgregatedOfferingResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.AddAgregatedOffering, SmaxHcmOptions.TenantId), addAgregatedOfferingRequestDto);
+        }
+
         public Task<object> UpdateOffering(UpdateOfferingDto updateOfferingDto)
         {
 

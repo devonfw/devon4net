@@ -49,5 +49,6 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         Task<GetPropertiesFromComponentResponseDto> GetPropertiesFromComponent(string versionId, string componentId);
         Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(UpdatePropertyFromComponentDto updatePropertyFromComponentDto);
         Task UpdateComponent(UpdateComponentDto updateComponentDto);
+        Task<AddAgregatedOfferingResponseDto> AddAggregatedOffering(AddAgregatedOfferingRequestDto addAgregatedOfferingRequestDto);
     }
 }

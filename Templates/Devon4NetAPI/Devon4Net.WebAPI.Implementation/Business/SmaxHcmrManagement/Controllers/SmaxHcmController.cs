@@ -176,6 +176,24 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
             return Ok(await SmaxHcmHandler.CreateOffering(createNewRequestDto));
         }
 
+        /// <summary>
+        /// sample: {"providerId":"11526","offeringId":"d18ae624-d68c-4dd5-b0f6-53c8cba1cb38","service":"12736","offeringDisplayName":"Capgemini Test Design"}
+        /// </summary>
+        /// <param name="createNewRequestDto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/addagregatedoffering")]
+        [ProducesResponseType(typeof(CreateOfferingResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> AddAgregatedOffering(AddAgregatedOfferingRequestDto addAgregatedOfferingRequestDto)
+        {
+            Devon4NetLogger.Debug("Executing CreateOffering from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.AddAggregatedOffering(addAgregatedOfferingRequestDto));
+        }
+
         [HttpPost]
         [AllowAnonymous]
         [Route("/v1/smaxhcm/updateoffering")]
