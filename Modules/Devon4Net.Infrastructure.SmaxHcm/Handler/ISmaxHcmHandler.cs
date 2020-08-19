@@ -48,14 +48,12 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         Task<ApplyComponentTemplateToComponentResponseDto> ApplyComponentTemplateToComponent(ApplyComponentTemplateToComponentDto applyComponentTemplateToComponentDto);
         Task<GetComponentsResponseDto> GetComponentsFromServiceDesigner(string versionId);
         Task<GetPropertiesFromComponentResponseDto> GetPropertiesFromComponent(string versionId, string componentId);
-        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, string value);
-
-        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, int value);
-
-        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, bool value);
-
-        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, List<UpdateListPropertyFromComponentDto> value);
+        Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, string value);
+        Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, int value);
+        Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, bool value);
+        Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, List<UpdateListPropertyFromComponentDto> value);
         Task UpdateComponent(UpdateComponentDto updateComponentDto);
         Task<AddAgregatedOfferingResponseDto> AddAggregatedOffering(AddAgregatedOfferingRequestDto addAgregatedOfferingRequestDto);
+        Task<GetOfferingProvidersResponseDto> GetOfferingProviders(string searchText = null, string[] tags = null);
     }
 }

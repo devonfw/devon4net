@@ -114,6 +114,15 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
             return Ok(await SmaxHcmHandler.GetOffering(offeringId));
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/getOfferingProviders")]
+        public async Task<IActionResult> GetOfferingProviders(string searchText, string[] tags)
+        {
+            Devon4NetLogger.Debug("Executing GetOfferingProviders from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.GetOfferingProviders(searchText, tags));
+        }
+
 
         [HttpGet]
         [AllowAnonymous]

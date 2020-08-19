@@ -337,6 +337,18 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<CreateOfferingResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateOffering, SmaxHcmOptions.TenantId), request);
         }
 
+        public Task<GetOfferingProvidersResponseDto> GetOfferingProviders(string searchText = null, string[] tags = null)
+        {
+            var data = new GetOfferingProvidersRequestDto
+            {
+                providerId = SmaxHcmOptions.ProviderId,
+                tags = tags,
+                text = searchText
+            };
+
+            return SendSmaxHcm<GetOfferingProvidersResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.GetOfferingProviders, SmaxHcmOptions.TenantId), data, false, true);
+        }
+
         public Task<AddAgregatedOfferingResponseDto> AddAggregatedOffering(AddAgregatedOfferingRequestDto addAgregatedOfferingRequestDto)
         {
             if (addAgregatedOfferingRequestDto == null || string.IsNullOrEmpty(addAgregatedOfferingRequestDto.offeringId) || string.IsNullOrEmpty(addAgregatedOfferingRequestDto.offeringDisplayName))
