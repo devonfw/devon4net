@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Devon4Net.Infrastructure.Log;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignContainer;
@@ -447,15 +448,54 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
 
         [HttpPost]
         [AllowAnonymous]
-        [Route("/v1/smaxhcm/updatePropertyFromComponent")]
+        [Route("/v1/smaxhcm/updateStringPropertyFromComponent")]
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdatePropertyFromComponent(UpdatePropertyFromComponentDto updatePropertyFromComponentDto)
+        public async Task<IActionResult> UpdateStringPropertyFromComponent(string propertyId, string value)
         {
-            Devon4NetLogger.Debug("Executing UpdatePropertyFromComponent from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.UpdatePropertyFromComponent(updatePropertyFromComponentDto));
+            Devon4NetLogger.Debug("Executing UpdateStringPropertyFromComponent from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.UpdatePropertyFromComponent(propertyId, value));
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/updateNumberPropertyFromComponent")]
+        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateNumberPropertyFromComponent(string propertyId, int value)
+        {
+            Devon4NetLogger.Debug("Executing UpdateNumberPropertyFromComponent from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.UpdatePropertyFromComponent(propertyId, value));
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/updateBoolPropertyFromComponent")]
+        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateBoolPropertyFromComponent(string propertyId, bool value)
+        {
+            Devon4NetLogger.Debug("Executing UpdateBoolPropertyFromComponent from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.UpdatePropertyFromComponent(propertyId, value));
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/updateListPropertyFromComponent")]
+        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateListPropertyFromComponent(string propertyId, List<UpdateListPropertyFromComponentDto> updateListPropertyFromComponentDtos)
+        {
+            Devon4NetLogger.Debug("Executing UpdateListPropertyFromComponent from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.UpdatePropertyFromComponent(propertyId, updateListPropertyFromComponentDtos));
         }
     }
 }

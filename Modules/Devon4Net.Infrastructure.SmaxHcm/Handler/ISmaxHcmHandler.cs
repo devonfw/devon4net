@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignContainer;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignVersion;
@@ -47,7 +48,13 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         Task<ApplyComponentTemplateToComponentResponseDto> ApplyComponentTemplateToComponent(ApplyComponentTemplateToComponentDto applyComponentTemplateToComponentDto);
         Task<GetComponentsResponseDto> GetComponentsFromServiceDesigner(string versionId);
         Task<GetPropertiesFromComponentResponseDto> GetPropertiesFromComponent(string versionId, string componentId);
-        Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(UpdatePropertyFromComponentDto updatePropertyFromComponentDto);
+        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, string value);
+
+        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, int value);
+
+        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, bool value);
+
+        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, List<UpdateListPropertyFromComponentDto> value);
         Task UpdateComponent(UpdateComponentDto updateComponentDto);
         Task<AddAgregatedOfferingResponseDto> AddAggregatedOffering(AddAgregatedOfferingRequestDto addAgregatedOfferingRequestDto);
     }
