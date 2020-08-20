@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Devon4Net.Domain.UnitOfWork.Enums;
+using Devon4Net.Infrastructure.Log;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +22,7 @@ namespace Devon4Net.Domain.UnitOfWork.Common
             SetDatabase<T>(services, databaseType, cosmosConfigurationParams, connectionString);
         }
 
-        public static void SetupDatabase<T>(this IServiceCollection services, IConfiguration configuration, string connectionStringName, DatabaseType databaseType, ServiceLifetime serviceLifetime = ServiceLifetime.Transient, CosmosConfigurationParams cosmosConfigurationParams = null) where T : DbContext 
+        public static void SetupDatabase<T>(this IServiceCollection services, IConfiguration configuration, string connectionStringName, DatabaseType databaseType, ServiceLifetime serviceLifetime = ServiceLifetime.Transient, bool migrate = false, CosmosConfigurationParams cosmosConfigurationParams = null) where T : DbContext 
         {
             var applicationConnectionStrings = configuration.GetSection("ConnectionStrings").GetChildren();
             if (applicationConnectionStrings == null) throw new ArgumentException("There are no connection strings provided.");
@@ -29,6 +30,34 @@ namespace Devon4Net.Domain.UnitOfWork.Common
             if (connectionString == null || string.IsNullOrEmpty(connectionString.Value)) throw new ArgumentException($"The provided connection string ({connectionStringName}) provided does not exists.");
 
             SetDatabase<T>(services, databaseType, cosmosConfigurationParams, connectionString.Value);
+            if (migrate) Migrate<T>(services);
+
+        }
+
+        private static void Migrate<T>(IServiceCollection services) where T : DbContext
+        {
+            try
+            {
+                var sp = services.BuildServiceProvider();
+                if (sp == null)
+                {
+                    Devon4NetLogger.Error($"Unable to build the service provider, the migration {typeof(T).FullName} will not be launched");
+                }
+                else
+                {
+                    var context = sp.GetService(typeof(T));
+                    if (context == null)
+                    {
+                        Devon4NetLogger.Error($"Unable to resolve {typeof(T).FullName} and the migration will not be launched");
+                    }
+
+                    ((T)context)?.Database.Migrate();
+                }
+            }
+            catch (Exception ex)
+            {
+                Devon4NetLogger.Fatal(ex);
+            }
         }
 
         private static void SetDatabase<T>(IServiceCollection services, DatabaseType databaseType,

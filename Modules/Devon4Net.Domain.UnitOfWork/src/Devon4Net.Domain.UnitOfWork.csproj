@@ -47,4 +47,8 @@
       <PackageReference Include="EntityFrameworkCore.FirebirdSQL" Version="2.1.2.2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Devon4Net.Infrastructure.Log\src\Devon4Net.Infrastructure.Log.csproj" />
+    </ItemGroup>
+
 </Project>
