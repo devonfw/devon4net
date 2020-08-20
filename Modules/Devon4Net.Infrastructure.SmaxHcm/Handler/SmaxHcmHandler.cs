@@ -531,7 +531,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
                     Description = createNewRequestDto.Description,
                     DisplayLabel = createNewRequestDto.DisplayLabel,
                     StartDate = GetTotalMillisecondsFromDateTime(createNewRequestDto.StartDate),
-                    EndDate = GetTotalMillisecondsFromDateTime(createNewRequestDto.EndDate),
+                    EndDate = createNewRequestDto.EndDate.HasValue ? GetTotalMillisecondsFromDateTime(createNewRequestDto.EndDate.Value) : null as long?,
                     RequestedByPerson = createNewRequestDto.RequestedByPerson,
                     RequestsOffering = createNewRequestDto.RequestsOffering,
                     ImpactScope = BulkImpactScopeConst.Enterprise,
@@ -554,6 +554,11 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
         private long GetTotalMillisecondsFromDateTime(DateTime dateTime)
         {
+            if (dateTime == null || dateTime == default || dateTime == DateTime.MinValue || dateTime == DateTime.MaxValue)
+            {
+                throw new ArgumentException($"The {nameof(dateTime)} provided can not have the value {dateTime}");
+            }
+
             var offSet = new DateTimeOffset(dateTime);
             return offSet.ToUnixTimeMilliseconds();
         }
