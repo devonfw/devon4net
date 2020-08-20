@@ -650,7 +650,7 @@
         </member>
         <member name="M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.CreateRequest(Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest.CreateRequestPropertiesDto)">
             <summary>
-            sample: { "impactScope": "Enterprise", "urgency": "NoDisruption", "requestedByPerson": "10016", "requestsOffering": "11428", "displayLabel": "Request from .net API", "description": "This is a request created from .NET API", "userOptions": "", "dataDomains": [ "string" ], "startDate": "2020-08-20T07:28:37.890Z", "endDate": "2020-08-20T07:28:37.890Z", "requestAttachments": "{\"complexTypeProperties\":[]}" } 
+            sample: { "impactScope": "Enterprise", "urgency": "NoDisruption", "requestedByPerson": "10016", "requestsOffering": "11428", "displayLabel": "Request from .net API", "description": "This is a request created from .NET API", "userOptions": "", "dataDomains": [ "string" ], "startDate": "2020-08-20T07:28:37.890Z", "endDate": "2020-08-21T07:28:37.890Z", "requestAttachments": "{\"complexTypeProperties\":[]}" } 
             </summary>
             <param name="createNewRequestDto"></param>
             <returns></returns>
