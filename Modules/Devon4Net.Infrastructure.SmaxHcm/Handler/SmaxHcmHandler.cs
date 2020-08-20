@@ -230,48 +230,48 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<GetPropertiesFromComponentResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetPropertiesFromComponent, SmaxHcmOptions.TenantId, versionId, componentId), null, false, true);
         }
 
-        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(UpdatePropertyFromComponentDto updatePropertyFromComponentDto)
+        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, string value)
         {
-            object property_value;
-            switch (updatePropertyFromComponentDto.valueType)
+            return UpdatePropertyFromComponent(propertyId, ComponentPropertyTypesConst.STRING, value);
+        }
+
+        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, int value)
+        {
+            return UpdatePropertyFromComponent(propertyId, ComponentPropertyTypesConst.NUMBER, value);
+        }
+
+        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, bool value)
+        {
+            return UpdatePropertyFromComponent(propertyId, ComponentPropertyTypesConst.BOOLEAN, value);
+        }
+
+        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, List<UpdateListPropertyFromComponentDto> value)
+        {
+            var data = new List<UpdatePropertyListDto>();
+
+            foreach(var property in value)
             {
-                case ComponentPropertyTypesConst.NUMBER:
-                    property_value = updatePropertyFromComponentDto.valueNumber;
-                    break;
-                case ComponentPropertyTypesConst.STRING:
-                    property_value = updatePropertyFromComponentDto.valueString;
-                    break;
-                case ComponentPropertyTypesConst.BOOLEAN:
-                    property_value = updatePropertyFromComponentDto.valueBoolean;
-                    break;
-                case ComponentPropertyTypesConst.LIST:
-                    var property_list = new List<PropertyListTypeRequest>();
-                    
-                    foreach(var item in updatePropertyFromComponentDto.valueList)
-                    {
-                        property_list.Add(new PropertyListTypeRequest
-                        {
-                            name = item.name,
-                            description = item.description,
-                            value_type = ComponentPropertyTypesConst.STRING.ToString(),
-                            value = item.value
-                        });
-                    }
-
-                    property_value = property_list;
-
-                    break;
-                default:
-                    throw new ArgumentException("The valueType is not valid", nameof(updatePropertyFromComponentDto.valueType));
+                data.Add(new UpdatePropertyListDto
+                {
+                    name = property.name,
+                    description = property.description,
+                    value = property.value,
+                    value_type = ComponentPropertyTypesConst.STRING.ToString()
+                });
             }
 
+            return UpdatePropertyFromComponent(propertyId, ComponentPropertyTypesConst.LIST, data);
+        }
+
+        private Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, ComponentPropertyTypesConst propertyType, object value)
+        {
             var data = new UpdatePropertyFromComponentRequestDto
             {
-                property_type = updatePropertyFromComponentDto.valueType.ToString(),
-                property_value = property_value
+                property_type = propertyType.ToString(),
+                property_value = value
             };
 
-            return SendSmaxHcm<UpdatePropertyFromComponentResponseDto>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.UpdatePropertyFromComponent, SmaxHcmOptions.TenantId, updatePropertyFromComponentDto.propertyId), data, false, true);
+            return SendSmaxHcm<UpdatePropertyFromComponentResponseDto>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.UpdatePropertyFromComponent, SmaxHcmOptions.TenantId, propertyId), data, false, true);
         }
 
         #endregion
@@ -335,6 +335,18 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             };
 
             return SendSmaxHcm<CreateOfferingResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateOffering, SmaxHcmOptions.TenantId), request);
+        }
+
+        public Task<GetOfferingProvidersResponseDto> GetOfferingProviders(string searchText = null, string[] tags = null)
+        {
+            var data = new GetOfferingProvidersRequestDto
+            {
+                providerId = SmaxHcmOptions.ProviderId,
+                tags = tags,
+                text = searchText
+            };
+
+            return SendSmaxHcm<GetOfferingProvidersResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.GetOfferingProviders, SmaxHcmOptions.TenantId), data, false, true);
         }
 
         public Task<AddAgregatedOfferingResponseDto> AddAggregatedOffering(AddAgregatedOfferingRequestDto addAgregatedOfferingRequestDto)
