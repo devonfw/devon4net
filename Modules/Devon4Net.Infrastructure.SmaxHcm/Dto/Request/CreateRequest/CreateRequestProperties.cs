@@ -12,8 +12,8 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest
         public string Description { get; set; }
         public string UserOptions { get; set; }
         public List<string> DataDomains { get; set; }
-        public double StartDate { get; set; }
-        public double EndDate { get; set; }
+        public long StartDate { get; set; }
+        public long EndDate { get; set; }
         public string RequestAttachments { get; set; }
     }
 }

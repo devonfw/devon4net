@@ -530,8 +530,8 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
                 {
                     Description = createNewRequestDto.Description,
                     DisplayLabel = createNewRequestDto.DisplayLabel,
-                    StartDate = (new TimeSpan(createNewRequestDto.StartDate.Ticks)).TotalMilliseconds,
-                    EndDate = (new TimeSpan(createNewRequestDto.EndDate.Ticks)).TotalMilliseconds,
+                    StartDate = GetTotalMillisecondsFromDateTime(createNewRequestDto.StartDate),
+                    EndDate = GetTotalMillisecondsFromDateTime(createNewRequestDto.EndDate),
                     RequestedByPerson = createNewRequestDto.RequestedByPerson,
                     RequestsOffering = createNewRequestDto.RequestsOffering,
                     ImpactScope = BulkImpactScopeConst.Enterprise,
@@ -550,6 +550,12 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             };
 
             return SendSmaxHcm<CreateRequestResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateRequest, SmaxHcmOptions.TenantId), request);
+        }
+
+        private long GetTotalMillisecondsFromDateTime(DateTime dateTime)
+        {
+            var offSet = new DateTimeOffset(dateTime);
+            return offSet.ToUnixTimeMilliseconds();
         }
 
         #endregion
