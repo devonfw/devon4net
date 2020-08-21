@@ -349,14 +349,22 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<GetOfferingProvidersResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.GetOfferingProviders, SmaxHcmOptions.TenantId), data, false, true);
         }
 
-        public Task<AddAgregatedOfferingResponseDto> AddAggregatedOffering(AddAgregatedOfferingRequestDto addAgregatedOfferingRequestDto)
+        public Task<AddAgregatedOfferingResponseDto> AddAggregatedOffering(AddAgregatedOfferingDto addAgregatedOfferingDto)
         {
-            if (addAgregatedOfferingRequestDto == null || string.IsNullOrEmpty(addAgregatedOfferingRequestDto.offeringId) || string.IsNullOrEmpty(addAgregatedOfferingRequestDto.offeringDisplayName))
+            if (addAgregatedOfferingDto == null || string.IsNullOrEmpty(addAgregatedOfferingDto.offeringId) || string.IsNullOrEmpty(addAgregatedOfferingDto.offeringDisplayName))
             {
                 throw new ArgumentException("The offeringId or the display name can not be null");
             }
 
-            return SendSmaxHcm<AddAgregatedOfferingResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.AddAgregatedOffering, SmaxHcmOptions.TenantId), addAgregatedOfferingRequestDto);
+            var data = new AddAgregatedOfferingRequestDto
+            {
+                offeringDisplayName = addAgregatedOfferingDto.offeringDisplayName,
+                offeringId = addAgregatedOfferingDto.offeringId,
+                providerId = SmaxHcmOptions.ProviderId,
+                service = addAgregatedOfferingDto.service
+            };
+
+            return SendSmaxHcm<AddAgregatedOfferingResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.AddAgregatedOffering, SmaxHcmOptions.TenantId), data);
         }
 
         public Task<object> UpdateOffering(UpdateOfferingDto updateOfferingDto)
@@ -550,6 +558,11 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             };
 
             return SendSmaxHcm<CreateRequestResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateRequest, SmaxHcmOptions.TenantId), request);
+        }
+
+        public Task<GetUsersByUserNameResponse> GetUsersByUserName(string username)
+        {
+            return SendSmaxHcm<GetUsersByUserNameResponse>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetUsersByName, SmaxHcmOptions.TenantId, username), null, false, true);
         }
 
         private long GetTotalMillisecondsFromDateTime(DateTime dateTime)

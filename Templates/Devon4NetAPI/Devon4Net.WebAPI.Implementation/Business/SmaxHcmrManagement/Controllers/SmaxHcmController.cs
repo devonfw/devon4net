@@ -198,10 +198,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddAgregatedOffering(AddAgregatedOfferingRequestDto addAgregatedOfferingRequestDto)
+        public async Task<IActionResult> AddAgregatedOffering(AddAgregatedOfferingDto addAgregatedOfferingDto)
         {
             Devon4NetLogger.Debug("Executing CreateOffering from controller SmaxHcm");
-            return Ok(await SmaxHcmHandler.AddAggregatedOffering(addAgregatedOfferingRequestDto));
+            return Ok(await SmaxHcmHandler.AddAggregatedOffering(addAgregatedOfferingDto));
         }
 
         [HttpPost]
@@ -250,6 +250,19 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         {
             Devon4NetLogger.Debug("Executing CreateRequest from controller SmaxHcm");
             return Ok(await SmaxHcmHandler.CreateRequest(createNewRequestDto));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/getUsersByName")]
+        [ProducesResponseType(typeof(GetUsersByUserNameResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetUsersByUsername(string username)
+        {
+            Devon4NetLogger.Debug("Executing GetUsersByUsername from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.GetUsersByUserName(username));
         }
 
         [HttpGet]

@@ -641,7 +641,7 @@
             <param name="createNewRequestDto"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.AddAgregatedOffering(Devon4Net.Infrastructure.SmaxHcm.Dto.Offering.AddAgregatedOfferingRequestDto)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.AddAgregatedOffering(Devon4Net.Infrastructure.SmaxHcm.Dto.Offering.AddAgregatedOfferingDto)">
             <summary>
             sample: {"providerId":"11526","offeringId":"d18ae624-d68c-4dd5-b0f6-53c8cba1cb38","service":"12736","offeringDisplayName":"Capgemini Test Design"}
             </summary>

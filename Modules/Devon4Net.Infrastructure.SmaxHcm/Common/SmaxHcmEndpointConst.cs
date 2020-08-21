@@ -20,7 +20,7 @@
         public const string Users = "/bo/rest/entities/user";
         public const string User = "/bo/rest/entities/user/{0}?timeStamp={1}"; //UserId, time stamp
         public const string UserTenants = "/bo/rest/entities/tenant?timeStamp={0}&filter=(user+eq+\"{1}\")";
-        public const string Providers= "/{0}/dnd/api/resource/provider"; //tenant ID
+        public const string Providers = "/{0}/dnd/api/resource/provider"; //tenant ID
 
         #region Design
         public const string GetDesign = "/{0}/dnd/api/service/design/{1}"; //tenantId, designId
@@ -52,8 +52,9 @@
         #endregion
 
         #region Request
-        public const string GetAllRequest= "/rest/{0}/ess/request/allRequestsWithBundles"; // tenantId
+        public const string GetAllRequest = "/rest/{0}/ess/request/allRequestsWithBundles"; // tenantId
         public const string CreateRequest = "/rest/{0}/ems/bulk"; // tenantId
+        public const string GetUsersByName = "/rest/{0}/ems/Person?filter=((IsSystemIntegration != 'true' and IsSystem != 'true') and Upn startswith ('{1}'))&layout=Id,Name,Upn"; // tenantId, username
         #endregion
 
         #region Offering
