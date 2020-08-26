@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Devon4Net.Application.WebAPI.Configuration.Application;
+using Devon4Net.Application.WebAPI.Configuration.Common;
 using Devon4Net.Domain.UnitOfWork;
 using Microsoft.AspNetCore.Builder;
 
@@ -9,8 +10,6 @@ namespace Devon4Net.Application.WebAPI.Configuration
 {
     public static class Configuration
     {
-        private const string DevonfwAppSettingsNodeName = "devonfw";
-
         public static void ConfigureDevonFw(this IServiceCollection services, IConfiguration configuration)
         {
             services.SetupDevonfw(ref configuration);
@@ -36,7 +35,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
 
         private static void SetupSwagger(ref IServiceCollection services, ref IConfiguration configuration)
         {
-            bool.TryParse(configuration[$"{DevonfwAppSettingsNodeName}:UseSwagger"], out bool useSwagger);
+            bool.TryParse(configuration[$"{DevonFwConst.DevonFwAppSettingsNodeName}:UseSwagger"], out var useSwagger);
             if (useSwagger) services.SetupSwagger(ref configuration);
         }
     }
