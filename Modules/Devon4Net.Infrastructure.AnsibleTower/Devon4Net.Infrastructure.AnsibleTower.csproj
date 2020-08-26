@@ -27,7 +27,7 @@
     <NoWarn>1591,1572,1571,1573,1587,1570,1701,1702,8034,1705,NU1605,NU1608,NU1701,CS1705</NoWarn>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <DocumentationFile>Devon4Net.WebAPI.Implementation.xml</DocumentationFile>
+    <DocumentationFile>Devon4Net.Infrastructure.AnsibleTower.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -40,12 +40,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Devon4Net.Infrastructure.CircuitBreaker\src\Devon4Net.Infrastructure.CircuitBreaker.csproj" />
     <ProjectReference Include="..\Devon4Net.Infrastructure.Log\src\Devon4Net.Infrastructure.Log.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Devon4Net.Infrastructure.AnsibleTower.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

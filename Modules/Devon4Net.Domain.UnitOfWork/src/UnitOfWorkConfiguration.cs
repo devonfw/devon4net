@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Devon4Net.Domain.UnitOfWork
 {
-    public static class Configure
+    public static class UnitOfWorkConfiguration
     {
         public static void SetupUnitOfWork(this IServiceCollection services)
         {
