@@ -6,8 +6,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Devon4Net.Infrastructure.CircuitBreaker.Common;
 using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
-using Devon4Net.Infrastructure.Common.Common;
 using Devon4Net.Infrastructure.Common.Exceptions;
 using Devon4Net.Infrastructure.Log;
 
@@ -268,7 +268,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
             if (string.IsNullOrEmpty(baseAddress))
             {
-                throw new ArgumentException("The base address to perform the circuitbreaker call can not be null or empty");
+                throw new ArgumentException("The base address to perform the circuit breaker call can not be null or empty");
             }
 
             if (baseAddress.EndsWith("/") && endPoint.StartsWith("/"))

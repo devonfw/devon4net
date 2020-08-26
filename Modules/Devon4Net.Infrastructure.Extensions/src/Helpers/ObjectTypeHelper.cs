@@ -3,7 +3,6 @@
 namespace Devon4Net.Infrastructure.Extensions.Helpers
 {
     public class ObjectTypeHelper : IObjectTypeHelper
-
     {
         public object CovertObjectFromClassName(object objectInstance, string fullClassName)
         {

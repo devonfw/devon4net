@@ -1,11 +1,27 @@
-﻿using Devon4Net.Infrastructure.Common.Options.Cors;
+﻿using Devon4Net.Infrastructure.Common.Options;
+using Devon4Net.Infrastructure.Common.Options.Cors;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Devon4Net.Application.WebAPI.Configuration
 {
     public static class CorsConfiguration
     {
-        public static void SetCorsAnyOriginAllowed(this IServiceCollection services)
+        public static void SetupCors(this IServiceCollection services, ref IConfiguration configuration)
+        {
+            var CorsOptions = services.GetTypedOptions<CorsOptions>(configuration, "devonfw");
+
+            if (CorsOptions?.Origins == null)
+            {
+                SetCorsAnyOriginAllowed(ref services);
+            }
+            else
+            {
+                SetupCorsOrigins(ref services, ref configuration);
+            }
+        }
+
+        private static void SetCorsAnyOriginAllowed(ref IServiceCollection services)
         {
             ////enables CORS and httpoptions
             services.AddCors(options =>
@@ -24,11 +40,13 @@ namespace Devon4Net.Application.WebAPI.Configuration
         /// </summary>
         /// <param name="services"></param>
         /// <param name="corsOptions"></param>
-        public static void SetupCorsOrigins(this IServiceCollection services, CorsOptions corsOptions)
+        private static void SetupCorsOrigins(ref IServiceCollection services, ref IConfiguration configuration)
         {
+            var corsOptions = services.GetTypedOptions<CorsOptions>(configuration, "Cors");
+
             if (corsOptions == null)
             {
-                SetCorsAnyOriginAllowed(services);
+                SetCorsAnyOriginAllowed(ref services);
             }
             else
             {

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Security;
 using Devon4Net.Infrastructure.Common;
+using Devon4Net.Infrastructure.Common.Options;
 using Devon4Net.Infrastructure.Common.Options.RabbitMq;
 using Devon4Net.Infrastructure.LiteDb.LiteDb;
 using Devon4Net.Infrastructure.LiteDb.Repository;
@@ -12,6 +13,7 @@ using Devon4Net.Infrastructure.RabbitMQ.Domain.Database;
 using Devon4Net.Infrastructure.RabbitMQ.Domain.Entities;
 using Devon4Net.Infrastructure.RabbitMQ.Domain.ServiceInterfaces;
 using EasyNetQ;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -19,9 +21,12 @@ namespace Devon4Net.Application.WebAPI.Configuration
 {
     public static class RabbitMqConfiguration
     {
-        public static void SetupRabbitMq(this IServiceCollection services, RabbitMqOptions rabbitMqOptions)
+        public static void SetupRabbitMq(this IServiceCollection services, ref IConfiguration configuration)
         {
-            if (rabbitMqOptions?.Hosts == null || !rabbitMqOptions.Hosts.Any())
+            var rabbitMqOptions = services.GetTypedOptions<RabbitMqOptions>(configuration, "RabbitMq");
+            if (rabbitMqOptions == null || !rabbitMqOptions.EnableRabbitMq || rabbitMqOptions.Hosts == null || !rabbitMqOptions.Hosts.Any()) return;
+
+            if (rabbitMqOptions.Hosts == null || !rabbitMqOptions.Hosts.Any())
             {
                 return;
             }

@@ -1,4 +1,5 @@
 using Devon4Net.Application.WebAPI.Configuration;
+using Devon4Net.Application.WebAPI.Configuration.Application;
 using Devon4Net.WebAPI.Implementation.Configure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

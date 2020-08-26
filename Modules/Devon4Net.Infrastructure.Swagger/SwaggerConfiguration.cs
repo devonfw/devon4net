@@ -4,15 +4,26 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Devon4Net.Infrastructure.Common.Options;
 using Microsoft.OpenApi.Models;
-using Devon = Devon4Net.Infrastructure.Common.Options.Swagger;
 using Devon4Net.Infrastructure.JWT.Common.Const;
+using Microsoft.Extensions.Configuration;
+using Devon4Net.Infrastructure.Common.Options.Swagger;
 
 namespace Devon4Net.Application.WebAPI.Configuration
 {
     public static class SwaggerConfiguration
     {
-        public static void SetupSwaggerService(this IServiceCollection services, Devon.SwaggerOptions swaggerOptions)
+        public static void SetupSwagger(this IServiceCollection services, ref IConfiguration configuration, bool useSwagger = true)
+        {
+            var swaggerOptions = services.GetTypedOptions<SwaggerOptions>(configuration, "Swagger");
+
+            if (!useSwagger) return;
+            if (swaggerOptions?.Endpoint == null) return;
+            SetupSwaggerService(ref services, swaggerOptions);
+        }
+
+        private static void SetupSwaggerService(ref IServiceCollection services, SwaggerOptions swaggerOptions)
         {
             if (swaggerOptions == null) return;
 
@@ -60,10 +71,16 @@ namespace Devon4Net.Application.WebAPI.Configuration
             services.AddMvcCore().AddApiExplorer();
         }
 
-        public static void ConfigureSwaggerApplication(this IApplicationBuilder app, Devon.SwaggerOptions swaggerOptions)
+        public static void ConfigureSwaggerApplication(this IApplicationBuilder app, SwaggerOptions swaggerOptions)
         {
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint(swaggerOptions.Endpoint.Url, swaggerOptions.Endpoint.Name); });
+        }
+
+        public static void ConfigureSwaggerApplication(this IApplicationBuilder app, string url, string name)
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint(url, name); });
         }
 
         #region private methods

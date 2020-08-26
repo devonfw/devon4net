@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Devon4Net.Infrastructure.AnsibleTower.Common;
+﻿using Devon4Net.Infrastructure.AnsibleTower.Common;
 using Devon4Net.Infrastructure.AnsibleTower.Dto;
 using Devon4Net.Infrastructure.AnsibleTower.Handler;
 using Devon4Net.Infrastructure.CircuitBreaker.Handler;
+using Devon4Net.Infrastructure.Common.Options;
 using Devon4Net.Infrastructure.Common.Options.AnsibleTower;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Devon4Net.Application.WebAPI.Configuration
@@ -14,11 +14,14 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static ICircuitBreakerHttpClient CircuitBreakerHttpClient { get; set; }
         private static AnsibleTowerOptions AnsibleTowerOptions { get; set; }
 
-        public static void SetupAnsibleTower(this IServiceCollection services, AnsibleTowerOptions ansibleTowerOptions)
+        public static void SetupAnsibleTower(this IServiceCollection services, ref IConfiguration configuration)
         {
+            AnsibleTowerOptions = services.GetTypedOptions<AnsibleTowerOptions>(configuration, "AnsibleTower");
+
+            if (AnsibleTowerOptions == null || string.IsNullOrEmpty(AnsibleTowerOptions.ApiUrlBase)) return;
+
             var serviceProvider = services.BuildServiceProvider();
             CircuitBreakerHttpClient = serviceProvider.GetService<ICircuitBreakerHttpClient>();
-            AnsibleTowerOptions = ansibleTowerOptions;
 
             var ansibleTowerInstance = GetAnsibleTowerInstances();
 

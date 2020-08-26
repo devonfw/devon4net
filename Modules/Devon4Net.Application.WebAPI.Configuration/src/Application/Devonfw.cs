@@ -1,6 +1,10 @@
 ﻿using System;
 using System.IO;
 using Devon4Net.Infrastructure.Common;
+using Devon4Net.Infrastructure.Common.Options;
+using Devon4Net.Infrastructure.Common.Options.Devon;
+using Devon4Net.Infrastructure.Extensions.Helpers;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +18,7 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
         private static IHostBuilder HostBuilder { get; set; }
         private static IConfiguration Configuration { get; set; }
         private static ConfigurationBuilder ConfigurationBuilder { get; set; }
+        private const string DevonfwAppSettingsNodeName = "devonfw";
 
         public static void Configure<T>(string[] args) where T : class
         {
@@ -28,10 +33,10 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             builder.UseSerilog();
             builder.UseConfiguration(Configuration);
 
-            var useDetailedErrorsKey = Configuration["devonfw:UseDetailedErrorsKey"];
+            var useDetailedErrorsKey = Configuration[$"{DevonfwAppSettingsNodeName}:UseDetailedErrorsKey"];
             builder.UseSetting(WebHostDefaults.DetailedErrorsKey, useDetailedErrorsKey);
 
-            var useIis = Convert.ToBoolean(Configuration["devonfw:UseIIS"],
+            var useIis = Convert.ToBoolean(Configuration[$"{DevonfwAppSettingsNodeName}:UseIIS"],
                 System.Globalization.CultureInfo.InvariantCulture);
 
             if (useIis)
@@ -47,6 +52,29 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             return builder;
         }
 
+        public static void SetupDevonfw(this IServiceCollection services, ref IConfiguration configuration)
+        {
+            services.GetTypedOptions<DevonfwOptions>(configuration, DevonfwAppSettingsNodeName);
+            services.ConfigureIIS(ref configuration);
+            services.SetupKillSwitch(ref configuration);
+            services.AddTransient(typeof(IObjectTypeHelper), typeof(ObjectTypeHelper));
+            services.AddTransient(typeof(IJsonHelper), typeof(JsonHelper));
+        }
+
+        public static void InitializeDevonFw(this IApplicationBuilder app)
+        {
+            app.UseRequestLocalization();
+            app.SetupDevonfwMiddleware();
+
+            bool.TryParse(Configuration[$"{DevonfwAppSettingsNodeName}:UseSwagger"], out bool useSwagger);
+            if (!useSwagger) return;
+            
+            var swaggerEndpoint = Configuration["Swagger:Endpoint:Url"];
+            var swaggerName = Configuration["Swagger:Endpoint:Name"];
+            
+            if (!string.IsNullOrEmpty(swaggerEndpoint) && !string.IsNullOrEmpty(swaggerName)) app.ConfigureSwaggerApplication(swaggerEndpoint, swaggerName);
+        }
+
         private static void CreateHostBuilder<T>(string[] args)  where T: class
         {
             HostBuilder = Host.CreateDefaultBuilder(args);
@@ -56,10 +84,10 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
                 webBuilder.UseSerilog();
                 webBuilder.UseConfiguration(Configuration);
 
-                var useDetailedErrorsKey = Configuration["devonfw:UseDetailedErrorsKey"];
+                var useDetailedErrorsKey = Configuration[$"{DevonfwAppSettingsNodeName}:UseDetailedErrorsKey"];
                 webBuilder.UseSetting(WebHostDefaults.DetailedErrorsKey, useDetailedErrorsKey);
 
-                var useIis = Convert.ToBoolean(Configuration["devonfw:UseIIS"],
+                var useIis = Convert.ToBoolean(Configuration[$"{DevonfwAppSettingsNodeName}:UseIIS"],
                     System.Globalization.CultureInfo.InvariantCulture);
 
                 if (useIis)
@@ -82,7 +110,7 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
         private static void LoadConfiguration()
         {
             AddConfigurationSettingsFile("appsettings.json", false, true);
-            AddConfigurationSettingsFile($"appsettings.{Configuration["devonfw:Environment"]}.json", true, true);
+            AddConfigurationSettingsFile($"appsettings.{Configuration[$"{DevonfwAppSettingsNodeName}:Environment"]}.json", true, true);
         }
 
         private static void AddConfigurationSettingsFile(string filename, bool optional, bool reloadOnChange)

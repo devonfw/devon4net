@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Devon4Net.Infrastructure.Common.Common
+namespace Devon4Net.Infrastructure.CircuitBreaker.Common
 {
     public class BuiltInTypes : IBuiltInTypes
     {

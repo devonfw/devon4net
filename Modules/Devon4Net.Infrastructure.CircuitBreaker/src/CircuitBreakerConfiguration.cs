@@ -4,9 +4,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+using Devon4Net.Infrastructure.CircuitBreaker.Common;
 using Devon4Net.Infrastructure.CircuitBreaker.Handler;
 using Devon4Net.Infrastructure.Common;
+using Devon4Net.Infrastructure.Common.Options;
 using Devon4Net.Infrastructure.Common.Options.CircuitBreaker;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using HttpClientHandler = Devon4Net.Infrastructure.CircuitBreaker.Handler.HttpClientHandler;
@@ -17,18 +20,20 @@ namespace Devon4Net.Application.WebAPI.Configuration
     {
         private static bool CheckCertificate { get; set; }
 
-        public static void SetupCircuitBreaker(this IServiceCollection services, CircuitBreakerOptions circuitBreakerOptions)
+        public static void SetupCircuitBreaker(this IServiceCollection services, ref IConfiguration configuration)
         {
+            var circuitBreakerOptions = services.GetTypedOptions<CircuitBreakerOptions>(configuration, "CircuitBreaker");
+
             if (circuitBreakerOptions?.Endpoints == null || !circuitBreakerOptions.Endpoints.Any())
             {
                 return;
             }
 
+            services.AddSingleton(typeof(IBuiltInTypes), typeof(BuiltInTypes));
+
             CheckCertificate = circuitBreakerOptions.CheckCertificate;
             services.AddHttpClient(circuitBreakerOptions.Endpoints);
-            services.AddTransient<ICircuitBreakerHttpClient, CircuitBreakerHttpClient>();
             services.AddTransient<IHttpClientHandler, HttpClientHandler>();
-            
         }
 
         private static void AddHttpClient(this IServiceCollection services, Endpoint endPointEntity)

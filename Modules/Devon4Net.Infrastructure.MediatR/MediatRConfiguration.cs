@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Devon4Net.Infrastructure.Common.Options;
 using Devon4Net.Infrastructure.Common.Options.MediatR;
 using Devon4Net.Infrastructure.LiteDb.LiteDb;
 using Devon4Net.Infrastructure.LiteDb.Repository;
@@ -9,14 +10,18 @@ using Devon4Net.Infrastructure.MediatR.Domain.Entities;
 using Devon4Net.Infrastructure.MediatR.Domain.ServiceInterfaces;
 using Devon4Net.Infrastructure.MediatR.Handler;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Devon4Net.Application.WebAPI.Configuration
 {
     public static class MediatRConfiguration
     {
-        public static void SetupMediatR(this IServiceCollection services, MediatROptions mediatROptions)
+        public static void SetupMediatR(this IServiceCollection services, ref IConfiguration configuration)
         {
+            var mediatROptions = services.GetTypedOptions<MediatROptions>(configuration, "MediatR");
+
+            if (mediatROptions == null || !mediatROptions.EnableMediatR) return;
             ConfigureMediatRGenericDependencyInjection(ref services);
             SetupMediatRBackupLocalDatabase(ref services, ref mediatROptions);
         }
