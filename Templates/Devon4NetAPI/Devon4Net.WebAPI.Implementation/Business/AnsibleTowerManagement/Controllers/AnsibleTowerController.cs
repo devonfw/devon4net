@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
+namespace Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers
 {
     /// <summary>
     /// Ansible Tower Controller

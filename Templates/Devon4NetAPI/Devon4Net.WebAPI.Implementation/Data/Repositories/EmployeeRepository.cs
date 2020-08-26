@@ -28,21 +28,21 @@ namespace Devon4Net.WebAPI.Implementation.Data.Repositories
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public async Task<IList<Employee>> GetEmployee(Expression<Func<Employee, bool>> predicate = null)
+        public Task<IList<Employee>> GetEmployee(Expression<Func<Employee, bool>> predicate = null)
         {
             Devon4NetLogger.Debug("GetTodo method from TodoRepository Employeeervice");
-            return await Get(predicate).ConfigureAwait(false);
+            return Get(predicate);
         }
 
         /// <summary>
-        /// Geto the TODO by id
+        /// Gets the TODO by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Employee> GetEmployeeById(long id)
+        public Task<Employee> GetEmployeeById(long id)
         {
             Devon4NetLogger.Debug($"GetTodoById method from repository Employeeervice with value : {id}");
-            return await GetFirstOrDefault(t => t.Id == id).ConfigureAwait(false);
+            return GetFirstOrDefault(t => t.Id == id);
         }
 
         /// <summary>
@@ -52,10 +52,10 @@ namespace Devon4Net.WebAPI.Implementation.Data.Repositories
         /// <param name="surName"></param>
         /// <param name="mail"></param>
         /// <returns></returns>
-        public async Task<Employee> Create(string name, string surName, string mail)
+        public Task<Employee> Create(string name, string surName, string mail)
         {
             Devon4NetLogger.Debug($"SetTodo method from repository Employeeervice with value : {name}");
-            return await Create(new Employee{Name = name, Surname = surName, Mail = mail}).ConfigureAwait(false);
+            return Create(new Employee{Name = name, Surname = surName, Mail = mail});
         }
 
         /// <summary>
