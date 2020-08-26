@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
 using Devon4Net.Infrastructure.CircuitBreaker.Handler;
@@ -17,13 +18,13 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
 {
     public class CyberArkHandler : ICyberArkHandler
     {
-        private ICircuitBreakerHttpClient CircuitBreakerHttpClient { get; }
+        private static IHttpClientHandler HttpClientHandler { get; set; }
         private CyberArkOptions CyberArkOptions { get; }
         private string AuthToken { get; set; }
 
-        public CyberArkHandler(ICircuitBreakerHttpClient circuitBreakerHttpClient, IOptions<CyberArkOptions> cyberArkOptions)
+        public CyberArkHandler(IHttpClientHandler httpClientHandler, IOptions<CyberArkOptions> cyberArkOptions)
         {
-            CircuitBreakerHttpClient = circuitBreakerHttpClient;
+            HttpClientHandler = httpClientHandler;
             CyberArkOptions = cyberArkOptions?.Value ?? throw new ArgumentException("No CyberArk options provided");
         }
 
@@ -229,35 +230,35 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
         {
             if (!CyberArkOptions.EnableCyberArk) return default;
             await Logon(authToken);
-            return await CircuitBreakerHttpClient.Get<T>(CyberArkOptions.CircuitBreakerName, endpoint, GetAuthorizationHeaders(), useCamelCase);
+            return await HttpClientHandler.Send<T>(HttpMethod.Get, CyberArkOptions.CircuitBreakerName, endpoint, null, MediaType.ApplicationJson, GetAuthorizationHeaders(), true, useCamelCase);
         }
 
         private async Task<T> GetCyberArk<T>(string endpoint, object content, bool useCamelCase, string authToken = null)
         {
             if (!CyberArkOptions.EnableCyberArk) return default;
             await Logon(authToken);
-            return await CircuitBreakerHttpClient.Get<T>(CyberArkOptions.CircuitBreakerName, endpoint, content, GetAuthorizationHeaders(), useCamelCase);
+            return await HttpClientHandler.Send<T>(HttpMethod.Get, CyberArkOptions.CircuitBreakerName, endpoint, content, MediaType.ApplicationJson, GetAuthorizationHeaders(), true, useCamelCase);
         }
 
         private async Task<T> PostCyberArk<T>(string endpoint, object dataToSend, bool useCamelCase, string authToken = null)
         {
             if (!CyberArkOptions.EnableCyberArk) return default;
             await Logon(authToken);
-            return await CircuitBreakerHttpClient.Post<T>(CyberArkOptions.CircuitBreakerName, endpoint, dataToSend, MediaType.ApplicationJson, GetAuthorizationHeaders(), useCamelCase);
+            return await HttpClientHandler.Send<T>(HttpMethod.Post, CyberArkOptions.CircuitBreakerName, endpoint, dataToSend, MediaType.ApplicationJson, GetAuthorizationHeaders(), true, useCamelCase);
         }
 
         private async Task<T> PutCyberArk<T>(string endpoint, object dataToSend, bool useCamelCase, string authToken = null)
         {
             if (!CyberArkOptions.EnableCyberArk) return default;
             await Logon(authToken);
-            return await CircuitBreakerHttpClient.Put<T>(CyberArkOptions.CircuitBreakerName, endpoint, dataToSend, MediaType.ApplicationJson, GetAuthorizationHeaders(), useCamelCase);
+            return await HttpClientHandler.Send<T>(HttpMethod.Put, CyberArkOptions.CircuitBreakerName, endpoint, dataToSend, MediaType.ApplicationJson, GetAuthorizationHeaders(), true, useCamelCase);
         }
 
         private async Task<T> DeleteCyberArk<T>(string endpoint,  bool useCamelCase, string authToken = null)
         {
             if (!CyberArkOptions.EnableCyberArk) return default;
             await Logon(authToken);
-            return await CircuitBreakerHttpClient.Delete<T>(CyberArkOptions.CircuitBreakerName, endpoint, GetAuthorizationHeaders(), useCamelCase);
+            return await HttpClientHandler.Send<T>(HttpMethod.Delete, CyberArkOptions.CircuitBreakerName, endpoint, null, MediaType.ApplicationJson, GetAuthorizationHeaders(), true, useCamelCase);
         }
 
         private async Task Logon(string authToken = null)
@@ -281,8 +282,7 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
         public async Task<string> Logon(string userName, string password)
         {
             if (!CyberArkOptions.EnableCyberArk) return default;
-
-            AuthToken = await CircuitBreakerHttpClient.Post<string>(CyberArkOptions.CircuitBreakerName, CyberArkEndpointConst.Logon, new LogonRequestDto { Username = userName, Password = password }, MediaType.ApplicationJson, null, true);
+            AuthToken  = await HttpClientHandler.Send<string>(HttpMethod.Post, CyberArkOptions.CircuitBreakerName, CyberArkEndpointConst.Logon, new LogonRequestDto { Username = userName, Password = password }, MediaType.ApplicationJson, null, true, true);
 
             return AuthToken;
         }

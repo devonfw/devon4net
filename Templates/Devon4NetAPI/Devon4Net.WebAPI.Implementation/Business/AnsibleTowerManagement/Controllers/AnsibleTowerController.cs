@@ -551,8 +551,8 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
             result.AppendLine($"");
             result.AppendLine($"Perform login with the user; {ansibleUser} and password: {ansiblePassword}");
             var token = await AnsibleTowerHandler.Login(ansibleUser, ansiblePassword);
-            result.AppendLine($"The user token is: {token.Token}");
-            var organizations = await AnsibleTowerHandler.GetOrganizations(token.Token);
+            result.AppendLine($"The user token is: {token.token}");
+            var organizations = await AnsibleTowerHandler.GetOrganizations(token.token);
 
             // Organizations
             Devon4NetLogger.Debug("Organization count: " + organizations.count);
@@ -565,7 +565,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
             result.AppendLine($"The retreived organization is: name: {organization?.name}, id: {organization?.id}");
 
             // Credentials
-            var credentialsList = await AnsibleTowerHandler.GetCredentials(token.Token, credentialName);
+            var credentialsList = await AnsibleTowerHandler.GetCredentials(token.token, credentialName);
             if (credentialsList?.results != null && credentialsList.results.Any()|| credentialsList?.results?.FirstOrDefault()?.name != credentialName)
             {
                 result.AppendLine($"The credentials with name {credentialName} has been retreived");
@@ -579,7 +579,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Controllers
                     user = idUser
                 };
                 result.AppendLine($"Storing the credential...");
-                var savedCredential = await AnsibleTowerHandler.CreateCredential(token.Token, credential);
+                var savedCredential = await AnsibleTowerHandler.CreateCredential(token.token, credential);
                 result.AppendLine($"The credential has been created in Ansible Tower. id: {savedCredential.id}, name: {savedCredential.name}, created: {savedCredential.created}");
             }
             else
