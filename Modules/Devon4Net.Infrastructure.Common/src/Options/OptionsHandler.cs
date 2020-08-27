@@ -9,7 +9,7 @@ namespace Devon4Net.Infrastructure.Common.Options
         public static T GetTypedOptions<T>(this IServiceCollection services, IConfiguration configuration, string sectionName) where T : class, new()
         {
             services.Configure<T>(configuration.GetSection(sectionName));
-            var serviceProvider = services.BuildServiceProvider();
+            using var serviceProvider = services.BuildServiceProvider();
             return serviceProvider.GetService<IOptions<T>>()?.Value;
         }
     }

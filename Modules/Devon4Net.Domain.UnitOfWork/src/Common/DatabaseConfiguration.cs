@@ -38,7 +38,7 @@ namespace Devon4Net.Domain.UnitOfWork.Common
         {
             try
             {
-                var sp = services.BuildServiceProvider();
+                using var sp = services.BuildServiceProvider();
                 if (sp == null)
                 {
                     Devon4NetLogger.Error($"Unable to build the service provider, the migration {typeof(T).FullName} will not be launched");

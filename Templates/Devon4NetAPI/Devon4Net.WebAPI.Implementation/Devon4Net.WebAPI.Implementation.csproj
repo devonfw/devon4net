@@ -50,6 +50,7 @@
     <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.Common\src\Devon4Net.Infrastructure.Common.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.CyberArk\Devon4Net.Infrastructure.CyberArk.csproj" />
     <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.Extensions\src\Devon4Net.Infrastructure.Extensions.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.FluentValidation\Devon4Net.Infrastructure.FluentValidation.csproj" />
     <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.JWT\src\Devon4Net.Infrastructure.JWT.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.LiteDb\Devon4Net.Infrastructure.LiteDb.csproj" />
     <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.Log\src\Devon4Net.Infrastructure.Log.csproj" />

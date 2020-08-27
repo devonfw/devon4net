@@ -22,7 +22,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
 
             if (AnsibleTowerOptions == null || string.IsNullOrEmpty(AnsibleTowerOptions.ApiUrlBase)) return;
 
-            var serviceProvider = services.BuildServiceProvider();
+            using var serviceProvider = services.BuildServiceProvider();
             HttpClientHandler = serviceProvider.GetService<IHttpClientHandler>();
 
             var ansibleTowerInstance = GetAnsibleTowerInstances();

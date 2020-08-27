@@ -845,7 +845,7 @@
             <param name="services"></param>
             <param name="configuration"></param>
         </member>
-        <member name="M:Devon4Net.WebAPI.Implementation.Configure.DevonConfiguration.SetupDatabase(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Configure.DevonConfiguration.SetupDatabase(Microsoft.Extensions.DependencyInjection.IServiceCollection@,Microsoft.Extensions.Configuration.IConfiguration@)">
             <summary>
             Setup here your database connections.
             To use RabbitMq message backup declare the 'RabbitMqBackupContext' database setup
@@ -901,7 +901,7 @@
             Repository implementation for the TODOS
             </summary>
         </member>
-        <member name="M:Devon4Net.WebAPI.Implementation.Data.Repositories.TodoRepository.#ctor(Devon4Net.WebAPI.Implementation.Domain.Database.TodoContext)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Data.Repositories.TodoRepository.#ctor(Devon4Net.WebAPI.Implementation.Domain.Database.TodoContext,Devon4Net.WebAPI.Implementation.Business.TodoManagement.Validators.TodosFluentValidator)">
             <summary>
             Constructor
             </summary>

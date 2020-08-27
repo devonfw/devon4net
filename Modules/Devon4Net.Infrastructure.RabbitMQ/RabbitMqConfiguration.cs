@@ -65,6 +65,24 @@ namespace Devon4Net.Application.WebAPI.Configuration
             catch (PathTooLongException ex ) { Devon4NetLogger.Error(ex); }
         }
 
+        public static void AddRabbitMqHandler<T>(this IServiceCollection services, bool subscribeToQueue) where T : class
+        {
+            var memberInfo = typeof(T).BaseType;
+            if (memberInfo != null && !memberInfo.Name.Contains("RabbitMqHandler"))
+            {
+                throw new ArgumentException($"The provided type {typeof(T).FullName} does not inherit from RabbitMqHandler");
+            }
+
+            using var sp = services.BuildServiceProvider();
+            var bus = sp.GetService<IBus>();
+            var repoLite = sp.GetService<IRabbitMqBackupLiteDbService>();
+            var repo = sp.GetService<IRabbitMqBackupService>();
+
+            var obj = (T)Activator.CreateInstance(typeof(T), services, bus, repo, repoLite, subscribeToQueue);
+
+            services.AddSingleton(obj);
+        }
+
         private static void ConfigureRabbitMqGenericDependencyInjection(IServiceCollection services)
         {
             services.AddTransient(typeof(IRepository<RabbitBackup>), typeof(Repository<RabbitBackup>));
