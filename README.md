@@ -1,17 +1,19 @@
 # The Open Application Standard Platform for .NET and .NET Core
 
-- devon4net is oriented to implement backend solutions. Microservice architecture is well supported.
+- devon4net is oriented to implement backend solutions. Microservice architecture patterns is well supported.
+- AWS templates integration. You can integrate devon4net in your serverless application in a easy way.
 - Global configuration automated. devon4Net can be instantiated on any .net core application template with no effort like AWS templates for serverless applications
 - Full and configurable support for HTTP2
 - Number of minium libraries needed
-- Modular clean Architecture layer
+- Modular clean Architecture layer.
+- Every component can be used isolated via Nuget in any .NET application without the Weab API Template
 - Red button functionality (aka killswitch) to stop attending API request with custom error
 - Global exception API error management via middleware with custom HTTP errors
--Support to only accept request from clients with a specific client certificate on Kestrel server.
+- Support to only accept request from clients with a specific client certificate on Kestrel server.
 - All components use IOptions pattern to be set up properly
-- Swagger generation compatible con open api v3
+- Swagger generation compatible with the latest Open API version
 - External configuration file for each environment
-- .NET Core 3.1 working solution (Latest v3.1.3)
+- .NET Core 3.1 working solution (Latest v3.1.7)
 - Packages and solution templates published on nuget
 - Full components customization by config file
 - Docker ready (My Thai Star sample fully working on docker)
@@ -21,11 +23,16 @@
 - Entity framework ORM (Unit of work, async methods, Model context generation guide)
 - Easy LiteDB support
 - .NET Standard 2.1 library ready
-- Multiplatform support: Windows, Linux, Mac ready
+- Multiplatform support provided by the framework: Windows, Linux and Mac ready
 - Samples: My Thai Star backend, Google API integration, Azure login, AOP with Castle
 - Documentation site
 - Embedded SPA page support
-- Easy RabbitMq support (command and handlers)
+- Easy RabbitMq support (command and event handlers)
+- MediatR library for in memory messaging + event handling
+- Microfocus SMAX support
+- Easy class FluentValidation. Create your own rules to determine if an instance of a class is valid or not
+- CyberArk integration
+- Ansible Tower integration. devon4net integrates with Ansible Tower to setup your cloud servers in a easy way
 
 Included features:
 
@@ -40,6 +47,7 @@ Included features:
 - Swagger:
               - Swagger autogenerating client from comments and annotations on controller classes
               - Full swagger client customization (Version, Title, Description, Terms, License, Json end point definition)
+              - Easy configuration with just one configuration node in your settings file
 
 - JWT:
               - Issuer, audience, token expiration customization by external file configuration
@@ -73,7 +81,21 @@ Included features:
             - Provided basic repository for CRUD operations
 
 - RabbitMq:
-            - Use of EasyQNet library to perform CQRS main functions
-            - Send commands
-            - Handled received commands to subscribed messages
+            - Use of EasyQNet library to perform CQRS main functions between different microservices
+            - Send commands / Subscribe queues with one C# sentence
+            - Events management: Handled received commands to subscribed messages
             - Automatic messaging backup when sent and handled (Internal database via LiteDB and database backup via Entity Framework)
+
+- MediatR:
+            - Use of MediatR library to perform CQRS main functions in memory
+            - Send commands / Subscribe queues with one C# sentence
+            - Events management: Handled received commands to subscribed messages
+            - Automatic messaging backup when sent and handled (Internal database via LiteDB and database backup via Entity Framework)
+- SmaxHcm:
+            - Component to manage Microfocus SMAX for cloud infrastructure services management
+
+- CyberArk:
+            - Manage safe credentials with CyberArk
+
+- AnsibleTower:
+            - Ansible automates the cloud infrastructure. devon4net integrates with Ansible Tower via API consumption endpoints
