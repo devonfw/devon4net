@@ -33,6 +33,7 @@
 - Easy class FluentValidation. Create your own rules to determine if an instance of a class is valid or not
 - CyberArk integration
 - Ansible Tower integration. devon4net integrates with Ansible Tower to setup your cloud servers in a easy way
+- gRPC + Protobuf support
 
 Included features:
 
@@ -99,3 +100,6 @@ Included features:
 
 - AnsibleTower:
             - Ansible automates the cloud infrastructure. devon4net integrates with Ansible Tower via API consumption endpoints
+
+- gRPC+Protobuf:
+            - Added Client + Server basic templates sample gRPC with Google's Protobuf protocol using devon4net
