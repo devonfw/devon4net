@@ -47,10 +47,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.TodoManagement.Service
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Todos> GetTodoById(long id)
+        public Task<Todos> GetTodoById(long id)
         {
             Devon4NetLogger.Debug($"GetTodoById method from service TodoService with value : {id}");
-            return await _todoRepository.GetTodoById(id).ConfigureAwait(false);
+            return _todoRepository.GetTodoById(id);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.TodoManagement.Service
         /// </summary>
         /// <param name="description"></param>
         /// <returns></returns>
-        public async Task<Todos> CreateTodo(string description)
+        public Task<Todos> CreateTodo(string description)
         {
             Devon4NetLogger.Debug($"SetTodo method from service TodoService with value : {description}");
 
@@ -67,7 +67,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.TodoManagement.Service
                 throw new ArgumentException("The 'Description' field can not be null.");
             }
 
-            return await _todoRepository.Create(description).ConfigureAwait(false);
+            return _todoRepository.Create(description);
         }
         
         /// <summary>

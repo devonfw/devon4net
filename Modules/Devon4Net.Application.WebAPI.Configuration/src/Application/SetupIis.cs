@@ -7,7 +7,7 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
 {
     public static class SetupIIS
     {
-        public static void ConfigureIIS(this IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureIIS(this IServiceCollection services, ref IConfiguration configuration)
         {
             bool.TryParse(configuration["devonfw:UseIIS"], out bool useIis);
 

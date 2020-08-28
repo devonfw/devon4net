@@ -18,15 +18,15 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Controller
     [EnableCors("CorsPolicy")]
     public class EmployeeController: ControllerBase
     {
-        private readonly IEmployeeService _EmployeeService;
+        private readonly IEmployeeService _employeeService;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="EmployeeService"></param>
-        public EmployeeController( IEmployeeService EmployeeService)
+        /// <param name="employeeService"></param>
+        public EmployeeController( IEmployeeService employeeService)
         {
-            _EmployeeService = EmployeeService;
+            _employeeService = employeeService;
         }
 
 
@@ -42,7 +42,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Controller
         public async Task<ActionResult> GetEmployee()
         {
             Devon4NetLogger.Debug("Executing GetEmployee from controller EmployeeController");
-            return Ok(await _EmployeeService.GetEmployee().ConfigureAwait(false));
+            return Ok(await _employeeService.GetEmployee().ConfigureAwait(false));
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Controller
         public async Task<ActionResult> Create(EmployeeDto employeeDto)
         {
             Devon4NetLogger.Debug("Executing GetEmployee from controller EmployeeController");
-            var result = await _EmployeeService.CreateEmployee(employeeDto.Name, employeeDto.Surname, employeeDto.Mail).ConfigureAwait(false);
+            var result = await _employeeService.CreateEmployee(employeeDto.Name, employeeDto.Surname, employeeDto.Mail).ConfigureAwait(false);
             return StatusCode(StatusCodes.Status201Created, result);
         }
 
@@ -70,10 +70,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Controller
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Delete([Required]long EmployeeId)
+        public async Task<ActionResult> Delete([Required]long employeeId)
         {
             Devon4NetLogger.Debug("Executing GetEmployee from controller EmployeeController");
-            return Ok(await _EmployeeService.DeleteEmployeeById(EmployeeId).ConfigureAwait(false));
+            return Ok(await _employeeService.DeleteEmployeeById(employeeId).ConfigureAwait(false));
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Controller
             {
                 return BadRequest("The id of the employee must be provided");
             }
-            return Ok(await _EmployeeService.ModifyEmployeeById(employeeDto.Id, employeeDto.Name, employeeDto.Surname, employeeDto.Mail).ConfigureAwait(false));
+            return Ok(await _employeeService.ModifyEmployeeById(employeeDto.Id, employeeDto.Name, employeeDto.Surname, employeeDto.Mail).ConfigureAwait(false));
         }
     }
 }

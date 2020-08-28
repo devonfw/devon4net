@@ -20,7 +20,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Service
     /// </summary>
     public class EmployeeService: Service<EmployeeContext>, IEmployeeService
     {
-        private readonly IEmployeeRepository _EmployeeRepository;
+        private readonly IEmployeeRepository _employeeRepository;
 
         /// <summary>
         /// Constructor
@@ -28,7 +28,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Service
         /// <param name="uoW"></param>
         public EmployeeService(IUnitOfWork<EmployeeContext> uoW) : base(uoW)
         {
-            _EmployeeRepository = uoW.Repository<IEmployeeRepository>();
+            _employeeRepository = uoW.Repository<IEmployeeRepository>();
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Service
         public async Task<IEnumerable<EmployeeDto>> GetEmployee(Expression<Func<Employee, bool>> predicate = null)
         {
             Devon4NetLogger.Debug("GetEmployee method from service Employeeervice");
-            var result = await _EmployeeRepository.GetEmployee(predicate).ConfigureAwait(false);
+            var result = await _employeeRepository.GetEmployee(predicate).ConfigureAwait(false);
             return result.Select(EmployeeConverter.ModelToDto);
         }
 
@@ -48,10 +48,10 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Service
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Employee> GetEmployeeById(long id)
+        public Task<Employee> GetEmployeeById(long id)
         {
             Devon4NetLogger.Debug($"GetEmployeeById method from service Employeeervice with value : {id}");
-            return await _EmployeeRepository.GetEmployeeById(id).ConfigureAwait(false);
+            return _employeeRepository.GetEmployeeById(id);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Service
         /// <param name="surName"></param>
         /// <param name="mail"></param>
         /// <returns></returns>
-        public async Task<Employee> CreateEmployee(string name, string surName, string mail)
+        public Task<Employee> CreateEmployee(string name, string surName, string mail)
         {
             Devon4NetLogger.Debug($"SetEmployee method from service Employeeervice with value : {name}, {surName}, {mail}");
 
@@ -80,7 +80,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Service
                 throw new ArgumentException("The 'mail' field can not be null.");
             }
 
-            return await _EmployeeRepository.Create(name, surName, mail).ConfigureAwait(false);
+            return _employeeRepository.Create(name, surName, mail);
         }
         
         /// <summary>
@@ -91,14 +91,14 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Service
         public async Task<long> DeleteEmployeeById(long id)
         {
             Devon4NetLogger.Debug($"DeleteEmployeeById method from service Employeeervice with value : {id}");
-            var Employee = await _EmployeeRepository.GetFirstOrDefault(t => t.Id == id).ConfigureAwait(false);
+            var employee = await _employeeRepository.GetFirstOrDefault(t => t.Id == id).ConfigureAwait(false);
 
-            if (Employee == null)
+            if (employee == null)
             {
                 throw new ArgumentException($"The provided Id {id} does not exists");
             }
 
-            return await _EmployeeRepository.DeleteEmployeeById(id).ConfigureAwait(false);
+            return await _employeeRepository.DeleteEmployeeById(id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Service
         public async Task<Employee> ModifyEmployeeById(long id, string name, string surName, string mail)
         {
             Devon4NetLogger.Debug($"ModifyEmployeeById method from service Employeeervice with value : {id}");
-            var employee = await _EmployeeRepository.GetFirstOrDefault(t => t.Id == id).ConfigureAwait(false);
+            var employee = await _employeeRepository.GetFirstOrDefault(t => t.Id == id).ConfigureAwait(false);
 
             if (employee == null)
             {
@@ -129,7 +129,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Service
                 throw new ArgumentException($"The provided Id {id} does not exists");
             }
 
-            return await _EmployeeRepository.Update(employee).ConfigureAwait(false);
+            return await _employeeRepository.Update(employee).ConfigureAwait(false);
         }
     }
 }

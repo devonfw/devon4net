@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Devon4Net.Infrastructure.Middleware.Headers
 {
     public static class MiddlewareHeaderDefinition
@@ -13,7 +15,7 @@ namespace Devon4Net.Infrastructure.Middleware.Headers
         public static string ReferrerPolicyHeader { get; set; }
         
 
-        public static void SetupHeaders(this IConfiguration configuration)
+        public static void SetupHeaders(this IServiceCollection services, ref IConfiguration configuration)
         {
             AccessControlExposeHeader = configuration["Headers:AccessControlExposeHeader"];
             StrictTransportSecurityHeader = configuration["Headers:StrictTransportSecurityHeader"];

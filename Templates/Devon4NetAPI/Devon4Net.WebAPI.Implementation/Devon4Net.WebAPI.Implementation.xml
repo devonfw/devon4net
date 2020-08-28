@@ -4,23 +4,23 @@
         <name>Devon4Net.WebAPI.Implementation</name>
     </assembly>
     <members>
-        <member name="T:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController">
+        <member name="T:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController">
             <summary>
             Ansible Tower Controller
             </summary>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.#ctor(Devon4Net.Infrastructure.AnsibleTower.Handler.IAnsibleTowerHandler)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.#ctor(Devon4Net.Infrastructure.AnsibleTower.Handler.IAnsibleTowerHandler)">
             <summary>
             Ansible Tower Controller constructor
             </summary>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Ping">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.Ping">
             <summary>
             Ping Ansible Tower
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Login(System.String,System.String)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.Login(System.String,System.String)">
             <summary>
             Performs the basic Ansible Tower login
             </summary>
@@ -28,14 +28,14 @@
             <param name="password">User password</param>
             <returns>The Ansible Tower login object result</returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Applications(System.String)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.Applications(System.String)">
             <summary>
             Gets the list of applications
             </summary>
             <param name="authenticationToken"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Applications(Devon4Net.Infrastructure.AnsibleTower.Dto.Applications.ApplicationsRequestDto,System.String)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.Applications(Devon4Net.Infrastructure.AnsibleTower.Dto.Applications.ApplicationsRequestDto,System.String)">
             <summary>
             Creates an application
             </summary>
@@ -43,7 +43,7 @@
             <param name="authenticationToken"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Organizations(System.String,System.String)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.Organizations(System.String,System.String)">
             <summary>
             Gets the organizations list 
             Please check the OrganizationRolesConst and OrganizationRelatedLinksConst classes
@@ -52,7 +52,7 @@
             <param name="searchCriteria"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.GetOrganization(System.String,System.String)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.GetOrganization(System.String,System.String)">
             <summary>
             Gets the organization given the organization identifier
             Please check the OrganizationRolesConst and OrganizationRelatedLinksConst classes
@@ -61,7 +61,7 @@
             <param name="organizationId"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.PostOrganization(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Organizations.CreateOrganizationRequestDto)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.PostOrganization(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Organizations.CreateOrganizationRequestDto)">
             <summary>
             Creates an organization
             Please check the OrganizationRolesConst and OrganizationRelatedLinksConst classes
@@ -70,14 +70,14 @@
             <param name="organizationRequest"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Inventories(System.String)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.Inventories(System.String)">
             <summary>
             Gets the list of inventories
             </summary>
             <param name="authenticationToken"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Inventories(System.String,System.String)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.Inventories(System.String,System.String)">
             <summary>
             Gets the inventory by the provided inventory Id
             </summary>
@@ -85,7 +85,7 @@
             <param name="inventoryId"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Inventories(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Inventories.CreateInventoryRequestDto)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.Inventories(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Inventories.CreateInventoryRequestDto)">
             <summary>
             Creates tan inventory
             </summary>
@@ -93,14 +93,14 @@
             <param name="inventoryRequest"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.JobTemplates(System.String)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.JobTemplates(System.String)">
             <summary>
             Gets the list of Job Templates
             </summary>
             <param name="authenticationToken"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.JobTemplates(System.String,System.String)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.JobTemplates(System.String,System.String)">
             <summary>
             Gets a Job Templates by the provided template job id
             </summary>
@@ -108,7 +108,7 @@
             <param name="jobTemplateId"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.JobTemplates(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.JobTemplates.CreateJobTemplateRequestDto)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.JobTemplates(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.JobTemplates.CreateJobTemplateRequestDto)">
             <summary>
             Creates a Job Template
             </summary>
@@ -116,7 +116,7 @@
             <param name="createJobTemplateRequest"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Credentials(System.String,System.String)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.Credentials(System.String,System.String)">
             <summary>
             Gets the credentials list 
             </summary>
@@ -124,7 +124,7 @@
             <param name="searchCriteria"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Credentials(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Credentials.CreateCredentialRequestDto)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.Credentials(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Credentials.CreateCredentialRequestDto)">
             <summary>
             Creates a credential 
             </summary>
@@ -132,7 +132,7 @@
             <param name="createCredentialRequest">Please check the input params. Inputs sample: url (CyberArk cojur), api_key, account, username, cacert</param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Projects(System.String,System.String)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.Projects(System.String,System.String)">
             <summary>
             Gets the projects list 
             </summary>
@@ -140,7 +140,7 @@
             <param name="searchCriteria"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Projects(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Projects.CreateProjectRequestDto)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.Projects(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Projects.CreateProjectRequestDto)">
             <summary>
             Creates a project
             </summary>
@@ -148,14 +148,14 @@
             <param name="createCredentialRequest"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.DeleteProject(System.String,System.String)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.DeleteProject(System.String,System.String)">
             <summary>
             Deletes a project by its Id
             </summary>
             <param name="projectId"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.Jobs(System.String,System.String)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.Jobs(System.String,System.String)">
             <summary>
             Gets the list of Job Templates
             </summary>
@@ -163,7 +163,7 @@
             <param name="searchCriteria"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.AskJobCancel(System.String,System.Int32)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.AskJobCancel(System.String,System.Int32)">
             <summary>
             Returns if a Job can be canceled
             </summary>
@@ -171,7 +171,7 @@
             <param name="idJob"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.JobCancel(System.String,System.Int32)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.JobCancel(System.String,System.Int32)">
             <summary>
             Cancels a job
             </summary>
@@ -179,7 +179,7 @@
             <param name="idJob"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.JobEvents(System.String,System.Int32)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.JobEvents(System.String,System.Int32)">
             <summary>
             Gets the event list of a Job 
             </summary>
@@ -187,7 +187,7 @@
             <param name="idJob"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.JobSchedule(System.String,System.Int32)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.JobSchedule(System.String,System.Int32)">
             <summary>
             Gets the event list of a Job 
             </summary>
@@ -195,14 +195,14 @@
             <param name="idJob"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.DeleteJobTemplate(System.String,System.String)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.DeleteJobTemplate(System.String,System.String)">
             <summary>
             Deletes a project by its Id
             </summary>
             <param name="projectId"></param>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Controllers.AnsibleTowerController.FullFlow(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.Int32)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AnsibleTowerManagement.Controllers.AnsibleTowerController.FullFlow(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.Int32)">
             <summary>
             Performs a regular Ansible Tower workflow.
             </summary>
@@ -224,11 +224,10 @@
             Please remember to avoid the use ob logic in a controller !!!
             </summary>
         </member>
-        <member name="M:Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers.AuthController.#ctor(Microsoft.Extensions.Options.IOptions{Devon4Net.Infrastructure.Common.Options.JWT.JwtOptions},Devon4Net.Infrastructure.JWT.Handlers.IJwtHandler)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers.AuthController.#ctor(Devon4Net.Infrastructure.JWT.Handlers.IJwtHandler)">
             <summary>
             Constructor with DI
             </summary>
-            <param name="jwtOptions"></param>
             <param name="jwtHandler"></param>
         </member>
         <member name="M:Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers.AuthController.Login(System.String,System.String)">
@@ -317,7 +316,7 @@
             <summary>
             Constructor
             </summary>
-            <param name="EmployeeService"></param>
+            <param name="employeeService"></param>
         </member>
         <member name="M:Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Controllers.EmployeeController.GetEmployee">
             <summary>
@@ -634,6 +633,49 @@
             <param name="todoDescription">The description of the TO-DO command. It cannot be empty</param>
             <returns></returns>
         </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.CreateOffering(Devon4Net.Infrastructure.SmaxHcm.Dto.Offering.CreateOfferingRequestDto)">
+            <summary>
+            sample: { "NumOfRequests":0, "IsPopularity":false, "Service":"11427", "RequireAssetInfo":"InfrastructurePeripheral", "DisplayLabel":"New offering from SMAX UI", "IsBundle":true, "IsDefault":true, "Description":"<p>New offering from SMAX UI Description</p>"}
+            </summary>
+            <param name="createNewRequestDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.AddAgregatedOffering(Devon4Net.Infrastructure.SmaxHcm.Dto.Offering.AddAgregatedOfferingDto)">
+            <summary>
+            sample: {"providerId":"11526","offeringId":"d18ae624-d68c-4dd5-b0f6-53c8cba1cb38","service":"12736","offeringDisplayName":"Capgemini Test Design"}
+            </summary>
+            <param name="createNewRequestDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.CreateRequest(Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest.CreateRequestPropertiesDto)">
+            <summary>
+            sample: { "impactScope": "Enterprise", "urgency": "NoDisruption", "requestedByPerson": "10016", "requestsOffering": "11428", "displayLabel": "Request from .net API", "description": "This is a request created from .NET API", "userOptions": "", "dataDomains": [ "string" ], "startDate": "2020-08-20T07:28:37.890Z", "endDate": "2020-08-21T07:28:37.890Z", "requestAttachments": "{\"complexTypeProperties\":[]}" } 
+            </summary>
+            <param name="createNewRequestDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.CreateDesignContainer(Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignContainer.CreateDesignContainerDto)">
+            <summary>
+            Sample: {"name":"Test Create Design BE","description":"Test Create Design BE desc","icon":"/903361753/dnd/api/blobstore/amazon_ec2.png?tag=library","tags":["/903361753/dnd/api/tag/8a809efe73146d590173147414bd05e1"]}
+            </summary>
+            <param name="createDesignContainerDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.CreateDesignVersion(Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignVersion.CreateDesignVersionDto)">
+            <summary>
+            Sample: {"containerId":"8a808a9c73d970f80173e2fa990b1590","description":"Version description","icon":"/903361753/dnd/api/blobstore/amazon_ec2.png?tag=library","name":"Version name","published":false,"url":"","version":"1.0.0"}
+            </summary>
+            <param name="createDesignVersionDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controllers.SmaxHcmController.CreateComponentsAndRelations(System.String,Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.CreateComponentsAndRelations.CreateComponentsAndRelationsDto)">
+            <summary>
+            Sample: {"nodes":[{"name":"Test Capgemini server group","displayName":"Test Capgemini server group","description":"Test Capgemini server group description","icon":"/903361753/dnd/api/blobstore/server_group.png?tag=library","orderIndex":1,"typeId":"8a808a9c73d970f80173e345c3ba1811","x":11,"y":80},{"name":"Test Capgemini AWS server","displayName":"Test Capgemini AWS server","description":"Test Capgemini AWS server description","icon":"/903361753/dnd/api/blobstore/amazon_ec2.png?tag=library","orderIndex":1,"typeId":"8a808a9c73d970f80173e36043c61868","x":511,"y":80}],"relationships":[{"name":"Relationship test","displayName":"Child","relationshipTypeId":"8a808a9c73d970f80173e3d42c931cd0","sourceName":"Test Capgemini server group","targetName":"Test Capgemini AWS server"}]}
+            </summary>
+            <param name="versionId"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="T:Devon4Net.WebAPI.Implementation.Business.TodoManagement.Controllers.TodoController">
             <summary>
             TODOs controller
@@ -803,7 +845,7 @@
             <param name="services"></param>
             <param name="configuration"></param>
         </member>
-        <member name="M:Devon4Net.WebAPI.Implementation.Configure.DevonConfiguration.SetupDatabase(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Configure.DevonConfiguration.SetupDatabase(Microsoft.Extensions.DependencyInjection.IServiceCollection@,Microsoft.Extensions.Configuration.IConfiguration@)">
             <summary>
             Setup here your database connections.
             To use RabbitMq message backup declare the 'RabbitMqBackupContext' database setup
@@ -833,7 +875,7 @@
         </member>
         <member name="M:Devon4Net.WebAPI.Implementation.Data.Repositories.EmployeeRepository.GetEmployeeById(System.Int64)">
             <summary>
-            Geto the TODO by id
+            Gets the TODO by id
             </summary>
             <param name="id"></param>
             <returns></returns>
@@ -859,7 +901,7 @@
             Repository implementation for the TODOS
             </summary>
         </member>
-        <member name="M:Devon4Net.WebAPI.Implementation.Data.Repositories.TodoRepository.#ctor(Devon4Net.WebAPI.Implementation.Domain.Database.TodoContext)">
+        <member name="M:Devon4Net.WebAPI.Implementation.Data.Repositories.TodoRepository.#ctor(Devon4Net.WebAPI.Implementation.Domain.Database.TodoContext,Devon4Net.WebAPI.Implementation.Business.TodoManagement.Validators.TodosFluentValidator)">
             <summary>
             Constructor
             </summary>

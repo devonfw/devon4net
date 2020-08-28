@@ -16,6 +16,8 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
         private IRabbitMqBackupLiteDbService RabbitMqBackupLiteDbService { get; set; }
         private IServiceCollection Services { get; set; }
 
+        public abstract Task<bool> HandleCommand(T command);
+
         protected RabbitMqHandler(IServiceCollection services, IBus serviceBus, bool subscribeToChannel = false)
         {
             BasicSetup(services, serviceBus, subscribeToChannel);
@@ -57,11 +59,9 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
             return status == QueueActionsEnum.Sent;
         }
 
-
-
         public TS GetInstance<TS>()
         {
-            var sp = Services.BuildServiceProvider();
+            using var sp = Services.BuildServiceProvider();
             return sp.GetService<TS>();
         }
 
@@ -162,7 +162,5 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
                 throw;
             }
         }
-
-        public abstract Task<bool> HandleCommand(T command);
     }
 }

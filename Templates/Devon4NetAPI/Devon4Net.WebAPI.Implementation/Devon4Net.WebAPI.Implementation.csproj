@@ -24,22 +24,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="3.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="3.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization.Policy" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="3.1.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="3.1.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.5">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.5" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.7" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
   </ItemGroup>
 
@@ -50,6 +50,7 @@
     <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.Common\src\Devon4Net.Infrastructure.Common.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.CyberArk\Devon4Net.Infrastructure.CyberArk.csproj" />
     <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.Extensions\src\Devon4Net.Infrastructure.Extensions.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.FluentValidation\Devon4Net.Infrastructure.FluentValidation.csproj" />
     <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.JWT\src\Devon4Net.Infrastructure.JWT.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.LiteDb\Devon4Net.Infrastructure.LiteDb.csproj" />
     <ProjectReference Include="..\..\..\modules\Devon4Net.Infrastructure.Log\src\Devon4Net.Infrastructure.Log.csproj" />

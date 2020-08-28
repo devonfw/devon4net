@@ -136,27 +136,6 @@ namespace Devon4Net.Domain.UnitOfWork.Repository
             return pagedResult;
         }
 
-        private async Task<PaginationResult<T>> GetSortedPagedResult<TKey>(int currentPage, int pageSize, IQueryable<T> resultList, Expression<Func<T, TKey>> keySelector, ListSortDirection sortDirection)
-        {
-            var pagedResult = new PaginationResult<T>() { CurrentPage = currentPage, PageSize = pageSize, RowCount = resultList.Count() };
-
-            var pageCount = (double)pagedResult.RowCount / pageSize;
-            pagedResult.PageCount = (int)Math.Ceiling(pageCount);
-
-            var skip = (currentPage - 1) * pageSize;
-
-            if (sortDirection == ListSortDirection.Ascending)
-            {
-                pagedResult.Results = await resultList.OrderBy(keySelector).Skip(skip).Take(pageSize).AsNoTracking().ToListAsync().ConfigureAwait(false);
-            }
-            else
-            {
-                pagedResult.Results = await resultList.OrderByDescending(keySelector).Skip(skip).Take(pageSize).AsNoTracking().ToListAsync().ConfigureAwait(false);
-            }
-
-            return pagedResult;
-        }
-
         internal void SetContext(DbContext context)
         {
             DbContext = context ?? throw new ContextNullException(nameof(context));

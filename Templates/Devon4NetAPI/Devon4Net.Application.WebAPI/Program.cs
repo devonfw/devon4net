@@ -8,7 +8,7 @@ namespace Devon4Net.Application.WebAPI
     /// <summary>
     /// devonfw template
     /// </summary>
-    public class Program
+    public static class Program
     {
         public static Task Main(string[] args)
         {

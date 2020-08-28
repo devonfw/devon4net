@@ -14,7 +14,7 @@
             Ansible Tower API manager
             </summary>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.#ctor(Devon4Net.Infrastructure.AnsibleTower.Common.IAnsibleTowerInstance,Devon4Net.Infrastructure.CircuitBreaker.Handler.ICircuitBreakerHttpClient)">
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.#ctor(Devon4Net.Infrastructure.AnsibleTower.Common.IAnsibleTowerInstance,Devon4Net.Infrastructure.CircuitBreaker.Handler.IHttpClientHandler)">
             <summary>
             Ansible Tower handler constructor
             </summary>
@@ -146,6 +146,14 @@
             <param name="credentialRequest"></param>
             <returns></returns>
         </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.DeleteProject(System.String,System.String)">
+            <summary>
+            Deletes a Project in Ansible Tower by Id
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="credentialRequest"></param>
+            <returns></returns>
+        </member>
         <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.GetJobs(System.String,System.String)">
             <summary>
             Gets the Job list from Ansible Tower
@@ -186,13 +194,21 @@
             <param name="jobId"></param>
             <returns></returns>
         </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.DeleteJobTemplate(System.String,System.String)">
+            <summary>
+            Deletes a Project in Ansible Tower by Id
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="credentialRequest"></param>
+            <returns></returns>
+        </member>
         <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.Ping">
             <summary>
             Performs the ping command in Ansible Tower
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.SetAutehnticationToken(System.String)">
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.SetAutehnticationTokenAsync(System.String)">
             <summary>
             Sets the internal Auth token variable value
             </summary>
@@ -225,6 +241,16 @@
         <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.PostAnsible``1(System.String,System.String,System.Object)">
             <summary>
             Performs the generic API Post call to Ansible Tower
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="authenticationToken"></param>
+            <param name="endpoint"></param>
+            <param name="dataToSend"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.DeleteAnsible``1(System.String,System.String,System.Boolean)">
+            <summary>
+            Performs the generic API Delete call to Ansible Tower
             </summary>
             <typeparam name="T"></typeparam>
             <param name="authenticationToken"></param>

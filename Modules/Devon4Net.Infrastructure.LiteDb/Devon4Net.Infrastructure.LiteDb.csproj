@@ -20,8 +20,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LiteDB" Version="5.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.5" />
+    <PackageReference Include="LiteDB" Version="5.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.7" />
   </ItemGroup>
 
   <ItemGroup>

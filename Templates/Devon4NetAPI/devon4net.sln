@@ -39,7 +39,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.An
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.CyberArk", "..\..\Modules\Devon4Net.Infrastructure.CyberArk\Devon4Net.Infrastructure.CyberArk.csproj", "{269019A6-A64E-4ED2-B144-26F5EC354651}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devon4Net.Infrastructure.SmaxHcm", "..\..\Modules\Devon4Net.Infrastructure.SmaxHcm\Devon4Net.Infrastructure.SmaxHcm.csproj", "{8AD209E5-81E7-4189-B65C-47F15EA7EB76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.SmaxHcm", "..\..\Modules\Devon4Net.Infrastructure.SmaxHcm\Devon4Net.Infrastructure.SmaxHcm.csproj", "{8AD209E5-81E7-4189-B65C-47F15EA7EB76}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.Swagger", "..\..\Modules\Devon4Net.Infrastructure.Swagger\Devon4Net.Infrastructure.Swagger.csproj", "{4207AB94-E9E0-45BC-9E81-5044147CCA77}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.Cors", "..\..\Modules\Devon4Net.Infrastructure.Cors\Devon4Net.Infrastructure.Cors.csproj", "{16571F0C-EF2F-454A-883B-B444EA22306D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devon4Net.Infrastructure.FluentValidation", "..\..\Modules\Devon4Net.Infrastructure.FluentValidation\Devon4Net.Infrastructure.FluentValidation.csproj", "{73222C79-F407-45F4-935A-CD645EF43CDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +117,18 @@ Global
 		{8AD209E5-81E7-4189-B65C-47F15EA7EB76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AD209E5-81E7-4189-B65C-47F15EA7EB76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AD209E5-81E7-4189-B65C-47F15EA7EB76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4207AB94-E9E0-45BC-9E81-5044147CCA77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4207AB94-E9E0-45BC-9E81-5044147CCA77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4207AB94-E9E0-45BC-9E81-5044147CCA77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4207AB94-E9E0-45BC-9E81-5044147CCA77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16571F0C-EF2F-454A-883B-B444EA22306D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16571F0C-EF2F-454A-883B-B444EA22306D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16571F0C-EF2F-454A-883B-B444EA22306D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16571F0C-EF2F-454A-883B-B444EA22306D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73222C79-F407-45F4-935A-CD645EF43CDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73222C79-F407-45F4-935A-CD645EF43CDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73222C79-F407-45F4-935A-CD645EF43CDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73222C79-F407-45F4-935A-CD645EF43CDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,6 +150,9 @@ Global
 		{56B07239-235B-41D2-BAF9-8D0C7CDF833C} = {68B87931-BF80-499A-816E-F6FF7B359443}
 		{269019A6-A64E-4ED2-B144-26F5EC354651} = {68B87931-BF80-499A-816E-F6FF7B359443}
 		{8AD209E5-81E7-4189-B65C-47F15EA7EB76} = {68B87931-BF80-499A-816E-F6FF7B359443}
+		{4207AB94-E9E0-45BC-9E81-5044147CCA77} = {68B87931-BF80-499A-816E-F6FF7B359443}
+		{16571F0C-EF2F-454A-883B-B444EA22306D} = {68B87931-BF80-499A-816E-F6FF7B359443}
+		{73222C79-F407-45F4-935A-CD645EF43CDA} = {68B87931-BF80-499A-816E-F6FF7B359443}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B0967205-4814-4D3A-907B-2BC885FA488C}

@@ -16,9 +16,16 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
 {
     public class JwtHandler : IJwtHandler
     {
+        private SecurityKey IssuerSigningKey { get; set; }
+        private SigningCredentials SigningCredentials { get; set; }
+        private X509Certificate2 Certificate { get; set; }
+        private static SecurityKey SecurityKey { get; set; }
+        private JwtOptions JwtOptions { get; }
+
         public JwtHandler(JwtOptions jwtOptions)
         {
             JwtOptions = jwtOptions;
+
             if (JwtOptions != null)
             {
                 SetupJwtSecurity();
@@ -26,31 +33,6 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
             else
             {
                 throw new ArgumentNullException($"Cannot create the JWT Handler. JWTOptions are null");
-            }
-        }
-
-        private SecurityKey IssuerSigningKey { get; set; }
-        private SigningCredentials SigningCredentials { get; set; }
-        private X509Certificate2 Certificate { get; set; }
-        private static SecurityKey SecurityKey { get; set; }
-        private JwtOptions JwtOptions { get; set; }
-
-        private void SetupJwtSecurity()
-        {
-            if (JwtOptions?.Security == null) return;
-
-            if (!string.IsNullOrEmpty(JwtOptions.Security.SecretKey))
-            {
-                GetSigningCredentialsFromKey(JwtOptions.Security.SecretKey);
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(JwtOptions.Security.Certificate) &&
-                !string.IsNullOrEmpty(JwtOptions.Security.CertificatePassword))
-                {
-                    GetSigningCredentialsFromCertificate(JwtOptions.Security.Certificate,
-                        JwtOptions.Security.CertificatePassword);
-                }
             }
         }
 
@@ -132,6 +114,25 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
             {
                 Console.WriteLine(ex);
                 throw;
+            }
+        }
+
+        private void SetupJwtSecurity()
+        {
+            if (JwtOptions?.Security == null) return;
+
+            if (!string.IsNullOrEmpty(JwtOptions.Security.SecretKey))
+            {
+                GetSigningCredentialsFromKey(JwtOptions.Security.SecretKey);
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(JwtOptions.Security.Certificate) &&
+                    !string.IsNullOrEmpty(JwtOptions.Security.CertificatePassword))
+                {
+                    GetSigningCredentialsFromCertificate(JwtOptions.Security.Certificate,
+                        JwtOptions.Security.CertificatePassword);
+                }
             }
         }
     }

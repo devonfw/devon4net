@@ -7,6 +7,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Common.Enums
         public const string ApplicationJavascript = "application/javascript";
         public const string ApplicationOctetStream = "application/octet-stream";
         public const string ApplicationJson = "application/json";
+        public const string ApplicationXwww = "application/x-www-form-urlencoded";
         public const string TextCss = "text/css";
         public const string TextPlain = "text/plain";
         public const string TextHtml = "text/html";

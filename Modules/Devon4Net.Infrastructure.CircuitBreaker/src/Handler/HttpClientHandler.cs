@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Devon4Net.Infrastructure.CircuitBreaker.Common;
 using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
 using Devon4Net.Infrastructure.Common.Exceptions;
 using Devon4Net.Infrastructure.Log;
@@ -16,12 +16,14 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
     public class HttpClientHandler : IHttpClientHandler
     {
         private IHttpClientFactory HttpClientFactory { get; set; }
+        private IBuiltInTypes BuiltInTypes { get; set; }
         private const string SoapAction = "SOAPAction";
         private static readonly JsonSerializerOptions CamelJsonSerializerOptions = new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase, IgnoreNullValues = true};
 
-        public HttpClientHandler(IHttpClientFactory httpClientFactory)
+        public HttpClientHandler(IHttpClientFactory httpClientFactory, IBuiltInTypes builtInTypes)
         {
             HttpClientFactory = httpClientFactory;
+            BuiltInTypes = builtInTypes;
         }
 
         public async Task<HttpResponseMessage> Send(HttpMethod httpMethod, string endPointName, string url, object content, string mediaType, bool contentAsJson = true, bool useCamelCase = false, Dictionary<string, string> headers = null)
@@ -39,15 +41,21 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
         public async Task<Stream> Send(HttpMethod httpMethod, string endPointName, string url, object content, string mediaType, Dictionary<string, string> headers = null, bool contentAsJson = true, bool useCamelCase = false)
         {
+            HttpResponseMessage httpResponseMessage = null;
+
             try
             {
-                var httpResponseMessage = await SendCommand(httpMethod, endPointName, url, content, mediaType, headers, contentAsJson, useCamelCase);
+                httpResponseMessage = await SendCommand(httpMethod, endPointName, url, content, mediaType, headers, contentAsJson, useCamelCase);
                 return await ManageHttpResponseAsStream(httpResponseMessage, endPointName);
             }
             catch (Exception ex)
             {
                 LogException(ref ex);
                 throw;
+            }
+            finally
+            {
+                httpResponseMessage?.Dispose();
             }
         }
 
@@ -106,10 +114,12 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
                 using (httpClient = GetDefaultClient(endPointName, headers))
                 {
-                    var request = new HttpRequestMessage(method, GetEncodedUrl(httpClient.BaseAddress.ToString(), url))
+                    var request = new HttpRequestMessage(method, GetEncodedUrl(httpClient.BaseAddress.ToString(), url));
+
+                    if (content != null)
                     {
-                        Content = CreateHttpContent(content, mediaType, contentAsJson, useCamelCase)
-                    };
+                        request.Content = CreateHttpContent(content, mediaType, contentAsJson, useCamelCase);
+                    }
 
                     httpResponseMessage = await httpClient.SendAsync(request).ConfigureAwait(false);
                     await LogHttpResponse(httpResponseMessage, endPointName).ConfigureAwait(false);
@@ -146,32 +156,16 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
         {
             if (requestContent == null) return null;
 
-            var requestBody = contentAsJson ? Serialize(requestContent, useCamelCase) : SerializeToXml(requestContent);
+            var requestBody = contentAsJson ? Serialize(requestContent, useCamelCase) : requestContent.ToString(); /*SerializeToXml(requestContent);*/
 
             HttpContent httpContent = new StringContent(requestBody);
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
+            
+            if (mediaType != null)
+            {
+                httpContent.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
+            }
+
             return httpContent;
-        }
-
-        private string SerializeToXml<T>(T content)
-        {
-            string result;
-            try
-            {
-                var xmlSerializer = new XmlSerializer(content.GetType());
-
-                using var textWriter = new StringWriter();
-                xmlSerializer.Serialize(textWriter, content);
-                result = textWriter.ToString();
-            }
-            catch (Exception ex)
-            {
-                Devon4NetLogger.Error($"Error trying to serialize object to XML to perform the HTTP Call");
-                Devon4NetLogger.Error(ex);
-                throw;
-            }
-
-            return result;
         }
 
         private void LogException(ref Exception exception)
@@ -188,7 +182,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
         {
             return string.IsNullOrEmpty(input)
                 ? default
-                : JsonSerializer.Deserialize<T>(input, useCamelCase ? CamelJsonSerializerOptions : null);
+                : BuiltInTypes.GetBuiltInTypeObjecNames().Contains(typeof(T).Name)  ? (T)Convert.ChangeType(input, typeof(T)) : JsonSerializer.Deserialize<T>(input, useCamelCase ? CamelJsonSerializerOptions : null);
         }
 
         private async Task CheckHttpResponse(HttpResponseMessage httpResponseMessage, string endPointName)
@@ -262,6 +256,11 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
         {
             var result = string.Empty;
 
+            if (endPoint.Contains(baseAddress))
+            {
+                endPoint = endPoint.Replace(baseAddress, "/");
+            }
+
             if (endPoint.Contains("//"))
             {
                 endPoint = endPoint.Replace("//", "/");
@@ -269,7 +268,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handler
 
             if (string.IsNullOrEmpty(baseAddress))
             {
-                throw new ArgumentException("The base address to perform the circuitbreaker call can not be null or empty");
+                throw new ArgumentException("The base address to perform the circuit breaker call can not be null or empty");
             }
 
             if (baseAddress.EndsWith("/") && endPoint.StartsWith("/"))

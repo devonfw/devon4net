@@ -1,11 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
 using Devon4Net.Infrastructure.CircuitBreaker.Handler;
 using Devon4Net.Infrastructure.Common.Options.SmaxHcm;
 using Devon4Net.Infrastructure.SmaxHcm.Common;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Catalog;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignContainer;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.CreateDesignVersion;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.GetDesignTags;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.ApplyComponentTemplateToComponent;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.CreateComponentsAndRelations;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdateComponent;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdatePropertyFromComponent;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Login;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Request;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Tenants;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Users;
 using Devon4Net.Infrastructure.SmaxHcm.Exceptions;
@@ -15,66 +30,457 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 {
     public class SmaxHcmHandler : ISmaxHcmHandler
     {
-        private ICircuitBreakerHttpClient CircuitBreakerHttpClient { get; }
+        private IHttpClientHandler HttpClientHandler { get; }
         private SmaxHcmOptions SmaxHcmOptions { get; }
         private string AuthToken { get; set; }
+        private string BasicAuthToken { get; set; }
 
-        public SmaxHcmHandler(ICircuitBreakerHttpClient circuitBreakerHttpClient, IOptions<SmaxHcmOptions> smaxHcmOptions)
+        public SmaxHcmHandler(IHttpClientHandler httpClientHandler,  IOptions<SmaxHcmOptions> smaxHcmOptions)
         {
-            CircuitBreakerHttpClient = circuitBreakerHttpClient;
+            HttpClientHandler = httpClientHandler;
             SmaxHcmOptions = smaxHcmOptions?.Value ?? throw new ArgumentException("No SmaxHcm options provided");
         }
 
-        #region Users
+        #region Designer
 
-        public async Task<GetUsersResponseDto> GetUsers(string authToken = null)
+        public Task<GetDesignResponseDto> GetDesign(string designId)
         {
-            await Login(AuthToken);
-
-            return await CircuitBreakerHttpClient.Get<GetUsersResponseDto>(SmaxHcmOptions.CircuitBreakerName, SmaxHcmEndpointConst.Users, GetAuthorizationHeaders());
-        }
-
-        public async Task<SmaxGetUserResponseDto> GetUserById(string userId, string authToken = null)
-        {
-            await Login(authToken);
-
-            if (string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(designId))
             {
-                throw new ArgumentException("The userId can not be null");
+                throw new ArgumentException("The designId can not be null");
             }
 
-            
-            return await CircuitBreakerHttpClient.Get<SmaxGetUserResponseDto>(SmaxHcmOptions.CircuitBreakerName, string.Format(SmaxHcmEndpointConst.User,userId,DateTime.Now.Ticks.ToString()), GetAuthorizationHeaders());
+            return SendSmaxHcm<GetDesignResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetDesign, SmaxHcmOptions.TenantId, designId), null, false, true);
+        }
+
+        public Task<GetIconsResponseDto> GetIcons()
+        {
+            return SendSmaxHcm<GetIconsResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetIcons, SmaxHcmOptions.TenantId), null, false, true);
+        }
+
+        public Task<GetDesignTagsResponseDto> GetDesignTags()
+        {
+            var data = new GetDesignTagsRequestDto
+            {
+                scopes = new string[]
+                {
+                    DesignConst.Sequence_Artifact_Container
+                }
+            };
+
+            return SendSmaxHcm<GetDesignTagsResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.GetDesignTags, SmaxHcmOptions.TenantId), data, false, true);
+        }
+
+        public Task<CreateDesignContainerResponseDto> CreateDesignContainer(CreateDesignContainerDto createDesignContainerDto)
+        {
+            var tags = new CreateDesignContainerRequestDto_Tag[createDesignContainerDto.Tags.Length];
+            for (var i = 0; i < createDesignContainerDto.Tags.Length; i++)
+            {
+                tags[i] = new CreateDesignContainerRequestDto_Tag
+                {
+                    self = createDesignContainerDto.Tags[i]
+                };
+            }
+
+            var data = new CreateDesignContainerRequestDto
+            {
+                container_type = DesignConst.Sequence_Artifact_Container,
+                description = createDesignContainerDto.Description,
+                name = createDesignContainerDto.Name,
+                tags = tags,
+                icon = createDesignContainerDto.Icon
+            };
+
+            return SendSmaxHcm<CreateDesignContainerResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateDesignContainer, SmaxHcmOptions.TenantId), data, false, true);
+        }
+
+        public Task<CreateDesignVersionResponseDto> CreateDesignVersion(CreateDesignVersionDto createVersionDto)
+        {
+            var data = new CreateDesignVersionRequestDto
+            {
+                containerId = createVersionDto.containerId,
+                description = createVersionDto.description,
+                icon = createVersionDto.icon,
+                name = createVersionDto.name,
+                published = createVersionDto.published,
+                type = DesignConst.Version_Type,
+                upgrades_from = new string[0],
+                upgrades_to = new string[0],
+                url = createVersionDto.url,
+                version = createVersionDto.version
+            };
+
+            return SendSmaxHcm<CreateDesignVersionResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateDesignVersion, SmaxHcmOptions.TenantId), data, false, true);
+        }
+
+        public Task DeleteDesignContainer(string containerId)
+        {
+            return SendSmaxHcm<object>(HttpMethod.Delete, string.Format(SmaxHcmEndpointConst.DeleteDesignContainer, SmaxHcmOptions.TenantId, containerId), null, false, true);
+        }
+
+        public Task DeleteDesignVersion(string versionId)
+        {
+            return SendSmaxHcm<object>(HttpMethod.Delete, string.Format(SmaxHcmEndpointConst.DeleteDesignVersion, SmaxHcmOptions.TenantId, versionId), null, false, true);
+        }
+
+        public Task<PublishDesignResponseDto> PublishDesignVersion(string versionId)
+        {
+            return SendSmaxHcm<PublishDesignResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.PublishDesign, SmaxHcmOptions.TenantId, versionId), null, false, true);
+        }
+
+        // Service designer
+
+        public Task<GetServiceDesignerMetamodelResponseDto> GetServiceDesignerMetamodel(string versionId)
+        {
+            return SendSmaxHcm<GetServiceDesignerMetamodelResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetServiceDesignerMetamodel, SmaxHcmOptions.TenantId, versionId), null, false, true);
+        }
+
+        public Task<GetComponentTemplatesFromComponentTypeResponseDto> GetComponentTemplatesFromComponentType(string componentTypeId)
+        {
+            return SendSmaxHcm<GetComponentTemplatesFromComponentTypeResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetComponentTemplatesFromComponentType, SmaxHcmOptions.TenantId, componentTypeId), null, false, true);
+        }
+
+        public Task<CreateComponentsAndRelationsResponseDto> CreateComponentsAndRelations(string versionId, CreateComponentsAndRelationsDto createComponentsAndRelationsDto)
+        {
+            var nodes = new List<CreateComponentsAndRelationsRequestDto_Node>();
+            var relationships = new List<CreateComponentsAndRelationsRequestDto_Relationship>();
+
+            foreach(var node in createComponentsAndRelationsDto.nodes)
+            {
+                nodes.Add(new CreateComponentsAndRelationsRequestDto_Node
+                {
+                    name = node.name,
+                    description = node.description,
+                    displayName = node.displayName,
+                    icon = node.icon,
+                    orderIndex = node.orderIndex,
+                    statusMessages = new object[0],
+                    tags = new string[]
+                    {
+                        DesignConst.Create_Component_Tag_Consumer_Visible
+                    },
+                    typeId = node.typeId,
+                    x = node.x,
+                    y = node.y
+                });
+            }
+
+            foreach(var relationship in createComponentsAndRelationsDto.relationships)
+            {
+                relationships.Add(new CreateComponentsAndRelationsRequestDto_Relationship
+                {
+                    name = relationship.name,
+                    displayName = relationship.displayName,
+                    relationshipTypeId = relationship.relationshipTypeId,
+                    source = new CreateComponentsAndRelationsRequestDto_Source
+                    {
+                        name = relationship.sourceName
+                    },
+                    target = new CreateComponentsAndRelationsRequestDto_Target
+                    {
+                        name = relationship.targetName
+                    }
+                });
+            }
+
+            var data = new CreateComponentsAndRelationsRequestDto
+            {
+                groups = new object[0],
+                nodes = nodes.ToArray(),
+                relationships = relationships.ToArray()
+            };
+
+            return SendSmaxHcm<CreateComponentsAndRelationsResponseDto>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.CreateComponentsAndRelations, SmaxHcmOptions.TenantId, versionId), data, false, true);
+        }
+
+        public Task UpdateComponent(UpdateComponentDto updateComponentDto)
+        {
+            var data = new UpdateComponentRequestDto
+            {
+                global_id = updateComponentDto.component_id,
+                name = updateComponentDto.name,
+                displayName = updateComponentDto.displayName,
+                description = updateComponentDto.description,
+                icon = updateComponentDto.icon,
+                processingOrder = updateComponentDto.processingOrder,
+                isConsumerVisible = updateComponentDto.isConsumerVisible,
+                isPattern = updateComponentDto.isPattern
+            };
+
+            return SendSmaxHcm<object>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.UpdateComponent, SmaxHcmOptions.TenantId, updateComponentDto.component_id), data, false, true);
+        }
+
+        public Task<ApplyComponentTemplateToComponentResponseDto> ApplyComponentTemplateToComponent(ApplyComponentTemplateToComponentDto applyComponentTemplateToComponentDto)
+        {
+            var data = new ApplyComponentTemplateToComponentRequestDto
+            {
+                componentTemplateId = applyComponentTemplateToComponentDto.componentTemplateId
+            };
+
+            return SendSmaxHcm<ApplyComponentTemplateToComponentResponseDto>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.ApplyComponentTemplateToComponent, SmaxHcmOptions.TenantId, applyComponentTemplateToComponentDto.versionId, applyComponentTemplateToComponentDto.componentId), data, false, true);
+        }
+
+        public Task<GetComponentsResponseDto> GetComponentsFromServiceDesigner(string versionId)
+        {
+            return SendSmaxHcm<GetComponentsResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetComponentsFromServiceDesigner, SmaxHcmOptions.TenantId, versionId), null, false, true);
+        }
+
+        public Task<GetPropertiesFromComponentResponseDto> GetPropertiesFromComponent(string versionId, string componentId)
+        {
+            return SendSmaxHcm<GetPropertiesFromComponentResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetPropertiesFromComponent, SmaxHcmOptions.TenantId, versionId, componentId), null, false, true);
+        }
+
+        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, string value)
+        {
+            return UpdatePropertyFromComponent(propertyId, ComponentPropertyTypesConst.STRING, value);
+        }
+
+        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, int value)
+        {
+            return UpdatePropertyFromComponent(propertyId, ComponentPropertyTypesConst.NUMBER, value);
+        }
+
+        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, bool value)
+        {
+            return UpdatePropertyFromComponent(propertyId, ComponentPropertyTypesConst.BOOLEAN, value);
+        }
+
+        public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, List<UpdateListPropertyFromComponentDto> value)
+        {
+            var data = new List<UpdatePropertyListDto>();
+
+            foreach(var property in value)
+            {
+                data.Add(new UpdatePropertyListDto
+                {
+                    name = property.name,
+                    description = property.description,
+                    value = property.value,
+                    value_type = ComponentPropertyTypesConst.STRING.ToString()
+                });
+            }
+
+            return UpdatePropertyFromComponent(propertyId, ComponentPropertyTypesConst.LIST, data);
+        }
+
+        private Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, ComponentPropertyTypesConst propertyType, object value)
+        {
+            var data = new UpdatePropertyFromComponentRequestDto
+            {
+                property_type = propertyType.ToString(),
+                property_value = value
+            };
+
+            return SendSmaxHcm<UpdatePropertyFromComponentResponseDto>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.UpdatePropertyFromComponent, SmaxHcmOptions.TenantId, propertyId), data, false, true);
         }
 
         #endregion
 
         #region Tenants
 
-        public async Task<GetUserTenantsResponseDto> GetUserTenants(string userId, string authToken = null)
+        public Task<GetUserTenantsResponseDto> GetUserTenants(string userId)
         {
-            await Login(AuthToken);
-
             if (string.IsNullOrEmpty(userId))
             {
                 throw new ArgumentException("The userId can not be null");
             }
 
-            return await CircuitBreakerHttpClient.Get<GetUserTenantsResponseDto>(SmaxHcmOptions.CircuitBreakerName, string.Format(SmaxHcmEndpointConst.UserTenants,userId, DateTime.Now.Ticks.ToString()), GetAuthorizationHeaders());
+            return SendSmaxHcm<GetUserTenantsResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.UserTenants, DateTime.Now.Ticks.ToString(), userId));
         }
 
         #endregion
 
-        #region Http
+        #region Offerings
 
-        private async Task Login(string authToken = null)
+        public Task<GetOfferingsResponseDto> GetOfferings()
         {
-            if (!string.IsNullOrEmpty(authToken))
+            return SendSmaxHcm<GetOfferingsResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.Offerings, SmaxHcmOptions.TenantId));
+        }
+
+        public Task<GetOfferingResponseDto> GetOffering(string offeringId)
+        {
+            if (string.IsNullOrEmpty(offeringId))
             {
-                AuthToken = authToken;
-                return;
+                throw new ArgumentException("The offeringId can not be null");
             }
 
+            return SendSmaxHcm<GetOfferingResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.OfferingDetail, SmaxHcmOptions.TenantId, offeringId));
+        }
+
+        public Task<CreateOfferingResponseDto> CreateOffering(CreateOfferingRequestDto createOfferingRequestDto)
+        {
+            var data = new CreateOfferingEntity
+            {
+                entity_type = BulkEntityConst.Offering,
+                properties = new CreateOfferingProperties
+                {
+                    Description = createOfferingRequestDto.Description,
+                    DisplayLabel = createOfferingRequestDto.DisplayLabel,
+                    IsBundle = createOfferingRequestDto.IsBundle,
+                    IsDefault = createOfferingRequestDto.IsDefault,
+                    IsPopularity = createOfferingRequestDto.IsPopularity,
+                    NumOfRequests = createOfferingRequestDto.NumOfRequests,
+                    OfferingType = OfferingTypeConst.ServiceOffering,
+                    RequireAssetInfo = createOfferingRequestDto.RequireAssetInfo,
+                    Service = createOfferingRequestDto.Service,
+                    Status = OfferingStatusConst.Active,
+                    SubscriptionActionType = SubscriptionActionTypeConst.All
+                }
+            };
+
+            var request = new CreateBulkOfferingRequestDto
+            {
+                operation = BulkOperationConst.Create,
+                entities = new List<CreateOfferingEntity> { data }
+            };
+
+            return SendSmaxHcm<CreateOfferingResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateOffering, SmaxHcmOptions.TenantId), request);
+        }
+
+        public Task<GetOfferingProvidersResponseDto> GetOfferingProviders(string searchText = null, string[] tags = null)
+        {
+            var data = new GetOfferingProvidersRequestDto
+            {
+                providerId = SmaxHcmOptions.ProviderId,
+                tags = tags,
+                text = searchText
+            };
+
+            return SendSmaxHcm<GetOfferingProvidersResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.GetOfferingProviders, SmaxHcmOptions.TenantId), data, false, true);
+        }
+
+        public Task<AddAgregatedOfferingResponseDto> AddAggregatedOffering(AddAgregatedOfferingDto addAgregatedOfferingDto)
+        {
+            if (addAgregatedOfferingDto == null || string.IsNullOrEmpty(addAgregatedOfferingDto.offeringId) || string.IsNullOrEmpty(addAgregatedOfferingDto.offeringDisplayName))
+            {
+                throw new ArgumentException("The offeringId or the display name can not be null");
+            }
+
+            var data = new AddAgregatedOfferingRequestDto
+            {
+                offeringDisplayName = addAgregatedOfferingDto.offeringDisplayName,
+                offeringId = addAgregatedOfferingDto.offeringId,
+                providerId = SmaxHcmOptions.ProviderId,
+                service = addAgregatedOfferingDto.service
+            };
+
+            return SendSmaxHcm<AddAgregatedOfferingResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.AddAgregatedOffering, SmaxHcmOptions.TenantId), data);
+        }
+
+        public Task<object> UpdateOffering(UpdateOfferingDto updateOfferingDto)
+        {
+
+            if (updateOfferingDto == null || string.IsNullOrEmpty(updateOfferingDto.offeringId))
+            {
+                throw new ArgumentException(
+                    "Please check the offering object properties. Object can not be null or empty");
+            }
+
+            var data = new UpdateOfferingRequest
+            {
+                providerId = string.IsNullOrEmpty(updateOfferingDto.providerId) ? SmaxHcmOptions.ProviderId : updateOfferingDto.providerId,
+                service = updateOfferingDto.service,
+                offeringDisplayName = updateOfferingDto.offeringDisplayName,
+                offeringId = updateOfferingDto.offeringId
+            };
+
+            return SendSmaxHcm<Object>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateNewOffering, SmaxHcmOptions.TenantId), data);
+        }
+
+        public Task<SwitchActivationOfferingResponse> SwitchActivationOffering(string offeringId, bool activate = true)
+        {
+            var data = new SwitchActivationOfferingRequest
+            {
+                entities = new List<SwitchActivationOfferingRequest_Entity>
+                {
+                    new SwitchActivationOfferingRequest_Entity
+                    {
+                        entity_type = BulkEntityConst.Offering,
+                        properties = new SwitchActivationOfferingRequest_Properties()
+                        {
+                            Id = offeringId,
+                            Status = activate ? OfferingStatusConst.Active : OfferingStatusConst.Inactive
+                        }
+                    }
+                },
+                operation = BulkOperationConst.Update
+            };
+
+            return SendSmaxHcm<SwitchActivationOfferingResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.SwitchActivationOffering, SmaxHcmOptions.TenantId), data);
+        }
+
+        #endregion
+
+        #region Providers
+
+        public Task<GetProvidersResponseDto> GetProviders()
+        {
+            return SendSmaxHcm<GetProvidersResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.Providers, SmaxHcmOptions.TenantId), null, false, true);
+        }
+        #endregion
+
+        #region Users
+        public Task<GetUsersResponseDto> GetUsers()
+        {
+            return SendSmaxHcm<GetUsersResponseDto>(HttpMethod.Get, SmaxHcmEndpointConst.Users);
+        }
+
+        public Task<SmaxGetUserResponseDto> GetUserById(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new ArgumentException("The userId can not be null");
+            }
+
+            return SendSmaxHcm<SmaxGetUserResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.User, userId, DateTime.Now.Ticks.ToString()));
+        }
+
+        #endregion
+
+        #region Security
+
+        public async Task<string> Login(string userName, string password)
+        {
+            BasicAuthToken = Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(userName + ":" + password));
+            AuthToken = await HttpClientHandler.Send<string>(HttpMethod.Post, SmaxHcmOptions.CircuitBreakerName, string.Format(SmaxHcmEndpointConst.Logon, SmaxHcmOptions.TenantId), new LoginRequestDto {Login = userName, Password = password}, MediaType.ApplicationJson);
+            return AuthToken;
+        }
+        #endregion
+
+        #region HttpMethods and security
+        private async Task<T> SendSmaxHcm<T>(HttpMethod httpMethod, string endpoint, object content = null,  bool getUrlWithTenant = false, bool addBasicAuth = false, bool useCamelCase = false)
+        {
+            await PerformLogin();
+            return await HttpClientHandler.Send<T>(httpMethod, SmaxHcmOptions.CircuitBreakerName, getUrlWithTenant ? GetUrlWithTenant(endpoint) : endpoint, content, MediaType.ApplicationJson, GetAuthorizationHeaders(addBasicAuth), true, useCamelCase);
+        }
+
+        private string GetUrlWithTenant(string originalUrl)
+        {
+            return string.IsNullOrEmpty(SmaxHcmOptions.TenantId) ? originalUrl : $"{originalUrl}&TENANTID={SmaxHcmOptions.TenantId}";
+        }
+
+        /// <summary>
+        /// Please check that some SMAX endpoint sometimes need the basic Athentication
+        /// </summary>
+        /// <param name="addBasicAuthentication">Flag to set the basic authentication in the header's request</param>
+        /// <returns></returns>
+        private Dictionary<string, string> GetAuthorizationHeaders(bool addBasicAuthentication)
+        {
+            var result = new Dictionary<string, string>
+            {
+                {"Cookie", $"{SmaxHcmEndpointConst.AuthorizationHeaderTokenkey}={AuthToken};TENANTID={SmaxHcmOptions.TenantId}"}
+            };
+
+            if (addBasicAuthentication)
+            {
+                result.Add("Authorization", $"Basic {BasicAuthToken}");
+            }
+
+            return result;
+        }
+
+        private async Task PerformLogin()
+        {
             if (SmaxHcmOptions == null || string.IsNullOrEmpty(SmaxHcmOptions.UserName) || string.IsNullOrEmpty(SmaxHcmOptions.Password))
             {
                 throw new SmaxHcmUnauthorizedException("No Smax authorization credentials provided");
@@ -82,52 +488,94 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
             AuthToken = await Login(SmaxHcmOptions.UserName, SmaxHcmOptions.Password).ConfigureAwait(false);
         }
-
-        public async Task<string> Login(string userName, string password)
-        {
-            AuthToken = await CircuitBreakerHttpClient.Post(SmaxHcmOptions.CircuitBreakerName, SmaxHcmEndpointConst.Logon, new LoginRequestDto { Login = userName, Password = password }, MediaType.ApplicationJson, null, true);
-            return AuthToken;
-        }
-
         #endregion
 
-        #region HttpMethods
-        private async Task<T> GetSmaxHcm<T>(string endpoint, string tenantId, bool useCamelCase, string authToken = null)
-        {
-            await Login(authToken);
-            return await CircuitBreakerHttpClient.Get<T>(SmaxHcmOptions.CircuitBreakerName, GetUrlWithTenant(endpoint, tenantId), GetAuthorizationHeaders(), useCamelCase);
-        }
+        #region Catalog
 
-        private async Task<T> PostSmaxHcm<T>(string endpoint, string tenantId, object dataToSend, bool useCamelCase, string authToken = null)
+        public Task<object> GetCatalogProviders(string category, bool includeArticles, bool includeOfferings, string query)
         {
-            await Login(authToken);
-            return await CircuitBreakerHttpClient.Post<T>(SmaxHcmOptions.CircuitBreakerName, GetUrlWithTenant(endpoint, tenantId), dataToSend, MediaType.ApplicationJson, GetAuthorizationHeaders(), useCamelCase);
-        }
-
-        private async Task<T> PutSmaxHcm<T>(string endpoint, string tenantId, object dataToSend, bool useCamelCase, string authToken = null)
-        {
-            await Login(authToken);
-            return await CircuitBreakerHttpClient.Put<T>(SmaxHcmOptions.CircuitBreakerName, GetUrlWithTenant(endpoint, tenantId), dataToSend, MediaType.ApplicationJson, GetAuthorizationHeaders(), useCamelCase);
-        }
-
-        private async Task<T> DeleteSmaxHcm<T>(string endpoint, string tenantId, bool useCamelCase, string authToken = null)
-        {
-            await Login(authToken);
-            return await CircuitBreakerHttpClient.Delete<T>(SmaxHcmOptions.CircuitBreakerName, GetUrlWithTenant(endpoint, tenantId), GetAuthorizationHeaders(), useCamelCase);
-        }
-
-        private string GetUrlWithTenant(string originalUrl, string tenantId)
-        {
-            return string.IsNullOrEmpty(tenantId) ? originalUrl : $"{originalUrl}&TENANTID={tenantId}";
-        }
-
-        private Dictionary<string, string> GetAuthorizationHeaders()
-        {
-            return new Dictionary<string, string>
+            var data = new QueryCatalogRequest
             {
-                {"Cookie", $"{SmaxHcmEndpointConst.AuthorizationHeaderTokenkey}={AuthToken}"}
+                categoryId = category,
+                includeArticles = includeArticles,
+                includeOfferings = includeOfferings,
+                searchQuery = query ?? string.Empty
             };
+
+            return SendSmaxHcm<Object>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.GetCatalogFeaturedProviders, SmaxHcmOptions.TenantId), data);
         }
+
+        public Task<GetOfferingsResponseDto> GetServiceDefinitions()
+        {
+            return SendSmaxHcm<GetOfferingsResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetServiceDefinitions, SmaxHcmOptions.TenantId));
+        }
+        #endregion
+
+        #region Request
+
+        public Task<GetAllRequestsResponseDto> GetAllRequest()
+        {
+            return SendSmaxHcm<GetAllRequestsResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetAllRequest, SmaxHcmOptions.TenantId));
+        }
+
+        /// <summary>
+        /// sample: { "entity": { "entity_type": "Request", "properties": { "ImpactScope": "Enterprise", "Urgency": "NoDisruption", "RequestedByPerson": "10016", "RequestsOffering": "11428", "DisplayLabel": "Request from Postman", "Description": "<p>This is a request created from Postman</p>", "UserOptions": "{"complexTypeProperties":[{"properties":{"OptionSet5FCCC5624DDDBA17DA397224C5D4ED0B_c":{"Option55F063755603608CB8287224C5D426DE_c":true},"OptionSetB9C2FB0D304A86418C651492D37A5E72_c":{"Option90AB77B8232585150B951492D37AE403_c":true},"changedUserOptionsForSimulation":"EndDate&","PropertyamazonResourceProvider55F063755603608CB8287224C5D426DE_c":"8a809efe73146d590173147b4a954cfc","Propertyregion55F063755603608CB8287224C5D426DE_c":"eu-west-1","PropertyPlatformType55F063755603608CB8287224C5D426DE_c":"Amazon Linux#eu-west-1","Propertykeypair55F063755603608CB8287224C5D426DE_c":"FARM-1-0d7bdb2a","PropertyvpcId55F063755603608CB8287224C5D426DE_c":"eu-west-1#vpc-017f010990ed442ce","Propertyimage55F063755603608CB8287224C5D426DE_c":"ami-0093757e056f6fe96","PropertysubnetId55F063755603608CB8287224C5D426DE_c":"subnet-0dcd276d74eb84059"}}]}", "DataDomains": [ "Public" ], "StartDate": 1596664800000, "EndDate": 1599170400000, "RequestAttachments": "{"complexTypeProperties":[]}" } }, "operation": "CREATE" } 
+        /// </summary>
+        /// <param name="createNewRequestDto">The response of the API please check the status provided at "completion_status" node</param>
+        /// <returns></returns>
+        public Task<CreateRequestResponse> CreateRequest(CreateRequestPropertiesDto createNewRequestDto)
+        {
+            if (createNewRequestDto == null )
+            {
+                throw new ArgumentException(
+                    "Please check the create NewRequest Dto object properties. Object can not be null or empty");
+            }
+
+            var data = new CreateRequestEntity
+            {
+                entity_type = BulkEntityConst.Request,
+                properties = new CreateRequestProperties
+                {
+                    Description = createNewRequestDto.Description,
+                    DisplayLabel = createNewRequestDto.DisplayLabel,
+                    StartDate = GetTotalMillisecondsFromDateTime(createNewRequestDto.StartDate),
+                    EndDate = createNewRequestDto.EndDate.HasValue ? GetTotalMillisecondsFromDateTime(createNewRequestDto.EndDate.Value) : null as long?,
+                    RequestedByPerson = createNewRequestDto.RequestedByPerson,
+                    RequestsOffering = createNewRequestDto.RequestsOffering,
+                    ImpactScope = BulkImpactScopeConst.Enterprise,
+                    Urgency = BulkUrgencyConst.NoDisruption,
+                    //UserOptions = createNewRequestDto.entity.properties.UserOptions != null ? createNewRequestDto.entity.properties.UserOptions : new UserOptionsDto{complexTypeProperties = new List<Complextypeproperty>()},
+                    UserOptions = createNewRequestDto.UserOptions,
+                    DataDomains = new List<string> {BulkDataDomainsConst.Public},
+                    RequestAttachments = createNewRequestDto.RequestAttachments
+                }
+            };
+
+            var request = new CreateRequestDto
+            {
+                operation = BulkOperationConst.Create,
+                entities = new List<CreateRequestEntity> {data}
+            };
+
+            return SendSmaxHcm<CreateRequestResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateRequest, SmaxHcmOptions.TenantId), request);
+        }
+
+        public Task<GetUsersByUserNameResponse> GetUsersByUserName(string username)
+        {
+            return SendSmaxHcm<GetUsersByUserNameResponse>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetUsersByName, SmaxHcmOptions.TenantId, username), null, false, true);
+        }
+
+        private long GetTotalMillisecondsFromDateTime(DateTime dateTime)
+        {
+            if (dateTime == null || dateTime == default || dateTime == DateTime.MinValue || dateTime == DateTime.MaxValue)
+            {
+                throw new ArgumentException($"The {nameof(dateTime)} provided can not have the value {dateTime}");
+            }
+
+            var offSet = new DateTimeOffset(dateTime);
+            return offSet.ToUnixTimeMilliseconds();
+        }
+
         #endregion
     }
 }

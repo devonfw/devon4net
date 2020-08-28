@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Devon4Net.Infrastructure.AnsibleTower.Common;
@@ -24,7 +25,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
     /// </summary>
     public class AnsibleTowerHandler : IAnsibleTowerHandler
     {
-        private ICircuitBreakerHttpClient CircuitBreakerHttpClient { get; }
+        private IHttpClientHandler HttpClientHandler { get; }
         private IAnsibleTowerInstance AnsibleTowerInstance { get; }
         private string AuthToken { get; set; }
 
@@ -33,9 +34,9 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         /// </summary>
         /// <param name="ansibleTowerInstance"></param>
         /// <param name="circuitBreakerHttpClient"></param>
-        public AnsibleTowerHandler(IAnsibleTowerInstance ansibleTowerInstance, ICircuitBreakerHttpClient circuitBreakerHttpClient)
+        public AnsibleTowerHandler(IAnsibleTowerInstance ansibleTowerInstance, IHttpClientHandler httpClientHandler)
         {
-            CircuitBreakerHttpClient = circuitBreakerHttpClient;
+            HttpClientHandler = httpClientHandler;
             AnsibleTowerInstance = ansibleTowerInstance;
         }
 
@@ -50,8 +51,9 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         [Route("/v1/ansible/Ansiblelogin")]
         public async Task<LoginRequestDto> Login(string userName, string password)
         {
-            var result = await CircuitBreakerHttpClient.Post<LoginRequestDto>(AnsibleTowerInstance.CircuitBreakerName, AnsibleTowerInstance.ApiDefinition.tokens, null, MediaType.ApplicationJson, GetLoginHeaders(userName, password), true).ConfigureAwait(false);
-            AuthToken = result.Token;
+            var result = await HttpClientHandler.Send<LoginRequestDto>(HttpMethod.Post, AnsibleTowerInstance.CircuitBreakerName, AnsibleTowerInstance.ApiDefinition.tokens, null, MediaType.ApplicationJson, GetLoginHeaders(userName, password)).ConfigureAwait(false);
+            //var result = await CircuitBreakerHttpClient.Post<LoginRequestDto>(AnsibleTowerInstance.CircuitBreakerName, AnsibleTowerInstance.ApiDefinition.tokens, null, MediaType.ApplicationJson, GetLoginHeaders(userName, password), true).ConfigureAwait(false);
+            AuthToken = result.token;
 
             return result;
         }
@@ -335,7 +337,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         /// <returns></returns>
         public Task<PingResponseDto> Ping()
         {
-            return CircuitBreakerHttpClient.Get<PingResponseDto>(AnsibleTowerInstance.CircuitBreakerName, AnsibleTowerInstance.ApiDefinition.ping, null, true);
+            return HttpClientHandler.Send<PingResponseDto>(HttpMethod.Get, AnsibleTowerInstance.CircuitBreakerName, AnsibleTowerInstance.ApiDefinition.ping, null, MediaType.ApplicationJson);
         }
 
         /// <summary>
@@ -359,7 +361,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
 
             var credentials = await Login(AnsibleTowerInstance.Username, AnsibleTowerInstance.Password);
 
-            AuthToken = credentials.Token;
+            AuthToken = credentials.token;
         }
 
         /// <summary>
@@ -398,7 +400,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         {
             await SetAutehnticationTokenAsync(authenticationToken);
             var searchCriteriaUri = (searchCriteria != null ? "?search=" + searchCriteria : string.Empty);
-            return await CircuitBreakerHttpClient.Get<T>(AnsibleTowerInstance.CircuitBreakerName, endpoint + searchCriteriaUri, GetAuthorizationHeaders(), true);
+            return await HttpClientHandler.Send<T>(HttpMethod.Get, AnsibleTowerInstance.CircuitBreakerName, endpoint + searchCriteriaUri, null, MediaType.ApplicationJson, GetAuthorizationHeaders());
         }
 
         /// <summary>
@@ -412,7 +414,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         private async Task<T> PostAnsible<T>(string authenticationToken, string endpoint, object dataToSend)
         {
             await SetAutehnticationTokenAsync(authenticationToken);
-            return await CircuitBreakerHttpClient.Post<T>(AnsibleTowerInstance.CircuitBreakerName, endpoint, dataToSend, MediaType.ApplicationJson, GetAuthorizationHeaders(), true);
+            return await HttpClientHandler.Send<T>(HttpMethod.Post, AnsibleTowerInstance.CircuitBreakerName, endpoint, dataToSend, MediaType.ApplicationJson, GetAuthorizationHeaders());
         }
 
         /// <summary>
@@ -426,7 +428,7 @@ namespace Devon4Net.Infrastructure.AnsibleTower.Handler
         private async Task<T> DeleteAnsible<T>(string authenticationToken, string endpoint, bool useCamelCase = true)
         {
             await SetAutehnticationTokenAsync(authenticationToken);
-            return await CircuitBreakerHttpClient.Delete<T>(AnsibleTowerInstance.CircuitBreakerName, endpoint, GetAuthorizationHeaders(), useCamelCase);
+            return await HttpClientHandler.Send<T>(HttpMethod.Delete, AnsibleTowerInstance.CircuitBreakerName, endpoint, null, MediaType.ApplicationJson, GetAuthorizationHeaders(),true, useCamelCase);
         }
         #endregion
     }

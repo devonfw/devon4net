@@ -33,32 +33,21 @@
 
   <ItemGroup>
     <PackageReference Include="EasyNetQ" Version="5.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.5" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.5" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.5" />
-    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
-      <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
-      <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.5.1" />
-      <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.1.2" />
-      <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.1" />
-      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="5.5.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.7" />
+    <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.5.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.1.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="5.5.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Options\Swagger\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Remove="Options\Swagger\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Options\Swagger\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Templates\Devon4NetAPI\Devon4Net.WebAPI.Implementation\Devon4Net.WebAPI.Implementation.csproj" />
@@ -66,6 +55,7 @@
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.AnsibleTower\Devon4Net.Infrastructure.AnsibleTower.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.CircuitBreaker\src\Devon4Net.Infrastructure.CircuitBreaker.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.Common\src\Devon4Net.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\..\Devon4Net.Infrastructure.Cors\Devon4Net.Infrastructure.Cors.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.CyberArk\Devon4Net.Infrastructure.CyberArk.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.Extensions\src\Devon4Net.Infrastructure.Extensions.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.JWT\src\Devon4Net.Infrastructure.JWT.csproj" />
@@ -75,10 +65,7 @@
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.Middleware\src\Devon4Net.Infrastructure.Middleware.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.RabbitMQ\Devon4Net.Infrastructure.RabbitMQ.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.SmaxHcm\Devon4Net.Infrastructure.SmaxHcm.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Common\" />
+    <ProjectReference Include="..\..\Devon4Net.Infrastructure.Swagger\Devon4Net.Infrastructure.Swagger.csproj" />
   </ItemGroup>
 
 </Project>
