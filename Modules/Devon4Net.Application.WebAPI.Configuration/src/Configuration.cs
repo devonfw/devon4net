@@ -13,12 +13,12 @@ namespace Devon4Net.Application.WebAPI.Configuration
         public static void ConfigureDevonFw(this IServiceCollection services, IConfiguration configuration)
         {
             services.SetupDevonfw(ref configuration);
+            services.SetupLog(ref configuration);
             services.SetupUnitOfWork();
             SetupSwagger(ref services, ref configuration);
             services.SetupCors(ref configuration);
             services.SetupCircuitBreaker(ref configuration);
             services.SetupHeaders(ref configuration);
-            services.SetupLog(ref configuration);
             services.SetupJwtConf(ref configuration);
             services.SetupLiteDb(ref configuration);
             services.SetupRabbitMq(ref configuration);
