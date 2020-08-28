@@ -30,8 +30,8 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
         public static IWebHostBuilder InitializeDevonFw(this IWebHostBuilder builder)
         {
             LoadConfiguration();
-            builder.UseSerilog();
             builder.UseConfiguration(Configuration);
+            builder.UseSerilog();
 
             var useDetailedErrorsKey = Configuration[$"{DevonFwConst.DevonFwAppSettingsNodeName}:UseDetailedErrorsKey"];
             builder.UseSetting(WebHostDefaults.DetailedErrorsKey, useDetailedErrorsKey);
