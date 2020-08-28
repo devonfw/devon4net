@@ -54,7 +54,13 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
 
         public static void SetupDevonfw(this IServiceCollection services, ref IConfiguration configuration)
         {
-            services.GetTypedOptions<DevonfwOptions>(configuration, DevonFwConst.DevonFwAppSettingsNodeName);
+            var devonOptions = services.GetTypedOptions<DevonfwOptions>(configuration, DevonFwConst.DevonFwAppSettingsNodeName);
+
+            if (devonOptions == null || string.IsNullOrEmpty(devonOptions.Environment) || devonOptions.Kestrel == null)
+            {
+                throw new ApplicationException("Please check the devonfw options node in your configuration file");
+            }
+
             services.ConfigureIIS(ref configuration);
             services.SetupKillSwitch(ref configuration);
             services.AddTransient(typeof(IObjectTypeHelper), typeof(ObjectTypeHelper));

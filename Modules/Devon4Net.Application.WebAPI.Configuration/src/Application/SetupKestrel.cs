@@ -104,6 +104,8 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
 
         private static HttpProtocols GetHttProtocol(string httpProtocol)
         {
+            if (httpProtocol == null) return HttpProtocols.Http1;
+
             return (httpProtocol.ToLower()) switch
             {
                 "http1" => HttpProtocols.Http1,
