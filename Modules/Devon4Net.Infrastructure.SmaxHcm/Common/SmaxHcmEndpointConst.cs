@@ -41,6 +41,7 @@
         public const string GetPropertiesFromComponent = "/{0}/dnd/api/designs/graph/{1}/component/{2}/properties"; // tenantId, versionId, componentId
         public const string UpdatePropertyFromComponent = "{0}/dnd/api/property/{1}"; // tenantId, propertyId
         public const string UpdateComponent = "/{0}/dnd/api/components/{1}"; // tenantId, componentId
+        public const string GetOverviewFromComponent = "/{0}/dnd/api/components/{1}"; // tenantId, componentId
         #endregion
 
         #region Catalog

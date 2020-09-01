@@ -193,6 +193,11 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<CreateComponentsAndRelationsResponseDto>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.CreateComponentsAndRelations, SmaxHcmOptions.TenantId, versionId), data, false, true);
         }
 
+        public Task<GetOverviewFromComponentResponseDto> GetOverviewFromComponent(string componentId)
+        {
+            return SendSmaxHcm<GetOverviewFromComponentResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetOverviewFromComponent, SmaxHcmOptions.TenantId, componentId), null, false, true);
+        }
+
         public Task UpdateComponent(UpdateComponentDto updateComponentDto)
         {
             var data = new UpdateComponentRequestDto
