@@ -565,6 +565,11 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<GetUsersByUserNameResponse>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetUsersByName, SmaxHcmOptions.TenantId, username), null, false, true);
         }
 
+        public Task<GetRequestResponseDto> GetRequestById(string requestId)
+        {
+            return SendSmaxHcm<GetRequestResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetRequestById, SmaxHcmOptions.TenantId, requestId), null, false, true);
+        }
+
         private long GetTotalMillisecondsFromDateTime(DateTime dateTime)
         {
             if (dateTime == null || dateTime == default || dateTime == DateTime.MinValue || dateTime == DateTime.MaxValue)

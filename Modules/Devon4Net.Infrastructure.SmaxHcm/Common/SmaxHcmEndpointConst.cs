@@ -55,6 +55,7 @@
         public const string GetAllRequest = "/rest/{0}/ess/request/allRequestsWithBundles"; // tenantId
         public const string CreateRequest = "/rest/{0}/ems/bulk"; // tenantId
         public const string GetUsersByName = "/rest/{0}/ems/Person?filter=((IsSystemIntegration != 'true' and IsSystem != 'true') and Upn startswith ('{1}'))&layout=Id,Name,Upn"; // tenantId, username
+        public const string GetRequestById = "/rest/{0}/ems/Request/{1}?layout=PhaseId"; // tenantId, RequestId
         #endregion
 
         #region Offering
