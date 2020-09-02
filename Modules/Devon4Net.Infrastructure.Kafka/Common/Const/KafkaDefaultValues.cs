@@ -18,5 +18,7 @@ namespace Devon4Net.Infrastructure.Kafka.Common.Const
         public const int MaxInFlight = 5;
         public const int MessageSendMaxRetries = 5;
         public const int BatchSize = 1000000;
+        public const int StatisticsIntervalMs = 0;
+        public const int SessionTimeoutMs = 3000;
     }
 }
