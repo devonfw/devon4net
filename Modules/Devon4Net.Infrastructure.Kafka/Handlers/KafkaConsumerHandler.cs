@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using Confluent.Kafka;
+using Devon4Net.Infrastructure.Log;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Devon4Net.Infrastructure.Kafka.Handlers
 {
-    public abstract class KafkaConsumerHandler
+    public abstract class KafkaConsumerHandler<T, TV> where T : class where TV : class
     {
-        public abstract Task HandleCommand<T, TV>(ConsumeResult<T, TV> consumeResult);
+        public abstract void HandleCommand(TV consumeResult);
         private IKakfkaHandler KafkaHandler { get; set; }
-        private IServiceCollection Services { get; set; }
+        protected IServiceCollection Services { get; set; }
 
         private string ConsumerId { get; set; }
 
-        protected KafkaConsumerHandler(IServiceCollection services, IKakfkaHandler kafkaHandler, string consumerId)
+        protected KafkaConsumerHandler(IServiceCollection services, IKakfkaHandler kafkaHandler, string consumerId, bool commit = false, int commitPeriod = 5)
         {
             Services = services;
             KafkaHandler = kafkaHandler;
             ConsumerId = consumerId;
+            Consume(commit, commitPeriod);
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
         /// <param name="consumerId"></param>
         /// <param name="commit"></param>
         /// <param name="commitPeriod"></param>
-        public async Task Consume<T, TV>(bool commit = false, int commitPeriod = 5) where T : class where TV : class
+        private void Consume(bool commit, int commitPeriod) 
         {
             var cancellationToken = new CancellationTokenSource();
 
@@ -43,16 +44,14 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
                     try
                     {
                         var consumeResult = consumer.Consume(cancellationToken.Token);
-                        await HandleCommand(consumeResult);
+                        HandleCommand(consumeResult.Message.Value);
                         if (consumeResult.IsPartitionEOF)
                         {
-                            Console.WriteLine(
-                                $"Reached end of topic {consumeResult.Topic}, partition {consumeResult.Partition}, offset {consumeResult.Offset}.");
-
+                            Devon4NetLogger.Information($"Reached end of topic {consumeResult.Topic}, partition {consumeResult.Partition}, offset {consumeResult.Offset}.");
                             continue;
                         }
 
-                        Console.WriteLine($"Received message at {consumeResult.TopicPartitionOffset}: {consumeResult.Message.Value}");
+                        Devon4NetLogger.Debug($"Received message at {consumeResult.TopicPartitionOffset}: {consumeResult.Message.Value}");
 
                         if (!commit) return;
 
@@ -69,18 +68,18 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
                         }
                         catch (KafkaException e)
                         {
-                            Console.WriteLine($"Commit error: {e.Error.Reason}");
+                            Devon4NetLogger.Error($"Commit error: {e.Error.Reason}");
                         }
                     }
                     catch (ConsumeException e)
                     {
-                        Console.WriteLine($"Consume error: {e.Error.Reason}");
+                        Devon4NetLogger.Error($"Consume error: {e.Error.Reason}");
                     }
                 }
             }
             catch (OperationCanceledException)
             {
-                Console.WriteLine("Closing consumer.");
+                Devon4NetLogger.Error("Closing consumer.");
                 consumer.Close();
             }
         }
