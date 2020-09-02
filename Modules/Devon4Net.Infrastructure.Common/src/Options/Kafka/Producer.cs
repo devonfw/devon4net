@@ -2,6 +2,7 @@
 {
     public class Producer
     {
+        public string ProducerId { get; set; }
         public string Servers { get; set; }
         public string ClientId { get; set; }
         public int? MessageMaxBytes { get; set; }
