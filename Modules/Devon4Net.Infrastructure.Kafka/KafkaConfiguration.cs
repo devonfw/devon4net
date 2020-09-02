@@ -2,7 +2,7 @@
 using Confluent.Kafka;
 using Devon4Net.Infrastructure.Common.Options;
 using Devon4Net.Infrastructure.Common.Options.Kafka;
-using Devon4Net.Infrastructure.Kafka.Handler;
+using Devon4Net.Infrastructure.Kafka.Handlers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

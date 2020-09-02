@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Confluent.Kafka;
 
-namespace Devon4Net.Infrastructure.Kafka.Handler
+namespace Devon4Net.Infrastructure.Kafka.Handlers
 {
     public interface IKakfkaHandler
     {

@@ -6,7 +6,7 @@ using Devon4Net.Infrastructure.Kafka.Common.Const;
 using Devon4Net.Infrastructure.Kafka.Exceptions;
 using Devon4Net.Infrastructure.Log;
 
-namespace Devon4Net.Infrastructure.Kafka.Handler
+namespace Devon4Net.Infrastructure.Kafka.Handlers
 {
     public class KakfkaHandler : IKakfkaHandler
     {
