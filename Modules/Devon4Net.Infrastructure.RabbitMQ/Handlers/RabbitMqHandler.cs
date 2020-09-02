@@ -61,8 +61,14 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
 
         public TS GetInstance<TS>()
         {
-            using var sp = Services.BuildServiceProvider();
-            return sp.GetService<TS>();
+            TS result;
+            var sp = Services.BuildServiceProvider();
+
+            using (var scope = sp.CreateScope())
+            {
+                result = scope.ServiceProvider.GetService<TS>();
+            }
+            return result;
         }
 
         private async Task<bool> BackupAndHandleCommand(T message)

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Confluent.Kafka;
 using Devon4Net.Infrastructure.Common.Options.Kafka;
+using Devon4Net.Infrastructure.Kafka.Common.Const;
 using Devon4Net.Infrastructure.Log;
 
 namespace Devon4Net.Infrastructure.Kafka.Handler
@@ -15,21 +16,21 @@ namespace Devon4Net.Infrastructure.Kafka.Handler
             KafkaOptions = kafkaOptions;
         }
 
-        public IProducer<T, V> GetProducerBuilder<T,V>(string clientId) where T : class where V : class
+        public IProducer<T, TV> GetProducerBuilder<T,TV>(string clientId) where T : class where TV : class
         {
             var producerOptions = KafkaOptions.Producers.FirstOrDefault(p => p.ClientId == clientId);
             var configuration = GetDefaultKafkaConfiguration(producerOptions);
 
-            return new ProducerBuilder<T,V>(configuration).Build();
+            return new ProducerBuilder<T,TV>(configuration).Build();
         }
 
-        public async Task<DeliveryResult<T, V>> DeliverMessage<T, V>(T key, V value, string clientId, string topicName) where T : class where V : class
+        public async Task<DeliveryResult<T, TV>> DeliverMessage<T, TV>(T key, TV value, string clientId, string topicName) where T : class where TV : class
         {
-            DeliveryResult<T, V> result;
-            using var producer = GetProducerBuilder<T, V>(clientId);
+            DeliveryResult<T, TV> result;
+            using var producer = GetProducerBuilder<T, TV>(clientId);
             try
             {
-                result = await producer.ProduceAsync(topicName, new Message<T, V> { Key = key, Value = value }).ConfigureAwait(false);
+                result = await producer.ProduceAsync(topicName, new Message<T, TV> { Key = key, Value = value }).ConfigureAwait(false);
                 producer.Flush();
                 producer.Dispose();
             }
@@ -49,20 +50,20 @@ namespace Devon4Net.Infrastructure.Kafka.Handler
             {
                 BootstrapServers = producer.Servers,
                 ClientId = producer.ClientId,
-                CompressionLevel = producer.CompressionLevel ?? -1,
+                CompressionLevel = producer.CompressionLevel ?? KafkaDefaultValues.CompressionLevel,
                 CompressionType = GetCompressionType(producer.CompressionType),
                 EnableSslCertificateVerification = producer.EnableSslCertificateVerification,
-                CancellationDelayMaxMs = producer.CancellationDelayMaxMs ?? 50,
+                CancellationDelayMaxMs = producer.CancellationDelayMaxMs ?? KafkaDefaultValues.CancellationDelayMaxMs,
                 Acks = GetAck(producer.Ack),
                 Debug = producer.Debug,
-                BrokerAddressTtl = producer.BrokerAddressTtl ?? 1000,
-                BatchNumMessages = producer.BatchNumMessages ?? 100000,
+                BrokerAddressTtl = producer.BrokerAddressTtl ?? KafkaDefaultValues.BrokerAddressTtl,
+                BatchNumMessages = producer.BatchNumMessages ?? KafkaDefaultValues.BatchNumMessages,
                 EnableIdempotence = producer.EnableIdempotence,
-                MaxInFlight = producer.MaxInFlight ?? 5,
-                MessageSendMaxRetries = producer.MessageSendMaxRetries ?? 5,
-                BatchSize = producer.BatchSize ?? 100000000,
-                MessageMaxBytes = producer.MessageMaxBytes ?? 100000000,
-                ReceiveMessageMaxBytes = producer.ReceiveMessageMaxBytes ?? 100000000
+                MaxInFlight = producer.MaxInFlight ?? KafkaDefaultValues.MaxInFlight,
+                MessageSendMaxRetries = producer.MessageSendMaxRetries ?? KafkaDefaultValues.MessageSendMaxRetries,
+                BatchSize = producer.BatchSize ?? KafkaDefaultValues.BatchSize,
+                MessageMaxBytes = producer.MessageMaxBytes ?? KafkaDefaultValues.MessageMaxBytes,
+                ReceiveMessageMaxBytes = producer.ReceiveMessageMaxBytes ?? KafkaDefaultValues.ReceiveMessageMaxBytes
             };
         }
 

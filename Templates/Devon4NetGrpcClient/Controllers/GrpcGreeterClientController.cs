@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Devon4Net.Application.GrpcService;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Http;
@@ -22,10 +23,10 @@ namespace Devon4Net.Application.GrpcClient.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public Task<HelloReply> Get()
+        public Task<HelloReply> Get(string name)
         {
             var client = new Greeter.GreeterClient(GrpcChannel);
-            return client.SayHelloAsync(new HelloRequest { Name = "GreeterClient" }).ResponseAsync;
+            return client.SayHelloAsync(new HelloRequest { Name = name }).ResponseAsync;
         }
     }
 }
