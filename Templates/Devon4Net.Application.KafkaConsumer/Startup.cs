@@ -1,4 +1,4 @@
-using Devon4Net.Application.KafkaConsumer.Business.KafkaConsumer.Handlers;
+using Devon4Net.Application.KafkaConsumer.Business.KafkaManagement.Handlers;
 using Devon4Net.Application.WebAPI.Configuration;
 using Devon4Net.Infrastructure.Kafka;
 using Microsoft.AspNetCore.Builder;
@@ -24,6 +24,7 @@ namespace Devon4Net.Application.KafkaConsumer
             services.AddControllers();
             services.ConfigureDevonFw(Configuration);
             services.SetupKafka(Configuration);
+            services.AddKafkaProducer<MessageProducerHandler>("Producer1");
             services.AddKafkaConsumer<MessageConsumerHandler>("Consumer1");
         }
 

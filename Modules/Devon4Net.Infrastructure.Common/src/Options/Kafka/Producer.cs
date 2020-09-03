@@ -5,6 +5,7 @@
         public string ProducerId { get; set; }
         public string Servers { get; set; }
         public string ClientId { get; set; }
+        public string Topic { get; set; }
         public int? MessageMaxBytes { get; set; }
         public int? CompressionLevel { get; set; }
         public string CompressionType { get; set; }

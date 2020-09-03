@@ -2,7 +2,7 @@
 using Devon4Net.Infrastructure.Log;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devon4Net.Application.KafkaConsumer.Business.KafkaConsumer.Handlers
+namespace Devon4Net.Application.KafkaConsumer.Business.KafkaManagement.Handlers
 {
     public class MessageConsumerHandler : KafkaConsumerHandler<string, string>
     {

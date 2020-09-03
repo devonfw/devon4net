@@ -20,6 +20,7 @@ namespace Devon4Net.Infrastructure.Kafka
             if (kafkaOptions == null || !kafkaOptions.EnableKafka || kafkaOptions.Producers == null || !kafkaOptions.Producers.Any()) return;
 
             services.AddTransient(typeof(IKakfkaHandler), typeof(KakfkaHandler));
+            //services.AddTransient(typeof(KafkaProducerHandler<,>));
         }
 
         public static void AddKafkaConsumer<T>(this IServiceCollection services, string consumerId, bool commit = false, int commitPeriod = 5) where T : class 
@@ -34,7 +35,23 @@ namespace Devon4Net.Infrastructure.Kafka
             using var sp = services.BuildServiceProvider();
             var kafHandler = sp.GetService<IKakfkaHandler>();
 
-            var obj = Activator.CreateInstance(typeof(T), services, kafHandler, consumerId, commit, commitPeriod);
+            var obj = (T)Activator.CreateInstance(typeof(T), services, kafHandler, consumerId, commit, commitPeriod);
+
+            services.AddSingleton(obj);
+        }
+
+        public static void AddKafkaProducer<T>(this IServiceCollection services, string producerId) where T : class
+        {
+            var memberInfo = typeof(T).BaseType;
+            if (memberInfo != null && !memberInfo.Name.Contains("KafkaProducerHandler"))
+            {
+                throw new ArgumentException($"The provided type {typeof(T).FullName} does not inherit from KafkaProducerHandler");
+            }
+
+            using var sp = services.BuildServiceProvider();
+            var kafHandler = sp.GetService<IKakfkaHandler>();
+
+            var obj = (T)Activator.CreateInstance(typeof(T), services, kafHandler, producerId);
 
             services.AddSingleton(obj);
         }

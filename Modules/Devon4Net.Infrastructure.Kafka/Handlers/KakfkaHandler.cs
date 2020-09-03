@@ -23,6 +23,29 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
 
         public IProducer<T, TV> GetProducerBuilder<T, TV>(string producerId) where T : class where TV : class
         {
+            var producerOptions = GetProducerOptions(producerId);
+
+            var configuration = GetDefaultKafkaProducerConfiguration(producerOptions);
+
+            var producer = GetProducerBuilderInstance<T, TV>(configuration);
+
+            var result = producer.Build();
+
+            return result;
+        }
+
+        private static ProducerBuilder<T, TV> GetProducerBuilderInstance<T, TV>(ProducerConfig configuration) where T : class where TV : class
+        {
+            var producer = new ProducerBuilder<T, TV>(configuration);
+
+            producer.SetErrorHandler((_, e) => Devon4NetLogger.Error(new ConsumerException($"Error code {e.Code} : {e.Reason}")));
+            producer.SetStatisticsHandler((_, json) => Devon4NetLogger.Information($"Statistics: {json}"));
+            producer.SetLogHandler((c, partitions) =>{Devon4NetLogger.Information($"Kafka log handler: [{string.Join(", ", partitions)}]");});
+            return producer;
+        }
+
+        private Producer GetProducerOptions(string producerId)
+        {
             if (string.IsNullOrEmpty(producerId))
             {
                 throw new ProducerNotFoundException($"The producerId param can not be null or empty");
@@ -35,20 +58,7 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
                 throw new ConsumerNotFoundException($"Could not find producer configuration with ConsumerId {producerId}");
             }
 
-            var configuration = GetDefaultKafkaProducerConfiguration(producerOptions);
-
-            var producer = new ProducerBuilder<T, TV>(configuration);
-
-            producer.SetErrorHandler((_, e) => Devon4NetLogger.Error(new ConsumerException($"Error code {e.Code} : {e.Reason}")));
-            producer.SetStatisticsHandler((_, json) => Devon4NetLogger.Information($"Statistics: {json}"));
-            producer.SetLogHandler((c, partitions) =>
-            {
-                Devon4NetLogger.Information($"Kafka log handler: [{string.Join(", ", partitions)}]");
-            });
-
-            var result = producer.Build();
-
-            return result;
+            return producerOptions;
         }
 
         private static ProducerConfig GetDefaultKafkaProducerConfiguration(Producer producer)
@@ -74,13 +84,14 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
             };
         }
 
-        public async Task<DeliveryResult<T, TV>> DeliverMessage<T, TV>(T key, TV value, string clientId, string topicName) where T : class where TV : class
+        public async Task<DeliveryResult<T, TV>> DeliverMessage<T, TV>(T key, TV value, string producerId) where T : class where TV : class
         {
             DeliveryResult<T, TV> result;
-            using var producer = GetProducerBuilder<T, TV>(clientId);
+            var producerOptions = GetProducerOptions(producerId);
+            using var producer = GetProducerBuilder<T, TV>(producerId);
             try
             {
-                result = await producer.ProduceAsync(topicName, new Message<T, TV> { Key = key, Value = value }).ConfigureAwait(false);
+                result = await producer.ProduceAsync(producerOptions.Topic, new Message<T, TV> { Key = key, Value = value }).ConfigureAwait(false);
                 producer.Flush();
                 producer.Dispose();
             }
@@ -155,7 +166,8 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
                 AutoOffsetReset = GetAutoOffsetReset(consumer.AutoOffsetReset),
                 EnablePartitionEof = consumer.EnablePartitionEof,
                 IsolationLevel = GetIsolationLevel(consumer.IsolationLevel),
-                EnableSslCertificateVerification = consumer.EnableSslCertificateVerification
+                EnableSslCertificateVerification = consumer.EnableSslCertificateVerification,
+                Debug = consumer.Debug
             };
         }
 

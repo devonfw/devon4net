@@ -17,6 +17,7 @@ namespace Devon4Net.Infrastructure.Common.Options.Kafka
         public bool EnablePartitionEof { get; set; }
         public string IsolationLevel { get; set; }
         public bool EnableSslCertificateVerification { get; set; }
+        public string Debug { get; set; }
 
         public List<string> GetTopics()
         {

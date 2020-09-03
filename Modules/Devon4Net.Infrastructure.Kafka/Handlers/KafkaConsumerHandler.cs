@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Confluent.Kafka;
 using Devon4Net.Infrastructure.Log;
 using Microsoft.Extensions.DependencyInjection;
@@ -61,59 +62,60 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
         {
             var cancellationToken = new CancellationTokenSource();
 
-            using var consumer = KafkaHandler.GetConsumerBuilder<T, TV>(ConsumerId);
+            
             try
             {
-                while (EnableConsumerFlag)
+                Task.Run(() =>
                 {
-                    try
+                    using var consumer = KafkaHandler.GetConsumerBuilder<T, TV>(ConsumerId);
+                    while (EnableConsumerFlag)
                     {
-                        var consumeResult = consumer.Consume(cancellationToken.Token);
-                        if (consumeResult?.Message == null) continue;
-
-                        HandleCommand(consumeResult.Message.Key, consumeResult.Message.Value);
-                        if (consumeResult.IsPartitionEOF)
-                        {
-                            Devon4NetLogger.Information($"Reached end of topic {consumeResult.Topic}, partition {consumeResult.Partition}, offset {consumeResult.Offset}.");
-                            continue;
-                        }
-
-                        Devon4NetLogger.Debug($"Received message at {consumeResult.TopicPartitionOffset}: {consumeResult.Message.Value}");
-
-                        if (!commit) continue;
-
-                        if (consumeResult.Offset % commitPeriod != 0) continue;
-                        // The Commit method sends a "commit offsets" request to the Kafka
-                        // cluster and synchronously waits for the response. This is very
-                        // slow compared to the rate at which the consumer is capable of
-                        // consuming messages. A high performance application will typically
-                        // commit offsets relatively infrequently and be designed handle
-                        // duplicate messages in the event of failure.
                         try
                         {
-                            consumer.Commit(consumeResult);
-                        }
-                        catch (KafkaException e)
-                        {
-                            Devon4NetLogger.Error($"Commit error: {e.Error.Reason}");
-                        }
-                    }
-                    catch (ConsumeException e)
-                    {
-                        Devon4NetLogger.Error($"Consume error: {e.Error.Reason}");
-                    }
-                }
+                            var consumeResult = consumer.Consume(cancellationToken.Token);
+                            if (consumeResult?.Message == null) continue;
 
-                Devon4NetLogger.Debug("The EnableConsumerFlag is set to false. Going to close consumer");
-                Devon4NetLogger.Information("Closing consumer");
-                consumer.Close();
-                Devon4NetLogger.Information("Consumer closed");
+                            HandleCommand(consumeResult.Message.Key, consumeResult.Message.Value);
+                            if (consumeResult.IsPartitionEOF)
+                            {
+                                Devon4NetLogger.Information($"Reached end of topic {consumeResult.Topic}, partition {consumeResult.Partition}, offset {consumeResult.Offset}.");
+                                continue;
+                            }
+
+                            Devon4NetLogger.Debug($"Received message at {consumeResult.TopicPartitionOffset}: {consumeResult.Message.Value}");
+
+                            if (!commit) continue;
+
+                            if (consumeResult.Offset % commitPeriod != 0) continue;
+                            // The Commit method sends a "commit offsets" request to the Kafka
+                            // cluster and synchronously waits for the response. This is very
+                            // slow compared to the rate at which the consumer is capable of
+                            // consuming messages. A high performance application will typically
+                            // commit offsets relatively infrequently and be designed handle
+                            // duplicate messages in the event of failure.
+                            try
+                            {
+                                consumer.Commit(consumeResult);
+                            }
+                            catch (KafkaException e)
+                            {
+                                Devon4NetLogger.Error($"Commit error: {e.Error.Reason}");
+                                consumer?.Close();
+                            }
+                        }
+                        catch (ConsumeException e)
+                        {
+                            Devon4NetLogger.Error($"Consume error: {e.Error.Reason}");
+                            consumer?.Close();
+                        }
+                    }
+                }, cancellationToken.Token);
             }
             catch (OperationCanceledException e)
             {
                 Devon4NetLogger.Error("Closing consumer.");
                 Devon4NetLogger.Error(e);
-                consumer?.Close();
+                
             }
         }
     }
