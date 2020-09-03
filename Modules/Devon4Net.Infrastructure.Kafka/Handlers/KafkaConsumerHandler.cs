@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Devon4Net.Infrastructure.Kafka.Handlers
 {
-    public abstract class KafkaConsumerHandler<T, TV> where T : class where TV : class
+    public abstract class KafkaConsumerHandler<T, TV>: IKafkaConsumerHandler where T : class where TV : class
     {
         public abstract void HandleCommand(T key, TV value);
         private IKakfkaHandler KafkaHandler { get; set; }
@@ -18,7 +18,7 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
 
         private string ConsumerId { get; set; }
 
-        public KafkaConsumerHandler(IServiceCollection services, IKakfkaHandler kafkaHandler, string consumerId, bool commit = false, int commitPeriod = 5)
+        protected KafkaConsumerHandler(IServiceCollection services, IKakfkaHandler kafkaHandler, string consumerId, bool commit = false, int commitPeriod = 5)
         {
             Services = services;
             KafkaHandler = kafkaHandler;
@@ -29,10 +29,10 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
             Consume(Commit, CommitPeriod);
         }
 
-        public T GetInstance<T>()
+        public TS GetInstance<TS>()
         {
             var sp = Services.BuildServiceProvider();
-            return sp.GetService<T>();
+            return sp.GetService<TS>();
         }
 
         public void EnableConsumer(bool startConsumer = true)
