@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Confluent.Kafka;
 using Devon4Net.Infrastructure.Common.Options.Kafka;
 using Devon4Net.Infrastructure.Kafka.Common.Const;
 using Devon4Net.Infrastructure.Kafka.Exceptions;
 using Devon4Net.Infrastructure.Log;
+using Microsoft.Extensions.Options;
 
 namespace Devon4Net.Infrastructure.Kafka.Handlers
 {
@@ -12,9 +14,9 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
     {
         private KafkaOptions KafkaOptions { get; }
 
-        public KakfkaHandler(KafkaOptions kafkaOptions)
+        public KakfkaHandler(IOptions<KafkaOptions> kafkaOptions)
         {
-            KafkaOptions = kafkaOptions;
+            KafkaOptions = kafkaOptions?.Value;
         }
 
         #region Producer
@@ -112,19 +114,30 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
 
             var consumer = new ConsumerBuilder<T, TV>(configuration);
 
-            consumer.SetErrorHandler((_, e) => Devon4NetLogger.Error(new ConsumerException($"Error code {e.Code} : {e.Reason}")));
-            consumer.SetStatisticsHandler((_, json) => Devon4NetLogger.Information($"Statistics: {json}"));
-            consumer.SetPartitionsAssignedHandler((c, partitions) =>
-            {
-                Devon4NetLogger.Information($"Assigned partitions: [{string.Join(", ", partitions)}]");
-            });
-            consumer.SetPartitionsRevokedHandler((c, partitions) =>
-            {
-                Devon4NetLogger.Information($"Revoking assignment: [{string.Join(", ", partitions)}]");
-            });
+            IConsumer<T, TV> result = null;
 
-            var result = consumer.Build();
-            if (!string.IsNullOrEmpty(consumerOptions.Topics)) result.Subscribe(consumerOptions.GetTopics());
+            try
+            {
+                consumer.SetErrorHandler((_, e) => Devon4NetLogger.Error(new ConsumerException($"Error code {e.Code} : {e.Reason}")));
+                consumer.SetStatisticsHandler((_, json) => Devon4NetLogger.Information($"Statistics: {json}"));
+                consumer.SetPartitionsAssignedHandler((c, partitions) =>
+                {
+                    Devon4NetLogger.Information($"Assigned partitions: [{string.Join(", ", partitions)}]");
+                });
+                consumer.SetPartitionsRevokedHandler((c, partitions) =>
+                {
+                    Devon4NetLogger.Information($"Revoking assignment: [{string.Join(", ", partitions)}]");
+                });
+
+
+
+                result = consumer.Build();
+                if (!string.IsNullOrEmpty(consumerOptions.Topics)) result.Subscribe(consumerOptions.GetTopics());
+            }
+            catch (InvalidOperationException ex)
+            {
+                Devon4NetLogger.Error(ex);
+            }
 
             return result;
         }

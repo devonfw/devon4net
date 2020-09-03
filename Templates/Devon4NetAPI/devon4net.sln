@@ -55,7 +55,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gRPC", "gRPC", "{2480AD81-0
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.Grpc", "..\..\Modules\Devon4Net.Infrastructure.Grpc\Devon4Net.Infrastructure.Grpc.csproj", "{18BC7B28-A210-4A26-B1B6-683FC8EC4FDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devon4Net.Infrastructure.Kafka", "..\..\Modules\Devon4Net.Infrastructure.Kafka\Devon4Net.Infrastructure.Kafka.csproj", "{0A474494-2A35-48CB-8192-A2D1F4925F99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.Kafka", "..\..\Modules\Devon4Net.Infrastructure.Kafka\Devon4Net.Infrastructure.Kafka.csproj", "{0A474494-2A35-48CB-8192-A2D1F4925F99}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kafka", "Kafka", "{B280E9A4-4173-472B-A51D-159057D12E25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devon4Net.Application.KafkaConsumer", "..\Devon4Net.Application.KafkaConsumer\Devon4Net.Application.KafkaConsumer.csproj", "{BA1A7EA8-BBD3-4107-87BA-B861FE2156D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -155,6 +159,10 @@ Global
 		{0A474494-2A35-48CB-8192-A2D1F4925F99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A474494-2A35-48CB-8192-A2D1F4925F99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A474494-2A35-48CB-8192-A2D1F4925F99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA1A7EA8-BBD3-4107-87BA-B861FE2156D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA1A7EA8-BBD3-4107-87BA-B861FE2156D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA1A7EA8-BBD3-4107-87BA-B861FE2156D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA1A7EA8-BBD3-4107-87BA-B861FE2156D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -184,6 +192,8 @@ Global
 		{2480AD81-0114-42DE-89FC-F8507D87DFE2} = {DE117EB7-E593-4898-8F84-F3F93BC9D362}
 		{18BC7B28-A210-4A26-B1B6-683FC8EC4FDE} = {68B87931-BF80-499A-816E-F6FF7B359443}
 		{0A474494-2A35-48CB-8192-A2D1F4925F99} = {68B87931-BF80-499A-816E-F6FF7B359443}
+		{B280E9A4-4173-472B-A51D-159057D12E25} = {DE117EB7-E593-4898-8F84-F3F93BC9D362}
+		{BA1A7EA8-BBD3-4107-87BA-B861FE2156D0} = {B280E9A4-4173-472B-A51D-159057D12E25}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B0967205-4814-4D3A-907B-2BC885FA488C}

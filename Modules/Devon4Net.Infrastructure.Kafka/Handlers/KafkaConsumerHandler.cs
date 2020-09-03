@@ -8,18 +8,44 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
 {
     public abstract class KafkaConsumerHandler<T, TV> where T : class where TV : class
     {
-        public abstract void HandleCommand(TV consumeResult);
+        public abstract void HandleCommand(T key, TV value);
         private IKakfkaHandler KafkaHandler { get; set; }
+        private bool EnableConsumerFlag { get; set; }
+        private bool Commit { get; set; }
+        private int CommitPeriod { get; set; }
+
         protected IServiceCollection Services { get; set; }
 
         private string ConsumerId { get; set; }
 
-        protected KafkaConsumerHandler(IServiceCollection services, IKakfkaHandler kafkaHandler, string consumerId, bool commit = false, int commitPeriod = 5)
+        public KafkaConsumerHandler(IServiceCollection services, IKakfkaHandler kafkaHandler, string consumerId, bool commit = false, int commitPeriod = 5)
         {
             Services = services;
             KafkaHandler = kafkaHandler;
             ConsumerId = consumerId;
-            Consume(commit, commitPeriod);
+            EnableConsumerFlag = true;
+            Commit = commit;
+            CommitPeriod = commitPeriod;
+            Consume(Commit, CommitPeriod);
+        }
+
+        public T GetInstance<T>()
+        {
+            var sp = Services.BuildServiceProvider();
+            return sp.GetService<T>();
+        }
+
+        public void EnableConsumer(bool startConsumer = true)
+        {
+            EnableConsumerFlag = true;
+            Devon4NetLogger.Debug("The EnableConsumerFlag is set to true");
+            if (startConsumer) Consume(Commit, CommitPeriod);
+        }
+
+        public void DisableConsumer()
+        {
+            EnableConsumerFlag = false;
+            Devon4NetLogger.Debug("The EnableConsumerFlag is set to false");
         }
 
         /// <summary>
@@ -29,7 +55,6 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TV"></typeparam>
-        /// <param name="consumerId"></param>
         /// <param name="commit"></param>
         /// <param name="commitPeriod"></param>
         private void Consume(bool commit, int commitPeriod) 
@@ -39,12 +64,14 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
             using var consumer = KafkaHandler.GetConsumerBuilder<T, TV>(ConsumerId);
             try
             {
-                while (true)
+                while (EnableConsumerFlag)
                 {
                     try
                     {
                         var consumeResult = consumer.Consume(cancellationToken.Token);
-                        HandleCommand(consumeResult.Message.Value);
+                        if (consumeResult?.Message == null) continue;
+
+                        HandleCommand(consumeResult.Message.Key, consumeResult.Message.Value);
                         if (consumeResult.IsPartitionEOF)
                         {
                             Devon4NetLogger.Information($"Reached end of topic {consumeResult.Topic}, partition {consumeResult.Partition}, offset {consumeResult.Offset}.");
@@ -53,7 +80,7 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
 
                         Devon4NetLogger.Debug($"Received message at {consumeResult.TopicPartitionOffset}: {consumeResult.Message.Value}");
 
-                        if (!commit) return;
+                        if (!commit) continue;
 
                         if (consumeResult.Offset % commitPeriod != 0) continue;
                         // The Commit method sends a "commit offsets" request to the Kafka
@@ -76,11 +103,17 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
                         Devon4NetLogger.Error($"Consume error: {e.Error.Reason}");
                     }
                 }
+
+                Devon4NetLogger.Debug("The EnableConsumerFlag is set to false. Going to close consumer");
+                Devon4NetLogger.Information("Closing consumer");
+                consumer.Close();
+                Devon4NetLogger.Information("Consumer closed");
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException e)
             {
                 Devon4NetLogger.Error("Closing consumer.");
-                consumer.Close();
+                Devon4NetLogger.Error(e);
+                consumer?.Close();
             }
         }
     }

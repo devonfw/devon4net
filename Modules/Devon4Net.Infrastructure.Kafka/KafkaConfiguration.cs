@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Confluent.Kafka;
 using Devon4Net.Infrastructure.Common.Options;
 using Devon4Net.Infrastructure.Common.Options.Kafka;
@@ -12,13 +13,30 @@ namespace Devon4Net.Infrastructure.Kafka
     {
         private static ProducerConfig KafkaOptions { get; set; }
 
-        public static void SetupKafka(this IServiceCollection services, ref IConfiguration configuration)
+        public static void SetupKafka(this IServiceCollection services, IConfiguration configuration)
         {
             var kafkaOptions = services.GetTypedOptions<KafkaOptions>(configuration, "Kafka");
 
             if (kafkaOptions == null || !kafkaOptions.EnableKafka || kafkaOptions.Producers == null || !kafkaOptions.Producers.Any()) return;
 
             services.AddTransient(typeof(IKakfkaHandler), typeof(KakfkaHandler));
+        }
+
+        public static void AddKafkaConsumer<T>(this IServiceCollection services, string consumerId, bool commit = false, int commitPeriod = 5) where T : class 
+        {
+            var memberInfo = typeof(T).BaseType;
+            if (memberInfo != null && !memberInfo.Name.Contains("KafkaConsumerHandler"))
+            {
+                throw new ArgumentException($"The provided type {typeof(T).FullName} does not inherit from KafkaConsumerHandler");
+            }
+
+
+            using var sp = services.BuildServiceProvider();
+            var kafHandler = sp.GetService<IKakfkaHandler>();
+
+            var obj = Activator.CreateInstance(typeof(T), services, kafHandler, consumerId, commit, commitPeriod);
+
+            services.AddSingleton(obj);
         }
     }
 }

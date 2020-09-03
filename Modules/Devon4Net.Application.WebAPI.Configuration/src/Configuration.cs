@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Devon4Net.Application.WebAPI.Configuration.Application;
 using Devon4Net.Application.WebAPI.Configuration.Common;
 using Devon4Net.Domain.UnitOfWork;
+using Devon4Net.Infrastructure.Kafka;
 using Microsoft.AspNetCore.Builder;
 
 namespace Devon4Net.Application.WebAPI.Configuration
@@ -26,6 +27,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             services.SetupAnsibleTower(ref configuration);
             services.SetupCyberArk(ref configuration);
             services.SetupSmaxHcm(ref configuration);
+            services.SetupKafka(configuration);
         }
 
         public static void ConfigureDevonFw(this IApplicationBuilder app)
