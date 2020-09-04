@@ -34,6 +34,8 @@
 - CyberArk integration
 - Ansible Tower integration. devon4net integrates with Ansible Tower to setup your cloud servers in a easy way
 - gRPC + Protobuf support
+- Kafka: Producer and consumer
+- Extra secrets/settings file support
 
 Included features:
 
@@ -103,3 +105,6 @@ Included features:
 
 - gRPC+Protobuf:
             - Added Client + Server basic templates sample gRPC with Google's Protobuf protocol using devon4net
+
+- Kafka:
+            - Added Apache Kafka support for deliver/consume messages             
