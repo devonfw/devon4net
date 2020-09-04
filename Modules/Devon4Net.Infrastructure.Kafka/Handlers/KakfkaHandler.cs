@@ -63,7 +63,7 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
 
         private static ProducerConfig GetDefaultKafkaProducerConfiguration(Producer producer)
         {
-            return new ProducerConfig
+            var result =  new ProducerConfig
             {
                 BootstrapServers = producer.Servers,
                 ClientId = producer.ClientId,
@@ -72,7 +72,6 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
                 EnableSslCertificateVerification = producer.EnableSslCertificateVerification,
                 CancellationDelayMaxMs = producer.CancellationDelayMaxMs ?? KafkaDefaultValues.CancellationDelayMaxMs,
                 Acks = GetAck(producer.Ack),
-                Debug = producer.Debug,
                 BrokerAddressTtl = producer.BrokerAddressTtl ?? KafkaDefaultValues.BrokerAddressTtl,
                 BatchNumMessages = producer.BatchNumMessages ?? KafkaDefaultValues.BatchNumMessages,
                 EnableIdempotence = producer.EnableIdempotence,
@@ -82,6 +81,13 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
                 MessageMaxBytes = producer.MessageMaxBytes ?? KafkaDefaultValues.MessageMaxBytes,
                 ReceiveMessageMaxBytes = producer.ReceiveMessageMaxBytes ?? KafkaDefaultValues.ReceiveMessageMaxBytes
             };
+
+            if (!string.IsNullOrEmpty(producer.Debug))
+            {
+                result.Debug = producer.Debug;
+            }
+
+            return result;
         }
 
         public async Task<DeliveryResult<T, TV>> DeliverMessage<T, TV>(T key, TV value, string producerId) where T : class where TV : class
@@ -155,7 +161,7 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
 
         private static ConsumerConfig GetDefaultKafkaConsumerConfiguration(Consumer consumer)
         {
-            return new ConsumerConfig
+            var result =  new ConsumerConfig
             {
                 BootstrapServers = consumer.Servers,
                 ClientId = consumer.ClientId,
@@ -167,8 +173,14 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
                 EnablePartitionEof = consumer.EnablePartitionEof,
                 IsolationLevel = GetIsolationLevel(consumer.IsolationLevel),
                 EnableSslCertificateVerification = consumer.EnableSslCertificateVerification,
-                Debug = consumer.Debug
             };
+
+            if (!string.IsNullOrEmpty(consumer.Debug))
+            {
+                result.Debug = consumer.Debug;
+            }
+
+            return result;
         }
 
         #endregion

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Devon4Net.Application.KafkaConsumer</name>
+    </assembly>
+    <members>
+        <member name="M:Devon4Net.Application.KafkaConsumer.Business.Controllers.KafkaController.DeliverMessage(System.String,System.String)">
+            <summary>
+            Delivers a Kafka message
+            </summary>
+            <param name="key">message key</param>
+            <param name="value">message value</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

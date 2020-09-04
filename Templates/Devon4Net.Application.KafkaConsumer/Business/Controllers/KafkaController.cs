@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Confluent.Kafka;
 using Devon4Net.Application.KafkaConsumer.Business.KafkaManagement.Handlers;
 using Devon4Net.Infrastructure.Log;
@@ -23,9 +20,10 @@ namespace Devon4Net.Application.KafkaConsumer.Business.Controllers
         }
 
         /// <summary>
-        /// Creates a TO-DO command sending a RabbitMq message
+        /// Delivers a Kafka message
         /// </summary>
-        /// <param name="todoDescription">The description of the TO-DO command. It cannot be empty</param>
+        /// <param name="key">message key</param>
+        /// <param name="value">message value</param>
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]

@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <StartupObject>Devon4Net.Application.KafkaConsumer.Program</StartupObject>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>Devon4Net.Application.KafkaConsumer.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
