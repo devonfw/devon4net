@@ -24,6 +24,7 @@ namespace Devon4Net.Domain.UnitOfWork.Common
 
         public static void SetupDatabase<T>(this IServiceCollection services, IConfiguration configuration, string connectionStringName, DatabaseType databaseType, ServiceLifetime serviceLifetime = ServiceLifetime.Transient, bool migrate = false, CosmosConfigurationParams cosmosConfigurationParams = null) where T : DbContext 
         {
+            ServiceLifetime = serviceLifetime;
             var applicationConnectionStrings = configuration.GetSection("ConnectionStrings").GetChildren();
             if (applicationConnectionStrings == null) throw new ArgumentException("There are no connection strings provided.");
             var connectionString = applicationConnectionStrings.FirstOrDefault(c => c.Key.ToLower() == connectionStringName.ToLower());
@@ -52,6 +53,7 @@ namespace Devon4Net.Domain.UnitOfWork.Common
                     }
 
                     ((T)context)?.Database.Migrate();
+                    sp.DisposeAsync();
                 }
             }
             catch (Exception ex)

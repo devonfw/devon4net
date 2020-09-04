@@ -1,4 +1,4 @@
-# The Open Application Standard Platform for .NET and .NET Core
+# The Open Application Standard Platform for .NET Core
 
 - devon4net is oriented to implement backend solutions. Microservice architecture patterns is well supported.
 - AWS templates integration. You can integrate devon4net in your serverless application in a easy way.
@@ -34,6 +34,8 @@
 - CyberArk integration
 - Ansible Tower integration. devon4net integrates with Ansible Tower to setup your cloud servers in a easy way
 - gRPC + Protobuf support
+- Kafka: Message producer and consumer handlers. Create/Delete topics as well
+- Extra secrets/settings file support
 
 Included features:
 
@@ -103,3 +105,6 @@ Included features:
 
 - gRPC+Protobuf:
             - Added Client + Server basic templates sample gRPC with Google's Protobuf protocol using devon4net
+
+- Kafka:
+            - Added Apache Kafka support for deliver/consume messages and create/delete topics as well             

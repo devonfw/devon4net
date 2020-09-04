@@ -41,9 +41,8 @@ namespace Devon4Net.Application.GrpcService
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseStaticFiles();
             app.ConfigureDevonFw();
-            //app.UseHttpsRedirection();
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

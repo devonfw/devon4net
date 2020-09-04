@@ -41,6 +41,7 @@
         public const string GetPropertiesFromComponent = "/{0}/dnd/api/designs/graph/{1}/component/{2}/properties"; // tenantId, versionId, componentId
         public const string UpdatePropertyFromComponent = "{0}/dnd/api/property/{1}"; // tenantId, propertyId
         public const string UpdateComponent = "/{0}/dnd/api/components/{1}"; // tenantId, componentId
+        public const string GetOverviewFromComponent = "/{0}/dnd/api/components/{1}"; // tenantId, componentId
         #endregion
 
         #region Catalog
@@ -55,6 +56,7 @@
         public const string GetAllRequest = "/rest/{0}/ess/request/allRequestsWithBundles"; // tenantId
         public const string CreateRequest = "/rest/{0}/ems/bulk"; // tenantId
         public const string GetUsersByName = "/rest/{0}/ems/Person?filter=((IsSystemIntegration != 'true' and IsSystem != 'true') and Upn startswith ('{1}'))&layout=Id,Name,Upn"; // tenantId, username
+        public const string GetRequestById = "/rest/{0}/ems/Request/{1}?layout=PhaseId"; // tenantId, RequestId
         #endregion
 
         #region Offering

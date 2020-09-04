@@ -56,5 +56,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         Task<AddAgregatedOfferingResponseDto> AddAggregatedOffering(AddAgregatedOfferingDto addAgregatedOfferingDto);
         Task<GetOfferingProvidersResponseDto> GetOfferingProviders(string searchText = null, string[] tags = null);
         Task<GetUsersByUserNameResponse> GetUsersByUserName(string username);
+        Task<GetRequestResponseDto> GetRequestById(string requestId);
+        Task<GetOverviewFromComponentResponseDto> GetOverviewFromComponent(string componentId);
     }
 }

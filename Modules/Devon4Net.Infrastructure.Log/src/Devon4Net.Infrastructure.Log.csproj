@@ -30,7 +30,7 @@
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
     <PackageReference Include="Serilog.Sinks.Graylog.Extended" Version="1.0.1" />
     <PackageReference Include="Serilog.Sinks.Seq" Version="4.0.0" />
-    <PackageReference Include="Serilog.Sinks.SQLite.NetStandard" Version="1.0.0" />
+    <PackageReference Include="Serilog.Sinks.SQLite.NetStandard" Version="1.0.1" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
   </ItemGroup>
 

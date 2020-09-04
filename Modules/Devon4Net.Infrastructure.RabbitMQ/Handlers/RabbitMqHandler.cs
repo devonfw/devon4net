@@ -59,10 +59,10 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
             return status == QueueActionsEnum.Sent;
         }
 
-        public TS GetInstance<TS>()
+        public T GetInstance<T>()
         {
-            using var sp = Services.BuildServiceProvider();
-            return sp.GetService<TS>();
+            var sp = Services.BuildServiceProvider();
+            return sp.GetService<T>();
         }
 
         private async Task<bool> BackupAndHandleCommand(T message)

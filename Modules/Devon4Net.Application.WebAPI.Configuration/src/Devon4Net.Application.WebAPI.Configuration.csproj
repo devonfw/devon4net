@@ -32,7 +32,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyNetQ" Version="5.2.0" />
+    <PackageReference Include="EasyNetQ" Version="5.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
@@ -58,6 +58,7 @@
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.CyberArk\Devon4Net.Infrastructure.CyberArk.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.Extensions\src\Devon4Net.Infrastructure.Extensions.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.JWT\src\Devon4Net.Infrastructure.JWT.csproj" />
+    <ProjectReference Include="..\..\Devon4Net.Infrastructure.Kafka\Devon4Net.Infrastructure.Kafka.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.LiteDb\Devon4Net.Infrastructure.LiteDb.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.Log\src\Devon4Net.Infrastructure.Log.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.MediatR\Devon4Net.Infrastructure.MediatR.csproj" />

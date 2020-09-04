@@ -61,6 +61,9 @@
       <None Update="Certificates\localhost.crt">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Certificates\RootCA.pem">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="localhostServer.cer">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>

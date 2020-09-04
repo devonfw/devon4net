@@ -76,12 +76,17 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
                     if (!string.IsNullOrEmpty(kestrelCertificate))
                     {
                         var kestrelCertificatePassword = configuration["devonfw:Kestrel:ServerCertificate:CertificatePassword"];
-                        httpsOptions.ServerCertificate = new X509Certificate2(File.ReadAllBytes(FileOperations.GetFileFullPath(kestrelCertificate)), kestrelCertificatePassword, X509KeyStorageFlags.MachineKeySet);
+                        httpsOptions.ServerCertificate = LoadServerCertificate(kestrelCertificate, kestrelCertificatePassword);
                     }
 
                     listenOptions.UseHttps(httpsOptions);
                 });
             });
+        }
+
+        private static X509Certificate2 LoadServerCertificate(string kestrelCertificate, string kestrelCertificatePassword)
+        {
+            return new X509Certificate2(File.ReadAllBytes(FileOperations.GetFileFullPath(kestrelCertificate)), kestrelCertificatePassword, X509KeyStorageFlags.MachineKeySet);
         }
 
         private static SslProtocols GetTlsProtocol(string httpProtocol)

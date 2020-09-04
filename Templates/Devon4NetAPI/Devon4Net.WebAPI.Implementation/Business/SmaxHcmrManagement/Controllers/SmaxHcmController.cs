@@ -414,6 +414,19 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
             return Ok(await SmaxHcmHandler.CreateComponentsAndRelations(versionId, createComponentsAndRelationsDto));
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/getOverviewFromComponent")]
+        [ProducesResponseType(typeof(GetOverviewFromComponentResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetOverviewFromComponent(string componentId)
+        {
+            Devon4NetLogger.Debug("Executing GetOverviewFromComponent from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.GetOverviewFromComponent(componentId));
+        }
+
         [HttpPut]
         [AllowAnonymous]
         [Route("/v1/smaxhcm/updateComponent")]
@@ -518,6 +531,19 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         {
             Devon4NetLogger.Debug("Executing UpdateListPropertyFromComponent from controller SmaxHcm");
             return Ok(await SmaxHcmHandler.UpdatePropertyFromComponent(propertyId, updateListPropertyFromComponentDtos));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/getRequestById")]
+        [ProducesResponseType(typeof(GetRequestResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetRequestById(string requestId)
+        {
+            Devon4NetLogger.Debug("Executing GetRequestById from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.GetRequestById(requestId));
         }
     }
 }
