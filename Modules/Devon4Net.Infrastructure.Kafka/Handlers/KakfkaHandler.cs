@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Confluent.Kafka;
+using Confluent.Kafka.Admin;
 using Devon4Net.Infrastructure.Common.Options.Kafka;
 using Devon4Net.Infrastructure.Kafka.Common.Const;
 using Devon4Net.Infrastructure.Kafka.Exceptions;
@@ -20,6 +22,25 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
         }
 
         #region Producer
+        public async Task<DeliveryResult<T, TV>> DeliverMessage<T, TV>(T key, TV value, string producerId) where T : class where TV : class
+        {
+            DeliveryResult<T, TV> result;
+            var producerOptions = GetProducerOptions(producerId);
+            using var producer = GetProducerBuilder<T, TV>(producerId);
+            try
+            {
+                result = await producer.ProduceAsync(producerOptions.Topic, new Message<T, TV> { Key = key, Value = value }).ConfigureAwait(false);
+                producer.Flush();
+                producer.Dispose();
+            }
+            catch (ProduceException<string, string> e)
+            {
+                Devon4NetLogger.Error(e);
+                throw;
+            }
+
+            return result;
+        }
 
         public IProducer<T, TV> GetProducerBuilder<T, TV>(string producerId) where T : class where TV : class
         {
@@ -90,25 +111,7 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
             return result;
         }
 
-        public async Task<DeliveryResult<T, TV>> DeliverMessage<T, TV>(T key, TV value, string producerId) where T : class where TV : class
-        {
-            DeliveryResult<T, TV> result;
-            var producerOptions = GetProducerOptions(producerId);
-            using var producer = GetProducerBuilder<T, TV>(producerId);
-            try
-            {
-                result = await producer.ProduceAsync(producerOptions.Topic, new Message<T, TV> { Key = key, Value = value }).ConfigureAwait(false);
-                producer.Flush();
-                producer.Dispose();
-            }
-            catch (ProduceException<string, string> e)
-            {
-                Devon4NetLogger.Error(e);
-                throw;
-            }
 
-            return result;
-        }
         #endregion
 
         #region Consumer
@@ -146,8 +149,6 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
                     Devon4NetLogger.Information($"Revoking assignment: [{string.Join(", ", partitions)}]");
                 });
 
-
-
                 result = consumer.Build();
                 if (!string.IsNullOrEmpty(consumerOptions.Topics)) result.Subscribe(consumerOptions.GetTopics());
             }
@@ -181,6 +182,65 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
             }
 
             return result;
+        }
+
+        #endregion
+
+        #region Admin
+        public async Task<bool> CreateTopic(string adminId, string topicName, short replicationFactor = 1, int numPartitions = 1)
+        {
+            using var adminClient = GetAdminClientBuilder(adminId);
+            try
+            {
+                await adminClient.CreateTopicsAsync(new[] {new TopicSpecification { Name = topicName, ReplicationFactor = replicationFactor, NumPartitions = numPartitions } });
+                return true;
+            }
+            catch (CreateTopicsException ex)
+            {
+                Devon4NetLogger.Error($"An error occured creating topic {ex.Results[0].Topic}: {ex.Results[0].Error.Reason}");
+                Devon4NetLogger.Error(ex);
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteTopic(string adminId, List<string> topicsName)
+        {
+            using var adminClient = GetAdminClientBuilder(adminId);
+            try
+            {
+                await adminClient.DeleteTopicsAsync(topicsName);
+                return true;
+            }
+            catch (CreateTopicsException ex)
+            {
+                Devon4NetLogger.Error($"An error occured creating topic {ex.Results[0].Topic}: {ex.Results[0].Error.Reason}");
+                Devon4NetLogger.Error(ex);
+                throw;
+            }
+        }
+
+        private IAdminClient GetAdminClientBuilder(string adminId)
+        {
+            var adminOptions = GetAdminOptions(adminId);
+            var adminClient = new AdminClientBuilder(new AdminClientConfig { BootstrapServers = adminOptions.Servers }).Build();
+            return adminClient;
+        }
+
+        private Administration GetAdminOptions(string adminId)
+        {
+            if (string.IsNullOrEmpty(adminId))
+            {
+                throw new AdminNotFoundException($"The adminId param can not be null or empty");
+            }
+
+            var adminOptions = KafkaOptions.Administration.FirstOrDefault(p => p.AdminId == adminId);
+
+            if (adminOptions == null)
+            {
+                throw new AdminNotFoundException($"Could not find admin configuration with ConsumerId {adminId}");
+            }
+
+            return adminOptions;
         }
 
         #endregion

@@ -20,7 +20,6 @@ namespace Devon4Net.Infrastructure.Kafka
             if (kafkaOptions == null || !kafkaOptions.EnableKafka || kafkaOptions.Producers == null || !kafkaOptions.Producers.Any()) return;
 
             services.AddTransient(typeof(IKakfkaHandler), typeof(KakfkaHandler));
-            //services.AddTransient(typeof(KafkaProducerHandler<,>));
         }
 
         public static void AddKafkaConsumer<T>(this IServiceCollection services, string consumerId, bool commit = false, int commitPeriod = 5) where T : class 
@@ -30,7 +29,6 @@ namespace Devon4Net.Infrastructure.Kafka
             {
                 throw new ArgumentException($"The provided type {typeof(T).FullName} does not inherit from KafkaConsumerHandler");
             }
-
 
             using var sp = services.BuildServiceProvider();
             var kafHandler = sp.GetService<IKakfkaHandler>();

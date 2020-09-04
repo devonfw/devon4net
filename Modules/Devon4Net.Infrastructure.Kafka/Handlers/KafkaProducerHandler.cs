@@ -21,7 +21,8 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
         public Task<DeliveryResult<T, TV>> SendMessage(T key, TV value) 
         {
             var result = KafkaHandler.DeliverMessage(key, value, ProducerId);
-            Devon4NetLogger.Information($"Message delivered. Key: {result.Result.Key} | Value : {result.Result.Value} | Topic: {result.Result.Topic} | TimeStamp : {result.Result.Timestamp} | Status: {result.Result.Status}");
+            var date = result.Result.Timestamp.UtcDateTime;
+            Devon4NetLogger.Information($"Message delivered. Key: {result.Result.Key} | Value : {result.Result.Value} | Topic: {result.Result.Topic} | UTC TimeStamp : {date.ToShortDateString()}-{date.ToLongTimeString()} | Status: {result.Result.Status}");
             return result;
         }
 

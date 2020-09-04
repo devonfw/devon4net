@@ -14,10 +14,8 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
         private bool EnableConsumerFlag { get; set; }
         private bool Commit { get; set; }
         private int CommitPeriod { get; set; }
-
-        protected IServiceCollection Services { get; set; }
-
         private string ConsumerId { get; set; }
+        protected IServiceCollection Services { get; set; }
 
         protected KafkaConsumerHandler(IServiceCollection services, IKakfkaHandler kafkaHandler, string consumerId, bool commit = false, int commitPeriod = 5)
         {
@@ -61,7 +59,6 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
         private void Consume(bool commit, int commitPeriod) 
         {
             var cancellationToken = new CancellationTokenSource();
-
             
             try
             {
@@ -72,7 +69,7 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
                     {
                         try
                         {
-                            var consumeResult = consumer.Consume(cancellationToken.Token);
+                            var consumeResult = consumer?.Consume(cancellationToken.Token);
                             if (consumeResult?.Message == null) continue;
 
                             HandleCommand(consumeResult.Message.Key, consumeResult.Message.Value);
@@ -87,12 +84,7 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
                             if (!commit) continue;
 
                             if (consumeResult.Offset % commitPeriod != 0) continue;
-                            // The Commit method sends a "commit offsets" request to the Kafka
-                            // cluster and synchronously waits for the response. This is very
-                            // slow compared to the rate at which the consumer is capable of
-                            // consuming messages. A high performance application will typically
-                            // commit offsets relatively infrequently and be designed handle
-                            // duplicate messages in the event of failure.
+
                             try
                             {
                                 consumer.Commit(consumeResult);
@@ -100,7 +92,7 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
                             catch (KafkaException e)
                             {
                                 Devon4NetLogger.Error($"Commit error: {e.Error.Reason}");
-                                consumer?.Close();
+                                consumer.Close();
                             }
                         }
                         catch (ConsumeException e)
