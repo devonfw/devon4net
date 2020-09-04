@@ -40,7 +40,7 @@
     <ProjectReference Include="..\Devon4Net.Infrastructure.Extensions\src\Devon4Net.Infrastructure.Extensions.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EasyNetQ" Version="5.2.0" />
+    <PackageReference Include="EasyNetQ" Version="5.2.1" />
     <PackageReference Include="LiteDB" Version="5.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.7">
