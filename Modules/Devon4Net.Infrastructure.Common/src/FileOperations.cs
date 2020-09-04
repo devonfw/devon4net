@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -8,11 +9,22 @@ namespace Devon4Net.Infrastructure.Common
     {
         private static string ApplicationPath {get;set;}
 
-        public static string GetFileFullPath(string fileName)
+        public static List<string> GetFilesFromPath(string searchPattern, string defaultDirectory = null)
+        {
+            var workingDirectory = string.IsNullOrEmpty(defaultDirectory) || !Directory.Exists(defaultDirectory) ? Directory.GetCurrentDirectory() : defaultDirectory;
+            return Directory.GetFiles(workingDirectory, searchPattern, SearchOption.AllDirectories).ToList();
+        }
+
+
+        public static string GetFileFullPath(string fileName, string defaultDirectory = null)
         {
             if (string.IsNullOrEmpty(fileName)) return string.Empty;
+
             if (File.Exists(fileName)) return Path.GetFullPath(fileName);
-            var theFile = Directory.GetFiles(Directory.GetCurrentDirectory(), fileName, SearchOption.AllDirectories).FirstOrDefault();
+
+            var workingDirectory = string.IsNullOrEmpty(defaultDirectory) || !Directory.Exists(defaultDirectory) ? Directory.GetCurrentDirectory() : defaultDirectory;
+
+            var theFile = Directory.GetFiles(workingDirectory, fileName, SearchOption.AllDirectories).FirstOrDefault();
             return theFile;
         }
 
