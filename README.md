@@ -1,4 +1,4 @@
-# The Open Application Standard Platform for .NET and .NET Core
+# The Open Application Standard Platform for .NET Core
 
 - devon4net is oriented to implement backend solutions. Microservice architecture patterns is well supported.
 - AWS templates integration. You can integrate devon4net in your serverless application in a easy way.
