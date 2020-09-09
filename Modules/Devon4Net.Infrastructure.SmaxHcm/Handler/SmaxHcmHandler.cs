@@ -53,6 +53,16 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<GetDesignResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetDesign, SmaxHcmOptions.TenantId, designId), null, false, true);
         }
 
+        public Task<byte[]> ExportDesign(string designId, string restUserId)
+        {
+            if (string.IsNullOrEmpty(designId))
+            {
+                throw new ArgumentException($"The {nameof(designId)} can not be null");
+            }
+
+            return SendSmaxHcm<byte[]>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.ExportDesign, SmaxHcmOptions.TenantId, designId, restUserId));
+        }
+
         public Task<GetIconsResponseDto> GetIcons()
         {
             return SendSmaxHcm<GetIconsResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetIcons, SmaxHcmOptions.TenantId), null, false, true);
@@ -453,10 +463,10 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         #endregion
 
         #region HttpMethods and security
-        private async Task<T> SendSmaxHcm<T>(HttpMethod httpMethod, string endpoint, object content = null,  bool getUrlWithTenant = false, bool addBasicAuth = false, bool useCamelCase = false)
+        private async Task<T> SendSmaxHcm<T>(HttpMethod httpMethod, string endpoint, object content = null,  bool getUrlWithTenant = false, bool addBasicAuth = false, bool addAcceptJsonHeader = false, bool useCamelCase = false)
         {
             await PerformLogin();
-            return await HttpClientHandler.Send<T>(httpMethod, SmaxHcmOptions.CircuitBreakerName, getUrlWithTenant ? GetUrlWithTenant(endpoint) : endpoint, content, MediaType.ApplicationJson, GetAuthorizationHeaders(addBasicAuth), true, useCamelCase);
+            return await HttpClientHandler.Send<T>(httpMethod, SmaxHcmOptions.CircuitBreakerName, getUrlWithTenant ? GetUrlWithTenant(endpoint) : endpoint, content, MediaType.ApplicationJson, GetAuthorizationHeaders(addBasicAuth, addAcceptJsonHeader), true, useCamelCase);
         }
 
         private string GetUrlWithTenant(string originalUrl)
@@ -469,7 +479,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         /// </summary>
         /// <param name="addBasicAuthentication">Flag to set the basic authentication in the header's request</param>
         /// <returns></returns>
-        private Dictionary<string, string> GetAuthorizationHeaders(bool addBasicAuthentication)
+        private Dictionary<string, string> GetAuthorizationHeaders(bool addBasicAuthentication, bool addAcceptJsonHeader)
         {
             var result = new Dictionary<string, string>
             {
@@ -479,6 +489,11 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             if (addBasicAuthentication)
             {
                 result.Add("Authorization", $"Basic {BasicAuthToken}");
+            }
+
+            if (addAcceptJsonHeader)
+            {
+                result.Add("Accept", MediaType.ApplicationJson);
             }
 
             return result;

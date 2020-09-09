@@ -14,6 +14,7 @@
 
         #region Auth
         public const string Logon = "/auth/authentication-endpoint/authenticate/login?TENANTID={0}"; // tenantId
+        public const string RestUserId = "{0}/dnd/rest/login/{0}/{1}"; // tenantId, userName
         #endregion
 
         public const string AuthorizationHeaderTokenkey = "LWSSO_COOKIE_KEY";

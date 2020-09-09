@@ -58,5 +58,6 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         Task<GetUsersByUserNameResponse> GetUsersByUserName(string username);
         Task<GetRequestResponseDto> GetRequestById(string requestId);
         Task<GetOverviewFromComponentResponseDto> GetOverviewFromComponent(string componentId);
+        Task<GetRestUserIdResponseDto> GetRestUser(string userName);
     }
 }
