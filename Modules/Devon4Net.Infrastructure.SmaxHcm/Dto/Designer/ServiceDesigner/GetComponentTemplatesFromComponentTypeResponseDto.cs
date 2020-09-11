@@ -13,10 +13,10 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner
         [JsonPropertyName("@total_results")]
         public int total_results { get; set; }
 
-        public GetComponentTemplatesFromComponentTypeResponseDto_Member[] members { get; set; }
+        public GetComponentTemplatesFromComponentTypeResponseDtoMember[] members { get; set; }
     }
 
-    public class GetComponentTemplatesFromComponentTypeResponseDto_Member
+    public class GetComponentTemplatesFromComponentTypeResponseDtoMember
     {
         [JsonPropertyName("@self")]
         public string self { get; set; }
@@ -32,11 +32,11 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner
         public string name { get; set; }
         public string description { get; set; }
         public string icon { get; set; }
-        public GetComponentTemplatesFromComponentTypeResponseDto_Ext ext { get; set; }
-        public GetComponentTemplatesFromComponentTypeResponseDto_Ancestor ancestor { get; set; }
+        public GetComponentTemplatesFromComponentTypeResponseDtoExt ext { get; set; }
+        public GetComponentTemplatesFromComponentTypeResponseDtoAncestor ancestor { get; set; }
     }
 
-    public class GetComponentTemplatesFromComponentTypeResponseDto_Ancestor
+    public class GetComponentTemplatesFromComponentTypeResponseDtoAncestor
     {
         [JsonPropertyName("@self")]
         public string self { get; set; }
@@ -48,10 +48,10 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner
         public string name { get; set; }
         public string description { get; set; }
         public string icon { get; set; }
-        public GetComponentTemplatesFromComponentTypeResponseDto_Ext ext { get; set; }
+        public GetComponentTemplatesFromComponentTypeResponseDtoExt ext { get; set; }
     }
 
-    public class GetComponentTemplatesFromComponentTypeResponseDto_Ext
+    public class GetComponentTemplatesFromComponentTypeResponseDtoExt
     {
         public string csa_name_key { get; set; }
         public bool csa_critical_system_object { get; set; }

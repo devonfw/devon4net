@@ -12,6 +12,7 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdateProper
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Request;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.AbandonRequest;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Tenants;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Users;
@@ -34,6 +35,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         Task<SwitchActivationOfferingResponse> SwitchActivationOffering(string offeringId, bool activate = true);
         Task<GetAllRequestsResponseDto> GetAllRequest();
         Task<CreateRequestResponse> CreateRequest(CreateRequestPropertiesDto createNewRequestDto);
+        Task<AbandonRequestResponseDto> AbandonRequest(string idRequest);
         Task<CreateOfferingResponseDto> CreateOffering(CreateOfferingRequestDto createOfferingRequestDto);
         Task<GetDesignTagsResponseDto> GetDesignTags();
         Task<GetIconsResponseDto> GetIcons();

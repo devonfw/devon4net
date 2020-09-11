@@ -39,7 +39,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Providers
         public string icon { get; set; }
         public bool enabled { get; set; }
         public ProviderType type_2 { get; set; }
-        public Access_Point access_point { get; set; }
+        public AccessPoint access_point { get; set; }
         public Ext1 ext { get; set; }
     }
 
@@ -57,7 +57,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Providers
         public Ext ext { get; set; }
     }
 
-    public class Access_Point
+    public class AccessPoint
     {
         public string uri { get; set; }
         public string password { get; set; }

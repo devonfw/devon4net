@@ -20,6 +20,7 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Login;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Offering;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Providers;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Request;
+using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.AbandonRequest;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Tenants;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Users;
@@ -35,7 +36,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         private string AuthToken { get; set; }
         private string BasicAuthToken { get; set; }
 
-        public SmaxHcmHandler(IHttpClientHandler httpClientHandler,  IOptions<SmaxHcmOptions> smaxHcmOptions)
+        public SmaxHcmHandler(IHttpClientHandler httpClientHandler, IOptions<SmaxHcmOptions> smaxHcmOptions)
         {
             HttpClientHandler = httpClientHandler;
             SmaxHcmOptions = smaxHcmOptions?.Value ?? throw new ArgumentException("No SmaxHcm options provided");
@@ -86,10 +87,10 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
         public Task<CreateDesignContainerResponseDto> CreateDesignContainer(CreateDesignContainerDto createDesignContainerDto)
         {
-            var tags = new CreateDesignContainerRequestDto_Tag[createDesignContainerDto.Tags.Length];
+            var tags = new CreateDesignContainerRequestDtoTag[createDesignContainerDto.Tags.Length];
             for (var i = 0; i < createDesignContainerDto.Tags.Length; i++)
             {
-                tags[i] = new CreateDesignContainerRequestDto_Tag
+                tags[i] = new CreateDesignContainerRequestDtoTag
                 {
                     self = createDesignContainerDto.Tags[i]
                 };
@@ -155,12 +156,12 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
         public Task<CreateComponentsAndRelationsResponseDto> CreateComponentsAndRelations(string versionId, CreateComponentsAndRelationsDto createComponentsAndRelationsDto)
         {
-            var nodes = new List<CreateComponentsAndRelationsRequestDto_Node>();
-            var relationships = new List<CreateComponentsAndRelationsRequestDto_Relationship>();
+            var nodes = new List<CreateComponentsAndRelationsRequestDtoNode>();
+            var relationships = new List<CreateComponentsAndRelationsRequestDtoRelationship>();
 
-            foreach(var node in createComponentsAndRelationsDto.nodes)
+            foreach (var node in createComponentsAndRelationsDto.nodes)
             {
-                nodes.Add(new CreateComponentsAndRelationsRequestDto_Node
+                nodes.Add(new CreateComponentsAndRelationsRequestDtoNode
                 {
                     name = node.name,
                     description = node.description,
@@ -178,18 +179,18 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
                 });
             }
 
-            foreach(var relationship in createComponentsAndRelationsDto.relationships)
+            foreach (var relationship in createComponentsAndRelationsDto.relationships)
             {
-                relationships.Add(new CreateComponentsAndRelationsRequestDto_Relationship
+                relationships.Add(new CreateComponentsAndRelationsRequestDtoRelationship
                 {
                     name = relationship.name,
                     displayName = relationship.displayName,
                     relationshipTypeId = relationship.relationshipTypeId,
-                    source = new CreateComponentsAndRelationsRequestDto_Source
+                    source = new CreateComponentsAndRelationsRequestDtoSource
                     {
                         name = relationship.sourceName
                     },
-                    target = new CreateComponentsAndRelationsRequestDto_Target
+                    target = new CreateComponentsAndRelationsRequestDtoTarget
                     {
                         name = relationship.targetName
                     }
@@ -267,7 +268,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         {
             var data = new List<UpdatePropertyListDto>();
 
-            foreach(var property in value)
+            foreach (var property in value)
             {
                 data.Add(new UpdatePropertyListDto
                 {
@@ -409,12 +410,12 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         {
             var data = new SwitchActivationOfferingRequest
             {
-                entities = new List<SwitchActivationOfferingRequest_Entity>
+                entities = new List<SwitchActivationOfferingRequestEntity>
                 {
-                    new SwitchActivationOfferingRequest_Entity
+                    new SwitchActivationOfferingRequestEntity
                     {
                         entity_type = BulkEntityConst.Offering,
-                        properties = new SwitchActivationOfferingRequest_Properties()
+                        properties = new SwitchActivationOfferingRequestProperties()
                         {
                             Id = offeringId,
                             Status = activate ? OfferingStatusConst.Active : OfferingStatusConst.Inactive
@@ -469,7 +470,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         public async Task<string> Login(string userName, string password)
         {
             BasicAuthToken = Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(userName + ":" + password));
-            AuthToken = await HttpClientHandler.Send<string>(HttpMethod.Post, SmaxHcmOptions.CircuitBreakerName, string.Format(SmaxHcmEndpointConst.Logon, SmaxHcmOptions.TenantId), new LoginRequestDto {Login = userName, Password = password}, MediaType.ApplicationJson);
+            AuthToken = await HttpClientHandler.Send<string>(HttpMethod.Post, SmaxHcmOptions.CircuitBreakerName, string.Format(SmaxHcmEndpointConst.Logon, SmaxHcmOptions.TenantId), new LoginRequestDto { Login = userName, Password = password }, MediaType.ApplicationJson);
             return AuthToken;
         }
         #endregion
@@ -484,8 +485,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         private async Task<HttpResponseMessage> SendSmaxHcm(HttpMethod httpMethod, string endpoint, object content = null, bool getUrlWithTenant = false, bool addBasicAuth = false, bool addAcceptJsonHeader = false, bool useCamelCase = false)
         {
             await PerformLogin();
-            var a = await HttpClientHandler.Send(httpMethod, SmaxHcmOptions.CircuitBreakerName, getUrlWithTenant ? GetUrlWithTenant(endpoint) : endpoint, content, MediaType.ApplicationJson, false, false, GetAuthorizationHeaders(addBasicAuth, addAcceptJsonHeader));
-            return a;
+            return await HttpClientHandler.Send(httpMethod, SmaxHcmOptions.CircuitBreakerName, getUrlWithTenant ? GetUrlWithTenant(endpoint) : endpoint, content, MediaType.ApplicationJson, false, false, GetAuthorizationHeaders(addBasicAuth, addAcceptJsonHeader));
         }
 
         private string GetUrlWithTenant(string originalUrl)
@@ -564,44 +564,92 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         /// <returns></returns>
         public Task<CreateRequestResponse> CreateRequest(CreateRequestPropertiesDto createNewRequestDto)
         {
-            if (createNewRequestDto == null )
+            try
             {
-                throw new ArgumentException(
-                    "Please check the create NewRequest Dto object properties. Object can not be null or empty");
-            }
-
-            var data = new CreateRequestEntity
-            {
-                entity_type = BulkEntityConst.Request,
-                properties = new CreateRequestProperties
+                if (createNewRequestDto == null)
                 {
-                    Description = createNewRequestDto.Description,
-                    DisplayLabel = createNewRequestDto.DisplayLabel,
-                    StartDate = GetTotalMillisecondsFromDateTime(createNewRequestDto.StartDate),
-                    EndDate = createNewRequestDto.EndDate.HasValue ? GetTotalMillisecondsFromDateTime(createNewRequestDto.EndDate.Value) : null as long?,
-                    RequestedByPerson = createNewRequestDto.RequestedByPerson,
-                    RequestsOffering = createNewRequestDto.RequestsOffering,
-                    ImpactScope = BulkImpactScopeConst.Enterprise,
-                    Urgency = BulkUrgencyConst.NoDisruption,
-                    //UserOptions = createNewRequestDto.entity.properties.UserOptions != null ? createNewRequestDto.entity.properties.UserOptions : new UserOptionsDto{complexTypeProperties = new List<Complextypeproperty>()},
-                    UserOptions = createNewRequestDto.UserOptions,
-                    DataDomains = new List<string> {BulkDataDomainsConst.Public},
-                    RequestAttachments = createNewRequestDto.RequestAttachments
+                    throw new ArgumentException(
+                        "Please check the create NewRequest Dto object properties. Object can not be null or empty");
                 }
-            };
 
-            var request = new CreateRequestDto
+                var data = new CreateRequestEntity
+                {
+                    entity_type = BulkEntityConst.Request,
+                    properties = new CreateRequestProperties
+                    {
+                        Description = createNewRequestDto.Description,
+                        DisplayLabel = createNewRequestDto.DisplayLabel,
+                        StartDate = GetTotalMillisecondsFromDateTime(createNewRequestDto.StartDate),
+                        EndDate = createNewRequestDto.EndDate.HasValue ? GetTotalMillisecondsFromDateTime(createNewRequestDto.EndDate.Value) : null as long?,
+                        RequestedByPerson = createNewRequestDto.RequestedByPerson,
+                        RequestsOffering = createNewRequestDto.RequestsOffering,
+                        ImpactScope = BulkImpactScopeConst.Enterprise,
+                        Urgency = BulkUrgencyConst.NoDisruption,
+                        //UserOptions = createNewRequestDto.entity.properties.UserOptions != null ? createNewRequestDto.entity.properties.UserOptions : new UserOptionsDto{complexTypeProperties = new List<Complextypeproperty>()},
+                        UserOptions = createNewRequestDto.UserOptions,
+                        DataDomains = new List<string> { BulkDataDomainsConst.Public },
+                        RequestAttachments = createNewRequestDto.RequestAttachments
+                    }
+                };
+
+                var request = new CreateRequestDto
+                {
+                    operation = BulkOperationConst.Create,
+                    entities = new List<CreateRequestEntity> { data }
+                };
+
+                return SendSmaxHcm<CreateRequestResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateRequest, SmaxHcmOptions.TenantId), request);
+            }
+            catch (Exception ex)
             {
-                operation = BulkOperationConst.Create,
-                entities = new List<CreateRequestEntity> {data}
-            };
+                throw new SmaxHcmGenericException($"Error on creating request - {ex.Message}");
+            }
+        }
 
-            return SendSmaxHcm<CreateRequestResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateRequest, SmaxHcmOptions.TenantId), request);
+        public Task<AbandonRequestResponseDto> AbandonRequest(string idRequest)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(idRequest))
+                {
+                    throw new ArgumentException(
+                        "Please request ID can not be null or empty");
+                }
+
+                var data = new AbandonRequestEntity
+                {
+                    entity_type = BulkEntityConst.Request,
+                    properties = new AbandonRequestProperties
+                    {
+                        Id = idRequest,
+                        PhaseId = PhaseIdValuesConst.Abandon
+                    }
+                };
+
+                var request = new AbandonRequestDto
+                {
+                    operation = BulkOperationConst.Update,
+                    entities = new List<AbandonRequestEntity> { data }
+                };
+
+                return SendSmaxHcm<AbandonRequestResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateRequest, SmaxHcmOptions.TenantId), request);
+            }
+            catch (Exception ex)
+            {
+                throw new SmaxHcmGenericException($"Error on abandoning request - {ex.Message}");
+            }
         }
 
         public Task<GetUsersByUserNameResponse> GetUsersByUserName(string username)
         {
-            return SendSmaxHcm<GetUsersByUserNameResponse>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetUsersByName, SmaxHcmOptions.TenantId, username), null, false, true);
+            try
+            {
+                return SendSmaxHcm<GetUsersByUserNameResponse>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetUsersByName, SmaxHcmOptions.TenantId, username), null, false, true);
+            }
+            catch (Exception ex)
+            {
+                throw new SmaxHcmGenericException($"Error on getting users by user name - {ex.Message}");
+            }
         }
 
         public Task<GetRequestResponseDto> GetRequestById(string requestId)
@@ -611,7 +659,7 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
         private long GetTotalMillisecondsFromDateTime(DateTime dateTime)
         {
-            if (dateTime == null || dateTime == default || dateTime == DateTime.MinValue || dateTime == DateTime.MaxValue)
+            if (dateTime == default || dateTime == DateTime.MinValue || dateTime == DateTime.MaxValue)
             {
                 throw new ArgumentException($"The {nameof(dateTime)} provided can not have the value {dateTime}");
             }
