@@ -74,7 +74,9 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
         public Task<GetDesignTagsResponseDto> GetDesignTags()
         {
-            var data = new GetDesignTagsRequestDto
+            try
+            {
+                var data = new GetDesignTagsRequestDto
             {
                 scopes = new string[]
                 {
@@ -83,48 +85,68 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             };
 
             return SendSmaxHcm<GetDesignTagsResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.GetDesignTags, SmaxHcmOptions.TenantId), data, false, true);
+            }
+            catch(Exception ex)
+            {
+
+                throw new SmaxHcmGenericException($"Error on getting the design tags - {ex.Message}");
+            }
         }
 
         public Task<CreateDesignContainerResponseDto> CreateDesignContainer(CreateDesignContainerDto createDesignContainerDto)
         {
-            var tags = new CreateDesignContainerRequestDtoTag[createDesignContainerDto.Tags.Length];
-            for (var i = 0; i < createDesignContainerDto.Tags.Length; i++)
+            try
             {
-                tags[i] = new CreateDesignContainerRequestDtoTag
+                var tags = new CreateDesignContainerRequestDtoTag[createDesignContainerDto.Tags.Length];
+                for (var i = 0; i < createDesignContainerDto.Tags.Length; i++)
                 {
-                    self = createDesignContainerDto.Tags[i]
+                    tags[i] = new CreateDesignContainerRequestDtoTag
+                    {
+                        self = createDesignContainerDto.Tags[i]
+                    };
+                }
+
+                var data = new CreateDesignContainerRequestDto
+                {
+                    container_type = DesignConst.Sequence_Artifact_Container,
+                    description = createDesignContainerDto.Description,
+                    name = createDesignContainerDto.Name,
+                    tags = tags,
+                    icon = createDesignContainerDto.Icon
                 };
+
+                return SendSmaxHcm<CreateDesignContainerResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateDesignContainer, SmaxHcmOptions.TenantId), data, false, true);
             }
-
-            var data = new CreateDesignContainerRequestDto
+            catch (Exception ex)
             {
-                container_type = DesignConst.Sequence_Artifact_Container,
-                description = createDesignContainerDto.Description,
-                name = createDesignContainerDto.Name,
-                tags = tags,
-                icon = createDesignContainerDto.Icon
-            };
-
-            return SendSmaxHcm<CreateDesignContainerResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateDesignContainer, SmaxHcmOptions.TenantId), data, false, true);
+                throw new SmaxHcmGenericException($"Error on creating the design container - {ex.Message}");
+            }
         }
 
         public Task<CreateDesignVersionResponseDto> CreateDesignVersion(CreateDesignVersionDto createVersionDto)
         {
-            var data = new CreateDesignVersionRequestDto
+            try
             {
-                containerId = createVersionDto.containerId,
-                description = createVersionDto.description,
-                icon = createVersionDto.icon,
-                name = createVersionDto.name,
-                published = createVersionDto.published,
-                type = DesignConst.Version_Type,
-                upgrades_from = new string[0],
-                upgrades_to = new string[0],
-                url = createVersionDto.url,
-                version = createVersionDto.version
-            };
+                var data = new CreateDesignVersionRequestDto
+                {
+                    containerId = createVersionDto.containerId,
+                    description = createVersionDto.description,
+                    icon = createVersionDto.icon,
+                    name = createVersionDto.name,
+                    published = createVersionDto.published,
+                    type = DesignConst.Version_Type,
+                    upgrades_from = new string[0],
+                    upgrades_to = new string[0],
+                    url = createVersionDto.url,
+                    version = createVersionDto.version
+                };
 
-            return SendSmaxHcm<CreateDesignVersionResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateDesignVersion, SmaxHcmOptions.TenantId), data, false, true);
+                return SendSmaxHcm<CreateDesignVersionResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.CreateDesignVersion, SmaxHcmOptions.TenantId), data, false, true);
+            }
+            catch (Exception ex)
+            {
+                throw new SmaxHcmGenericException($"Error on getting the design version - {ex.Message}");
+            }
         }
 
         public Task DeleteDesignContainer(string containerId)
@@ -139,72 +161,100 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
         public Task<PublishDesignResponseDto> PublishDesignVersion(string versionId)
         {
-            return SendSmaxHcm<PublishDesignResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.PublishDesign, SmaxHcmOptions.TenantId, versionId), null, false, true);
+            try
+            {
+                return SendSmaxHcm<PublishDesignResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.PublishDesign, SmaxHcmOptions.TenantId, versionId), null, false, true);
+            }
+            catch (Exception ex)
+            {
+                throw new SmaxHcmGenericException($"Error on publishing the design version - {ex.Message}");
+            }
         }
 
         // Service designer
 
         public Task<GetServiceDesignerMetamodelResponseDto> GetServiceDesignerMetamodel(string versionId)
         {
-            return SendSmaxHcm<GetServiceDesignerMetamodelResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetServiceDesignerMetamodel, SmaxHcmOptions.TenantId, versionId), null, false, true);
+            try
+            {
+                return SendSmaxHcm<GetServiceDesignerMetamodelResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetServiceDesignerMetamodel, SmaxHcmOptions.TenantId, versionId), null, false, true);
+            }
+            catch (Exception ex)
+            {
+                throw new SmaxHcmGenericException($"Error on getting service designer metamodel - {ex.Message}");
+            }
         }
 
         public Task<GetComponentTemplatesFromComponentTypeResponseDto> GetComponentTemplatesFromComponentType(string componentTypeId)
         {
-            return SendSmaxHcm<GetComponentTemplatesFromComponentTypeResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetComponentTemplatesFromComponentType, SmaxHcmOptions.TenantId, componentTypeId), null, false, true);
+            try
+            {
+                return SendSmaxHcm<GetComponentTemplatesFromComponentTypeResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetComponentTemplatesFromComponentType, SmaxHcmOptions.TenantId, componentTypeId), null, false, true);
+            }
+            catch (Exception ex)
+            {
+                throw new SmaxHcmGenericException($"Error on getting the component templates from component type - {ex.Message}");
+            }
         }
 
         public Task<CreateComponentsAndRelationsResponseDto> CreateComponentsAndRelations(string versionId, CreateComponentsAndRelationsDto createComponentsAndRelationsDto)
         {
-            var nodes = new List<CreateComponentsAndRelationsRequestDtoNode>();
-            var relationships = new List<CreateComponentsAndRelationsRequestDtoRelationship>();
-
-            foreach (var node in createComponentsAndRelationsDto.nodes)
+            try
             {
-                nodes.Add(new CreateComponentsAndRelationsRequestDtoNode
+                var nodes = new List<CreateComponentsAndRelationsRequestDtoNode>();
+                var relationships = new List<CreateComponentsAndRelationsRequestDtoRelationship>();
+
+                foreach (var node in createComponentsAndRelationsDto.nodes)
                 {
-                    name = node.name,
-                    description = node.description,
-                    displayName = node.displayName,
-                    icon = node.icon,
-                    orderIndex = node.orderIndex,
-                    statusMessages = new object[0],
-                    tags = new string[]
+                    nodes.Add(new CreateComponentsAndRelationsRequestDtoNode
                     {
-                        DesignConst.Create_Component_Tag_Consumer_Visible
-                    },
-                    typeId = node.typeId,
-                    x = node.x,
-                    y = node.y
-                });
-            }
+                        name = node.name,
+                        description = node.description,
+                        displayName = node.displayName,
+                        icon = node.icon,
+                        orderIndex = node.orderIndex,
+                        statusMessages = new object[0],
+                        tags = new string[]
+                        {
+                            DesignConst.Create_Component_Tag_Consumer_Visible
+                        },
+                        typeId = node.typeId,
+                        x = node.x,
+                        y = node.y
+                    });
+                }
 
-            foreach (var relationship in createComponentsAndRelationsDto.relationships)
-            {
-                relationships.Add(new CreateComponentsAndRelationsRequestDtoRelationship
+                foreach (var relationship in createComponentsAndRelationsDto.relationships)
                 {
-                    name = relationship.name,
-                    displayName = relationship.displayName,
-                    relationshipTypeId = relationship.relationshipTypeId,
-                    source = new CreateComponentsAndRelationsRequestDtoSource
+                    relationships.Add(new CreateComponentsAndRelationsRequestDtoRelationship
                     {
-                        name = relationship.sourceName
-                    },
-                    target = new CreateComponentsAndRelationsRequestDtoTarget
-                    {
-                        name = relationship.targetName
-                    }
-                });
+                        name = relationship.name,
+                        displayName = relationship.displayName,
+                        relationshipTypeId = relationship.relationshipTypeId,
+                        source = new CreateComponentsAndRelationsRequestDtoSource
+                        {
+                            name = relationship.sourceName
+                        },
+                        target = new CreateComponentsAndRelationsRequestDtoTarget
+                        {
+                            name = relationship.targetName
+                        }
+                    });
+                }
+
+                var data = new CreateComponentsAndRelationsRequestDto
+                {
+                    groups = new object[0],
+                    nodes = nodes.ToArray(),
+                    relationships = relationships.ToArray()
+                };
+
+                return SendSmaxHcm<CreateComponentsAndRelationsResponseDto>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.CreateComponentsAndRelations, SmaxHcmOptions.TenantId, versionId), data, false, true);
             }
-
-            var data = new CreateComponentsAndRelationsRequestDto
+            catch (Exception ex)
             {
-                groups = new object[0],
-                nodes = nodes.ToArray(),
-                relationships = relationships.ToArray()
-            };
-
-            return SendSmaxHcm<CreateComponentsAndRelationsResponseDto>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.CreateComponentsAndRelations, SmaxHcmOptions.TenantId, versionId), data, false, true);
+                throw new SmaxHcmGenericException($"Error on creting components and relations - {ex.Message}");
+            }
         }
 
         public Task<GetOverviewFromComponentResponseDto> GetOverviewFromComponent(string componentId)
@@ -231,12 +281,19 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
         public Task<ApplyComponentTemplateToComponentResponseDto> ApplyComponentTemplateToComponent(ApplyComponentTemplateToComponentDto applyComponentTemplateToComponentDto)
         {
-            var data = new ApplyComponentTemplateToComponentRequestDto
+            try
             {
-                componentTemplateId = applyComponentTemplateToComponentDto.componentTemplateId
-            };
+                var data = new ApplyComponentTemplateToComponentRequestDto
+                {
+                    componentTemplateId = applyComponentTemplateToComponentDto.componentTemplateId
+                };
 
-            return SendSmaxHcm<ApplyComponentTemplateToComponentResponseDto>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.ApplyComponentTemplateToComponent, SmaxHcmOptions.TenantId, applyComponentTemplateToComponentDto.versionId, applyComponentTemplateToComponentDto.componentId), data, false, true);
+                return SendSmaxHcm<ApplyComponentTemplateToComponentResponseDto>(HttpMethod.Put, string.Format(SmaxHcmEndpointConst.ApplyComponentTemplateToComponent, SmaxHcmOptions.TenantId, applyComponentTemplateToComponentDto.versionId, applyComponentTemplateToComponentDto.componentId), data, false, true);
+            }
+            catch (Exception ex)
+            {
+                throw new SmaxHcmGenericException($"Error on applying component template to component - {ex.Message}");
+            }
         }
 
         public Task<GetComponentsResponseDto> GetComponentsFromServiceDesigner(string versionId)
@@ -246,12 +303,26 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
         public Task<GetPropertiesFromComponentResponseDto> GetPropertiesFromComponent(string versionId, string componentId)
         {
-            return SendSmaxHcm<GetPropertiesFromComponentResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetPropertiesFromComponent, SmaxHcmOptions.TenantId, versionId, componentId), null, false, true);
+            try
+            {
+                return SendSmaxHcm<GetPropertiesFromComponentResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetPropertiesFromComponent, SmaxHcmOptions.TenantId, versionId, componentId), null, false, true);
+            }
+            catch (Exception ex)
+            {
+                throw new SmaxHcmGenericException($"Error on getting the properties from component - {ex.Message}");
+            }
         }
 
         public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, string value)
         {
-            return UpdatePropertyFromComponent(propertyId, ComponentPropertyTypesConst.STRING, value);
+            try
+            {
+                return UpdatePropertyFromComponent(propertyId, ComponentPropertyTypesConst.STRING, value);
+            }
+            catch (Exception ex)
+            {
+                throw new SmaxHcmGenericException($"Error on updating property from component - {ex.Message}");
+            }
         }
 
         public Task<UpdatePropertyFromComponentResponseDto> UpdatePropertyFromComponent(string propertyId, int value)
@@ -358,32 +429,46 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
         public Task<GetOfferingProvidersResponseDto> GetOfferingProviders(string searchText = null, string[] tags = null)
         {
-            var data = new GetOfferingProvidersRequestDto
+            try
             {
-                providerId = SmaxHcmOptions.ProviderId,
-                tags = tags,
-                text = searchText
-            };
+                var data = new GetOfferingProvidersRequestDto
+                {
+                    providerId = SmaxHcmOptions.ProviderId,
+                    tags = tags,
+                    text = searchText
+                };
 
-            return SendSmaxHcm<GetOfferingProvidersResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.GetOfferingProviders, SmaxHcmOptions.TenantId), data, false, true);
+                return SendSmaxHcm<GetOfferingProvidersResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.GetOfferingProviders, SmaxHcmOptions.TenantId), data, false, true);
+            }
+            catch (Exception ex)
+            {
+                throw new SmaxHcmGenericException($"Error on getting offering providers - {ex.Message}");
+            }
         }
 
         public Task<AddAgregatedOfferingResponseDto> AddAggregatedOffering(AddAgregatedOfferingDto addAgregatedOfferingDto)
         {
-            if (addAgregatedOfferingDto == null || string.IsNullOrEmpty(addAgregatedOfferingDto.offeringId) || string.IsNullOrEmpty(addAgregatedOfferingDto.offeringDisplayName))
+            try
             {
-                throw new ArgumentException("The offeringId or the display name can not be null");
+                if (addAgregatedOfferingDto == null || string.IsNullOrEmpty(addAgregatedOfferingDto.offeringId) || string.IsNullOrEmpty(addAgregatedOfferingDto.offeringDisplayName))
+                {
+                    throw new ArgumentException("The offeringId or the display name can not be null");
+                }
+
+                var data = new AddAgregatedOfferingRequestDto
+                {
+                    offeringDisplayName = addAgregatedOfferingDto.offeringDisplayName,
+                    offeringId = addAgregatedOfferingDto.offeringId,
+                    providerId = SmaxHcmOptions.ProviderId,
+                    service = addAgregatedOfferingDto.service
+                };
+
+                return SendSmaxHcm<AddAgregatedOfferingResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.AddAgregatedOffering, SmaxHcmOptions.TenantId), data);
             }
-
-            var data = new AddAgregatedOfferingRequestDto
+            catch (Exception ex)
             {
-                offeringDisplayName = addAgregatedOfferingDto.offeringDisplayName,
-                offeringId = addAgregatedOfferingDto.offeringId,
-                providerId = SmaxHcmOptions.ProviderId,
-                service = addAgregatedOfferingDto.service
-            };
-
-            return SendSmaxHcm<AddAgregatedOfferingResponseDto>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.AddAgregatedOffering, SmaxHcmOptions.TenantId), data);
+                throw new SmaxHcmGenericException($"Error on adding aggregated offering - {ex.Message}");
+            }
         }
 
         public Task<object> UpdateOffering(UpdateOfferingDto updateOfferingDto)
@@ -408,24 +493,31 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
 
         public Task<SwitchActivationOfferingResponse> SwitchActivationOffering(string offeringId, bool activate = true)
         {
-            var data = new SwitchActivationOfferingRequest
+            try
             {
-                entities = new List<SwitchActivationOfferingRequestEntity>
+                var data = new SwitchActivationOfferingRequest
                 {
-                    new SwitchActivationOfferingRequestEntity
+                    entities = new List<SwitchActivationOfferingRequestEntity>
                     {
-                        entity_type = BulkEntityConst.Offering,
-                        properties = new SwitchActivationOfferingRequestProperties()
+                        new SwitchActivationOfferingRequestEntity
                         {
-                            Id = offeringId,
-                            Status = activate ? OfferingStatusConst.Active : OfferingStatusConst.Inactive
+                            entity_type = BulkEntityConst.Offering,
+                            properties = new SwitchActivationOfferingRequestProperties()
+                            {
+                                Id = offeringId,
+                                Status = activate ? OfferingStatusConst.Active : OfferingStatusConst.Inactive
+                            }
                         }
-                    }
-                },
-                operation = BulkOperationConst.Update
-            };
+                    },
+                    operation = BulkOperationConst.Update
+                };
 
-            return SendSmaxHcm<SwitchActivationOfferingResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.SwitchActivationOffering, SmaxHcmOptions.TenantId), data);
+                return SendSmaxHcm<SwitchActivationOfferingResponse>(HttpMethod.Post, string.Format(SmaxHcmEndpointConst.SwitchActivationOffering, SmaxHcmOptions.TenantId), data);
+            }
+            catch (Exception ex)
+            {
+                throw new SmaxHcmGenericException($"Error on switching activation offering - {ex.Message}");
+            }
         }
 
         #endregion
