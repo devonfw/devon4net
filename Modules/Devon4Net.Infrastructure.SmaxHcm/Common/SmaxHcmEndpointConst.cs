@@ -25,6 +25,7 @@
 
         #region Design
         public const string GetDesign = "/{0}/dnd/api/service/design/{1}"; //tenantId, designId
+        public const string ExportDesign = "/{0}/dnd/rest/export/{1}?userIdentifier={2}"; // tenantId, versionId, rest user id
         public const string GetIcons = "/{0}/dnd/api/blobstore?tag=library"; // tenantId
         public const string GetDesignTags = "/{0}/dnd/api/tag/filter"; // tenantId
         public const string CreateDesignContainer = "/{0}/dnd/api/container"; // tenantId

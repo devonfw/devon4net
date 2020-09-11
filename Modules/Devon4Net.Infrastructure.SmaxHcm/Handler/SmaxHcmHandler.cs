@@ -53,14 +53,17 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<GetDesignResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.GetDesign, SmaxHcmOptions.TenantId, designId), null, false, true);
         }
 
-        public Task<byte[]> ExportDesign(string designId, string restUserId)
+        public async Task<byte[]> ExportDesign(string designId, string restUserId)
         {
             if (string.IsNullOrEmpty(designId))
             {
                 throw new ArgumentException($"The {nameof(designId)} can not be null");
             }
 
-            return SendSmaxHcm<byte[]>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.ExportDesign, SmaxHcmOptions.TenantId, designId, restUserId));
+            using (var designResponse = await SendSmaxHcm(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.ExportDesign, SmaxHcmOptions.TenantId, designId, restUserId), null, false, true))
+            {
+                return await designResponse.Content.ReadAsByteArrayAsync();
+            }
         }
 
         public Task<GetIconsResponseDto> GetIcons()
@@ -450,6 +453,15 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
             return SendSmaxHcm<SmaxGetUserResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.User, userId, DateTime.Now.Ticks.ToString()));
         }
 
+        public Task<GetRestUserResponseDto> GetRestUser(string userName)
+        {
+            if (string.IsNullOrEmpty(userName))
+            {
+                throw new ArgumentException($"The {nameof(userName)} can not be null");
+            }
+
+            return SendSmaxHcm<GetRestUserResponseDto>(HttpMethod.Get, string.Format(SmaxHcmEndpointConst.RestUserId, SmaxHcmOptions.TenantId, userName), null, false, true, true);
+        }
         #endregion
 
         #region Security
@@ -467,6 +479,13 @@ namespace Devon4Net.Infrastructure.SMAXHCM.Handler
         {
             await PerformLogin();
             return await HttpClientHandler.Send<T>(httpMethod, SmaxHcmOptions.CircuitBreakerName, getUrlWithTenant ? GetUrlWithTenant(endpoint) : endpoint, content, MediaType.ApplicationJson, GetAuthorizationHeaders(addBasicAuth, addAcceptJsonHeader), true, useCamelCase);
+        }
+
+        private async Task<HttpResponseMessage> SendSmaxHcm(HttpMethod httpMethod, string endpoint, object content = null, bool getUrlWithTenant = false, bool addBasicAuth = false, bool addAcceptJsonHeader = false, bool useCamelCase = false)
+        {
+            await PerformLogin();
+            var a = await HttpClientHandler.Send(httpMethod, SmaxHcmOptions.CircuitBreakerName, getUrlWithTenant ? GetUrlWithTenant(endpoint) : endpoint, content, MediaType.ApplicationJson, false, false, GetAuthorizationHeaders(addBasicAuth, addAcceptJsonHeader));
+            return a;
         }
 
         private string GetUrlWithTenant(string originalUrl)

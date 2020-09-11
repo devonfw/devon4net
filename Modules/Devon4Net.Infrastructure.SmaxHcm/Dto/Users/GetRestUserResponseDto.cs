@@ -3,34 +3,34 @@ using System.Text.Json.Serialization;
 
 namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
 {
-    public class GetRestUserIdResponseDto
+    public class GetRestUserResponseDto
     {
         [JsonPropertyName("@type")]
-        public GetRestUserIdResponseDtoType type { get; set; }
+        public GetRestUserResponseDtoType type { get; set; }
 
         public string id { get; set; }
         public string name { get; set; }
         public string displayName { get; set; }
         public bool isCriticalSystemObject { get; set; }
         public object[] tags { get; set; }
-        public GetRestUserIdResponseDtoProperty1[] property { get; set; }
-        public GetRestUserIdResponseDtoState state { get; set; }
-        public GetRestUserIdResponseDtoOwnedby ownedBy { get; set; }
+        public GetRestUserResponseDtoProperty1[] property { get; set; }
+        public GetRestUserResponseDtoState state { get; set; }
+        public GetRestUserResponseDtoOwnedby ownedBy { get; set; }
         public bool disabled { get; set; }
         public bool isOutOfSync { get; set; }
         public bool validUpgrade { get; set; }
         public object[] upgradeRelationsFrom { get; set; }
         public object[] upgradeRelationsTo { get; set; }
-        public GetRestUserIdResponseDtoPartytype partyType { get; set; }
+        public GetRestUserResponseDtoPartytype partyType { get; set; }
         public string emailAddress { get; set; }
-        public GetRestUserIdResponseDtoRole[] role { get; set; }
-        public GetRestUserIdResponseDtoPartypreference1[] partyPreference { get; set; }
+        public GetRestUserResponseDtoRole[] role { get; set; }
+        public GetRestUserResponseDtoPartypreference1[] partyPreference { get; set; }
         public string userName { get; set; }
         public string commonName { get; set; }
-        public GetRestUserIdResponseDtoOrganization organization { get; set; }
+        public GetRestUserResponseDtoOrganization organization { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoType
+    public class GetRestUserResponseDtoType
     {
         public string id { get; set; }
         public string name { get; set; }
@@ -38,7 +38,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public bool disabled { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoState
+    public class GetRestUserResponseDtoState
     {
         public string id { get; set; }
         public string name { get; set; }
@@ -46,16 +46,16 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public bool disabled { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoOwnedby
+    public class GetRestUserResponseDtoOwnedby
     {
-        public GetRestUserIdResponseDtoType1 type { get; set; }
+        public GetRestUserResponseDtoType1 type { get; set; }
         public string id { get; set; }
         public string name { get; set; }
         public string displayName { get; set; }
         public bool isCriticalSystemObject { get; set; }
         public string icon { get; set; }
         public object[] tags { get; set; }
-        public GetRestUserIdResponseDtoState1 state { get; set; }
+        public GetRestUserResponseDtoState1 state { get; set; }
         public bool disabled { get; set; }
         public bool isOutOfSync { get; set; }
         public bool validUpgrade { get; set; }
@@ -77,7 +77,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public bool portalAllowAdvGrpOwnedSubscr { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoType1
+    public class GetRestUserResponseDtoType1
     {
         public string id { get; set; }
         public string name { get; set; }
@@ -85,7 +85,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public bool disabled { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoState1
+    public class GetRestUserResponseDtoState1
     {
         public string id { get; set; }
         public string name { get; set; }
@@ -93,7 +93,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public bool disabled { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoPartytype
+    public class GetRestUserResponseDtoPartytype
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }
@@ -105,10 +105,10 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public bool isCriticalSystemObject { get; set; }
         public string icon { get; set; }
         public bool disabled { get; set; }
-        public GetRestUserIdResponseDtoCategorytype categoryType { get; set; }
+        public GetRestUserResponseDtoCategorytype categoryType { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoCategorytype
+    public class GetRestUserResponseDtoCategorytype
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }
@@ -122,29 +122,29 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public object[] categories { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoOrganization
+    public class GetRestUserResponseDtoOrganization
     {
-        public GetRestUserIdResponseDtoType2 type { get; set; }
+        public GetRestUserResponseDtoType2 type { get; set; }
         public string id { get; set; }
         public string name { get; set; }
         public string displayName { get; set; }
         public bool isCriticalSystemObject { get; set; }
         public string icon { get; set; }
         public object[] tags { get; set; }
-        public GetRestUserIdResponseDtoState2 state { get; set; }
+        public GetRestUserResponseDtoState2 state { get; set; }
         public bool disabled { get; set; }
         public bool isOutOfSync { get; set; }
         public bool validUpgrade { get; set; }
         public object[] upgradeRelationsFrom { get; set; }
         public object[] upgradeRelationsTo { get; set; }
-        public GetRestUserIdResponseDtoPartytype1 partyType { get; set; }
+        public GetRestUserResponseDtoPartytype1 partyType { get; set; }
         public object[] role { get; set; }
-        public GetRestUserIdResponseDtoPartypreference[] partyPreference { get; set; }
+        public GetRestUserResponseDtoPartypreference[] partyPreference { get; set; }
         public string accountNumber { get; set; }
         public object[] person { get; set; }
         public object[] contactPerson { get; set; }
         public object[] organization { get; set; }
-        public GetRestUserIdResponseDtoBusinessrole businessRole { get; set; }
+        public GetRestUserResponseDtoBusinessrole businessRole { get; set; }
         public string portalTitle { get; set; }
         public string portalWelcomeMsg { get; set; }
         public string portalHomePage { get; set; }
@@ -159,7 +159,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public string idmUUID { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoType2
+    public class GetRestUserResponseDtoType2
     {
         public string id { get; set; }
         public string name { get; set; }
@@ -167,7 +167,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public bool disabled { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoState2
+    public class GetRestUserResponseDtoState2
     {
         public string id { get; set; }
         public string name { get; set; }
@@ -175,7 +175,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public bool disabled { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoPartytype1
+    public class GetRestUserResponseDtoPartytype1
     {
         public string id { get; set; }
         public string name { get; set; }
@@ -183,7 +183,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public bool disabled { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoBusinessrole
+    public class GetRestUserResponseDtoBusinessrole
     {
         public string id { get; set; }
         public string name { get; set; }
@@ -191,18 +191,18 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public bool disabled { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoPartypreference
+    public class GetRestUserResponseDtoPartypreference
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }
 
         public string id { get; set; }
         public bool isCriticalSystemObject { get; set; }
-        public GetRestUserIdResponseDtoContenttype contentType { get; set; }
-        public GetRestUserIdResponseDtoPreferredlocale preferredLocale { get; set; }
+        public GetRestUserResponseDtoContenttype contentType { get; set; }
+        public GetRestUserResponseDtoPreferredlocale preferredLocale { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoContenttype
+    public class GetRestUserResponseDtoContenttype
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }
@@ -214,10 +214,10 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public bool isCriticalSystemObject { get; set; }
         public string icon { get; set; }
         public bool disabled { get; set; }
-        public GetRestUserIdResponseDtoCategorytype1 categoryType { get; set; }
+        public GetRestUserResponseDtoCategorytype1 categoryType { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoCategorytype1
+    public class GetRestUserResponseDtoCategorytype1
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }
@@ -231,7 +231,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public object[] categories { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoPreferredlocale
+    public class GetRestUserResponseDtoPreferredlocale
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }
@@ -243,10 +243,10 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public bool isCriticalSystemObject { get; set; }
         public string icon { get; set; }
         public bool disabled { get; set; }
-        public GetRestUserIdResponseDtoCategorytype2 categoryType { get; set; }
+        public GetRestUserResponseDtoCategorytype2 categoryType { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoCategorytype2
+    public class GetRestUserResponseDtoCategorytype2
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }
@@ -260,7 +260,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public object[] categories { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoProperty1
+    public class GetRestUserResponseDtoProperty1
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }
@@ -272,10 +272,10 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public string name { get; set; }
         public string displayName { get; set; }
         public bool isCriticalSystemObject { get; set; }
-        public GetRestUserIdResponseDtoArtifact artifact { get; set; }
+        public GetRestUserResponseDtoArtifact artifact { get; set; }
         public object[] propertyBindings { get; set; }
-        public GetRestUserIdResponseDtoValuetype valueType { get; set; }
-        public GetRestUserIdResponseDtoValue[] values { get; set; }
+        public GetRestUserResponseDtoValuetype valueType { get; set; }
+        public GetRestUserResponseDtoValue[] values { get; set; }
         public int maxOccurs { get; set; }
         public int minOccurs { get; set; }
         public int orderIndex { get; set; }
@@ -296,7 +296,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public bool valueTypeString { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoArtifact
+    public class GetRestUserResponseDtoArtifact
     {
         public string id { get; set; }
         public string name { get; set; }
@@ -309,7 +309,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public object[] upgradeRelationsTo { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoValuetype
+    public class GetRestUserResponseDtoValuetype
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }
@@ -321,10 +321,10 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public bool isCriticalSystemObject { get; set; }
         public string icon { get; set; }
         public bool disabled { get; set; }
-        public GetRestUserIdResponseDtoCategorytype3 categoryType { get; set; }
+        public GetRestUserResponseDtoCategorytype3 categoryType { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoCategorytype3
+    public class GetRestUserResponseDtoCategorytype3
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }
@@ -338,7 +338,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public object[] categories { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoValue
+    public class GetRestUserResponseDtoValue
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }
@@ -350,24 +350,24 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public int orderIndex { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoRole
+    public class GetRestUserResponseDtoRole
     {
         public string name { get; set; }
         public bool isCriticalSystemObject { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoPartypreference1
+    public class GetRestUserResponseDtoPartypreference1
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }
 
         public string id { get; set; }
         public bool isCriticalSystemObject { get; set; }
-        public GetRestUserIdResponseDtoContenttype1 contentType { get; set; }
-        public GetRestUserIdResponseDtoPreferredlocale1 preferredLocale { get; set; }
+        public GetRestUserResponseDtoContenttype1 contentType { get; set; }
+        public GetRestUserResponseDtoPreferredlocale1 preferredLocale { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoContenttype1
+    public class GetRestUserResponseDtoContenttype1
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }
@@ -379,10 +379,10 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public bool isCriticalSystemObject { get; set; }
         public string icon { get; set; }
         public bool disabled { get; set; }
-        public GetRestUserIdResponseDtoCategorytype4 categoryType { get; set; }
+        public GetRestUserResponseDtoCategorytype4 categoryType { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoCategorytype4
+    public class GetRestUserResponseDtoCategorytype4
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }
@@ -396,7 +396,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public object[] categories { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoPreferredlocale1
+    public class GetRestUserResponseDtoPreferredlocale1
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }
@@ -408,10 +408,10 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
         public bool isCriticalSystemObject { get; set; }
         public string icon { get; set; }
         public bool disabled { get; set; }
-        public GetRestUserIdResponseDtoCategorytype5 categoryType { get; set; }
+        public GetRestUserResponseDtoCategorytype5 categoryType { get; set; }
     }
 
-    public class GetRestUserIdResponseDtoCategorytype5
+    public class GetRestUserResponseDtoCategorytype5
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }
