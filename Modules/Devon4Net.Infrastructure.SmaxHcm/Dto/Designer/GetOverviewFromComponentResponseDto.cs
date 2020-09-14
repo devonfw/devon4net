@@ -29,7 +29,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer
         public int processingOrder { get; set; }
         public GetOverviewFromComponentResponseDtoBlueprint blueprint { get; set; }
         public GetOverviewFromComponentResponseDtoBasecomponenttype baseComponentType { get; set; }
-        public GetOverviewFromComponentResponseDtoConfiguration_Item_Type configuration_item_type { get; set; }
+        public GetOverviewFromComponentResponseDtoConfigurationItemType configuration_item_type { get; set; }
     }
 
     public class GetOverviewFromComponentResponseDtoBlueprint
@@ -168,7 +168,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer
         public bool disabled { get; set; }
     }
 
-    public class GetOverviewFromComponentResponseDtoConfiguration_Item_Type
+    public class GetOverviewFromComponentResponseDtoConfigurationItemType
     {
         [JsonPropertyName("@created")]
         public DateTime created { get; set; }

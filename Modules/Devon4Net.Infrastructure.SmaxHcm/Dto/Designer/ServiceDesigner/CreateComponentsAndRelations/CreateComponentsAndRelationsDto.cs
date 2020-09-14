@@ -2,11 +2,11 @@
 {
     public class CreateComponentsAndRelationsDto
     {
-        public CreateComponentsAndRelationsDto_Node[] nodes { get; set; }
-        public CreateComponentsAndRelationsDto_Relationship[] relationships { get; set; }
+        public CreateComponentsAndRelationsDtoNode[] nodes { get; set; }
+        public CreateComponentsAndRelationsDtoRelationship[] relationships { get; set; }
     }
 
-    public class CreateComponentsAndRelationsDto_Node
+    public class CreateComponentsAndRelationsDtoNode
     {
         public string name { get; set; }
         public string displayName { get; set; }
@@ -18,7 +18,7 @@
         public int y { get; set; }
     }
 
-    public class CreateComponentsAndRelationsDto_Relationship
+    public class CreateComponentsAndRelationsDtoRelationship
     {
         public string name { get; set; }
         public string displayName { get; set; }

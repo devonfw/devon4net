@@ -2,12 +2,12 @@
 {
     public class CreateComponentsAndRelationsRequestDto
     {
-        public CreateComponentsAndRelationsRequestDto_Node[] nodes { get; set; }
-        public CreateComponentsAndRelationsRequestDto_Relationship[] relationships { get; set; }
+        public CreateComponentsAndRelationsRequestDtoNode[] nodes { get; set; }
+        public CreateComponentsAndRelationsRequestDtoRelationship[] relationships { get; set; }
         public object[] groups { get; set; }
     }
 
-    public class CreateComponentsAndRelationsRequestDto_Node
+    public class CreateComponentsAndRelationsRequestDtoNode
     {
         public string name { get; set; }
         public string displayName { get; set; }
@@ -21,21 +21,21 @@
         public object[] statusMessages { get; set; }
     }
 
-    public class CreateComponentsAndRelationsRequestDto_Relationship
+    public class CreateComponentsAndRelationsRequestDtoRelationship
     {
         public string name { get; set; }
         public string displayName { get; set; }
         public string relationshipTypeId { get; set; }
-        public CreateComponentsAndRelationsRequestDto_Source source { get; set; }
-        public CreateComponentsAndRelationsRequestDto_Target target { get; set; }
+        public CreateComponentsAndRelationsRequestDtoSource source { get; set; }
+        public CreateComponentsAndRelationsRequestDtoTarget target { get; set; }
     }
 
-    public class CreateComponentsAndRelationsRequestDto_Source
+    public class CreateComponentsAndRelationsRequestDtoSource
     {
         public string name { get; set; }
     }
 
-    public class CreateComponentsAndRelationsRequestDto_Target
+    public class CreateComponentsAndRelationsRequestDtoTarget
     {
         public string name { get; set; }
     }

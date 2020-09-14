@@ -14,6 +14,7 @@
 
         #region Auth
         public const string Logon = "/auth/authentication-endpoint/authenticate/login?TENANTID={0}"; // tenantId
+        public const string RestUserId = "{0}/dnd/rest/login/{0}/{1}"; // tenantId, userName
         #endregion
 
         public const string AuthorizationHeaderTokenkey = "LWSSO_COOKIE_KEY";
@@ -24,6 +25,7 @@
 
         #region Design
         public const string GetDesign = "/{0}/dnd/api/service/design/{1}"; //tenantId, designId
+        public const string ExportDesign = "/{0}/dnd/rest/export/{1}?userIdentifier={2}"; // tenantId, versionId, rest user id
         public const string GetIcons = "/{0}/dnd/api/blobstore?tag=library"; // tenantId
         public const string GetDesignTags = "/{0}/dnd/api/tag/filter"; // tenantId
         public const string CreateDesignContainer = "/{0}/dnd/api/container"; // tenantId
