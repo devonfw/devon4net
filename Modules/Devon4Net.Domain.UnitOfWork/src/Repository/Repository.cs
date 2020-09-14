@@ -13,16 +13,29 @@ namespace Devon4Net.Domain.UnitOfWork.Repository
     public class Repository<T> : IRepository<T> where T : class
     {
         private DbContext DbContext { get; set; }
+        private bool DbContextBehaviour  { get; set; }
 
-        public Repository(DbContext context)
+        private IQueryable<T> Queryable => SetQuery<T>();
+
+        public Repository(DbContext context, bool dbContextBehaviour = false)
         {
             DbContext = context;
+            DbContextBehaviour = dbContextBehaviour;
         }
 
         public async Task<T> Create(T entity, bool detach = true)
         {
             var result = await DbContext.Set<T>().AddAsync(entity).ConfigureAwait(false);
             result.State = EntityState.Added;
+            await DbContext.SaveChangesAsync().ConfigureAwait(false);
+            if (detach) result.State = EntityState.Detached;
+            return result.Entity;
+        }
+
+        public async Task<T> Update(T entity, bool detach = true)
+        {
+            var result = DbContext.Set<T>().Update(entity);
+            result.State = EntityState.Modified;
             await DbContext.SaveChangesAsync().ConfigureAwait(false);
             if (detach) result.State = EntityState.Detached;
             return result.Entity;
@@ -89,28 +102,24 @@ namespace Devon4Net.Domain.UnitOfWork.Repository
             return GetPagedResult(currentPage, pageSize, GetSortedQueryFromPredicate(predicate, keySelector, sortDirection));
         }
 
-        public async Task<T> Update(T entity, bool detach = true)
+        public Task<long> Count(Expression<Func<T, bool>> predicate = null)
         {
-            var result = DbContext.Set<T>().Update(entity);
-            result.State = EntityState.Modified;
-            await DbContext.SaveChangesAsync().ConfigureAwait(false);
-            if (detach) result.State = EntityState.Detached;
-            return result.Entity;
+            return predicate == null ? Queryable.LongCountAsync() : Queryable.LongCountAsync(predicate);
         }
 
         private IQueryable<T> GetQueryFromPredicate(Expression<Func<T, bool>> predicate)
         {
-            return predicate != null ? DbContext.Set<T>().Where(predicate).AsNoTracking() : DbContext.Set<T>().AsNoTracking();
+            return predicate != null ? Queryable.Where(predicate): Queryable;
         }
 
         private IQueryable<T> GetSortedQueryFromPredicate<TKey>(Expression<Func<T, bool>> predicate, Expression<Func<T, TKey>> keySelector, ListSortDirection sortDirection)
         {
             if (sortDirection == ListSortDirection.Ascending)
             {
-                return predicate != null ? DbContext.Set<T>().Where(predicate).OrderBy(keySelector).AsNoTracking() : DbContext.Set<T>().OrderBy(keySelector).AsNoTracking();
+                return predicate != null ? Queryable.Where(predicate).OrderBy(keySelector) : Queryable.OrderBy(keySelector);
             }
 
-            return predicate != null ? DbContext.Set<T>().Where(predicate).OrderByDescending(keySelector).AsNoTracking() : DbContext.Set<T>().OrderByDescending(keySelector).AsNoTracking();
+            return predicate != null ? Queryable.Where(predicate).OrderByDescending(keySelector) : Queryable.OrderByDescending(keySelector);
         }
 
         private IQueryable<T> GetResultSetWithNestedProperties(IList<string> includedNestedFiels, Expression<Func<T, bool>> predicate = null)
@@ -131,9 +140,25 @@ namespace Devon4Net.Domain.UnitOfWork.Repository
             pagedResult.PageCount = (int)Math.Ceiling(pageCount);
 
             var skip = (currentPage - 1) * pageSize;
-            pagedResult.Results = await resultList.Skip(skip).Take(pageSize).AsNoTracking().ToListAsync().ConfigureAwait(false);
+            pagedResult.Results = await resultList.AsNoTracking().Skip(skip).Take(pageSize).ToListAsync().ConfigureAwait(false);
 
             return pagedResult;
+        }
+
+        private IQueryable<T> SetQuery<T>() where T : class
+        {
+            SetContextBehaviour(DbContextBehaviour);
+            return DbContext.Set<T>().AsNoTracking();
+        }
+
+        private void SetContextBehaviour( bool enabled)
+        {
+            DbContext.ChangeTracker.AutoDetectChangesEnabled = enabled;
+
+            DbContext.ChangeTracker.LazyLoadingEnabled = enabled;
+
+            DbContext.ChangeTracker.QueryTrackingBehavior = enabled ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking;
+
         }
 
         internal void SetContext(DbContext context)
