@@ -17,6 +17,11 @@ namespace Devon4Net.Domain.UnitOfWork.Repository
 
         private IQueryable<T> Queryable => SetQuery<T>();
 
+        /// <summary>
+        /// Initialization class
+        /// </summary>
+        /// <param name="context">The data base context to work with</param>
+        /// <param name="dbContextBehaviour">Sets the AutoDetectChangesEnabled, LazyLoadingEnabled and QueryTrackingBehavior flag to true or false</param>
         public Repository(DbContext context, bool dbContextBehaviour = false)
         {
             DbContext = context;
