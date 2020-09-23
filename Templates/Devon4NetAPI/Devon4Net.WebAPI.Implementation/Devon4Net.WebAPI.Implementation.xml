@@ -218,6 +218,29 @@
             <param name="idUser"></param>
             <returns>Something</returns>
         </member>
+        <member name="T:Devon4Net.WebAPI.Implementation.Business.AntiForgeryTokenManagement.Controllers.AntiForgeryTokenController">
+            <summary>
+            TODOs controller
+            </summary>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AntiForgeryTokenManagement.Controllers.AntiForgeryTokenController.#ctor(Microsoft.AspNetCore.Antiforgery.IAntiforgery)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="todoService"></param>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AntiForgeryTokenManagement.Controllers.AntiForgeryTokenController.Token">
+            <summary>
+            Gets the antiforgery token
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.WebAPI.Implementation.Business.AntiForgeryTokenManagement.Controllers.AntiForgeryTokenController.HelloSecured">
+            <summary>
+            Gets the secured string result
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Devon4Net.WebAPI.Implementation.Business.AuthManagement.Controllers.AuthController">
             <summary>
             Auth controller sample.

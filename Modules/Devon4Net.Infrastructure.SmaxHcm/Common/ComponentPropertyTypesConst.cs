@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Devon4Net.Infrastructure.SmaxHcm.Common
+﻿namespace Devon4Net.Infrastructure.SmaxHcm.Common
 {
     public enum ComponentPropertyTypesConst
     {

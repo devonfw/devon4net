@@ -5,21 +5,21 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Offering
     public class GetOfferingProvidersResponseDto
     {
         public string completionStatus { get; set; }
-        public GetOfferingProvidersResponseDto_Result[] results { get; set; }
+        public GetOfferingProvidersResponseDtoResult[] results { get; set; }
         public int totalCount { get; set; }
     }
 
-    public class GetOfferingProvidersResponseDto_Result
+    public class GetOfferingProvidersResponseDtoResult
     {
         public string version { get; set; }
-        public GetOfferingProvidersResponseDto_Tag[] tags { get; set; }
+        public GetOfferingProvidersResponseDtoTag[] tags { get; set; }
         public string id { get; set; }
         public string title { get; set; }
         public string icon { get; set; }
         public string description { get; set; }
     }
 
-    public class GetOfferingProvidersResponseDto_Tag
+    public class GetOfferingProvidersResponseDtoTag
     {
         [JsonPropertyName("@self")]
         public string self { get; set; }

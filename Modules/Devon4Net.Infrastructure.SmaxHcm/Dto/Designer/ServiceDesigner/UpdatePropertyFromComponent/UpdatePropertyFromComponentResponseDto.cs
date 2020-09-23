@@ -13,7 +13,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdatePr
         public string name { get; set; }
         public string description { get; set; }
         public string icon { get; set; }
-        public UpdatePropertyFromComponentResponseDto_Ext ext { get; set; }
+        public UpdatePropertyFromComponentResponseDtoExt ext { get; set; }
 
         [JsonPropertyName("@self")]
         public string self { get; set; }
@@ -26,12 +26,12 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdatePr
         public bool visibleWhenDeployDesign { get; set; }
         public bool requiredWhenDeployDesign { get; set; }
         public object[] bindings { get; set; }
-        public UpdatePropertyFromComponentResponseDto_Property_Measure property_measure { get; set; }
+        public UpdatePropertyFromComponentResponseDtoPropertyMeasure property_measure { get; set; }
         public string ownership { get; set; }
-        public UpdatePropertyFromComponentResponseDto_Owner owner { get; set; }
+        public UpdatePropertyFromComponentResponseDtoOwner owner { get; set; }
     }
 
-    public class UpdatePropertyFromComponentResponseDto_Ext
+    public class UpdatePropertyFromComponentResponseDtoExt
     {
         public string csa_name_key { get; set; }
         public bool csa_critical_system_object { get; set; }
@@ -39,14 +39,14 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdatePr
         public bool csa_consumer_visible { get; set; }
     }
 
-    public class UpdatePropertyFromComponentResponseDto_Property_Measure
+    public class UpdatePropertyFromComponentResponseDtoPropertyMeasure
     {
         public bool enabled { get; set; }
         public object type { get; set; }
         public object unit { get; set; }
     }
 
-    public class UpdatePropertyFromComponentResponseDto_Owner
+    public class UpdatePropertyFromComponentResponseDtoOwner
     {
         [JsonPropertyName("@self")]
         public string self { get; set; }
@@ -63,10 +63,10 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner.UpdatePr
         public string name { get; set; }
         public string description { get; set; }
         public string icon { get; set; }
-        public UpdatePropertyFromComponentResponseDto_Ext1 ext { get; set; }
+        public UpdatePropertyFromComponentResponseDtoExt1 ext { get; set; }
     }
 
-    public class UpdatePropertyFromComponentResponseDto_Ext1
+    public class UpdatePropertyFromComponentResponseDtoExt1
     {
         public string csa_name_key { get; set; }
         public bool csa_critical_system_object { get; set; }

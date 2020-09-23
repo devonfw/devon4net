@@ -2,37 +2,37 @@
 {
     public class CreateRequestResponse
     {
-        public CreateRequestResponse_Entity_Result_List[] entity_result_list { get; set; }
+        public CreateRequestResponseEntityResultList[] entity_result_list { get; set; }
         public object[] relationship_result_list { get; set; }
         public object[] translation_result_list { get; set; }
-        public CreateRequestResponse_Meta meta { get; set; }
+        public CreateRequestResponseMeta meta { get; set; }
     }
 
-    public class CreateRequestResponse_Meta
+    public class CreateRequestResponseMeta
     {
         public string completion_status { get; set; }
     }
 
-    public class CreateRequestResponse_Entity_Result_List
+    public class CreateRequestResponseEntityResultList
     {
-        public CreateRequestResponse_Entity entity { get; set; }
+        public CreateRequestResponseEntity entity { get; set; }
         public string completion_status { get; set; }
     }
 
-    public class CreateRequestResponse_Entity
+    public class CreateRequestResponseEntity
     {
         public string entity_type { get; set; }
-        public CreateRequestResponse_Properties properties { get; set; }
-        public CreateRequestResponse_Related_Properties related_properties { get; set; }
+        public CreateRequestResponseProperties properties { get; set; }
+        public CreateRequestResponseRelatedProperties related_properties { get; set; }
     }
 
-    public class CreateRequestResponse_Properties
+    public class CreateRequestResponseProperties
     {
         public long LastUpdateTime { get; set; }
         public string Id { get; set; }
     }
 
-    public class CreateRequestResponse_Related_Properties
+    public class CreateRequestResponseRelatedProperties
     {
     }
 }

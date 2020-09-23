@@ -2,14 +2,14 @@
 {
     public class GetAllRequestsResponseDto
     {
-        public GetAllRequestsResponseDto_Request[] requests { get; set; }
+        public GetAllRequestsResponseDtoRequest[] requests { get; set; }
         public int totalCount { get; set; }
     }
 
-    public class GetAllRequestsResponseDto_Request
+    public class GetAllRequestsResponseDtoRequest
     {
-        public GetAllRequestsResponseDto_Properties properties { get; set; }
-        public GetAllRequestsResponseDto_Relatedpropertiesmap relatedPropertiesMap { get; set; }
+        public GetAllRequestsResponseDtoProperties properties { get; set; }
+        public GetAllRequestsResponseDtoRelatedpropertiesmap relatedPropertiesMap { get; set; }
         public object translations { get; set; }
         public string entityType { get; set; }
         public string id { get; set; }
@@ -18,7 +18,7 @@
         public string[] relatedPropertyNamesIterator { get; set; }
     }
 
-    public class GetAllRequestsResponseDto_Properties
+    public class GetAllRequestsResponseDtoProperties
     {
         public string PhaseId { get; set; }
         public string Description { get; set; }
@@ -32,20 +32,20 @@
         public string RequestsOffering { get; set; }
     }
 
-    public class GetAllRequestsResponseDto_Relatedpropertiesmap
+    public class GetAllRequestsResponseDtoRelatedpropertiesmap
     {
-        public GetAllRequestsResponseDto_Requestedforperson RequestedForPerson { get; set; }
-        public GetAllRequestsResponseDto_Requestsoffering RequestsOffering { get; set; }
+        public GetAllRequestsResponseDtoRequestedforperson RequestedForPerson { get; set; }
+        public GetAllRequestsResponseDtoRequestsoffering RequestsOffering { get; set; }
     }
 
-    public class GetAllRequestsResponseDto_Requestedforperson
+    public class GetAllRequestsResponseDtoRequestedforperson
     {
         public string Email { get; set; }
         public string Avatar { get; set; }
         public string Name { get; set; }
     }
 
-    public class GetAllRequestsResponseDto_Requestsoffering
+    public class GetAllRequestsResponseDtoRequestsoffering
     {
         public string Id { get; set; }
         public string Image { get; set; }

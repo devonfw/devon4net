@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
+﻿namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Users
 {
     public class SmaxGetUserResponseDto
     {

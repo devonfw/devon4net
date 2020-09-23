@@ -23,6 +23,8 @@
         public const string AspNetVersion = "X-AspNet-Version";
 
         public const string XPowered = "X-Powered-By";
+
+        public const string XsrfToken = "XSRF-TOKEN";
     }
 
 }

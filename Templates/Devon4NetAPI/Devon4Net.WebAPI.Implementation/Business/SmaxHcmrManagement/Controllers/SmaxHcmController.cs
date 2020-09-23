@@ -152,6 +152,19 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
 
         [HttpGet]
         [AllowAnonymous]
+        [Route("/v1/smaxhcm/exportDesign")]
+        [ProducesResponseType(typeof(byte[]), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ExportDesign(string designId, string restUserId)
+        {
+            Devon4NetLogger.Debug("Executing ExportDesign from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.ExportDesign(designId, restUserId));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
         [Route("/v1/smaxhcm/catalogproviders")]
         public async Task<IActionResult> GetCatalogProviders(string category, bool includeArticles, bool includeOfferings, string query)
         {
@@ -263,6 +276,19 @@ namespace Devon4Net.WebAPI.Implementation.Business.SmaxHcmrManagement.Controller
         {
             Devon4NetLogger.Debug("Executing GetUsersByUsername from controller SmaxHcm");
             return Ok(await SmaxHcmHandler.GetUsersByUserName(username));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("/v1/smaxhcm/getRestUserByName")]
+        [ProducesResponseType(typeof(GetRestUserResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetRestUserByName(string username)
+        {
+            Devon4NetLogger.Debug("Executing GetRestUserByName from controller SmaxHcm");
+            return Ok(await SmaxHcmHandler.GetRestUser(username));
         }
 
         [HttpGet]

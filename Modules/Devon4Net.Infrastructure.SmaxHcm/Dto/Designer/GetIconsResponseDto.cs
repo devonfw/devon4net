@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer
 {
@@ -11,7 +10,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer
         [JsonPropertyName("@modified")]
         public string modified { get; set; }
 
-        public GetIconsResponseDto_Member[] members { get; set; }
+        public GetIconsResponseDtoMember[] members { get; set; }
 
         [JsonPropertyName("@start_index")]
         public int start_index { get; set; }
@@ -23,7 +22,7 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer
         public int total_results { get; set; }
     }
 
-    public class GetIconsResponseDto_Member
+    public class GetIconsResponseDtoMember
     {
         [JsonPropertyName("@self")]
         public string self { get; set; }

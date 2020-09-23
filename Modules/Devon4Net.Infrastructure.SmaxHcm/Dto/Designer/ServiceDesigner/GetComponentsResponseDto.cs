@@ -6,12 +6,12 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner
     {
         [JsonPropertyName("@self")]
         public string self { get; set; }
-        public GetComponentsResponseDto_Node[] nodes { get; set; }
-        public GetComponentsResponseDto_Relationship[] relationships { get; set; }
+        public GetComponentsResponseDtoNode[] nodes { get; set; }
+        public GetComponentsResponseDtoRelationship[] relationships { get; set; }
         public object[] statusMessages { get; set; }
     }
 
-    public class GetComponentsResponseDto_Node
+    public class GetComponentsResponseDtoNode
     {
         public string id { get; set; }
         public string name { get; set; }
@@ -23,10 +23,10 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner
         public string[] tags { get; set; }
         public int x { get; set; }
         public int y { get; set; }
-        public GetComponentsResponseDto_Statusmessage[] statusMessages { get; set; }
+        public GetComponentsResponseDtoStatusmessage[] statusMessages { get; set; }
     }
 
-    public class GetComponentsResponseDto_Statusmessage
+    public class GetComponentsResponseDtoStatusmessage
     {
         public string type { get; set; }
         public string message { get; set; }
@@ -36,24 +36,24 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner
         public int priority { get; set; }
     }
 
-    public class GetComponentsResponseDto_Relationship
+    public class GetComponentsResponseDtoRelationship
     {
         public string id { get; set; }
         public string name { get; set; }
         public string relationshipTypeId { get; set; }
         public string type { get; set; }
-        public GetComponentsResponseDto_Source source { get; set; }
-        public GetComponentsResponseDto_Target target { get; set; }
+        public GetComponentsResponseDtoSource source { get; set; }
+        public GetComponentsResponseDtoTarget target { get; set; }
         public object[] statusMessages { get; set; }
     }
 
-    public class GetComponentsResponseDto_Source
+    public class GetComponentsResponseDtoSource
     {
         public string id { get; set; }
         public string name { get; set; }
     }
 
-    public class GetComponentsResponseDto_Target
+    public class GetComponentsResponseDtoTarget
     {
         public string id { get; set; }
         public string name { get; set; }

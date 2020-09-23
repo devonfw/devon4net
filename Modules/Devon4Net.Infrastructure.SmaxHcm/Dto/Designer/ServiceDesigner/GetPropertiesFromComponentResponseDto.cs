@@ -4,10 +4,10 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner
 {
     public class GetPropertiesFromComponentResponseDto
     {
-        public GetPropertiesFromComponentResponseDto_Member[] members { get; set; }
+        public GetPropertiesFromComponentResponseDtoMember[] members { get; set; }
     }
 
-    public class GetPropertiesFromComponentResponseDto_Member
+    public class GetPropertiesFromComponentResponseDtoMember
     {
         public string id { get; set; }
         public string name { get; set; }
@@ -34,10 +34,10 @@ namespace Devon4Net.Infrastructure.SmaxHcm.Dto.Designer.ServiceDesigner
         public int serviceDesignReferenceCount { get; set; }
         public int componentTemplateReferenceCount { get; set; }
         public object value { get; set; }
-        public GetPropertiesFromComponentResponseDto_Constraint[] constraints { get; set; }
+        public GetPropertiesFromComponentResponseDtoConstraint[] constraints { get; set; }
     }
 
-    public class GetPropertiesFromComponentResponseDto_Constraint
+    public class GetPropertiesFromComponentResponseDtoConstraint
     {
         [JsonPropertyName("@type")]
         public string type { get; set; }
