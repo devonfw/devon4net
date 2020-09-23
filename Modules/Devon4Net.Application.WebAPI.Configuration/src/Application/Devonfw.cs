@@ -8,6 +8,7 @@ using Devon4Net.Infrastructure.Common.Options;
 using Devon4Net.Infrastructure.Common.Options.Devon;
 using Devon4Net.Infrastructure.Extensions.Helpers;
 using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Middleware.Headers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +23,7 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
         private static IHostBuilder HostBuilder { get; set; }
         private static IConfiguration Configuration { get; set; }
         private static ConfigurationBuilder ConfigurationBuilder { get; set; }
+        private static DevonfwOptions DevonfwOptions { get; set; }
 
         public static void Configure<T>(string[] args) where T : class
         {
@@ -57,9 +59,10 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
 
         public static void SetupDevonfw(this IServiceCollection services, ref IConfiguration configuration)
         {
-            var devonOptions = services.GetTypedOptions<DevonfwOptions>(configuration, DevonFwConst.DevonFwAppSettingsNodeName);
 
-            if (devonOptions == null || string.IsNullOrEmpty(devonOptions.Environment) || devonOptions.Kestrel == null)
+            DevonfwOptions = services.GetTypedOptions<DevonfwOptions>(configuration, DevonFwConst.DevonFwAppSettingsNodeName);
+
+            if (DevonfwOptions == null || string.IsNullOrEmpty(DevonfwOptions.Environment) || DevonfwOptions.Kestrel == null)
             {
                 throw new ApplicationException("Please check the devonfw options node in your configuration file");
             }
@@ -68,6 +71,7 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             services.SetupKillSwitch(ref configuration);
             services.AddTransient(typeof(IObjectTypeHelper), typeof(ObjectTypeHelper));
             services.AddTransient(typeof(IJsonHelper), typeof(JsonHelper));
+            services.ConfigureXsrf();
         }
 
         public static void InitializeDevonFw(this IApplicationBuilder app)
@@ -76,6 +80,7 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             app.SetupDevonfwMiddleware();
 
             bool.TryParse(Configuration[$"{DevonFwConst.DevonFwAppSettingsNodeName}:UseSwagger"], out bool useSwagger);
+
             if (!useSwagger) return;
             
             var swaggerEndpoint = Configuration["Swagger:Endpoint:Url"];
@@ -83,6 +88,8 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             
             if (!string.IsNullOrEmpty(swaggerEndpoint) && !string.IsNullOrEmpty(swaggerName)) app.ConfigureSwaggerApplication(swaggerEndpoint, swaggerName);
         }
+
+
 
         private static void CreateHostBuilder<T>(string[] args)  where T: class
         {
@@ -150,7 +157,7 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
 
             foreach (var settingsItem in settingsItemList)
             {
-                if (string.IsNullOrEmpty(settingsItem)) continue;;
+                if (string.IsNullOrEmpty(settingsItem)) continue;
 
                 if (Directory.Exists(settingsItem))
                 {
@@ -209,6 +216,16 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             if (ConfigurationBuilder != null) return;
             ConfigurationBuilder = new ConfigurationBuilder();
             ConfigurationBuilder.SetBasePath(Directory.GetCurrentDirectory());
+        }
+
+        private static void ConfigureXsrf(this IServiceCollection services)
+        {
+            if(DevonfwOptions == null || !DevonfwOptions.UseXsrf) return;
+            services.AddAntiforgery(options =>
+            {
+                options.HeaderName = CustomMiddlewareHeaderTypeConst.XsrfToken;
+                options.SuppressXFrameOptionsHeader = false;
+            });
         }
     }
 }

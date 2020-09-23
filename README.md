@@ -36,6 +36,8 @@
 - gRPC + Protobuf support
 - Kafka: Message producer and consumer handlers. Create/Delete topics as well
 - Extra secrets/settings file support
+- Added ValidateAntiForgeryToken support via XSRF-TOKEN in cookie and header
+
 
 Included features:
 
