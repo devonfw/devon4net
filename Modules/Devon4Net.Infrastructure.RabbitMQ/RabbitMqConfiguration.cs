@@ -37,8 +37,8 @@ namespace Devon4Net.Application.WebAPI.Configuration
                 SetupRabbitMqBackupLocalDatabase(services, rabbitMqOptions);
 
                 var prefetchCount = (ushort)(rabbitMqOptions.PrefetchCount != null ? (ushort)rabbitMqOptions.PrefetchCount.Value : 0);
-                var timeOut = (ushort)(rabbitMqOptions.Timeout != null ? (ushort)rabbitMqOptions.Timeout.Value : 0);
-                var requestedHeartbeat = (ushort)(rabbitMqOptions.RequestedHeartbeat != null ? (ushort)rabbitMqOptions.RequestedHeartbeat.Value : 0);
+                var timeOut = rabbitMqOptions.Timeout != null ? TimeSpan.FromSeconds(rabbitMqOptions.Timeout.Value) : default;
+                var requestedHeartbeat = (rabbitMqOptions.RequestedHeartbeat != null ? TimeSpan.FromSeconds(rabbitMqOptions.RequestedHeartbeat.Value) : default);
 
                 var connection = new ConnectionConfiguration
                 {
@@ -49,13 +49,13 @@ namespace Devon4Net.Application.WebAPI.Configuration
                     VirtualHost = string.IsNullOrEmpty(rabbitMqOptions.VirtualHost) ? "/" : rabbitMqOptions.VirtualHost,
                     Platform = rabbitMqOptions.Platform,
                     PrefetchCount = prefetchCount > 0 ? prefetchCount : (ushort)50,
-                    Timeout = timeOut > 0 ? timeOut : (ushort)10,
+                    Timeout = timeOut,
                     UserName = rabbitMqOptions.UserName,
                     Password = rabbitMqOptions.Password,
-                    RequestedHeartbeat = requestedHeartbeat > 0 ? requestedHeartbeat : (ushort)10,
+                    RequestedHeartbeat = requestedHeartbeat,
                 };
 
-                connection.Validate();
+                //!connection.Validate();
 
                 services.AddSingleton(RabbitHutch.CreateBus(connection, serviceRegister => serviceRegister.Register(serviceProvider => Log.Logger)));
             }

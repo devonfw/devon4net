@@ -21,7 +21,6 @@ namespace Devon4Net.Application.GrpcClient
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigureDevonFw(Configuration);
-            services.SetupGrpc(Configuration);
             services.AddControllers();
         }
 

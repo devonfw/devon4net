@@ -32,20 +32,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyNetQ" Version="5.2.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.7" />
+    <PackageReference Include="EasyNetQ" Version="6.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.10" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.7" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.7" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.10" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.10" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.5.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.1.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="5.5.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="6.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="5.6.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
   </ItemGroup>
 
 
@@ -57,6 +57,7 @@
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.Cors\Devon4Net.Infrastructure.Cors.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.CyberArk\Devon4Net.Infrastructure.CyberArk.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.Extensions\src\Devon4Net.Infrastructure.Extensions.csproj" />
+    <ProjectReference Include="..\..\Devon4Net.Infrastructure.Grpc\Devon4Net.Infrastructure.Grpc.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.JWT\src\Devon4Net.Infrastructure.JWT.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.Kafka\Devon4Net.Infrastructure.Kafka.csproj" />
     <ProjectReference Include="..\..\Devon4Net.Infrastructure.LiteDb\Devon4Net.Infrastructure.LiteDb.csproj" />
