@@ -13,47 +13,39 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace Devon4Net.Application.WebAPI.Configuration.Application
 {
     public static class Devonfw
     {
-        private static IHostBuilder HostBuilder { get; set; }
+        private static IWebHostBuilder WebHostBuilder { get; set; }
         private static IConfiguration Configuration { get; set; }
         private static ConfigurationBuilder ConfigurationBuilder { get; set; }
         private static DevonfwOptions DevonfwOptions { get; set; }
 
-        public static void Configure<T>(string[] args) where T : class
-        {
-            LoadConfiguration();
-            CreateHostBuilder<T>(args);
-            HostBuilder.Build().Run();
-        }
-
         public static IWebHostBuilder InitializeDevonFw(this IWebHostBuilder builder)
         {
+            WebHostBuilder = builder;
             LoadConfiguration();
-            builder.UseConfiguration(Configuration);
-            builder.UseSerilog();
 
             var useDetailedErrorsKey = Configuration[$"{DevonFwConst.DevonFwAppSettingsNodeName}:UseDetailedErrorsKey"];
-            builder.UseSetting(WebHostDefaults.DetailedErrorsKey, useDetailedErrorsKey);
+            WebHostBuilder.UseSetting(WebHostDefaults.DetailedErrorsKey, useDetailedErrorsKey);
 
-            var useIis = Convert.ToBoolean(Configuration[$"{DevonFwConst.DevonFwAppSettingsNodeName}:UseIIS"],
-                System.Globalization.CultureInfo.InvariantCulture);
+            var useIis = Convert.ToBoolean(Configuration[$"{DevonFwConst.DevonFwAppSettingsNodeName}:UseIIS"], System.Globalization.CultureInfo.InvariantCulture);
 
             if (useIis)
             {
-                ConfigureIis(ref builder);
+                ConfigureIis();
             }
             else
             {
-                SetupKestrel.Configure(ref builder, Configuration);
+                SetupKestrel.Configure(WebHostBuilder, Configuration);
             }
 
-            builder.ConfigureServices(services => services.AddSingleton(Configuration));
+            WebHostBuilder.UseConfiguration(Configuration);
+            WebHostBuilder.UseSerilog();
+
             return builder;
         }
 
@@ -89,42 +81,14 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             if (!string.IsNullOrEmpty(swaggerEndpoint) && !string.IsNullOrEmpty(swaggerName)) app.ConfigureSwaggerApplication(swaggerEndpoint, swaggerName);
         }
 
-
-
-        private static void CreateHostBuilder<T>(string[] args)  where T: class
+        private static void ConfigureIis()
         {
-            HostBuilder = Host.CreateDefaultBuilder(args);
-            HostBuilder.ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<T>();
-                webBuilder.UseSerilog();
-                webBuilder.UseConfiguration(Configuration);
-
-                var useDetailedErrorsKey = Configuration[$"{DevonFwConst.DevonFwAppSettingsNodeName}:UseDetailedErrorsKey"];
-                webBuilder.UseSetting(WebHostDefaults.DetailedErrorsKey, useDetailedErrorsKey);
-
-                var useIis = Convert.ToBoolean(Configuration[$"{DevonFwConst.DevonFwAppSettingsNodeName}:UseIIS"],
-                    System.Globalization.CultureInfo.InvariantCulture);
-
-                if (useIis)
-                {
-                    ConfigureIis(ref webBuilder);
-                }
-                else
-                {
-                    SetupKestrel.Configure(ref webBuilder, Configuration);
-                }
-
-            });
-        }
-
-        private static void ConfigureIis(ref IWebHostBuilder webBuilder)
-        {
-            webBuilder.UseIISIntegration();
+            WebHostBuilder.UseIISIntegration();
         }
 
         private static void LoadConfiguration()
         {
+            SetupConfigurationBuilder();
             AddConfigurationSettingsFile("appsettings.json", false, true);
             AddConfigurationSettingsFile($"appsettings.{Configuration[$"{DevonFwConst.DevonFwAppSettingsNodeName}:Environment"]}.json", true, true);
             CheckExtraSettingsFiles();
@@ -216,6 +180,7 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             if (ConfigurationBuilder != null) return;
             ConfigurationBuilder = new ConfigurationBuilder();
             ConfigurationBuilder.SetBasePath(Directory.GetCurrentDirectory());
+            Configuration = ConfigurationBuilder.Build();
         }
 
         private static void ConfigureXsrf(this IServiceCollection services)
