@@ -13,7 +13,7 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
 {
     public static class SetupKestrel
     {
-        public static void Configure(ref IWebHostBuilder webBuilder, IConfiguration configuration)
+        public static void Configure(IWebHostBuilder webBuilder, IConfiguration configuration)
         {
             var httpProtocol = configuration["devonfw:Kestrel:HttpProtocol"];
             var sslProtocol = configuration["devonfw:Kestrel:SslProtocol"];
@@ -67,12 +67,9 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
 
                     httpsOptions.SslProtocols = GetTlsProtocol(sslProtocol);
 
-                    if (requireClientCertificate)
-                    {                        
-                        httpsOptions.ClientCertificateMode = ClientCertificateMode.RequireCertificate;
-                        httpsOptions.CheckCertificateRevocation = checkCertificateRevocation;
-                    }
-                    
+                    httpsOptions.ClientCertificateMode = requireClientCertificate ? ClientCertificateMode.RequireCertificate : ClientCertificateMode.NoCertificate;
+                    httpsOptions.CheckCertificateRevocation = checkCertificateRevocation;
+
                     if (!string.IsNullOrEmpty(kestrelCertificate))
                     {
                         var kestrelCertificatePassword = configuration["devonfw:Kestrel:ServerCertificate:CertificatePassword"];

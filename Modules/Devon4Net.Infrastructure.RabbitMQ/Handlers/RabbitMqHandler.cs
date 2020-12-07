@@ -46,7 +46,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
             {
                 status = QueueActionsEnum.SetUp;
 
-                await ServiceBus.PublishAsync(command).ContinueWith(task => { status = PublishCommandTaskResult(command, task);}).ConfigureAwait(false);
+                await ServiceBus.PubSub.PublishAsync(command).ContinueWith(task => { status = PublishCommandTaskResult(command, task);}).ConfigureAwait(false);
                 await BackUpMessage(command, status).ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -141,7 +141,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
 
             if (subscribeToChannel)
             {
-                ServiceBus.SubscribeAsync<T>(typeof(T).Name, BackupAndHandleCommand);
+                ServiceBus.PubSub.SubscribeAsync<T>(typeof(T).Name, BackupAndHandleCommand);
             }
         }
 

@@ -15,15 +15,7 @@ namespace Devon4Net.Application.WebAPI
             return CreateHostBuilder(args).Build().RunAsync();
         }
 
-        /// <summary>
-        /// Main devonfw program. You can use the dotnet way adding .InitializeDevonFw() to the default WebHost.CreateDefaultBuilder
-        /// or use directly Devonfw.Configure<Startup>(args); to create automatically the webhost
-        /// </summary>
-        /// <param name="args"></param>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            // Please use
-            // Devonfw.Configure<Startup>(args);
-            // Or : 
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

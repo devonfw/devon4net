@@ -33,7 +33,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
                 SetupLogAop(ref services, logOptions);
             }
 
-            if (logOptions.GrayLog != null)
+            if (logOptions.UseGraylog && logOptions.GrayLog != null)
             {
                 SetupGraylog(logOptions.GrayLog);
             }
@@ -59,23 +59,25 @@ namespace Devon4Net.Application.WebAPI.Configuration
 
         public static void ConfigureLog(LogOptions logOptions)
         {
-            var logFile = logOptions.LogFile != null ? string.Format(logOptions.LogFile, DateTime.Today.ToShortDateString().Replace("/", string.Empty)) : DefaultLogFile;
-            LoggerConfiguration = new LoggerConfiguration()
-                    .Enrich.FromLogContext()
-                    .WriteTo.Console()
-                    .WriteTo.File(GetValidPath(logFile, DefaultLogFile));
+            LoggerConfiguration = new LoggerConfiguration().Enrich.FromLogContext().WriteTo.Console();
 
-            SetLogLevel(logOptions.LogLevel, LoggerConfiguration);
+            if (logOptions.UseLogFile)
+            {
+                var logFile = logOptions.LogFile != null ? string.Format(logOptions.LogFile, DateTime.Today.ToShortDateString().Replace("/", string.Empty)) : DefaultLogFile;
+                LoggerConfiguration = LoggerConfiguration.WriteTo.File(GetValidPath(logFile, DefaultLogFile));
+            }
 
             if (!string.IsNullOrEmpty(logOptions.SeqLogServerHost))
             {
                 LoggerConfiguration = LoggerConfiguration.WriteTo.Seq(logOptions.SeqLogServerHost);
             }
 
-            if (!string.IsNullOrEmpty(logOptions.SqliteDatabase))
+            if (logOptions.UseSQLiteDb && !string.IsNullOrEmpty(logOptions.SqliteDatabase))
             {
                 LoggerConfiguration = LoggerConfiguration.WriteTo.SQLite(GetValidPath(logOptions.SqliteDatabase, DefaultSqliteFile));
             }
+            
+            SetLogLevel(logOptions.LogLevel, LoggerConfiguration);
 
             Log.Logger = LoggerConfiguration.CreateLogger();
         }

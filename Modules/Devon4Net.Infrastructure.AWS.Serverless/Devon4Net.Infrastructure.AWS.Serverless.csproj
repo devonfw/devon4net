@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Devon4Net.Application.WebAPI.Configuration\src\Devon4Net.Application.WebAPI.Configuration.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.AWS.Secrets\Devon4Net.Infrastructure.AWS.Secrets.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Common\src\Devon4Net.Infrastructure.Common.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,4 +1,5 @@
-﻿using Devon4Net.Infrastructure.Common.Options;
+﻿using System.Net.Http;
+using Devon4Net.Infrastructure.Common.Options;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +16,7 @@ namespace Devon4Net.Infrastructure.Grpc
         {
             var grpcOptions = services.GetTypedOptions<GrpcOptions>(configuration, "Grpc");
 
-            if (grpcOptions == null || string.IsNullOrEmpty(grpcOptions.GrpcServer)) return;
+            if (!grpcOptions.EnableGrpc || string.IsNullOrEmpty(grpcOptions.GrpcServer)) return;
 
 #if NETCOREAPP
             services.AddGrpc(options =>
@@ -23,7 +24,19 @@ namespace Devon4Net.Infrastructure.Grpc
                 options.MaxReceiveMessageSize = grpcOptions.MaxReceiveMessageSize * 1024 * 1024; // 16 MB
             });
 
-            services.AddSingleton(GrpcChannel.ForAddress(grpcOptions.GrpcServer));
+            if (grpcOptions.UseDevCertificate)
+            {
+                var httpHandler = new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                };
+
+                services.AddSingleton(GrpcChannel.ForAddress(grpcOptions.GrpcServer, new GrpcChannelOptions { HttpHandler = httpHandler }));
+            }
+            else
+            {
+                services.AddSingleton(GrpcChannel.ForAddress(grpcOptions.GrpcServer));
+            }
 #endif
         }
     }
