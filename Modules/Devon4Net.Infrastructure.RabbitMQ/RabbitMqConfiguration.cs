@@ -55,8 +55,6 @@ namespace Devon4Net.Application.WebAPI.Configuration
                     RequestedHeartbeat = requestedHeartbeat,
                 };
 
-                //!connection.Validate();
-
                 services.AddSingleton(RabbitHutch.CreateBus(connection, serviceRegister => serviceRegister.Register(serviceProvider => Log.Logger)));
             }
             catch (ArgumentNullException ex) { Devon4NetLogger.Error(ex); }
