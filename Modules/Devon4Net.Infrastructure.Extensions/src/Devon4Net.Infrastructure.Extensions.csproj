@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Version>3.1.5</Version>
         <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
@@ -21,9 +21,9 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="3.1.10" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.0" />
       <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
-      <PackageReference Include="System.Text.Json" Version="4.7.2" />
+      <PackageReference Include="System.Text.Json" Version="5.0.0" />
     </ItemGroup>
 
 </Project>
