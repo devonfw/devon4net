@@ -126,6 +126,16 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Handlers
             return AwsCdkS3Handler.Create(bucketName, expirationDays, removalPolicy, encryption, webSiteRedirectHost, versioned);
         }
 
+        public IBucket LocateBucketByName(string identification, string bucketName)
+        {
+            return AwsCdkS3Handler.LocateFromName(identification, bucketName);
+        }
+
+        public IBucket LocateBucketByArn(string identification, string arn)
+        {
+            return AwsCdkS3Handler.LocateFromArn(identification, arn);
+        }
+
         #endregion
 
         #region RDS
