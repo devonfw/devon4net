@@ -19,19 +19,15 @@
         <icon>https://avatars2.githubusercontent.com/u/7803029?s=200&amp;v=4</icon>
     </PropertyGroup>
 
-    <ItemGroup>
-      <Compile Remove="Helpers\JsonSerializerHelper.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
+  <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.10" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.10" />
-      <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.10" />
-      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.10" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
       <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.8.0" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
-      <PackageReference Include="System.Text.Json" Version="4.7.2" />
+      <PackageReference Include="System.Text.Json" Version="5.0.0" />
     </ItemGroup>
 
 </Project>
