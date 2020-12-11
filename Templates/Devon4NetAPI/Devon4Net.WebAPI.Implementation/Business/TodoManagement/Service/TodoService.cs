@@ -96,14 +96,16 @@ namespace Devon4Net.WebAPI.Implementation.Business.TodoManagement.Service
         public async Task<Todos> ModifyTodoById(long id)
         {
             Devon4NetLogger.Debug($"ModifyTodoById method from service TodoService with value : {id}");
+            
             var todo = await _todoRepository.GetFirstOrDefault(t => t.Id == id).ConfigureAwait(false);
-            todo.Done = !todo.Done;
 
             if (todo == null)
             {
                 throw new ArgumentException($"The provided Id {id} does not exists");
             }
-
+            
+            todo.Done = !todo.Done;
+            
             return await _todoRepository.Update(todo).ConfigureAwait(false);
         }
     }

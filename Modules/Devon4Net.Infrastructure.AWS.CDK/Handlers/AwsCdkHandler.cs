@@ -53,7 +53,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Handlers
 
         public IVpc LocateVpc(string identification, string vpcId, bool isDefault = true)
         {
-            return AwsCdkVpcHandler.Locate(identification,vpcId,isDefault);
+            return AwsCdkVpcHandler.Locate(identification, vpcId, isDefault);
         }
 
         #endregion
@@ -62,7 +62,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Handlers
 
         public ISecurityGroup AddSecurityGroup(string identification, string securityGroupName, bool allowGroupAllOutbound, IPeer egressPeer, Port egreessPort, IPeer ingressPeer, Port ingressPort, Vpc vpc)
         {
-            return AwsSecurityGroupHandler.Create(identification, securityGroupName, allowGroupAllOutbound,vpc,ingressPeer, ingressPort, egressPeer,egreessPort);
+            return AwsSecurityGroupHandler.Create(identification, securityGroupName, allowGroupAllOutbound, vpc, ingressPeer, ingressPort, egressPeer, egreessPort);
         }
 
         public ISecurityGroup AddSecurityGroup(string identification, string securityGroupName, bool allowGroupAllOutbound, IPeer egressPeer, Port egreessPort, IPeer ingressPeer, Port ingressPort, IVpc vpcId)
@@ -107,7 +107,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Handlers
         /// <param name="charsToExclude"></param>
         /// <param name="passwordLength"></param>
         /// <returns></returns>
-        public ISecret AddSecret(string secretName, IKey key,  string charsToExclude = "^{}\"@/;-+=&\\/", int passwordLength = 16)
+        public ISecret AddSecret(string secretName, IKey key, string charsToExclude = "^{}\"@/;-+=&\\/", int passwordLength = 16)
         {
             return AwsCdkSecretHandler.Create(secretName, key, charsToExclude, passwordLength);
         }
@@ -188,6 +188,16 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Handlers
             return AwsCdkDatabaseHandler.CreateDatabase(databaseEngineVersion, identification, databaseName, userName, password, storageType,
                 instanceClass, instanceSize, vpc, securityGroupId, securityGroupName, parameterGroupId, roles, allocatedStorageGb, removalPolicy, deleteAutomatedBackups,
                 backupRetentionDays, deletionProtection, subnetType, defaultSubnetDomainSeparator);
+        }
+
+        public IBucket LocateBucketByName(string identification, string bucketName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IBucket LocateBucketByArn(string identification, string arn)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

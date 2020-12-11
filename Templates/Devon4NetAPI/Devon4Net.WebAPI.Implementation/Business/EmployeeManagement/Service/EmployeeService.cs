@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -122,12 +122,6 @@ namespace Devon4Net.WebAPI.Implementation.Business.EmployeeManagement.Service
             employee.Name= name;
             employee.Surname = surName;
             employee.Mail= mail;
-
-
-            if (employee == null)
-            {
-                throw new ArgumentException($"The provided Id {id} does not exists");
-            }
 
             return await _employeeRepository.Update(employee).ConfigureAwait(false);
         }
