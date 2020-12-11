@@ -18,7 +18,6 @@ namespace Devon4Net.Infrastructure.Grpc
 
             if (!grpcOptions.EnableGrpc || string.IsNullOrEmpty(grpcOptions.GrpcServer)) return;
 
-#if NETCOREAPP
             services.AddGrpc(options =>
             {
                 options.MaxReceiveMessageSize = grpcOptions.MaxReceiveMessageSize * 1024 * 1024; // 16 MB
@@ -37,7 +36,6 @@ namespace Devon4Net.Infrastructure.Grpc
             {
                 services.AddSingleton(GrpcChannel.ForAddress(grpcOptions.GrpcServer));
             }
-#endif
         }
     }
 }

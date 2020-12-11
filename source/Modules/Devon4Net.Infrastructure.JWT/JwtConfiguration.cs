@@ -26,7 +26,6 @@ namespace Devon4Net.Application.WebAPI.Configuration
 
         private static void SetupJwtNetCore(IServiceCollection services, JwtOptions jwtOptions, JwtHandler jwtHandler)
         {
-#if NETCOREAPP
             services.AddAuthentication(options => options.DefaultScheme = AuthConst.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -47,7 +46,6 @@ namespace Devon4Net.Application.WebAPI.Configuration
                         ValidIssuers = new List<string> {jwtOptions.Issuer}
                     };
                 });
-#endif
         }
     }
 }
