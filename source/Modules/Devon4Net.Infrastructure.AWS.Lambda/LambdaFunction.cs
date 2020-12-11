@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.IO;
 using System.Threading.Tasks;
 using Amazon.Lambda.Core;
@@ -31,7 +31,7 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
             SetupConfiguration();
             ServiceCollection.AddOptions();
             ServiceCollection.AddSingleton(Configuration);
-            ServiceCollection.AddLogging(ConfigureLogging);
+            ServiceCollection.AddLogging(ConfigureLogging); //NOSONAR false positive
             ConfigureServices(ServiceCollection);
             ServiceProvider = ServiceCollection.BuildServiceProvider();
             Logger = ServiceProvider.GetRequiredService<ILogger<TInput>>();
