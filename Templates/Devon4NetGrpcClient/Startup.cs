@@ -1,10 +1,8 @@
 using Devon4Net.Application.WebAPI.Configuration;
-using Devon4Net.Infrastructure.Grpc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace Devon4Net.Application.GrpcClient
 {
@@ -27,11 +25,6 @@ namespace Devon4Net.Application.GrpcClient
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             app.ConfigureDevonFw();
 
             app.UseHttpsRedirection();

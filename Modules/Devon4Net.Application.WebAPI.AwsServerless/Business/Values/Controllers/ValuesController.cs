@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Devon4Net.Infrastructure.Log;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Devon4Net.Application.WebAPI.AwsServerless.Business.Values.Controllers
@@ -24,18 +25,21 @@ namespace Devon4Net.Application.WebAPI.AwsServerless.Business.Values.Controllers
         [HttpPost]
         public void Post([FromBody]string value)
         {
+            Devon4NetLogger.Debug($"Received post value {value}");
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
+            Devon4NetLogger.Debug($"Received put value {value}");
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            Devon4NetLogger.Debug($"Received delete value {id}");
         }
     }
 }

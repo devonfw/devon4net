@@ -43,7 +43,7 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
             {
                 Issuer = JwtOptions.Issuer,
                 Audience = JwtOptions.Audience,
-                Subject = new ClaimsIdentity(clientClaims),
+                Subject = new ClaimsIdentity(clientClaims), //NOSONAR false positive
                 Expires = DateTime.UtcNow.AddMinutes(Convert.ToInt16(JwtOptions.ClockSkew)),
                 IssuedAt = DateTime.Now,
                 Claims = clientClaims.Where(c=>c.Type != ClaimTypes.Role).ToDictionary(x => x.Type, x => x.Value as object),
