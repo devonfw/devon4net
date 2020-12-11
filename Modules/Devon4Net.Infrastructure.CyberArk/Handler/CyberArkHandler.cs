@@ -42,8 +42,7 @@ namespace Devon4Net.Infrastructure.CyberArk.Handler
                 throw new ArgumentException("The idSafe cannot be null");
             }
 
-            var searchCriteria = string.IsNullOrEmpty(idSafe) ? string.Empty : $"/{idSafe}";
-            return GetCyberArk<GetSafeResponseDto>($"{CyberArkEndpointConst.Safes}{searchCriteria}", false, authToken);
+            return GetCyberArk<GetSafeResponseDto>($"{CyberArkEndpointConst.Safes}/{idSafe}", false, authToken);
         }
 
         public Task<AddSafeResponseDto> AddSafe(AddSafeRequestDto safeRequest, string authToken = null)
