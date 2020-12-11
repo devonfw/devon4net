@@ -15,18 +15,7 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
     {
         public static void Configure(IWebHostBuilder webBuilder, IConfiguration configuration)
         {
-            var httpProtocol = configuration["devonfw:Kestrel:HttpProtocol"];
-            var sslProtocol = configuration["devonfw:Kestrel:SslProtocol"];
-            int.TryParse(configuration["devonfw:Kestrel:ApplicationPort"], out int applicationPort);
-            bool.TryParse(configuration["devonfw:Kestrel:UseHttps"], out bool useHttps);
-            long.TryParse(configuration["devonfw:Kestrel:MaxConcurrentConnections"], out long maxConcurrentConnections);
-            long.TryParse(configuration["devonfw:Kestrel:MaxConcurrentUpgradedConnections"], out long maxConcurrentUpgradedConnections);
-            long.TryParse(configuration["devonfw:Kestrel:KeepAliveTimeout"], out long keepAliveTimeout);
-            long.TryParse(configuration["devonfw:Kestrel:MaxRequestBodySize"], out long maxRequestBodySize);
-            int.TryParse(configuration["devonfw:Kestrel:Http2MaxStreamsPerConnection"], out int http2MaxStreamsPerConnection);
-            int.TryParse(configuration["devonfw:Kestrel:Http2InitialConnectionWindowSize"], out int Http2InitialConnectionWindowSize);
-            int.TryParse(configuration["devonfw:Kestrel:Http2InitialStreamWindowSize"], out int http2InitialStreamWindowSize);
-            bool.TryParse(configuration["devonfw:Kestrel:AllowSynchronousIO"], out bool allowSynchronousIO);
+            GetConfigurationValues(configuration, out var httpProtocol, out var sslProtocol, out var applicationPort, out var useHttps, out var maxConcurrentConnections, out var maxConcurrentUpgradedConnections, out var keepAliveTimeout, out var maxRequestBodySize, out var http2MaxStreamsPerConnection, out var http2InitialConnectionWindowSize, out var http2InitialStreamWindowSize, out var allowSynchronousIo);
 
             webBuilder.UseKestrel(options =>
             {
@@ -45,9 +34,9 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
                     }
 
                     options.Limits.Http2.MaxStreamsPerConnection = http2MaxStreamsPerConnection;
-                    if (Http2InitialConnectionWindowSize >= 65535 && Http2InitialConnectionWindowSize <= Math.Pow(2,31))
+                    if (http2InitialConnectionWindowSize >= 65535 && http2InitialConnectionWindowSize <= Math.Pow(2,31))
                     {
-                        options.Limits.Http2.InitialConnectionWindowSize = Http2InitialConnectionWindowSize;
+                        options.Limits.Http2.InitialConnectionWindowSize = http2InitialConnectionWindowSize;
                     }
 
                     if (http2InitialStreamWindowSize >= 65535 && http2InitialStreamWindowSize <= Math.Pow(2, 31))
@@ -55,7 +44,7 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
                         options.Limits.Http2.InitialStreamWindowSize = http2InitialStreamWindowSize;
                     }
 
-                    options.AllowSynchronousIO = allowSynchronousIO;
+                    options.AllowSynchronousIO = allowSynchronousIo;
 
 
                     if (!useHttps) return;
@@ -81,6 +70,26 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             });
         }
 
+        private static void GetConfigurationValues(IConfiguration configuration, out string httpProtocol, out string sslProtocol,
+            out int applicationPort, out bool useHttps, out long maxConcurrentConnections,
+            out long maxConcurrentUpgradedConnections, out long keepAliveTimeout, out long maxRequestBodySize,
+            out int http2MaxStreamsPerConnection, out int http2InitialConnectionWindowSize,
+            out int http2InitialStreamWindowSize, out bool allowSynchronousIo)
+        {
+            httpProtocol = configuration["devonfw:Kestrel:HttpProtocol"];
+            sslProtocol = configuration["devonfw:Kestrel:SslProtocol"];
+            int.TryParse(configuration["devonfw:Kestrel:ApplicationPort"], out applicationPort);
+            bool.TryParse(configuration["devonfw:Kestrel:UseHttps"], out useHttps);
+            long.TryParse(configuration["devonfw:Kestrel:MaxConcurrentConnections"], out maxConcurrentConnections);
+            long.TryParse(configuration["devonfw:Kestrel:MaxConcurrentUpgradedConnections"], out maxConcurrentUpgradedConnections);
+            long.TryParse(configuration["devonfw:Kestrel:KeepAliveTimeout"], out keepAliveTimeout);
+            long.TryParse(configuration["devonfw:Kestrel:MaxRequestBodySize"], out maxRequestBodySize);
+            int.TryParse(configuration["devonfw:Kestrel:Http2MaxStreamsPerConnection"], out http2MaxStreamsPerConnection);
+            int.TryParse(configuration["devonfw:Kestrel:Http2InitialConnectionWindowSize"], out http2InitialConnectionWindowSize);
+            int.TryParse(configuration["devonfw:Kestrel:Http2InitialStreamWindowSize"], out http2InitialStreamWindowSize);
+            bool.TryParse(configuration["devonfw:Kestrel:AllowSynchronousIO"], out allowSynchronousIo);
+        }
+
         private static X509Certificate2 LoadServerCertificate(string kestrelCertificate, string kestrelCertificatePassword)
         {
             return new X509Certificate2(File.ReadAllBytes(FileOperations.GetFileFullPath(kestrelCertificate)), kestrelCertificatePassword, X509KeyStorageFlags.MachineKeySet);
@@ -100,7 +109,6 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
                 "none" => SslProtocols.None,
                 _ => SslProtocols.Tls12,
             };
-            throw new NotImplementedException();
 #pragma warning restore CS0618 // Type or member is obsolete
         }
 

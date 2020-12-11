@@ -40,7 +40,7 @@ namespace Devon4Net.WebAPI.Implementation.Business.AntiForgeryTokenManagement.Co
         {
             Devon4NetLogger.Debug("Executing Token from controller AntiForgeryTokenController");
             var token = _antiForgeryToken.GetAndStoreTokens(HttpContext);
-            HttpContext.Response.Cookies.Append(CustomMiddlewareHeaderTypeConst.XsrfToken, token.RequestToken, new CookieOptions() { HttpOnly = false });
+            HttpContext.Response.Cookies.Append(CustomMiddlewareHeaderTypeConst.XsrfToken, token.RequestToken);
             return Ok($"Please add the header {CustomMiddlewareHeaderTypeConst.XsrfToken}:{token.RequestToken}");
         }
 

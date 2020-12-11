@@ -56,10 +56,13 @@ namespace Devon4Net.Application.WebAPI.Configuration
                 options.Filters.Add(new AopExceptionFilterAttribute());
             });
         }
-
+        /// <summary>
+        /// Use of logging
+        /// </summary>
+        /// <param name="logOptions"></param>
         public static void ConfigureLog(LogOptions logOptions)
         {
-            LoggerConfiguration = new LoggerConfiguration().Enrich.FromLogContext().WriteTo.Console();
+            LoggerConfiguration = new LoggerConfiguration().Enrich.FromLogContext().WriteTo.Console(); //NOSONAR false positive
 
             if (logOptions.UseLogFile)
             {

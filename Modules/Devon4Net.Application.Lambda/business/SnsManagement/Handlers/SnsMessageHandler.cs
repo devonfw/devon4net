@@ -16,11 +16,11 @@ namespace Devon4Net.Application.Lambda.Business.SnsManagement.Handlers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public Task<SnsMessageHandlerResult> HandleMessage(SnsCustomMessage notification, ILambdaContext context)
+        public Task<SnsMessageHandlerResult> HandleMessage(SnsCustomMessage message, ILambdaContext context)
         {
-            _logger.LogInformation($"Handling notification: {notification?.Message}");
+            _logger.LogInformation($"Handling notification: {message?.Message}");
 
-            return Task.FromResult(new SnsMessageHandlerResult{Content = notification?.Message });
+            return Task.FromResult(new SnsMessageHandlerResult{Content = message?.Message });
         }
     }
 }

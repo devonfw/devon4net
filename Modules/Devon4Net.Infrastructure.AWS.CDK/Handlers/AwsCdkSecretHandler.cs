@@ -25,21 +25,16 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Handlers
             AccountId = accountId;
         }
 
-        public ISecret Create(string secretName, string encryptionKeyId, string charsToExclude = "^{}\"@/;-+=&\\/", int passwordLength = 16,  IKeyProps encryptionKeyProperties= null)
-        {
-            return Create(secretName, string.IsNullOrEmpty(encryptionKeyId) ? null : new Key(Scope, encryptionKeyId, encryptionKeyProperties), charsToExclude, passwordLength );
-        }
-
-
         /// <summary>
-        /// Creates a secret using an existing KMS key from the existing KMS id
+        /// Creates a secret using an existing KMS key from the existing KMS encryptionKeyId
         /// </summary>
         /// <param name="secretName"></param>
         /// <param name="encryptionKeyId"></param>
         /// <param name="charsToExclude"></param>
         /// <param name="passwordLength"></param>
+        /// <param name="encryptionKeyProperties"></param>
         /// <returns></returns>
-        public ISecret Create(string secretName, string encryptionKeyId, string charsToExclude = "^{}^{}\"@/;-+=&\\/", int passwordLength = 16)
+        public ISecret Create(string secretName, string encryptionKeyId, string charsToExclude = "^{}^{}\"@/;-+=&\\/", int passwordLength = 16, IKeyProps encryptionKeyProperties = null)
         {
             if (string.IsNullOrEmpty(encryptionKeyId))
             {

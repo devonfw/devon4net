@@ -26,12 +26,15 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
             Setup();
         }
 
+        /// <summary>
+        /// Setting up options
+        /// </summary>
         public void Setup()
         {
             SetupConfiguration();
             ServiceCollection.AddOptions();
             ServiceCollection.AddSingleton(Configuration);
-            ServiceCollection.AddLogging(ConfigureLogging);
+            ServiceCollection.AddLogging(ConfigureLogging); //NOSONAR false positive
             ConfigureServices(ServiceCollection);
             ServiceProvider = ServiceCollection.BuildServiceProvider();
             Logger = ServiceProvider.GetRequiredService<ILogger<TInput>>();

@@ -1,12 +1,9 @@
 using Devon4Net.Application.WebAPI.Configuration;
-using Devon4Net.Application.WebAPI.Configuration.Application;
 using Devon4Net.WebAPI.Implementation.Configure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
 
 namespace Devon4Net.Application.WebAPI
 {
@@ -47,15 +44,7 @@ namespace Devon4Net.Application.WebAPI
         /// <param name="env">environment param</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
-
+            app.UseHsts();
             app.UseStaticFiles();
             app.ConfigureDevonFw();
             app.UseHttpsRedirection();

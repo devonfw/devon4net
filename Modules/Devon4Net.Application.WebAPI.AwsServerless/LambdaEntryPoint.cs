@@ -1,4 +1,5 @@
 using Devon4Net.Infrastructure.AWS.Serverless;
+using Devon4Net.Infrastructure.Log;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -55,6 +56,7 @@ namespace Devon4Net.Application.WebAPI.AwsServerless
         /// <param name="builder"></param>
         protected override void Init(IHostBuilder builder)
         {
+            Devon4NetLogger.Debug("Use Init override to customize the services registered with the IHostBuilder.");
         }
     }
 }
