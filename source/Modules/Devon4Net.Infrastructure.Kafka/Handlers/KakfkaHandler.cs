@@ -263,10 +263,10 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
         {
             return producerCompressionType.ToLower() switch
             {
-                "gzip" => CompressionType.None,
-                "nnappy" => CompressionType.None,
-                "lz4" => CompressionType.None,
-                "zstd" => CompressionType.None,
+                "gzip" => CompressionType.Gzip,
+                "snappy" => CompressionType.Snappy,
+                "lz4" => CompressionType.Lz4,
+                "zstd" => CompressionType.Zstd,
                 "none" => CompressionType.None,
                 _ => CompressionType.None
             };
