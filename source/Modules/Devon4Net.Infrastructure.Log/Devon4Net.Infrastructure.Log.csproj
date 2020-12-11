@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <Version>3.1.5</Version>
+        <Version>3.1.10</Version>
         <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
         <Company>Capgemini S.A.</Company>
         <Description>Log component to create log file, log sqlite database and graylog traces for webapi on .net core 3.0</Description>

@@ -5,7 +5,7 @@
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>3.1.5</Version>
+    <Version>3.1.10</Version>
     <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
     <Company>Capgemini S.A.</Company>
     <Description>JWT classes to manage the JWTs/Encripted token with the ability to choose the encryption algorithm</Description>
