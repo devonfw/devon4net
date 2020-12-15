@@ -3,7 +3,7 @@
   <metadata>
     <id>Devon4Net.WebAPI.Template</id>
     <title>Devon4Net web API solution template</title>
-    <version>3.1.10</version>
+    <version>3.1.11</version>
     <description>Project template to develop web API template for .NET core 3.1</description>
     <tags>OASP Devon4Net webapi devonfw</tags>
     <authors>iCSD/ADCenter Capgemini Valencia</authors>
