@@ -1,4 +1,6 @@
-﻿using Amazon.CDK;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Amazon.CDK;
 using Amazon.CDK.AWS.S3;
 using Devon4Net.Infrastructure.AWS.CDK.CdkEntity;
 
@@ -10,7 +12,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Handlers
         {
         }
 
-        public IBucket Create(string bucketName, int expirationDays, RemovalPolicy removalPolicy = RemovalPolicy.DESTROY, BucketEncryption encryption = BucketEncryption.KMS_MANAGED, string webSiteRedirectHost = "", bool versioned = true)
+        public IBucket Create(string bucketName, int expirationDays, IList<ILifecycleRule> lifecycleRules = null, RemovalPolicy removalPolicy = RemovalPolicy.DESTROY, BucketEncryption encryption = BucketEncryption.KMS_MANAGED, string webSiteRedirectHost = "", bool versioned = true)
         {
             return CreateBucket(new BucketEntity
             {
@@ -19,7 +21,8 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Handlers
                 ExpirationDays = expirationDays,
                 Versioned = versioned,
                 Encryption = encryption,
-                WebSiteRedirectHost = webSiteRedirectHost
+                WebSiteRedirectHost = webSiteRedirectHost,
+                LifecycleRules = lifecycleRules
             });
         }
 
@@ -42,14 +45,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Handlers
                     Versioned = bucket.Versioned,
                     RemovalPolicy = bucket.RemovalPolicy,
                     Encryption = bucket.Encryption,
-
-                    LifecycleRules = new ILifecycleRule[]
-                    {
-                        new LifecycleRule
-                        {
-                            Expiration = Duration.Days(bucket.ExpirationDays)
-                        }
-                    }
+                    LifecycleRules = GetLifeCycleRules(bucket.LifecycleRules, bucket.ExpirationDays)
                 });
             }
 
@@ -58,19 +54,32 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Handlers
                 Versioned = bucket.Versioned,
                 RemovalPolicy = bucket.RemovalPolicy,
                 Encryption = bucket.Encryption,
-
-                LifecycleRules = new ILifecycleRule[]
-                {
-                    new LifecycleRule
-                    {
-                        Expiration = Duration.Days(bucket.ExpirationDays)
-                    }
-                },
+                LifecycleRules = GetLifeCycleRules(bucket.LifecycleRules, bucket.ExpirationDays),
                 WebsiteRedirect = new RedirectTarget
                 {
                     HostName = bucket.WebSiteRedirectHost
                 }
             });
+        }
+
+        private ILifecycleRule[] GetLifeCycleRules(IList<ILifecycleRule> bucketLifecycleRules, int bucketExpirationDays)
+        {
+            var result = new List<ILifecycleRule>();
+
+            if (bucketExpirationDays > 0)
+            {
+                result.Add(new LifecycleRule
+                {
+                    Expiration = Duration.Days(bucketExpirationDays)
+                });
+            }
+
+            if (bucketLifecycleRules != null && bucketLifecycleRules.Any())
+            {
+                result.AddRange(bucketLifecycleRules);
+            }
+
+            return result.Any() ? result.ToArray() : null;
         }
     }
 }

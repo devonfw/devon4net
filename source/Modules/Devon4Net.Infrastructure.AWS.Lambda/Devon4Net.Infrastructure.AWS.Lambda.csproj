@@ -3,7 +3,23 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <LangVersion>8</LangVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Version>3.1.10</Version>
+    <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
+    <Company>Capgemini S.A.</Company>
+    <Description>AWS component to manage the CDK version</Description>
+    <Copyright>Copyright © Capgemini</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://www.devonfw.com</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
+    <RepositoryType />
+    <license>http://www.devonfw.com/terms-of-use/</license>
+    <PackageTags>devonfw devon4net Capgemini AWS Lambda</PackageTags>
+    <PackageReleaseNotes>Netstandard 2.1 for devonfw net core 3.1 compatibility version</PackageReleaseNotes>
+    <icon>https://avatars2.githubusercontent.com/u/7803029?s=200&amp;v=4</icon>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.Core" Version="1.2.0" />
     <PackageReference Include="Amazon.Lambda.Logging.AspNetCore" Version="3.1.0" />

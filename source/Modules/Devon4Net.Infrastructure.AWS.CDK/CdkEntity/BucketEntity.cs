@@ -1,4 +1,5 @@
-﻿using Amazon.CDK;
+﻿using System.Collections.Generic;
+using Amazon.CDK;
 using Amazon.CDK.AWS.S3;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.CdkEntity
@@ -11,5 +12,6 @@ namespace Devon4Net.Infrastructure.AWS.CDK.CdkEntity
         public bool Versioned { get; set; }
         public string WebSiteRedirectHost { get; set; }
         public BucketEncryption Encryption { get; set; }
+        public IList<ILifecycleRule> LifecycleRules { get; set; }
     }
 }
