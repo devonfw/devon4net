@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29403.142
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{DE117EB7-E593-4898-8F84-F3F93BC9D362}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gRPC", "gRPC", "{2480AD81-0114-42DE-89FC-F8507D87DFE2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Application.GrpcService", "Templates\gRPC\Devon4NetGrpc\Devon4Net.Application.GrpcService.csproj", "{361D471A-0A6A-4149-ACE0-0845A1A274F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Application.GrpcClient", "Templates\gRPC\Devon4NetGrpcClient\Devon4Net.Application.GrpcClient.csproj", "{E3CE6E78-BF9D-4FF7-A2BB-B31C4273C609}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{361D471A-0A6A-4149-ACE0-0845A1A274F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{361D471A-0A6A-4149-ACE0-0845A1A274F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{361D471A-0A6A-4149-ACE0-0845A1A274F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{361D471A-0A6A-4149-ACE0-0845A1A274F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3CE6E78-BF9D-4FF7-A2BB-B31C4273C609}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3CE6E78-BF9D-4FF7-A2BB-B31C4273C609}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3CE6E78-BF9D-4FF7-A2BB-B31C4273C609}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3CE6E78-BF9D-4FF7-A2BB-B31C4273C609}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2480AD81-0114-42DE-89FC-F8507D87DFE2} = {DE117EB7-E593-4898-8F84-F3F93BC9D362}
+		{361D471A-0A6A-4149-ACE0-0845A1A274F9} = {2480AD81-0114-42DE-89FC-F8507D87DFE2}
+		{E3CE6E78-BF9D-4FF7-A2BB-B31C4273C609} = {2480AD81-0114-42DE-89FC-F8507D87DFE2}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B0967205-4814-4D3A-907B-2BC885FA488C}
+	EndGlobalSection
+EndGlobal
