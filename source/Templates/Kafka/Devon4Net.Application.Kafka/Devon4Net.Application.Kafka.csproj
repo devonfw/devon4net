@@ -9,7 +9,7 @@
     <NoWarn>1701;1702;8034;1705;NU1605;NU1608;NU1701;CS1705;AD0001</NoWarn>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <DocumentationFile>D:\work\jmsanmu\devon4net-1\source\Templates\Kafka\Devon4Net.Application.Kafka\Devon4Net.Application.Kafka.xml</DocumentationFile>
+    <DocumentationFile>Devon4Net.Application.Kafka.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
