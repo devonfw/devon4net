@@ -20,7 +20,7 @@ ____
 It is important to understand the distinction between layers and tiers. __Layers__ describe the logical groupings of the functionality and components in an application; whereas __tiers__ describe the physical distribution of the functionality and components on separate servers, computers, networks, or remote locations. Although both layers and tiers use the same set of names (presentation, business, services, and data), remember that only tiers imply a physical separation. It is quite common to locate more than one layer on the same physical machine (the same tier). You can think of the term tier as referring to physical distribution patterns such as two-tier, three-tier, and __n__-tier.
 ____
 
-The proposed architecture makes use of cooperating components called layers. Each layer contains a set of components capable to develop a specific functionality.
+The proposed architecture makes use of cooperating components called layers. To develop specific functionality each layer contains a set of components which is capable to develop such functionalities.
 
 The next figure represents the different layers:
 
