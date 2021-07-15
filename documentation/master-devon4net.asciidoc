@@ -1,5 +1,6 @@
 = .net
 
+
 == Architecture basics
 
 include::architecture_guide.asciidoc[leveloffset=2]
