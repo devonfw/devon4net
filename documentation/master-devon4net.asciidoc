@@ -1,5 +1,4 @@
-= .net
-
+= devon4net
 
 == Architecture basics
 
