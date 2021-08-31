@@ -1,4 +1,4 @@
-name: document spellcheck workflow
+name: spellcheck
 on:
   push:
   workflow_dispatch:
