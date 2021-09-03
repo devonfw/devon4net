@@ -10,6 +10,6 @@ jobs:
        uses: actions/checkout@v2
      - name: download dictionary
        run: |
-        wget https://raw.githubusercontent.com/sujith-mn/.github/master/en-devonfw.dict -O ./en-devonfw.dict
+        wget https://raw.githubusercontent.com/devonfw/.github/master/en-devonfw.dict -O ./en-devonfw.dict
      - uses: igsekor/pyspelling-any@v0.0.2
        name: Spellcheck
