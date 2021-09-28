@@ -123,7 +123,7 @@ Based on _Microsoft_ approach, we will implement a class to define the security 
 
 On Oasp4Net.Infrastructure.JWT assembly is defined a subset of _Microsoft's authorization schema_ Database. It is started up the first time the application launches.
 
-YOu can read more about _Authorization on: 
+You can read more about _Authorization on: 
 
 https://docs.microsoft.com/en-us/aspnet/core/security/authorization/[Authorization in ASP.NET Core]
 
