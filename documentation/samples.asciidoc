@@ -36,7 +36,7 @@ video::videos/mts_startup.mp4[width=640, start=0, options=autoplay]
 
 ==== [navy]#Basic architecture details#
 
-Following the devonfw conventions the .Net Core 2.0 My Thai Star backend is going to be developed dividing the application in _Components_ and using a n-layer architecture.
+Following the OASP conventions the .Net Core 2.0 My Thai Star backend is going to be developed dividing the application in _Components_ and using a n-layer architecture.
 
 image::images/project_modules.png[, link="images/project_modules.png"]
 
