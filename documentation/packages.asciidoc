@@ -121,7 +121,7 @@ The Devon4Net.Infrastructure.CircuitBreaker componnet implements the retry patte
 |Endpoints| Array with predefined sites to connect with
 |Name| The name key to identificate the destination URL
 |Headers| Not ready yet
-|WaitAndRetrySeconds| Array wich determinates the number of retruies and the lapse period between each retry. The value is in milliseconds.
+|WaitAndRetrySeconds| Array which determinates the number of retruies and the lapse period between each retry. The value is in milliseconds.
 |Certificate| Ceritificate client to use to perform the HTTP call
 |SslProtocol| The secure protocol to use on the call
 |=======================
