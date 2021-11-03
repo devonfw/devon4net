@@ -237,7 +237,7 @@ Included features:
 |link:guide-validation[validation]|framework| https://www.newtonsoft.com/jsonschema/help/html/GenerateWithDataAnnotations.htm[NewtonSoft Json], http://www.asp.net/mvc/overview/older-versions-1/models-data/validation-with-the-data-annotation-validators-cs[DataAnnotations]
 |component management|link:guide-dependency-injection[dependency injection]| https://unity.codeplex.com[Unity]
 |link:guide-security[security]|Authentication & Authorization| https://jwt.io[JWT] https://msdn.microsoft.com/en-us/library/fkytk30f(v=vs.110).aspx[.Net Security - Token based, local Authentication Provider]
-|unit tests|framework|https://xunit.github.io/[xUnit]
+|unit tests|framework|https://github.com/xunit/xunit[xUnit]
 |Circuit breaker|framework, allows retry pattern on http calls|https://github.com/App-vNext/Polly[Polly]
 |CQRS|Memory events and queue events| https://github.com/jbogard/MediatR[MediatR] - https://github.com/EasyNetQ/EasyNetQ[EasyNetQ] - https://github.com/confluentinc/confluent-kafka-dotnet[Kafka]
 |Kafka| Kafka support for enterprise applications| https://github.com/confluentinc/confluent-kafka-dotnet[Confluent.Kafka]
