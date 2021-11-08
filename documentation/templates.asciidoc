@@ -60,7 +60,7 @@ NOTE: For the latest updates on references packages, please get the sources from
 
 == Links
 
-icon:= fa-floppy-o[]  link:https://github.com/devonfw/devon4net/tree/develop/Templates[.Net templates]
+icon:= fa-floppy-o[]  link:https://github.com/devonfw/devon4net/tree/develop/source/Templates[.Net templates]
 
 
 
