@@ -8,9 +8,25 @@ matrix:
   dictionary:
     wordlists:
     - en-devonfw.dict
-    output: en-devonfw.dic
+    output:  en-devonfw.dic
   pipeline:
   - pyspelling.filters.url:
+  #Ignore for directory path
+  - pyspelling.filters.context: 
+      context_visible_first: true
+      escapes: '^.*[\/\\][^\/\\]+$'
+  #Ignore for upper camel case
+  - pyspelling.filters.context:
+      context_visible_first: true
+      delimiters:
+      - open: '\b[A-Z][a-z0-9]+[A-Z]'
+        close: '[a-z0-9]*\b'
+  #Ignore for lower camel case
+  - pyspelling.filters.context:
+      context_visible_first: true
+      delimiters:
+      - open: '\b[a-z]+[A-Z]'
+        close: '[a-z0-9]*\b'
   - pyspelling.filters.context:
       context_visible_first: true
       escapes: \\[\\-~]
@@ -20,5 +36,4 @@ matrix:
       # content
       # ----
       - open: '(?s)^(?P<open> *-{4,})$'
-        close: '^(?P=open)$'
-        
+        close: '^(?P=open)$'  
