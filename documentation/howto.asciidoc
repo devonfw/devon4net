@@ -36,7 +36,7 @@ You are ready to start developing with devon4Net
 ==== Option 2
 [listing]
 ....
-Create a new dotnet API project from scracht
+Create a new dotnet API project from scratch
 Add the nuget package reference to your project:
 Install-Package Devon4Net.Application.WebAPI.Configuration
 ....
@@ -519,7 +519,7 @@ Repositories location:
 image::images/Repositories.png["cobigen", width=="300", link=="images/Repositories.png]
 
 Now, we are going to open the following file *Devon4Net.WebAPI.Implementation\Configure\DevonConfiguration.cs*.
-In there we have to add the Dependency Inyection for the services and the repositories that Cobigen has generated. The following image is an example of what is needed to add.
+In there we have to add the Dependency Injection for the services and the repositories that Cobigen has generated. The following image is an example of what is needed to add.
 
 [[img-cobigen]]
 image::images/BussinessConfiguration.png["cobigen", width=="800", link=="images/BussinessConfiguration.png]
@@ -562,7 +562,7 @@ The supported protocols are:
 
 [options="header"]
 |=======================
-|*Protocl*|*Description*
+|*Protocol*|*Description*
 |Http1| Http1 protocol
 |Http2| Http2 Protocol
 |Http1AndHttp2| Both supported
@@ -646,7 +646,7 @@ openssl pkcs12 -export -out localhost.pfx -inkey localhost.key -in localhost.crt
 
 == Setup the database driver
 
-Add the databse connection on the SetupDatabase method at Startup.cs
+Add the database connection on the SetupDatabase method at Startup.cs
     
 [source, C#]
 ----
