@@ -46,7 +46,7 @@ At the moment .net Core template is supported. The template is ready to be used 
 
 ==== [navy]#My Thai Star#
 
-You can find My Thai Star .NET port application at https://github.com/oasp/my-thai-star/tree/develop/net[Github].
+You can find My Thai Star .NET port application at https://github.com/devonfw/my-thai-star/tree/develop/net[Github].
 
 NOTE: As devon4net has been migrated to the latest version of .net core, the template is not finished yet.
 
@@ -319,7 +319,7 @@ This configuration allows all Controller classes to be tracked. If you don't nee
 
 devon4net Core projects are ready to be integrated with docker. 
 
-https://github.com/oasp/my-thai-star/tree/develop/net[My Thai Star application] sample is ready to be use with linux docker containers. The Readme file explains how to launch and setup the sample application.
+https://github.com/devonfw/my-thai-star/tree/develop/net[My Thai Star application] sample is ready to be use with linux docker containers. The Readme file explains how to launch and setup the sample application.
 
 * *angular* : Angular client to support backend. Just binaries.
 
