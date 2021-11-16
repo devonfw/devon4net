@@ -18,20 +18,20 @@ This document covers .NET Coding Standards and is recommended to be read by team
 ==== Camel Case (camelCase)
 Each word or abbreviation in the middle of the phrase begins with a capital letter, with no intervening spaces or punctuation.
 
-The camelCasing convention, used only for parameter names, capitalizes the first character of each word except the first word, as shown in the following examples. As the example also shows, two-letter acronyms that begin a camel-cased identifier are both lowercase.
+The camel case convention, used only for parameter names, capitalizes the first character of each word except the first word, as shown in the following examples. As the example also shows, two-letter acronyms that begin a camel-cased identifier are both lowercase.
 
-icon:= fa-thumbs-o-up[] use camelCasing for parameter names.
+icon:= fa-thumbs-o-up[] use `camelCasing` for parameter names.
 
-==== Pascal Case (PascalCase)
+==== Pascal Case (`PascalCase`)
 The first letter of each concatenated word is capitalized. No other characters are used to separate the words, like hyphens or underscores.
 
-The PascalCasing convention, used for all identifiers except parameter names, capitalizes the first character of each word (including acronyms over two letters in length).
+The `PascalCasing` convention, used for all identifiers except parameter names, capitalizes the first character of each word (including acronyms over two letters in length).
 
-icon:= fa-thumbs-o-up[] use PascalCasing for all public member, type, and namespace names consisting of multiple words.
+icon:= fa-thumbs-o-up[] use `PascalCasing` for all public member, type, and namespace names consisting of multiple words.
 
 
 ==== Underscore Prefix (_underScore)
-For underscore ( _ ), the word after _ use camelCase terminology.
+For underscore ( _ ), the word after _ use `camelCase` terminology.
 
 
 
@@ -43,9 +43,9 @@ icon:= fa-thumbs-o-up[] favor readability over brevity.
     ◦ e.g.: GetLength is a better name than GetInt.
     ◦ Aim for the “ubiquitous language” (E. Evans): A language distilled from the domain language, which helps the team clarifying domain concepts and communicating with domain experts.
 
-icon:= fa-thumbs-o-up[] prefer adding a suffix rather than a prefix to indicate a new version of an existing API.
+icon:= fa-thumbs-o-up[] prefer adding a suffix rather than a prefix to indicate a new version of an existing `API`.
 
-icon:= fa-thumbs-o-up[] use a numeric suffix to indicate a new version of an existing API, particularly if the existing name of the API is the only name that makes sense (i.e., if it is an industry standard) and if adding any meaningful suffix (or changing the name) is not an appropriate option.
+icon:= fa-thumbs-o-up[] use a numeric suffix to indicate a new version of an existing `API`, particularly if the existing name of the `API` is the only name that makes sense (i.e., if it is an industry standard) and if adding any meaningful suffix (or changing the name) is not an appropriate option.
 
 icon:= fa-thumbs-o-down[] do not use underscores, hyphens, or any other non-alphanumeric characters.
 
@@ -57,7 +57,7 @@ icon:= fa-thumbs-o-down[] do not use abbreviations or contractions as part of id
 
 icon:= fa-thumbs-o-down[] do not use any acronyms that are not widely accepted, and even if they are, only when necessary.
 
-icon:= fa-thumbs-o-down[] do not use the "Ex" (or a similar) suffix for an identifier to distinguish it from an earlier version of the same API.
+icon:= fa-thumbs-o-down[] do not use the "Ex" (or a similar) suffix for an identifier to distinguish it from an earlier version of the same `API`.
 
 icon:= fa-thumbs-o-down[] do not use C# reserved words as names. 
 
@@ -68,11 +68,11 @@ icon:= fa-thumbs-o-down[] do not use Hungarian notation. Hungarian notation is t
 
 == [navy]#Names of Assemblies and DLLs#
 
-An assembly is the unit of deployment and identity for managed code programs. Although assemblies can span one or more files, typically an assembly maps one-to-one with a DLL. Therefore, this section describes only DLL naming conventions, which then can be mapped to assembly naming conventions.
+An assembly is the unit of deployment and identity for managed code programs. Although assemblies can span one or more files, typically an assembly maps one-to-one with a` DLL`. Therefore, this section describes only` DLL` naming conventions, which then can be mapped to assembly naming conventions.
 
 icon:= fa-thumbs-o-up[] choose names for your assembly DLLs that suggest large chunks of functionality, such as System.Data.
 
-Assembly and DLL names don’t have to correspond to namespace names, but it is reasonable to follow the namespace name when naming assemblies. A good rule of thumb is to name the DLL based on the common prefix of the assemblies contained in the assembly. For example, an assembly with two namespaces, MyCompany.MyTechnology.FirstFeature and MyCompany.MyTechnology.SecondFeature, could be called MyCompany.MyTechnology.dll.
+Assembly and `DLL` names don’t have to correspond to namespace names, but it is reasonable to follow the namespace name when naming assemblies. A good rule of thumb is to name the `DLL` based on the common prefix of the assemblies contained in the assembly. For example, an assembly with two namespaces, MyCompany.MyTechnology.FirstFeature and MyCompany.MyTechnology.SecondFeature, could be called MyCompany.MyTechnology.dll.
 
 icon:= fa-thumbs-o-up[] consider naming DLLs according to the following pattern: +
 <Company>.<Component>.dll
@@ -92,7 +92,7 @@ Litware.Controls.dll.
 
 * Comments: Use // for simple comment or /// for summaries. Do not /* … */ and do not flower box.
 
-* Use Use built-in C# native data types vs .NET CTS types (string instead of String)
+* Use Use built-in C# native data types vs .NET `CTS` types (string instead of String)
 
 * Avoid changing default type in Enums. 
 
@@ -114,7 +114,7 @@ Litware.Controls.dll.
 |Namespace| Pascal case
 |Class| Pascal case
 |Interface| Pascal case
-|Generics| Single capital letter (T or K)
+|Generics| Single capital letter (T or `K`)
 |Methods| Pascal case (use a Verb or Verb+Object)
 |Public field|Pascal case
 |Private field|Camel case with underscore (_) prefix
@@ -149,7 +149,7 @@ Code is the only completely reliable documentation: write “good code” first!
 * Avoid “repeating the code” and commenting the obvious
 
 
-* Avoid commenting “tricky code”: rewrite it! If there’s no time at present to refactor a tricky section, mark it with a TODO and schedule time to take care of it as soon as possible.
+* Avoid commenting “tricky code”: rewrite it! If there’s no time at present to refactor a tricky section, mark it with a `TODO` and schedule time to take care of it as soon as possible.
 
 
 === [navy]#Effective comments#
