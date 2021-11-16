@@ -18,7 +18,7 @@ This document covers .NET Coding Standards and is recommended to be read by team
 ==== Camel Case (camelCase)
 Each word or abbreviation in the middle of the phrase begins with a capital letter, with no intervening spaces or punctuation.
 
-The `camelCasing` convention, used only for parameter names, capitalizes the first character of each word except the first word, as shown in the following examples. As the example also shows, two-letter acronyms that begin a camel-cased identifier are both lowercase.
+The camel case convention, used only for parameter names, capitalizes the first character of each word except the first word, as shown in the following examples. As the example also shows, two-letter acronyms that begin a camel-cased identifier are both lowercase.
 
 icon:= fa-thumbs-o-up[] use `camelCasing` for parameter names.
 
