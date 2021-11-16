@@ -102,7 +102,7 @@ Add the devonfw configuration options in your appsettings.json file
 
 === devon4net configuration files
 
-To start usinf devon4net in your .net core application add this configuration in your appsettings.json file:
+To start using devon4net in your .net core application add this configuration in your appsettings.json file:
 
 [source, json]
 ----
