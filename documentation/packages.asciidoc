@@ -28,7 +28,7 @@ The devon4Net web API configuration core.
 
     PM> Install-Package Devon4Net.Application.WebAPI.Configuration
 
-==== Defaul configuration values
+==== Default configuration values
 
 [source, json]
 ----
@@ -80,7 +80,7 @@ The devon4Net web API configuration core.
 
 === Devon4Net.Infrastructure.CircuitBreaker
 ==== Description
-The Devon4Net.Infrastructure.CircuitBreaker componnet implements the retry pattern for HTTP/HTTPS calls.
+The Devon4Net.Infrastructure.CircuitBreaker component implements the retry pattern for HTTP/HTTPS calls.
 
 ==== Configuration
 
@@ -119,9 +119,9 @@ The Devon4Net.Infrastructure.CircuitBreaker componnet implements the retry patte
 |*Property*|*Description*
 |CheckCertificate| True if HTTPS is requiered. This is usefull when developing an API Gateway needs a secured HTTP, disabling this on development we can use communications with a valid server certificate
 |Endpoints| Array with predefined sites to connect with
-|Name| The name key to identificate the destination URL
+|Name| The name key to identify the destination URL
 |Headers| Not ready yet
-|WaitAndRetrySeconds| Array which determinates the number of retruies and the lapse period between each retry. The value is in milliseconds.
+|WaitAndRetrySeconds| Array which determines the number of retries and the lapse period between each retry. The value is in milliseconds.
 |Certificate| Ceritificate client to use to perform the HTTP call
 |SslProtocol| The secure protocol to use on the call
 |=======================
@@ -191,7 +191,7 @@ NOTE: This component will move on next releases to Infrastructure instead of bei
 
 - Adding the database connection information:
 
-Add the databse connection on the SetupDatabase method at Startup.cs
+Add the database connection on the SetupDatabase method at Startup.cs
     
 [source, C#]
 ----

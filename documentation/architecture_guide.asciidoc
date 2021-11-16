@@ -112,14 +112,14 @@ The repository and unit of work patterns are create an abstraction layer between
 
 NOTE: Domain Layer has no dependencies with other layers. It contains the Entities, datasources and the Repository Interfaces.
 
-=== devon4Net architecture layer implementaion
+=== devon4Net architecture layer implementation
 
 The next picture shows how the devon4Net API template implements the architectured described in previous points:
 
 
 [[img-t-architecture]]
 .devon4Net architecture implementations
-image::images/onion_architecture_solution.png["devon4Net api templare architecture implementation", width="400", link="images/onion_architecture_solution.png"]
+image::images/onion_architecture_solution.png["devon4Net api template architecture implementation", width="400", link="images/onion_architecture_solution.png"]
 
 ==== Cross-Cutting concerns
 
@@ -148,7 +148,7 @@ image::images/laryer_arch_detail.png["technical architecture", width="750", link
 
 The provided bundle contains the devon4Net API template based on .net core. The template allows to create a microservice solution with minimal configuration. 
 
-Also, the devon4Net framework can be added to third party templates such as the Amazon API template to use lambdas in serverless envirnments.
+Also, the devon4Net framework can be added to third party templates such as the Amazon API template to use lambdas in serverless environments.
 
 Included features:
 

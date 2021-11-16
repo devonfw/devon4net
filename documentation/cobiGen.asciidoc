@@ -11,7 +11,7 @@ toc::[]
 
 In this guide we will explain how to generate a new WebApi project from an OpenAPI 3.0.0 specification. This  means that we are going to use a “contract first” strategy. This is going to be possible due to these type of files that contain all the information about entities, operations, etc…
 
-In order to make it work we are using https://github.com/devonfw/cobigen[CobiGen], a powerful tool for generating source code. CobiGen allows users to generate all the structure and code of the components, helping to save a lot of time otherwise waisted on repetitive tasks.
+In order to make it work we are using https://github.com/devonfw/cobigen[CobiGen], a powerful tool for generating source code. CobiGen allows users to generate all the structure and code of the components, helping to save a lot of time otherwise wasted on repetitive tasks.
 
 === [navy]#Getting things ready#
 
@@ -45,7 +45,7 @@ You can read more information about how to configure your OpenAPI file and a wor
 
 === [navy]#Generating files#
 
-Cobigen allow us to generate the files in two different ways. One of them is using Eclipse which it can be done by using the its grafical interface. The other way to generate the code is using the Cobigen CLI tool.
+Cobigen allow us to generate the files in two different ways. One of them is using Eclipse which it can be done by using the its graphical interface. The other way to generate the code is using the Cobigen CLI tool.
 
 ==== [navy]#Generating files through Eclipse#
 In order to generate the files using Eclipse we need to follow some simple steps.
@@ -100,7 +100,7 @@ Repositories location:
 image::images/Repositories.png["cobigen", width=="300", link=="images/Repositories.png]
 
 Now, we are going to open the following file *Devon4Net.WebAPI.Implementation\Configure\DevonConfiguration.cs*.
-In there we have to add the Dependency Inyection for the services and the repositories that Cobigen has generated. The following image is an example of what is needed to add.
+In there we have to add the Dependency Injection for the services and the repositories that Cobigen has generated. The following image is an example of what is needed to add.
 
 [[img-cobigen]]
 image::images/BussinessConfiguration.png["cobigen", width=="800", link=="images/BussinessConfiguration.png]
@@ -111,7 +111,7 @@ Moreover it is needed to remove the last line in order to be able to run the app
 
 ==== [navy]#Configure data base#
 
-Cobigen is generating an empty context that has to be filled with manualy in order to be able to work with the database. The context can be found in *[Project_Name]/Devon4Net.WebAPI.Implementation/Domain/Database/CobigenContext.cs*.
+Cobigen is generating an empty context that has to be filled with manually in order to be able to work with the database. The context can be found in *[Project_Name]/Devon4Net.WebAPI.Implementation/Domain/Database/CobigenContext.cs*.
 
 [[img-cobigen]]
 image::images/CobigenContextLocation.png["cobigen", width=="350", link=="images/CobigenContextLocation.png]
@@ -120,7 +120,7 @@ image::images/CobigenContextLocation.png["cobigen", width=="350", link=="images/
 
 In order to finish the configuration of the services it is needed to go to each service file of the managements generated. 
 
-In there we will see some "NotImplementedExceptions", so it is needed to read carefuly each coment inside of each exception in order to be able to use the service. It can be shown an example of the service with its NotImplementedExceptions comments:
+In there we will see some "NotImplementedExceptions", so it is needed to read carefully each comment inside of each exception in order to be able to use the service. It can be shown an example of the service with its NotImplementedExceptions comments:
 
 [[img-cobigen]]
 image::images/ServiceExample.png["cobigen", width=="800", link=="images/ServiceExample.png]
