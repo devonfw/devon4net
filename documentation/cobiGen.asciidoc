@@ -74,7 +74,7 @@ Ones you select all the files that you want to generate, click on the _“Finish
 
 ==== [navy]#Generating files through Cobigen` CLI`#
 
-In ordet to generate the files using the Cobigen` CLI` it is needed to do the following steps:
+In order to generate the files using the Cobigen` CLI` it is needed to do the following steps:
 
 1. Go to devonfw distribution folder
 2. Run *console.bat*, this will open a console.

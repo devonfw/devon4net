@@ -15,12 +15,42 @@ matrix:
   - pyspelling.filters.context: 
       context_visible_first: true
       escapes: '^.*[\/\\][^\/\\]+$'
+  #Ignore for url starting with http or https
+  - pyspelling.filters.context: 
+      context_visible_first: true
+      delimiters:
+      - open: 'https?:\S+?'
+        close: '\s'
   #Ignore content between backticks
   - pyspelling.filters.context: 
       context_visible_first: true
       delimiters:
       - open: '`+[^`]+'
         close: '`+'
+  #Ignore links
+  - pyspelling.filters.context: 
+      context_visible_first: true
+      delimiters:
+      - open: 'link:[^[]+'
+        close: '\['
+  #Ignore Image tags
+  - pyspelling.filters.context: 
+      context_visible_first: true
+      delimiters:
+      - open: 'image:[^[]+'
+        close: '\['
+  #Ignore Image tags link part
+  - pyspelling.filters.context:
+      context_visible_first: true
+      delimiters:
+      - open: ',.+?link=[^\]]+'
+        close: '\]'
+  #Ignore include tag
+  - pyspelling.filters.context: 
+      context_visible_first: true
+      delimiters:
+      - open: 'include:[^[]+'
+        close: '\['
   - pyspelling.filters.context:
       context_visible_first: true
       escapes: \\[\\-~]
@@ -35,5 +65,5 @@ matrix:
       context_visible_first: true
       delimiters:
       # Ignore multiline content between [source, *] and blank line
-      - open: '\[source,.*\]'
-        close: '^\s*$' 
+      - open: '\[source, .*\]\r?\n\s*----'
+        close: '[^-]*'

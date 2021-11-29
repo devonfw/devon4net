@@ -141,7 +141,7 @@ The provided _Data Layer_ contains the abstract classes to inherit from. All new
 
 [[img-t-architecture]]
 .Architecture representation in deep
-image::images/laryer_arch_detail.png["technical architecture", width="750", link="images/laryer_arch_detail.png"]
+image::images/layer_arch_detail.png["technical architecture", width="750", link="images/layer_arch_detail.png"]
 
 == Templates
 === State of the art
