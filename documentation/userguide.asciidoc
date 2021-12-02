@@ -84,7 +84,7 @@ In order to design your database model from scratch, we encourage to follow the 
 
 [Source,c#]
 ----
-Scaffold-`DbContext` "Your connection string to existing database" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+`Scaffold-DbContext` "Your connection string to existing database" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
 ----
 
 The command will create the database context and the mapped entities as well inside of Models folder.
@@ -110,7 +110,7 @@ Where:
 |*Param*|*Description*
 |`TodoContext`| Is the database context definition
 |Default| Is the connection string defined at `_ConnectionString_` node at the appsettings configuration file 
-|WebAPI.Configuration.Enums.DatabaseType.InMemory| Is the database driver selection. In this case `InMemory` data base is chosen
+|`WebAPI.Configuration.Enums.DatabaseType.InMemory`| Is the database driver selection. In this case `InMemory` data base is chosen
 |=======================
 
 The supported databases are:
@@ -154,7 +154,7 @@ For example, My Thai Star Booking controller constructor looks like this:
 
 Currently devon4net has a _Unit of Work_ class in order to perform CRUD operations to database making use of your designed model context.
 
-_Repositories_ are declared at _devon4net.Domain.UnitOfWork_ project and make use of _Unit of Work_ class.
+_Repositories_ are declared at `_devon4net.Domain.UnitOfWork_` project and make use of _Unit of Work_ class.
 
 
 The common methods to perform CRUD operations (where <T> is an entity from your model) are:
@@ -255,7 +255,7 @@ Please check https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/xm
 
 An important part of life software is the need of using log and traces. devon4net has a log module pre-configured to achieve this important point.
 
-By default Microsoft provides a logging module on .NET Core applications. This module is open and can it can be extended. devon4net uses the https://serilog.net/[serilog] implementation. This implementation provides a huge quantity information about events and traces.
+By default Microsoft provides a logging module on .NET Core applications. This module is open and can it can be extended. devon4net uses the https://serilog.net/[Serilog] implementation. This implementation provides a huge quantity information about events and traces.
 
 ==== [navy]#Log file#
 devon4net can write the log information to a simple text file. You can configure the file name and folder at appsettings.json file (`LogFile` attribute) at devon4net.Application.WebApi project.
@@ -267,7 +267,7 @@ devon4net can write the log information to a SQLite database. You can configure 
 With this method you can launch queries in order to search the information you are looking for.
 
 ==== [navy]#Seq log#
-devon4net can write the log information to a serilog server. You can configure the serilog URL at appsettings.json file `(SeqLogServerUrl attribute)` at devon4net.Application.WebApi project.
+devon4net can write the log information to a Serilog server. You can configure the Serilog URL at appsettings.json file `(SeqLogServerUrl attribute)` at devon4net.Application.WebApi project.
 
 With this method you can make queries via HTTP.
 
@@ -503,7 +503,7 @@ services.Configure<IISOptions>(options =>
 [options="header"]
 |=======================
 |Option|Default|Setting
-|`AutomaticAuthentication`| true |If true, the authentication middleware sets the HttpContext.User and responds to generic challenges. If false, the authentication middleware only provides an identity (HttpContext.User) and responds to challenges when explicitly requested by the Authentication Scheme. Windows Authentication must be enabled in IIS for `AutomaticAuthentication` to function.
+|`AutomaticAuthentication`| true |If true, the authentication middleware sets the `HttpContext.User` and responds to generic challenges. If false, the authentication middleware only provides an identity (`HttpContext.User`) and responds to challenges when explicitly requested by the Authentication Scheme. Windows Authentication must be enabled in IIS for `AutomaticAuthentication` to function.
 |`AuthenticationDisplayName` | null| 	Sets the display name shown to users on login pages.
 |`ForwardClientCertificate` |true|If true and the `MS-ASPNETCORE-CLIENTCERT` request header is present, the `HttpContext.Connection.ClientCertificate` is populated.
 |=======================
@@ -511,7 +511,7 @@ services.Configure<IISOptions>(options =>
 
 [underline]#web.config#
 
-The web.config file configures the ASP.NET Core Module and provides other IIS configuration. Creating, transforming, and publishing web.config is handled by Microsoft.NET.Sdk.Web, which is included when you set your project's SDK at the top of your .csproj file, <Project Sdk="Microsoft.NET.Sdk.Web">. To prevent the MSBuild target from transforming your web.config file, add the `<IsTransformWebConfigDisabled>` property to your project file with a setting of true:
+The web.config file configures the ASP.NET Core Module and provides other IIS configuration. Creating, transforming, and publishing web.config is handled by Microsoft.NET.Sdk.Web, which is included when you set your project's SDK at the top of your .csproj file, <Project Sdk="Microsoft.NET.Sdk.Web">. To prevent the `MSBuild` target from transforming your web.config file, add the `<IsTransformWebConfigDisabled>` property to your project file with a setting of true:
 
 [source, xml]
 ----
@@ -712,7 +712,7 @@ https://docs.microsoft.com/en-us/aspnet/core/publishing/docker[Publishing to Doc
 
 https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-strings[Connection strings]
 
-https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/new-db#create-the-model[EF basics]
+https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/new-db#create-the-model[`EF` basics]
 
 https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/complex-data-model[Entity framework advanced design]
 
