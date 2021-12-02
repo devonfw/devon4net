@@ -52,7 +52,7 @@ NOTE: As devon4net has been migrated to the latest version of .net core, the tem
 
 == [navy]#Cookbook#
 === [navy]#Data management#
-To use `EF` Core, install the package for the database provider(s) you want to target. This walk-through uses SQL Server.
+To use EF Core, install the package for the database provider(s) you want to target. This walk-through uses SQL Server.
 
 For a list of available providers see https://docs.microsoft.com/en-us/ef/core/providers/index[Database Providers]
     
@@ -712,7 +712,7 @@ https://docs.microsoft.com/en-us/aspnet/core/publishing/docker[Publishing to Doc
 
 https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-strings[Connection strings]
 
-https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/new-db#create-the-model[`EF` basics]
+https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/new-db#create-the-model[EF basics]
 
 https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/complex-data-model[Entity framework advanced design]
 
