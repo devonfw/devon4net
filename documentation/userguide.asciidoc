@@ -24,7 +24,7 @@ All the  guidelines shown and used in this document are a set of rules and conve
 [options="header"]
 |=======================
 |*File / Folder*|*Content*
-|Documentation| User documentation in` HTML` format
+|Documentation| User documentation in HTML format
 |Modules| Contains the source code of the different devon4net modules
 |Samples| Different samples implemented in .NET and .NET Core. Also includes My Thai Star Devon flagship restaurant application
 |Templates| Main .net Core template to start developing from scratch
@@ -39,7 +39,7 @@ All the  guidelines shown and used in this document are a set of rules and conve
 
 The application templates given in the bundle are ready to use. 
 
-At the moment .net Core template is supported. The template is ready to be used as a simple console Kestrel application or being deployed in a web server like` IIS`.
+At the moment .net Core template is supported. The template is ready to be used as a simple console Kestrel application or being deployed in a web server like IIS.
 
 
 === [navy]#Samples#
@@ -52,7 +52,7 @@ NOTE: As devon4net has been migrated to the latest version of .net core, the tem
 
 == [navy]#Cookbook#
 === [navy]#Data management#
-To use` EF` Core, install the package for the database provider(s) you want to target. This walk-through uses SQL Server.
+To use `EF` Core, install the package for the database provider(s) you want to target. This walk-through uses SQL Server.
 
 For a list of available providers see https://docs.microsoft.com/en-us/ef/core/providers/index[Database Providers]
     
@@ -116,13 +116,13 @@ Where:
 
 The supported databases are:
 
-        - `SqlServer`
+        - SqlServer
         - Sqlite
-        - `InMemory`
+        - InMemory
         - Cosmos
         - PostgreSQL
-        - `MySql`
-        - `MariaDb`
+        - MySql
+        - MariaDb
         - FireBird
         - Oracle
         - MSAccess
@@ -153,12 +153,12 @@ For example, My Thai Star Booking controller constructor looks like this:
 
 
 
-Currently devon4net has a _Unit of Work_ class in order to perform` CRUD` operations to database making use of your designed model context.
+Currently devon4net has a _Unit of Work_ class in order to perform CRUD operations to database making use of your designed model context.
 
 _Repositories_ are declared at _devon4net.Domain.UnitOfWork_ project and make use of _Unit of Work_ class.
 
 
-The common methods to perform` CRUD` operations (where <T> is an entity from your model) are:
+The common methods to perform CRUD operations (where <T> is an entity from your model) are:
 
 
 * Sync methods:
@@ -192,9 +192,9 @@ If you perform a Commit operation and an error happens, changes will be rolled b
 
 === [navy]#Swagger integration#
 
-The given templates allow you to specify the` API` contract through Swagger integration and the controller classes are the responsible of exposing methods making use of comments in the source code.
+The given templates allow you to specify the API contract through Swagger integration and the controller classes are the responsible of exposing methods making use of comments in the source code.
 
-The next example shows how to comment the method with summaries in order to define the contract. Add (Triple Slash)` XML` Documentation To Swagger:
+The next example shows how to comment the method with summaries in order to define the contract. Add (Triple Slash) XML Documentation To Swagger:
 
 [Source,c#]
 ----
@@ -217,7 +217,7 @@ public async Task<IActionResult> BookingSearch([FromBody]BookingSearchDto bookin
 ----
 
 
-In order to be effective and make use of the comments to build the` API` contract, the project which contains the controller classes must generate the` XML` document file. To achieve this, the` XML` documentation file must be checked in project settings tab:
+In order to be effective and make use of the comments to build the API contract, the project which contains the controller classes must generate the XML document file. To achieve this, the XML documentation file must be checked in project settings tab:
 
 [[img-t-architecture]]
 .Project settings tab
@@ -231,7 +231,7 @@ We propose to generate the file under the `XmlDocumentation` folder. For example
 The file _devon4net.Business.Common.xml_ won't appear until you build the project. Once the file is generated, please modify its properties as a resource and set it to be _Copy always_ .
 
 [[img-t-architecture]]
-.Swagger` XML` document file properties
+.Swagger XML document file properties
 image::images/doc_copy_always.png["technical architecture", width="450", link="images/doc_copy_always.png"]
 
 Once you have this, the swagger user interface will show the method properties defined in your controller comments. 
@@ -244,7 +244,7 @@ Swagger comment:
 |=======================
 |*Comment*|*Functionality*
 |<summary>| Will map to the operation's summary
-|<remarks>| Will map to the operation's description (shown as "Implementation Notes" in the` UI`)
+|<remarks>| Will map to the operation's description (shown as "Implementation Notes" in the UI)
 |<response code="\###">| Specifies the different response of the target method
 |<param>| Will define the parameter(s) of the target method
 |
@@ -268,9 +268,9 @@ devon4net can write the log information to a SQLite database. You can configure 
 With this method you can launch queries in order to search the information you are looking for.
 
 ==== [navy]#Seq log#
-devon4net can write the log information to a serilog server. You can configure the serilog` URL` at appsettings.json file (SeqLogServerUrl attribute) at devon4net.Application.WebApi project.
+devon4net can write the log information to a serilog server. You can configure the serilog URL at appsettings.json file (SeqLogServerUrl attribute) at devon4net.Application.WebApi project.
 
-With this method you can make queries via` HTTP`.
+With this method you can make queries via HTTP.
 
 image::images/serilog_seq.png[, link="images/serilog_seq.png"]
 
@@ -279,15 +279,15 @@ By default you can find the log information at _Logs_ folder.
 
 === [navy]#JWT module#
 
-JSON Web Tokens are an open, industry standard` RFC` 7519 method for representing claims securely between two parties allowing you to decode, verify and generate` JWT`.
+JSON Web Tokens are an open, industry standard RFC 7519 method for representing claims securely between two parties allowing you to decode, verify and generate JWT.
 
-You should use` JWT` for:
+You should use JWT for:
 
 - Authentication : allowing the user to access routes, services, and resources that are permitted with that token.
 
-- Information Exchange:` JSON` Web Tokens are a good way of securely transmitting information between parties.  Additionally, as the signature is calculated using the header and the payload, you can also verify that the content.
+- Information Exchange: JSON Web Tokens are a good way of securely transmitting information between parties.  Additionally, as the signature is calculated using the header and the payload, you can also verify that the content.
 
-The` JWT` module is configured at Startup.cs inside devon4net.Application.WebApi project from .NET Core template. In this class you can configure the different authentication policy and` JWT` properties.
+The JWT module is configured at Startup.cs inside devon4net.Application.WebApi project from .NET Core template. In this class you can configure the different authentication policy and JWT properties.
 
 Once the user has been authenticated, the client perform the call to the backend with the attribute _Bearer_ plus the token generated at server side. 
 
@@ -295,14 +295,14 @@ image::images/jwt.png[, link="images/jwt.png"]
 
 On My Thai Star sample there are two predefined users: user0 and Waiter. Once they log in the application, the client (Angular/Xamarin) will manage the server call with the json web token. With this method we can manage the server authentication and authorization.
 
-You can find more information about` JWT` at  https://jwt.io[jwt.io]
+You can find more information about JWT at  https://jwt.io[jwt.io]
 
 
 === [navy]#AOP module#
 
-AOP (Aspect Oriented Programming) tracks al information when a method is call.` AOP` also tracks the input and output data when a method is call.
+AOP (Aspect Oriented Programming) tracks al information when a method is call.`AOP` also tracks the input and output data when a method is call.
 
-By default devon4net has` AOP` module pre-configured and activated for controllers at Startup.cs file at devon4net.Application.WebApi:
+By default devon4net has `AOP` module pre-configured and activated for controllers at Startup.cs file at devon4net.Application.WebApi:
 
 
 [Source,c#]
@@ -338,7 +338,7 @@ Docker configuration and docker-compose files are provided.
 == [navy]#Testing with XUnit#
 [quote, About xUnit.net, https://xunit.github.io/#documentation]
 ____
-xUnit.net is a free, open source, community-focused unit testing tool for the .NET Framework. Written by the original inventor of NUnit v2, xUnit.net is the latest technology for unit testing C#, F#, VB.NET and other .NET languages. xUnit.net works with `ReSharper`, `CodeRush`, TestDriven.NET and Xamarin. It is part of the .NET Foundation, and operates under their code of conduct. It is licensed under Apache 2 (an` OSI` approved license).
+xUnit.net is a free, open source, community-focused unit testing tool for the .NET Framework. Written by the original inventor of NUnit v2, xUnit.net is the latest technology for unit testing C#, F#, VB.NET and other .NET languages. xUnit.net works with `ReSharper`, `CodeRush`, TestDriven.NET and Xamarin. It is part of the .NET Foundation, and operates under their code of conduct. It is licensed under Apache 2 (an OSI approved license).
 ____
 
 _Facts_ are tests which are always true. They test invariant conditions.
@@ -451,7 +451,7 @@ Supported operating systems:
 * Windows 7 and newer
 * Windows Server 2008 R2 and newer*
 
-`WebListener` server will not work in a reverse-proxy configuration with` IIS`. You must use the https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?tabs=aspnetcore2x[Kestrel server].
+`WebListener` server will not work in a reverse-proxy configuration with IIS. You must use the https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?tabs=aspnetcore2x[Kestrel server].
 
 [underline]#IIS configuration#
 
@@ -459,18 +459,18 @@ Enable the Web Server (IIS) role and establish role services.
 
 *Windows desktop operating systems*
 
-Navigate to Control Panel > Programs > Programs and Features > Turn Windows features on or off (left side of the screen). Open the group for Internet Information Services and Web Management Tools. Check the box for` IIS` Management Console. Check the box for World Wide Web Services. Accept the default features for World Wide Web Services or customize the` IIS` features to suit your needs.
+Navigate to Control Panel > Programs > Programs and Features > Turn Windows features on or off (left side of the screen). Open the group for Internet Information Services and Web Management Tools. Check the box for IIS Management Console. Check the box for World Wide Web Services. Accept the default features for World Wide Web Services or customize the IIS features to suit your needs.
 
 image::images/iis_1.png[, link="images/iis_1.png"]
 
-*Conceptually, the` IIS` configuration described in this document also applies to hosting ASP.NET Core applications on Nano Server` IIS`, but refer to ASP.NET Core with` IIS` on Nano Server for specific instructions.
+*Conceptually, the IIS configuration described in this document also applies to hosting ASP.NET Core applications on Nano Server IIS, but refer to ASP.NET Core with IIS on Nano Server for specific instructions.
 
 *Windows Server operating systems*
 For server operating systems, use the Add Roles and Features wizard via the Manage menu or the link in Server Manager. On the Server Roles step, check the box for Web Server (IIS).
 
 image::images/iis_2.png[, link="images/iis_2.png"]
 
-On the Role services step, select the` IIS` role services you desire or accept the default role services provided.
+On the Role services step, select the IIS role services you desire or accept the default role services provided.
 
 image::images/iis_3.png[, link="images/iis_3.png"]
 Proceed through the Confirmation step to install the web server role and services. A server/IIS restart is not required after installing the Web Server (IIS) role.
@@ -478,12 +478,12 @@ Proceed through the Confirmation step to install the web server role and service
 
 [underline]#Install the .NET Core Windows Server Hosting bundle#
 
-. Install the .NET Core Windows Server Hosting bundle on the hosting system. The bundle will install the .NET Core Runtime, .NET Core Library, and the ASP.NET Core Module. The module creates the reverse-proxy between` IIS` and the Kestrel server. Note: If the system doesn't have an Internet connection, obtain and install the Microsoft Visual C++ 2015 Redistributable before installing the .NET Core Windows Server Hosting bundle.
+. Install the .NET Core Windows Server Hosting bundle on the hosting system. The bundle will install the .NET Core Runtime, .NET Core Library, and the ASP.NET Core Module. The module creates the reverse-proxy between IIS and the Kestrel server. Note: If the system doesn't have an Internet connection, obtain and install the Microsoft Visual C++ 2015 Redistributable before installing the .NET Core Windows Server Hosting bundle.
 
-. Restart the system or execute net stop was /y followed by net start w3svc from a command prompt to pick up a change to the system` PATH`.
+. Restart the system or execute net stop was /y followed by net start w3svc from a command prompt to pick up a change to the system `PATH`.
 
 
-NOTE: If you use an` IIS` Shared Configuration, see ASP.NET Core Module with` IIS` Shared Configuration.
+NOTE: If you use an IIS Shared Configuration, see ASP.NET Core Module with IIS Shared Configuration.
 
 To configure IISIntegration service options, include a service configuration for IISOptions in `ConfigureServices`:
 
@@ -499,15 +499,15 @@ services.Configure<IISOptions>(options =>
 [options="header"]
 |=======================
 |Option|Default|Setting
-|`AutomaticAuthentication`| true |If true, the authentication middleware sets the HttpContext.User and responds to generic challenges. If false, the authentication middleware only provides an identity (HttpContext.User) and responds to challenges when explicitly requested by the `AuthenticationScheme`. Windows Authentication must be enabled in` IIS` for `AutomaticAuthentication` to function.
+|`AutomaticAuthentication`| true |If true, the authentication middleware sets the HttpContext.User and responds to generic challenges. If false, the authentication middleware only provides an identity (HttpContext.User) and responds to challenges when explicitly requested by the `AuthenticationScheme`. Windows Authentication must be enabled in IIS for `AutomaticAuthentication` to function.
 |AuthenticationDisplayName | null| 	Sets the display name shown to users on login pages.
-|ForwardClientCertificate |true|If true and the ` MS-ASPNETCORE-CLIENTCERT` request header is present, the HttpContext.Connection.ClientCertificate is populated.
+|ForwardClientCertificate |true|If true and the `MS-ASPNETCORE-CLIENTCERT` request header is present, the HttpContext.Connection.ClientCertificate is populated.
 |=======================
 
 
 [underline]#web.config#
 
-The web.config file configures the ASP.NET Core Module and provides other` IIS` configuration. Creating, transforming, and publishing web.config is handled by Microsoft.NET.Sdk.Web, which is included when you set your project's` SDK` at the top of your .csproj file, <Project Sdk="Microsoft.NET.Sdk.Web">. To prevent the MSBuild target from transforming your web.config file, add the <IsTransformWebConfigDisabled> property to your project file with a setting of true:
+The web.config file configures the ASP.NET Core Module and provides other IIS configuration. Creating, transforming, and publishing web.config is handled by Microsoft.NET.Sdk.Web, which is included when you set your project's SDK at the top of your .csproj file, <Project Sdk="Microsoft.NET.Sdk.Web">. To prevent the MSBuild target from transforming your web.config file, add the <IsTransformWebConfigDisabled> property to your project file with a setting of true:
 
 [source, xml]
 ----
@@ -521,7 +521,7 @@ In order to deploy your application to Azure platform you can follow the instruc
 
 *Set up the development environment*
 
-*   Install the latest&nbsp;https://www.visualstudio.com/vs/azure-tools/[Azure` SDK` for Visual Studio]. The` SDK` installs Visual Studio if you don't already have it.
+*   Install the latest&nbsp;https://www.visualstudio.com/vs/azure-tools/[Azure SDK for Visual Studio]. The SDK installs Visual Studio if you don't already have it.
 
 *   Verify your&nbsp;https://portal.azure.com/[Azure account]. You can&nbsp;https://azure.microsoft.com/pricing/free-trial/[open a free Azure account]&nbsp;or&nbsp;https://azure.microsoft.com/pricing/member-offers/msdn-benefits-details/[Activate Visual Studio subscriber benefits].
 
@@ -569,11 +569,11 @@ image::./offline/azure_files/show.png[Web application open in Microsoft Edge on 
 
 *   Select&nbsp;**Register**&nbsp;and register a new user. You can use a fictitious email address. When you submit, the page displays the following error:
 
-__"Internal Server Error: A database operation failed while processing the request.` SQL` exception: Cannot open the database. Applying existing migrations for Application` DB` context may resolve this issue."__
+__"Internal Server Error: A database operation failed while processing the request. SQL exception: Cannot open the database. Applying existing migrations for Application DB context may resolve this issue."__
 
 *   Select&nbsp;**Apply Migrations**&nbsp;and, once the page updates, refresh the page.
 
-image::../offline/azure_files/mig.png[Internal Server Error: A database operation failed while processing the request.` SQL` exception: Cannot open the database. Applying existing migrations for Application` DB` context may resolve this issue.]
+image::../offline/azure_files/mig.png[Internal Server Error: A database operation failed while processing the request. SQL exception: Cannot open the database. Applying existing migrations for Application DB context may resolve this issue.]
 
 The app displays the email used to register the new user and a&nbsp;**Log out**&nbsp;link.
 
@@ -603,15 +603,15 @@ image::./offline/azure_files/newrg1.png[App Service dialog]
 
 *   Select the&nbsp;**Services**&nbsp;tab to create a new database.
 
-*   Select the green&nbsp;**+**&nbsp;icon to create a new` SQL` Database
+*   Select the green&nbsp;**+**&nbsp;icon to create a new SQL Database
 
-image::./offline/azure_files/sql.png[New` SQL` Database]
+image::./offline/azure_files/sql.png[New SQL Database]
 
-*   Select&nbsp;**New...**&nbsp;on the&nbsp;**Configure` SQL` Database**&nbsp;dialog to create a new database.
+*   Select&nbsp;**New...**&nbsp;on the&nbsp;**Configure SQL Database**&nbsp;dialog to create a new database.
 
-image::./offline/azure_files/conf.png[New` SQL` Database and server]
+image::./offline/azure_files/conf.png[New SQL Database and server]
 
-The&nbsp;**Configure` SQL` Server**&nbsp;dialog appears.
+The&nbsp;**Configure SQL Server**&nbsp;dialog appears.
 
 *   Enter an administrator user name and password, and then select&nbsp;**OK**. Don't forget the user name and password you create in this step. You can keep the default&nbsp;**Server Name**.
 
@@ -621,7 +621,7 @@ The&nbsp;**Configure` SQL` Server**&nbsp;dialog appears.
 
 "admin" is not allowed as the administrator user name.
 
-image::./offline/azure_files/conf_servername.png[Configure` SQL` Server dialog]
+image::./offline/azure_files/conf_servername.png[Configure SQL Server dialog]
 
 *   Select&nbsp;**OK**.
 
@@ -629,7 +629,7 @@ Visual Studio returns to the&nbsp;**Create App Service**&nbsp;dialog.
 
 *   Select&nbsp;**Create**&nbsp;on the&nbsp;**Create App Service**&nbsp;dialog.
 
-image::./azure_files/conf_final.png[Configure` SQL` Database dialog]
+image::./azure_files/conf_final.png[Configure SQL Database dialog]
 
 *   Click the&nbsp;**Settings**&nbsp;link in the&nbsp;**Publish**&nbsp;dialog.
 
@@ -698,7 +698,7 @@ image::./offline/azure_files/rgd.png[Azure Portal: Resource Groups page]
 *   Enter the name of the resource group and select&nbsp;**Delete**. Your app and all other resources created in this tutorial are now deleted from Azure.
 
 == [navy]#External links#
-https://docs.microsoft.com/en-us/aspnet/core/publishing/iis?tabs=aspnetcore2x[Publishing .Net Core on` IIS`]
+https://docs.microsoft.com/en-us/aspnet/core/publishing/iis?tabs=aspnetcore2x[Publishing .Net Core on IIS]
 
 https://docs.microsoft.com/en-us/aspnet/core/hosting/aspnet-core-module#aspnet-core-module-with-an-iis-shared-configuration[IIS Shared configuration]
 
