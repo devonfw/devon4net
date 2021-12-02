@@ -109,7 +109,7 @@ Where:
 |=======================
 |*Param*|*Description*
 |`TodoContext`| Is the database context definition
-|Default| Is the connection string defined at _ConnectionString_ node at the appsettings configuration file 
+|Default| Is the connection string defined at `_ConnectionString_` node at the appsettings configuration file 
 |WebAPI.Configuration.Enums.DatabaseType.InMemory| Is the database driver selection. In this case `InMemory` data base is chosen
 |=======================
 
@@ -267,7 +267,7 @@ devon4net can write the log information to a SQLite database. You can configure 
 With this method you can launch queries in order to search the information you are looking for.
 
 ==== [navy]#Seq log#
-devon4net can write the log information to a serilog server. You can configure the serilog URL at appsettings.json file (SeqLogServerUrl attribute) at devon4net.Application.WebApi project.
+devon4net can write the log information to a serilog server. You can configure the serilog URL at appsettings.json file `(SeqLogServerUrl attribute)` at devon4net.Application.WebApi project.
 
 With this method you can make queries via HTTP.
 
@@ -299,7 +299,7 @@ You can find more information about JWT at  https://jwt.io[jwt.io]
 
 === [navy]#AOP module#
 
-AOP (Aspect Oriented Programming) tracks al information when a method is call.`AOP` also tracks the input and output data when a method is call.
+AOP (Aspect Oriented Programming) tracks all information when a method is call.`AOP` also tracks the input and output data when a method is call.
 
 By default devon4net has `AOP` module pre-configured and activated for controllers at Startup.cs file at devon4net.Application.WebApi:
 
@@ -337,7 +337,7 @@ Docker configuration and docker-compose files are provided.
 == [navy]#Testing with XUnit#
 [quote, About xUnit.net, https://xunit.github.io/#documentation]
 ____
-xUnit.net is a free, open source, community-focused unit testing tool for the .NET Framework. Written by the original inventor of NUnit v2, xUnit.net is the latest technology for unit testing C#, F#, VB.NET and other .NET languages. xUnit.net works with `ReSharper`, `CodeRush`, TestDriven.NET and Xamarin. It is part of the .NET Foundation, and operates under their code of conduct. It is licensed under Apache 2 (an OSI approved license).
+xUnit.net is a free, open source, community-focused unit testing tool for the .NET Framework. Written by the original inventor of NUnit v2, xUnit.net is the latest technology for unit testing C#, F#, VB.NET and other .NET languages. xUnit.net works with `ReSharper`, `CodeRush`, `TestDriven.NET` and Xamarin. It is part of the .NET Foundation, and operates under their code of conduct. It is licensed under Apache 2 (an OSI approved license).
 ____
 
 _Facts_ are tests which are always true. They test invariant conditions.
@@ -400,6 +400,9 @@ bool IsOdd(int value)
 
 [Fact]
 
+[Source,c#]
+----
+
 public void Test() 
 {
 }
@@ -422,6 +425,8 @@ public void Dispose() {
  }
  
 }
+
+----
 |=======================
 
 
@@ -477,7 +482,7 @@ Proceed through the Confirmation step to install the web server role and service
 
 [underline]#Install the .NET Core Windows Server Hosting bundle#
 
-. Install the .NET Core Windows Server Hosting bundle on the hosting system. The bundle will install the .NET Core Runtime, .NET Core Library, and the ASP.NET Core Module. The module creates the reverse-proxy between IIS and the Kestrel server. Note: If the system doesn't have an Internet connection, obtain and install the Microsoft Visual C++ 2015 Redistributable before installing the .NET Core Windows Server Hosting bundle.
+. Install the .NET Core Windows Server Hosting bundle on the hosting system. The bundle will install the .NET Core Runtime, .NET Core Library, and the ASP.NET Core Module. The module creates the reverse-proxy between IIS and the Kestrel server. Note: If the system doesn't have an Internet connection, obtain and install the Microsoft Visual C++ 2015 Re-distributable before installing the .NET Core Windows Server Hosting bundle.
 
 . Restart the system or execute net stop was /y followed by net start w3svc from a command prompt to pick up a change to the system `PATH`.
 
@@ -499,14 +504,14 @@ services.Configure<IISOptions>(options =>
 |=======================
 |Option|Default|Setting
 |`AutomaticAuthentication`| true |If true, the authentication middleware sets the HttpContext.User and responds to generic challenges. If false, the authentication middleware only provides an identity (HttpContext.User) and responds to challenges when explicitly requested by the Authentication Scheme. Windows Authentication must be enabled in IIS for `AutomaticAuthentication` to function.
-|AuthenticationDisplayName | null| 	Sets the display name shown to users on login pages.
-|ForwardClientCertificate |true|If true and the `MS-ASPNETCORE-CLIENTCERT` request header is present, the HttpContext.Connection.ClientCertificate is populated.
+|`AuthenticationDisplayName` | null| 	Sets the display name shown to users on login pages.
+|`ForwardClientCertificate` |true|If true and the `MS-ASPNETCORE-CLIENTCERT` request header is present, the `HttpContext.Connection.ClientCertificate` is populated.
 |=======================
 
 
 [underline]#web.config#
 
-The web.config file configures the ASP.NET Core Module and provides other IIS configuration. Creating, transforming, and publishing web.config is handled by Microsoft.NET.Sdk.Web, which is included when you set your project's SDK at the top of your .csproj file, <Project Sdk="Microsoft.NET.Sdk.Web">. To prevent the MSBuild target from transforming your web.config file, add the <IsTransformWebConfigDisabled> property to your project file with a setting of true:
+The web.config file configures the ASP.NET Core Module and provides other IIS configuration. Creating, transforming, and publishing web.config is handled by Microsoft.NET.Sdk.Web, which is included when you set your project's SDK at the top of your .csproj file, <Project Sdk="Microsoft.NET.Sdk.Web">. To prevent the MSBuild target from transforming your web.config file, add the `<IsTransformWebConfigDisabled>` property to your project file with a setting of true:
 
 [source, xml]
 ----
@@ -656,7 +661,7 @@ image::./offline/azure_files/register.png[Web application opened in Microsoft Ed
 
 *Update the app*
 
-*   Edit the&nbsp;__Pages/About.cshtml__&nbsp;Razor page and change its contents. For example, you can modify the paragraph to say "Hello ASP.NET Core!":
+*   Edit `the&nbsp;__Pages/About.cshtml__&nbsp;Razor` page and change its contents. For example, you can modify the paragraph to say "Hello ASP.NET Core!":
 
     html<button class="action copy" data-bi-name="copy">Copy</button>
 

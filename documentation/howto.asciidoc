@@ -679,7 +679,7 @@ The supported databases are:
 
 == Change the JWT encryption algorithm
 
-In the appsettings.json configuration file, you can use the next values on the _SecretKeyLengthAlgorithm_ and _SecretKeyEncryptionAlgorithm_ nodes at JWT configuration:
+In the appsettings.json configuration file, you can use the next values on the `_SecretKeyLengthAlgorithm_` and `_SecretKeyEncryptionAlgorithm_` nodes at JWT configuration:
 
 
 [options="header"]
@@ -697,8 +697,8 @@ In the appsettings.json configuration file, you can use the next values on the _
 |`RsaOaepKeyWrap`|"http://www.w3.org/2001/04/xmlenc#rsa-oaep"
 |`Aes128KW`|"A128KW"
 |`Aes256KW`|"A256KW"
-|`RsaPKCS1`|"RSA1_5"
-|`RsaOAEP`|"RSA-OAEP"
+|`RsaPKCS1`|`"RSA1_5"`
+|`RsaOAEP`|`"RSA-OAEP"`
 |`ExclusiveC14n`|"http://www.w3.org/2001/10/xml-exc-c14n#"
 |`ExclusiveC14nWithComments`|"http://www.w3.org/2001/10/xml-exc-c14n#WithComments"
 |`EnvelopedSignature`|"http://www.w3.org/2000/09/xmldsig#enveloped-signature"
