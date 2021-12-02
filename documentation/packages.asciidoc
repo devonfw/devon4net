@@ -30,8 +30,7 @@ The devon4Net web API configuration core.
 
 ==== Default configuration values
 
-[source, json]
-----
+```
 
   "devonfw": {
     "UseDetailedErrorsKey": true,
@@ -76,7 +75,7 @@ The devon4Net web API configuration core.
       "AuthenticationDisplayName" : ""
     }
   }
-----
+```
 
 === Devon4Net.Infrastructure.CircuitBreaker
 ==== Description
@@ -90,8 +89,7 @@ The Devon4Net.Infrastructure.CircuitBreaker component implements the retry patte
 
 ==== Default configuration values
 
-[source, json]
-----
+```
   "CircuitBreaker": {
     "CheckCertificate": true,
     "Endpoints": [
@@ -113,7 +111,7 @@ The Devon4Net.Infrastructure.CircuitBreaker component implements the retry patte
       }
     ]
   }
-----
+```
 [options="header"]
 |=======================
 |*Property*|*Description*
@@ -327,8 +325,7 @@ ____
 
 ==== Default configuration values
 
-[source, json]
-----
+```
 "JWT": {
     "Audience": "devon4Net",
     "Issuer": "devon4Net",
@@ -345,7 +342,7 @@ ____
       "CertificateEncryptionAlgorithm": ""
     }
   }
-----
+```
 
 
 - `_ClockSkew_` indicates the token expiration time in minutes
@@ -515,8 +512,7 @@ or on:
 
 
 
-[source, json]
-----
+```
 "Swagger": {
     "Version": "v1",
     "Title": "devon4net API",
@@ -538,7 +534,7 @@ or on:
       "RouteTemplate": "swagger/v1/{documentName}/swagger.json"
     }
   }
-----
+```
 
 - Add this line of code (only if you use this component stand alone):
 
