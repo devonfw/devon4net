@@ -680,9 +680,9 @@ The supported databases are:
         - MSAccess
 
 
-== Change the` JWT` encryption algorithm
+== Change the JWT encryption algorithm
 
-In the appsettings.json configuration file, you can use the next values on the _SecretKeyLengthAlgorithm_ and _SecretKeyEncryptionAlgorithm_ nodes at` JWT` configuration:
+In the appsettings.json configuration file, you can use the next values on the _SecretKeyLengthAlgorithm_ and _SecretKeyEncryptionAlgorithm_ nodes at JWT configuration:
 
 
 [options="header"]
