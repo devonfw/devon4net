@@ -107,7 +107,7 @@ image::images/BussinessConfiguration.png["cobigen", width=="800", link=="images/
 
 Moreover it is needed to remove the last line in order to be able to run the application:
 
-    throw new NotImplementedException(...);
+    `throw new NotImplementedException(...);`
 
 ==== [navy]#Configure data base#
 

@@ -61,7 +61,7 @@ PE: devon4Net API template shows how to implement the TODOs service as follows:
     public class TodoService: Service<TodoContext>, ITodoService
 ----
 
-Where _Service_ is the base service class to be inherited and have full access for the _Unit of work_, _TodoContext_ is the TODOs database context and _ITodoService_ is the interface of the service, which exposes the public extended methods to be implemented.
+Where _Service_ is the base service class to be inherited and have full access for the _Unit of work_, `_TodoContext_` is the TODOs database context and _ITodoService_ is the interface of the service, which exposes the public extended methods to be implemented.
 
 
 ==== Data layer
@@ -177,10 +177,10 @@ Included features:
 
 - Headers:
               - Automatic header injection with middleware.
-              - Supported header definitions: AccessControlExposeHeader, StrictTransportSecurityHeader, XFrameOptionsHeader, XssProtectionHeader, XContentTypeOptionsHeader, ContentSecurityPolicyHeader, PermittedCrossDomainPoliciesHeader, ReferrerPolicyHeader
+              - Supported header definitions: `AccessControlExposeHeader, StrictTransportSecurityHeader, XFrameOptionsHeader, XssProtectionHeader, XContentTypeOptionsHeader, ContentSecurityPolicyHeader, PermittedCrossDomainPoliciesHeader, ReferrerPolicyHeader`
 
 - Reporting server:
-              - Partial implementation of reporting server based on My-FyiReporting (now runs on linux container)
+              - Partial implementation of reporting server based on My-Fyi-Reporting (now runs on linux container)
 
 - Testing:
               - Integration test template with sqlite support
@@ -200,18 +200,18 @@ Included features:
             - Use of EasyQNet library to perform CQRS main functions between different microservices
             - Send commands / Subscribe queues with one C# sentence
             - Events management: Handled received commands to subscribed messages
-            - Automatic messaging backup when sent and handled (Internal database via LiteDB and database backup via Entity Framework)
+            - Automatic messaging backup when sent and handled (Internal database via `LiteDB` and database backup via Entity Framework)
 
 - `MediatR`:
             - Use of `MediatR` library to perform CQRS main functions in memory
             - Send commands / Subscribe queues with one C# sentence
             - Events management: Handled received commands to subscribed messages
-            - Automatic messaging backup when sent and handled (Internal database via LiteDB and database backup via Entity Framework)
+            - Automatic messaging backup when sent and handled (Internal database via `LiteDB` and database backup via Entity Framework)
 - `SmaxHcm`:
             - Component to manage Microfocus `SMAX` for cloud infrastructure services management
 
-- `CyberArk`:
-            - Manage safe credentials with `CyberArk`
+- CyberArk:
+            - Manage safe credentials with CyberArk
 
 - `AnsibleTower`:
             - Ansible automates the cloud infrastructure. devon4net integrates with Ansible Tower via API consumption endpoints

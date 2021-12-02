@@ -1005,13 +1005,12 @@ Please refer to https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=
 
 - To use CORS in your API methods, use the next notation:
 
-[source,C#]
-----    
+```    
 [EnableCors("YourCorsPolicy")] 
 public IActionResult Index() {  
     return View();  
 }  
-----
+```
     
     
 - if you want to disable the CORS check use the following annotation:
