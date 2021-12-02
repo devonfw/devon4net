@@ -348,11 +348,11 @@ ____
 ----
 
 
-- _ClockSkew_ indicates the token expiration time in minutes
+- `_ClockSkew_` indicates the token expiration time in minutes
 
-- _Certificate_ you can specify the name of your certificate (if it is on the same path) or the full path of the certificate. If the certificate does not exists an exception will be raised.
+- `_Certificate_` you can specify the name of your certificate (if it is on the same path) or the full path of the certificate. If the certificate does not exists an exception will be raised.
 
-- _SecretKeyLengthAlgorithm_, _SecretKeyEncryptionAlgorithm_ and _CertificateEncryptionAlgorithm_ supported algorithms are:
+- `_SecretKeyLengthAlgorithm_`, `_SecretKeyEncryptionAlgorithm_` and `_CertificateEncryptionAlgorithm_` supported algorithms are:
 
 [options="header"]
 |=======================
@@ -418,10 +418,9 @@ NOTE: Please check https://github.com/AzureAD/azure-activedirectory-identitymode
 
 - Add this line of code  (only if you use this component stand alone):
 
-[source, C#]
-----
+```
 services.AddBusinessCommonJwtPolicy();
-----
+```
 
 
 On
@@ -478,8 +477,7 @@ or on:
 - You can configure your Middleware configuration on _appsettings.{environment}.json_:
 
 
-[source, json]
-----
+```
 
 "Middleware": {
     "Headers": {
@@ -493,7 +491,7 @@ or on:
       "ReferrerPolicyHeader": ""
     }
 }
-----
+```
 
 - On the above sample, the server application will add to response header the `AccessControlExposeHeader`, XFrameOptionsHeader, XssProtectionHeader and XContentTypeOptionsHeader headers.
 - If the header response type does not have a value, it will not be added to the response headers.
@@ -577,8 +575,7 @@ On
 
 - In order to generate the documentation annotate your actions with summary, remarks and response tags:
 
-[sourcecode, C#]
-----
+```
 /// <summary>
 /// Method to make a reservation with potential guests. The method returns the reservation token with the format: {(CB_|GB_)}{now.Year}{now.Month:00}{now.Day:00}{_}{MD5({Host/Guest-email}{now.Year}{now.Month:00}{now.Day:00}{now.Hour:00}{now.Minute:00}{now.Second:00})}
 /// </summary>
@@ -593,14 +590,14 @@ On
 [Route("/mythaistar/services/rest/bookingmanagement/v1/booking")]
 [AllowAnonymous]
 [EnableCors("CorsPolicy")]
-public async Task<IActionResult> BookingBooking([FromBody]BookingDto bookingDto)
+public async Task<IActionResult> Booking([FromBody]BookingDto bookingDto)
 {
     try
     {
 
     ...
 
-----
+```
 
 - Ensure that your project has the _generateXMLdocumentationfile_ check active on build menu:
 
@@ -655,8 +652,7 @@ devon4Net.Domain.Context contains the extended class devon4NetBaseContext in ord
 
 - Add to _appsettings.{environment}.json_ file your database connections:
 
-[source,json]
-----
+```
 "ConnectionStrings": 
 {
 "DefaultConnection": 
@@ -667,7 +663,7 @@ devon4Net.Domain.Context contains the extended class devon4NetBaseContext in ord
     
 "SqliteConnection": "Data Source=c:\\tmp\\membership.db;"
 }
-----
+```
 
 
 
@@ -700,22 +696,20 @@ devon4Net Application user classes to implement basic Microsoft's basic authenti
 
 - Add the database connection string for user management on _appsettings.{environment}.json_:
 
-[source,json]
-----
+```
 "ConnectionStrings": 
 {
 "AuthConnection":
 "Server=(localdb)\\mssqllocaldb;Database=aspnet-DualAuthCore-5E206A0B-D4DA-4E71-92D3-87FD6B120C5E;Trusted_Connection=True;MultipleActiveResultSets=true"
 }
-----
+```
 
 
 - Add the following line of code
 
-[source, C#]
-----
+```
 services.AddApplicationUserDependencyInjection();
-----
+```
 
 On
 
@@ -747,14 +741,14 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataSeed
 ==== Notes
 
 - You can use the following methods to set up the database configuration:
-[source, C#]
-----
+
+```
 public static void AddApplicationUserDbContextInMemoryService(this IServiceCollection services)
 
 public static void AddApplicationUserDbContextSQliteService(this IServiceCollection services, string connectionString)
 
 public static void AddApplicationUserDbContextSQlServerService(this IServiceCollection services, string connectionString)
-----
+```
 
 - The method `_AddApplicationUserDbContextInMemoryService_` uses the _AuthContext_ connection string name to set up the database.
 
@@ -774,13 +768,12 @@ Basic client classes to  invoke` GET`/POST methods asynchronously. This componen
 - Create an instance of _RestManagementService_ class.
 - Use next methods to use GET/POST basic options:
 
-[source, C#]
-----
+```
 public Task<string> CallGetMethod(string url);
 public Task<Stream> CallGetMethodAsStream(string url);
 public Task<string> CallPostMethod<T>(string url, T dataToSend);
 public Task<string> CallPutMethod<T>(string url, T dataToSend);
-----
+```
 
 
 ==== Notes
@@ -940,10 +933,9 @@ Simple AOP Exception handler for .Net Controller classes integrated with Serilog
 
 Add this line of code on `ConfigureServices` method on Startup.cs
 
-[source, C#]
-----
+```
 services.AddAopAttributeService();
-----
+```
 
 
 
@@ -992,8 +984,7 @@ Please refer to https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=
 
 - On the other hand, you can specify different Cors policies in your solution as follows:
 
-[source,json]
-----
+```
 
 "Cors": []
 [
@@ -1012,7 +1003,7 @@ Please refer to https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=
     "AllowCredentials": true
   }
 ]
-----
+```
 
 ==== Notes
 
