@@ -120,7 +120,7 @@ image::images/CobigenContextLocation.png["cobigen", width=="350", link=="images/
 
 In order to finish the configuration of the services it is needed to go to each service file of the managements generated. 
 
-In there we will see some "NotImplementedExceptions", so it is needed to read carefully each comment inside of each exception in order to be able to use the service. It can be shown an example of the service with its NotImplementedExceptions comments:
+In there we will see some `"NotImplementedExceptions"`, so it is needed to read carefully each comment inside of each exception in order to be able to use the service. It can be shown an example of the service with its `NotImplementedExceptions` comments:
 
 [[img-cobigen]]
 image::images/ServiceExample.png["cobigen", width=="800", link=="images/ServiceExample.png]

@@ -173,7 +173,7 @@ Where:
 |NameOftheService| The key name of the endpoint provided in the appsettings.json file at Endpoints[] node
 |`EndPoint`|Part of the url to use with the base address. PE: _/validate_
 |`InputData`| Your instance of the class with values that you want to use in the POST call
-|MediaType.ApplicationJson| The media type flag for the POST call
+|`MediaType.ApplicationJson`| The media type flag for the POST call
 |=======================
 
 
@@ -434,7 +434,7 @@ or on:
 
 
 
-- Inside the _AddBusinessCommonJwtPolicy_ method you can add your  JWT Policy like in My Thai Star application sample:
+- Inside the `_AddBusinessCommonJwtPolicy_` method you can add your  JWT Policy like in My Thai Star application sample:
 
 [source, C#]
 ----
@@ -461,14 +461,14 @@ or on:
 
 - devon4Net supports the following automatic response headers:
 
-* AccessControlExposeHeader
-* StrictTransportSecurityHeader
-* XFrameOptionsHeader
-* XssProtectionHeader
-* XContentTypeOptionsHeader
-* ContentSecurityPolicyHeader
-* PermittedCrossDomainPoliciesHeader
-* ReferrerPolicyHeader:toc: macro
+* `AccessControlExposeHeader`
+* `StrictTransportSecurityHeader`
+* `XFrameOptionsHeader`
+* `XssProtectionHeader`
+* `XContentTypeOptionsHeader`
+* `ContentSecurityPolicyHeader`
+* `PermittedCrossDomainPoliciesHeader`
+* `ReferrerPolicyHeader:toc: macro`
 
 ==== Configuration
 - Install package on your solution:
@@ -495,7 +495,7 @@ or on:
 }
 ----
 
-- On the above sample, the server application will add to response header the AccessControlExposeHeader, XFrameOptionsHeader, XssProtectionHeader and XContentTypeOptionsHeader headers.
+- On the above sample, the server application will add to response header the `AccessControlExposeHeader`, XFrameOptionsHeader, XssProtectionHeader and XContentTypeOptionsHeader headers.
 - If the header response type does not have a value, it will not be added to the response headers.
 
 
@@ -756,7 +756,7 @@ public static void AddApplicationUserDbContextSQliteService(this IServiceCollect
 public static void AddApplicationUserDbContextSQlServerService(this IServiceCollection services, string connectionString)
 ----
 
-- The method _AddApplicationUserDbContextInMemoryService_ uses the _AuthContext_ connection string name to set up the database.
+- The method `_AddApplicationUserDbContextInMemoryService_` uses the _AuthContext_ connection string name to set up the database.
 
 - This component is used with the components _devon4Net.Infrastructure.JWT_ and _devon4Net.Infrastructure.JWT.MVC_.
 
