@@ -33,7 +33,7 @@ https://www.microsoft.com/net/core[.Net Core SDK]
 
 
 . Initialize a C# project:
-*   Open the Integrated Terminal from Visual Studio Code by typing CTRL+` (backtick). Alternatively, you can select **View** > **Integrated Terminal** from the main menu.
+*   Open the Integrated Terminal from Visual Studio Code by typing `CTRL+(backtick)`. Alternatively, you can select **View** > **Integrated Terminal** from the main menu.
 
 *   In the terminal window, type `dotnet new console`.
 

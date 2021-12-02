@@ -82,10 +82,9 @@ In order to design your database model from scratch, we encourage to follow the 
 
 * Run the following command to create a model from the existing database:
 
-[Source,c#]
-----
-`Scaffold-DbContext` "Your connection string to existing database" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
-----
+```
+Scaffold-DbContext "Your connection string to existing database" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+```
 
 The command will create the database context and the mapped entities as well inside of Models folder.
 
