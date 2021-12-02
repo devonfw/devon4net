@@ -37,7 +37,7 @@ You are ready to start developing with devon4Net
 [listing]
 ....
 Create a new dotnet` API` project from scratch
-Add the nuget package reference to your project:
+Add the NuGet package reference to your project:
 Install-Package Devon4Net.Application.WebAPI.Configuration
 ....
 
@@ -62,8 +62,7 @@ Set up your project as follows in program.cs file:
 
 Set up your project as follows in startup.cs file:
 
-[source, c#]
-----
+```
 
     private IConfiguration Configuration { get; }
 
@@ -95,7 +94,7 @@ Set up your project as follows in startup.cs file:
         ...
     }
     
-----
+```
 
 Add the devonfw configuration options in your appsettings.json file
 
@@ -155,8 +154,7 @@ To start using devon4net in your .net core application add this configuration in
 Also, for start using the devon4net components, you should add the next json options in your appsettings.json or appsettings.Development.json file:
 
 
-[source, json]
-----
+```
 {
   "ExtraSettingsFiles": [
     "Put a directory path (relative/absolute/linux-like) like /run/secrets/global where there are many settings/secret files to load",
@@ -422,7 +420,7 @@ Also, for start using the devon4net components, you should add the next json opt
 }
 
 
-----
+```
 
 == devon4net Cobigen Guide
 
@@ -526,7 +524,7 @@ image::images/BussinessConfiguration.png["cobigen", width=="800", link=="images/
 
 Moreover it is needed to remove the last line in order to be able to run the application:
 
-    throw new NotImplementedException(...);
+    `throw new NotImplementedException(...);`
 
 ==== Configure data base
 
@@ -539,7 +537,7 @@ image::images/CobigenContextLocation.png["cobigen", width=="350", link=="images/
 
 In order to finish the configuration of the services it is needed to go to each service file of the managements generated. 
 
-In there we will see some "NotImplementedExceptions", so it is needed to read carefully each comment inside of each exception in order to be able to use the service. It can be shown an example of the service with its NotImplementedExceptions comments:
+In there we will see some `"NotImplementedExceptions"`, so it is needed to read carefully each comment inside of each exception in order to be able to use the service. It can be shown an example of the service with its `NotImplementedExceptions` comments:
 
 [[img-cobigen]]
 image::images/ServiceExample.png["cobigen", width=="800", link=="images/ServiceExample.png]
@@ -648,13 +646,12 @@ openssl pkcs12 -export -out localhost.pfx -inkey localhost.key -in localhost.crt
 
 Add the database connection on the `SetupDatabase` method at Startup.cs
     
-[source, C#]
-----
+```
        private void SetupDatabase(IServiceCollection services)
         {
             services.SetupDatabase<TodoContext>(Configuration, "Default", WebAPI.Configuration.Enums.DatabaseType.InMemory);
         }
-----
+```
 
 Where: 
 
@@ -662,20 +659,20 @@ Where:
 |=======================
 |*Param*|*Description*
 |`TodoContext`| Is the database context definition
-|Default| Is the connection string defined at _ConnectionString_ node at the appsettings configuration file 
-|WebAPI.Configuration.Enums.DatabaseType.InMemory| Is the database driver selection. In this case `InMemory` data base is chosen
+|Default| Is the connection string defined at `_ConnectionString_` node at the appsettings configuration file 
+|`WebAPI.Configuration.Enums.DatabaseType.InMemory`| Is the database driver selection. In this case InMemory data base is chosen
 |=======================
 
 The supported databases are:
 
-        - `SqlServer`
+        - SqlServer
         - Sqlite
-        - `InMemory`
+        - InMemory
         - Cosmos
         - PostgreSQL
-        - `MySql`
-        - `MariaDb`
-        - `FireBird`
+        - MySql
+        - MariaDb
+        - FireBird
         - Oracle
         - MSAccess
 
@@ -692,37 +689,37 @@ In the appsettings.json configuration file, you can use the next values on the _
 |`Aes192Encryption`|"http://www.w3.org/2001/04/xmlenc#aes192-cbc"
 |`Aes256Encryption`|"http://www.w3.org/2001/04/xmlenc#aes256-cbc"
 |`DesEncryption`|"http://www.w3.org/2001/04/xmlenc#des-cbc"
-|Aes128KeyWrap|"http://www.w3.org/2001/04/xmlenc#kw-aes128"
-|Aes192KeyWrap|"http://www.w3.org/2001/04/xmlenc#kw-aes192"
-|Aes256KeyWrap|"http://www.w3.org/2001/04/xmlenc#kw-aes256"
-|RsaV15KeyWrap|"http://www.w3.org/2001/04/xmlenc#rsa-1_5"
+|`Aes128KeyWrap`|"http://www.w3.org/2001/04/xmlenc#kw-aes128"
+|`Aes192KeyWrap`|"http://www.w3.org/2001/04/xmlenc#kw-aes192"
+|`Aes256KeyWrap`|"http://www.w3.org/2001/04/xmlenc#kw-aes256"
+|`RsaV15KeyWrap`|"http://www.w3.org/2001/04/xmlenc#rsa-1_5"
 |`Ripemd160Digest`|"http://www.w3.org/2001/04/xmlenc#ripemd160"
-|RsaOaepKeyWrap|"http://www.w3.org/2001/04/xmlenc#rsa-oaep"
-|Aes128KW|"A128KW"
-|Aes256KW|"A256KW"
-|RsaPKCS1|"RSA1_5"
-|RsaOAEP|"RSA-OAEP"
+|`RsaOaepKeyWrap`|"http://www.w3.org/2001/04/xmlenc#rsa-oaep"
+|`Aes128KW`|"A128KW"
+|`Aes256KW`|"A256KW"
+|`RsaPKCS1`|"RSA1_5"
+|`RsaOAEP`|"RSA-OAEP"
 |`ExclusiveC14n`|"http://www.w3.org/2001/10/xml-exc-c14n#"
-|ExclusiveC14nWithComments|"http://www.w3.org/2001/10/xml-exc-c14n#WithComments"
+|`ExclusiveC14nWithComments`|"http://www.w3.org/2001/10/xml-exc-c14n#WithComments"
 |`EnvelopedSignature`|"http://www.w3.org/2000/09/xmldsig#enveloped-signature"
 |`Sha256Digest`|"http://www.w3.org/2001/04/xmlenc#sha256"
 |`Sha384Digest`|"http://www.w3.org/2001/04/xmldsig-more#sha384"
 |`Sha512Digest`|"http://www.w3.org/2001/04/xmlenc#sha512"
-|Sha256|"SHA256"
-|Sha384|"SHA384"
-|Sha512|"SHA512"
-|EcdsaSha256Signature|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"
-|EcdsaSha384Signature|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384"
-|EcdsaSha512Signature|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512"
-|HmacSha256Signature|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha256"
-|HmacSha384Signature|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha384"
-|HmacSha512Signature|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha512"
-|RsaSha256Signature|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
-|RsaSha384Signature|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha384"
-|RsaSha512Signature|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"
-|RsaSsaPssSha256Signature|"http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1"
-|RsaSsaPssSha384Signature|"http://www.w3.org/2007/05/xmldsig-more#sha384-rsa-MGF1"
-|RsaSsaPssSha512Signature|"http://www.w3.org/2007/05/xmldsig-more#sha512-rsa-MGF1"
+|`Sha256`|"SHA256"
+|`Sha384`|"SHA384"
+|`Sha512`|"SHA512"
+|`EcdsaSha256Signature`|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"
+|`EcdsaSha384Signature`|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384"
+|`EcdsaSha512Signature`|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512"
+|`HmacSha256Signature`|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha256"
+|`HmacSha384Signature`|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha384"
+|`HmacSha512Signature`|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha512"
+|`RsaSha256Signature`|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
+|`RsaSha384Signature`|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha384"
+|`RsaSha512Signature`|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"
+|`RsaSsaPssSha256Signature`|"http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1"
+|`RsaSsaPssSha384Signature`|"http://www.w3.org/2007/05/xmldsig-more#sha384-rsa-MGF1"
+|`RsaSsaPssSha512Signature`|"http://www.w3.org/2007/05/xmldsig-more#sha512-rsa-MGF1"
 |`EcdsaSha256`|"ES256"
 |`EcdsaSha384`|"ES384"
 |`EcdsaSha512`|"ES512"
@@ -733,11 +730,11 @@ In the appsettings.json configuration file, you can use the next values on the _
 |`RsaSha256`|"RS256"
 |`RsaSha384`|"RS384"
 |`RsaSha512`|"RS512"
-|RsaSsaPssSha256|"PS256"
-|RsaSsaPssSha384|"PS384"
-|RsaSsaPssSha512|"PS512"
-|Aes128CbcHmacSha256|"A128CBC-HS256"
-|Aes192CbcHmacSha384|"A192CBC-HS384"
-|Aes256CbcHmacSha512|"A256CBC-HS512"
+|`RsaSsaPssSha256`|"PS256"
+|`RsaSsaPssSha384`|"PS384"
+|`RsaSsaPssSha512`|"PS512"
+|`Aes128CbcHmacSha256`|"A128CBC-HS256"
+|`Aes192CbcHmacSha384`|"A192CBC-HS384"
+|`Aes256CbcHmacSha512`|"A256CBC-HS512"
 |=======================
 

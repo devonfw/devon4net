@@ -180,7 +180,7 @@ Included features:
               - Supported header definitions: `AccessControlExposeHeader, StrictTransportSecurityHeader, XFrameOptionsHeader, XssProtectionHeader, XContentTypeOptionsHeader, ContentSecurityPolicyHeader, PermittedCrossDomainPoliciesHeader, ReferrerPolicyHeader`
 
 - Reporting server:
-              - Partial implementation of reporting server based on My-Fyi-Reporting (now runs on linux container)
+              - Partial implementation of reporting server based on `My-FyiReporting` (now runs on linux container)
 
 - Testing:
               - Integration test template with sqlite support

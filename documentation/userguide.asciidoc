@@ -56,7 +56,7 @@ To use `EF` Core, install the package for the database provider(s) you want to t
 
 For a list of available providers see https://docs.microsoft.com/en-us/ef/core/providers/index[Database Providers]
     
-* Go to *Tools > `NuGet` Package Manager > Package Manager Console*
+* Go to *Tools > NuGet Package Manager > Package Manager Console*
 
 * Run *Install-Package Microsoft.EntityFrameworkCore.SqlServer*
 
@@ -78,7 +78,7 @@ In order to design your database model from scratch, we encourage to follow the 
  
 ==== [navy]#EF Database first#
 
-* Go to *Tools > `NuGet` Package Manager > Package Manager Console*
+* Go to *Tools > NuGet Package Manager > Package Manager Console*
 
 * Run the following command to create a model from the existing database:
 
@@ -96,13 +96,12 @@ Services are registered with dependency injection during application startup.
 In order to register your database context (or multiple database context as well) you can add the following line at ConfigureDbService method at startup.cs:
 
 
-[source, C#]
-----
+```
        private void SetupDatabase(IServiceCollection services)
         {
             services.SetupDatabase<TodoContext>(Configuration, "Default", WebAPI.Configuration.Enums.DatabaseType.InMemory);
         }
-----
+```
 
 Where: 
 
@@ -225,7 +224,7 @@ image::images/project_doc.png["technical architecture", width="450", link="image
 
 We propose to generate the file under the `XmlDocumentation` folder. For example in devon4net.Domain.Entities project in My Thai Star .NET implementation the output folder is:
 
-    XmlDocumentation\devon4net.Business.Common.xml
+    `XmlDocumentation\devon4net.Business.Common.xml`
 
 
 The file _devon4net.Business.Common.xml_ won't appear until you build the project. Once the file is generated, please modify its properties as a resource and set it to be _Copy always_ .
@@ -451,7 +450,7 @@ Supported operating systems:
 * Windows 7 and newer
 * Windows Server 2008 R2 and newer*
 
-`WebListener` server will not work in a reverse-proxy configuration with IIS. You must use the https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?tabs=aspnetcore2x[Kestrel server].
+WebListener server will not work in a reverse-proxy configuration with IIS. You must use the https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?tabs=aspnetcore2x[Kestrel server].
 
 [underline]#IIS configuration#
 
