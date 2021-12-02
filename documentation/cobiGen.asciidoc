@@ -111,7 +111,7 @@ Moreover it is needed to remove the last line in order to be able to run the app
 
 ==== [navy]#Configure data base#
 
-Cobigen is generating an empty context that has to be filled with manually in order to be able to work with the database. The context can be found in *[Project_Name]/Devon4Net.WebAPI.Implementation/Domain/Database/CobigenContext.cs*.
+Cobigen is generating an empty context that has to be filled with manually in order to be able to work with the database. The context can be found in `*[Project_Name]/Devon4Net.WebAPI.Implementation/Domain/Database/CobigenContext.cs*`.
 
 [[img-cobigen]]
 image::images/CobigenContextLocation.png["cobigen", width=="350", link=="images/CobigenContextLocation.png]

@@ -247,13 +247,13 @@ icon:= fa-floppy-o[]  link:resources/samples/components/GMailAPIConsumer.zip[Goo
 
 [options=""]
 |=======================
-|Application| MyThaiStarEmailService.exe
-|Config file| MyThaiStarEmailService.exe.Config
+|Application| `MyThaiStarEmailService.exe`
+|Config file| `MyThaiStarEmailService.exe.Config`
 |Default port|8080
 |=======================
 
 === [navy]#Overview#
-. Execute MyThaiStarEmailService.exe.
+. Execute `MyThaiStarEmailService.exe`.
 . The first time google will ask you for credentials
 (just one time) in your default browser:
 

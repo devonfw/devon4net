@@ -455,7 +455,7 @@ Supported operating systems:
 * Windows 7 and newer
 * Windows Server 2008 R2 and newer*
 
-WebListener server will not work in a reverse-proxy configuration with IIS. You must use the https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?tabs=aspnetcore2x[Kestrel server].
+`WebListener` server will not work in a reverse-proxy configuration with IIS. You must use the https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?tabs=aspnetcore2x[Kestrel server].
 
 [underline]#IIS configuration#
 
