@@ -45,7 +45,7 @@ You can read more information about how to configure your OpenAPI file and a wor
 
 === [navy]#Generating files#
 
-Cobigen allow us to generate the files in two different ways. One of them is using Eclipse which it can be done by using the its graphical interface. The other way to generate the code is using the Cobigen` CLI` tool.
+Cobigen allow us to generate the files in two different ways. One of them is using Eclipse which it can be done by using the its graphical interface. The other way to generate the code is using the Cobigen CLI tool.
 
 ==== [navy]#Generating files through Eclipse#
 In order to generate the files using Eclipse we need to follow some simple steps.
@@ -60,7 +60,7 @@ Next we copy our OpenAPI file into the root folder of the project.
 [[img-cobigen]]
 image::images/OpenAPI_file_root_folder.png["cobigen", width=="300", link=="images/OpenAPI_file_root_folder.png"]
 
-And then we right click on OpenAPI file and then select *`CobiGen` > Generate...* It will display a window like this:
+And then we right click on OpenAPI file and then select *CobiGen > Generate...* It will display a window like this:
 
 [[img-cobigen]]
 image::images/cobigen_generate0.png["cobigen", width=="800", link=="images/cobigen_generate0.png"]
@@ -72,9 +72,9 @@ image::images/cobigen_generate1.png["cobigen", width=="800", link=="images/cobig
 
 Ones you select all the files that you want to generate, click on the _“Finish”_ button to generate all the source code.
 
-==== [navy]#Generating files through Cobigen` CLI`#
+==== [navy]#Generating files through Cobigen CLI#
 
-In order to generate the files using the Cobigen` CLI` it is needed to do the following steps:
+In order to generate the files using the Cobigen CLI it is needed to do the following steps:
 
 1. Go to devonfw distribution folder
 2. Run *console.bat*, this will open a console.
