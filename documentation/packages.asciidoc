@@ -824,8 +824,7 @@ public class LoginController : devon4NetJWTController
 
 - In order to generate a  JWT, you should implement the  JWT generation on user login. For example, in My Thai Star is created as follows:
 
-[source, C#]
-----
+```
 public async Task<IActionResult> Login([FromBody]LoginDto loginDto)
 {
     try
@@ -857,7 +856,7 @@ public async Task<IActionResult> Login([FromBody]LoginDto loginDto)
         return StatusCode((int)HttpStatusCode.InternalServerError, $"{ex.Message} : {ex.InnerException}");
     }
 }
-----
+```
 
 - In My Thai Star the  JWT will contain the user information such id, roles...
 
