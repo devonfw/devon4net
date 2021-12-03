@@ -2,20 +2,23 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Devon4Net.WebAPI.Template</id>
+    <version>6.0.1</version>
     <title>Devon4Net web API solution template</title>
-    <version>3.1.11</version>
-    <description>Project template to develop web API template for .NET core 3.1</description>
-    <tags>OASP Devon4Net webapi devonfw</tags>
     <authors>iCSD/ADCenter Capgemini Valencia</authors>
+    <owners></owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <repository type="git" url="https://github.com/devonfw/devon4net" />
+    <license type="file">content\assets\LICENSE</license>
+    <icon>content\assets\devonfw.png</icon>
+    <projectUrl>https://devonfw.com/</projectUrl>
+    <description>Project template to develop web API template for .NET 6.0</description>
+    <releaseNotes>.Net 6 LTS devon4net template. Support for Kafka, RabbitMq lifecycle, LiteDB and other improvements like HTTP2, JWT, Swagger, UoW, HTTP security via certificates, killswitch functionality and many more features.</releaseNotes>
     <copyright>Copyright © Capgemini</copyright>
     <language>en-US</language>
-   <licenseUrl>https://devonfw.com/website/pages/docs/devonfw-ide-support.asciidoc.html#LICENSE.asciidoc</licenseUrl>
-    <projectUrl>https://devonfw.com</projectUrl>
-    <iconUrl>https://avatars2.githubusercontent.com/u/7803029?s=200amp;v=4</iconUrl>
+    <tags>OASP devon4Net webapi devonfw</tags>
     <packageTypes>
       <packageType name="Template" />
     </packageTypes>
-    <releaseNotes>Added support for Kafka, RabbitMq lifecycle, LiteDB and other improvements. .Net core 3.1., HTTP2, JWT, Swagger, UoW, HTTP security via certificates, killswitch functionality and many more features.</releaseNotes>
   </metadata>
   <files>
     <file src="Content/**" target="" />
