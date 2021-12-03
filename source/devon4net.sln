@@ -84,16 +84,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.AWS.CDK", "Modules\Devon4Net.Infrastructure.AWS.CDK\Devon4Net.Infrastructure.AWS.CDK.csproj", "{FA89615E-671E-4A55-A0C1-0850BE44F0BA}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deprecated", "Deprecated", "{00CCFCB3-3E1C-4414-ACF9-57F1AC5D5E49}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.AnsibleTower", "Modules\Deprecated\Devon4Net.Infrastructure.AnsibleTower\Devon4Net.Infrastructure.AnsibleTower.csproj", "{7F46E72F-B061-49DE-A72D-D7A6B2113D08}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.CyberArk", "Modules\Deprecated\Devon4Net.Infrastructure.CyberArk\Devon4Net.Infrastructure.CyberArk.csproj", "{8FF1CD0C-DBE6-4D5E-872A-F5CDA390827D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.SmaxHcm", "Modules\Deprecated\Devon4Net.Infrastructure.SmaxHcm\Devon4Net.Infrastructure.SmaxHcm.csproj", "{D0415EBD-ED21-44C6-A2AB-939A36794E86}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -212,22 +202,6 @@ Global
 		{FF4E2EF4-4779-4048-8D60-C4415D1BCEE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF4E2EF4-4779-4048-8D60-C4415D1BCEE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF4E2EF4-4779-4048-8D60-C4415D1BCEE2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FA89615E-671E-4A55-A0C1-0850BE44F0BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FA89615E-671E-4A55-A0C1-0850BE44F0BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FA89615E-671E-4A55-A0C1-0850BE44F0BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FA89615E-671E-4A55-A0C1-0850BE44F0BA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7F46E72F-B061-49DE-A72D-D7A6B2113D08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F46E72F-B061-49DE-A72D-D7A6B2113D08}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7F46E72F-B061-49DE-A72D-D7A6B2113D08}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F46E72F-B061-49DE-A72D-D7A6B2113D08}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8FF1CD0C-DBE6-4D5E-872A-F5CDA390827D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8FF1CD0C-DBE6-4D5E-872A-F5CDA390827D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8FF1CD0C-DBE6-4D5E-872A-F5CDA390827D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8FF1CD0C-DBE6-4D5E-872A-F5CDA390827D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D0415EBD-ED21-44C6-A2AB-939A36794E86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D0415EBD-ED21-44C6-A2AB-939A36794E86}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D0415EBD-ED21-44C6-A2AB-939A36794E86}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D0415EBD-ED21-44C6-A2AB-939A36794E86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -268,11 +242,6 @@ Global
 		{974A87AF-8E2A-4829-BBE7-E59E92487A4C} = {5DC7E2B4-40CC-4083-8D68-B14482C1949D}
 		{A678C90B-C42B-4D7D-B1FD-A2AD08F2E359} = {7F01F674-F054-448E-A8FF-6BB1845D942D}
 		{FF4E2EF4-4779-4048-8D60-C4415D1BCEE2} = {7F01F674-F054-448E-A8FF-6BB1845D942D}
-		{FA89615E-671E-4A55-A0C1-0850BE44F0BA} = {F3974B4E-9A4D-4E88-A165-2E84872681C0}
-		{00CCFCB3-3E1C-4414-ACF9-57F1AC5D5E49} = {C2CE6A98-0264-4EE1-A58A-38BB6C1B6179}
-		{7F46E72F-B061-49DE-A72D-D7A6B2113D08} = {00CCFCB3-3E1C-4414-ACF9-57F1AC5D5E49}
-		{8FF1CD0C-DBE6-4D5E-872A-F5CDA390827D} = {00CCFCB3-3E1C-4414-ACF9-57F1AC5D5E49}
-		{D0415EBD-ED21-44C6-A2AB-939A36794E86} = {00CCFCB3-3E1C-4414-ACF9-57F1AC5D5E49}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {986CD1FB-4839-41E2-81B5-EEBB4D9485F3}
