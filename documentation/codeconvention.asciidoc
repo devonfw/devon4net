@@ -8,7 +8,7 @@ toc::[]
 = Code conventions
 
 == [navy]#Introduction#
-This document covers .NET Coding Standards and is recommended to be read by team leaders/sw architects and developing teams operating in the Microsoft .NET environment.
+This document covers .NET Coding Standards and is recommended to be read by team `leaders/sw` architects and developing teams operating in the Microsoft .NET environment.
 
 “All the code in the system looks as if it was written by a single – very competent – individual” (K. Beck) 
 
@@ -31,7 +31,7 @@ icon:= fa-thumbs-o-up[] use `PascalCasing` for all public member, type, and name
 
 
 ==== Underscore Prefix (_underScore)
-For underscore ( _ ), the word after _ use `camelCase` terminology.
+For underscore ( _ ), the word after _ use camelCase terminology.
 
 
 
@@ -40,7 +40,7 @@ icon:= fa-thumbs-o-up[] choose easily readable identifier names.
 
 icon:= fa-thumbs-o-up[] favor readability over brevity.
 
-    ◦ e.g.: GetLength is a better name than GetInt.
+    ◦ e.g.: `GetLength` is a better name than GetInt.
     ◦ Aim for the “ubiquitous language” (E. Evans): A language distilled from the domain language, which helps the team clarifying domain concepts and communicating with domain experts.
 
 icon:= fa-thumbs-o-up[] prefer adding a suffix rather than a prefix to indicate a new version of an existing `API`.
@@ -63,7 +63,7 @@ icon:= fa-thumbs-o-down[] do not use C# reserved words as names.
 
 icon:= fa-thumbs-o-down[] do not use Hungarian notation. Hungarian notation is the practice of including a prefix in identifiers to encode some metadata about the parameter, such as the data type of the identifier. 
 
-    ◦ e.g.: iNumberOfClients, sClientName
+    ◦ `e.g.: iNumberOfClients, sClientName`
 
 
 == [navy]#Names of Assemblies and DLLs#
@@ -72,7 +72,7 @@ An assembly is the unit of deployment and identity for managed code programs. Al
 
 icon:= fa-thumbs-o-up[] choose names for your assembly DLLs that suggest large chunks of functionality, such as System.Data.
 
-Assembly and `DLL` names don’t have to correspond to namespace names, but it is reasonable to follow the namespace name when naming assemblies. A good rule of thumb is to name the `DLL` based on the common prefix of the assemblies contained in the assembly. For example, an assembly with two namespaces, MyCompany.MyTechnology.FirstFeature and MyCompany.MyTechnology.SecondFeature, could be called MyCompany.MyTechnology.dll.
+Assembly and `DLL` names don’t have to correspond to namespace names, but it is reasonable to follow the namespace name when naming assemblies. A good rule of thumb is to name the `DLL` based on the common prefix of the assemblies contained in the assembly. For example, an assembly with two namespaces, `MyCompany.MyTechnology.FirstFeature` and `MyCompany.MyTechnology.SecondFeature`, could be called `MyCompany.MyTechnology.dll`.
 
 icon:= fa-thumbs-o-up[] consider naming DLLs according to the following pattern: +
 <Company>.<Component>.dll
