@@ -29,7 +29,7 @@ https://www.microsoft.com/net/core[.Net Core SDK]
 *    Open Visual Studio Code.
 *   Click on the Explorer icon on the left menu and then click **Open Folder**.
 
-*   Select the folder you want your C# project to be in and click **Select Folder**. For our example, we'll create a folder for our project named 'Hello World'.
+*   Select the folder you want your C# project to be in and click **Select Folder**. For our example, we'll create a folder for our project named `'HelloWorld'`.
 
 
 . Initialize a C# project:

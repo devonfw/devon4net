@@ -192,21 +192,21 @@ Included features:
               - Client Certificate customization
               - Number of retries customizables
 
-- `LiteDb`:
-            - Support for `LiteDB`
+- LiteDB:
+            - Support for LiteDB
             - Provided basic repository for CRUD operations
 
 - `RabbitMq`:
             - Use of EasyQNet library to perform CQRS main functions between different microservices
             - Send commands / Subscribe queues with one C# sentence
             - Events management: Handled received commands to subscribed messages
-            - Automatic messaging backup when sent and handled (Internal database via `LiteDB` and database backup via Entity Framework)
+            - Automatic messaging backup when sent and handled (Internal database via LiteDB and database backup via Entity Framework)
 
 - `MediatR`:
             - Use of `MediatR` library to perform CQRS main functions in memory
             - Send commands / Subscribe queues with one C# sentence
             - Events management: Handled received commands to subscribed messages
-            - Automatic messaging backup when sent and handled (Internal database via `LiteDB` and database backup via Entity Framework)
+            - Automatic messaging backup when sent and handled (Internal database via LiteDB and database backup via Entity Framework)
 - `SmaxHcm`:
             - Component to manage Microfocus `SMAX` for cloud infrastructure services management
 
