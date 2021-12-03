@@ -1,3 +1,4 @@
+using Devon4Net.Application.Kafka.Business.KafkaManagement.Handlers;
 using Devon4Net.Application.WebAPI.Configuration;
 using Devon4Net.Application.WebAPI.Configuration.Application;
 using Devon4Net.Infrastructure.Kafka;
@@ -17,6 +18,8 @@ builder.Services.SetupMiddleware(builder.Configuration);
 builder.Services.SetupLog(builder.Configuration);
 builder.Services.SetupSwagger(builder.Configuration);
 builder.Services.SetupKafka(builder.Configuration);
+builder.Services.AddKafkaProducer<MessageProducerHandler>("Producer1");
+builder.Services.AddKafkaConsumer<MessageConsumerHandler>("Consumer1");
 #endregion
 
 var app = builder.Build();
