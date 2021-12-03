@@ -1,7 +1,9 @@
-﻿﻿namespace Devon4Net.Infrastructure.Common.Exceptions
+﻿using System.Runtime.Serialization;
+
+namespace Devon4Net.Infrastructure.Common.Exceptions
 {
     /// <summary>Interface for webapi exceptions</summary>
-    public interface IWebApiException
+    public interface IWebApiException : ISerializable
     {
         /// <summary>Gets the status code.</summary>
         /// <value>The status code.</value>

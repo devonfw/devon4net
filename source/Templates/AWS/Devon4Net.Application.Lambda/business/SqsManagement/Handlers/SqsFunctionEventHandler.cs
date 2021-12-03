@@ -38,9 +38,9 @@ namespace Devon4Net.Application.Lambda.Business.SqsManagement.Handlers
                 var messageHandler = scope.ServiceProvider.GetService<IMessageHandler<TMessage, SqsMessageHandlerResult>>();
                 if (messageHandler == null)
                 {
-                    var errorMessage = $"No IMessageHandler<{typeof(TMessage).Name}> found";
-                    _logger.LogError(errorMessage);
-                    throw new InvalidOperationException(errorMessage);
+                    var messageHandlerName = typeof(TMessage).Name;
+                    _logger.LogCritical("No IMessageHandler<{messageHandlerName}> found", messageHandlerName);
+                    throw new InvalidOperationException($"No IMessageHandler<{messageHandlerName}> found");
                 }
 
                 await messageHandler.HandleMessage(message, context).ConfigureAwait(false);

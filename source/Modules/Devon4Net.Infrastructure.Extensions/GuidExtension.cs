@@ -4,14 +4,14 @@
 
     public static class GuidExtension
     {
-        public static bool IsNullOrEmptyGuid(this Guid? guid )
-        {
-            return guid == null || guid == default(Guid) || guid == Guid.Empty;
-        }
-
+        /// <summary>
+        /// Returns true if it is a null or empty guid
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
         public static bool IsNullOrEmptyGuid(this Guid guid)
         {
-            return guid == default(Guid) || guid == Guid.Empty;
+            return guid.Equals(Guid.Empty) || guid.Equals(default);  //NOSONAR false positive
         }
 
         public static string GuidToString(this Guid guid)
@@ -24,7 +24,7 @@
         public static Guid StringToGuid(this string guid)
         {
             if (string.IsNullOrEmpty(guid)) throw new ArgumentException("Guid can't be null");
-            Guid.TryParse(guid, out Guid result);
+            _ = Guid.TryParse(guid, out Guid result);
             if (result.IsNullOrEmptyGuid()) throw new ArgumentException("Parse error");
             return result;
         }
@@ -34,6 +34,5 @@
             if (string.IsNullOrEmpty(guid)) return false;
             return Guid.TryParse(guid, out Guid myGuid);
         }
-
     }
 }

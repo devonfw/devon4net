@@ -1,0 +1,67 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <!--<Nullable>enable</Nullable>-->
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>0fb690f7-5271-4ad5-aa4e-7bb51bc6e28e</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationFile>.\Devon4Net.Application.WebAPI.XML</DocumentationFile>
+    <ErrorReport>none</ErrorReport>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Devon4Net.Infrastructure.AnsibleTower" Version="6.0.0" />
+    <PackageReference Include="Devon4Net.Infrastructure.CircuitBreaker" Version="6.0.0" />
+    <PackageReference Include="Devon4Net.Infrastructure.Common" Version="6.0.0" />
+    <PackageReference Include="Devon4Net.Infrastructure.Cors" Version="6.0.0" />
+    <PackageReference Include="Devon4Net.Infrastructure.CyberArk" Version="6.0.0" />
+    <PackageReference Include="Devon4Net.Infrastructure.Grpc" Version="6.0.0" />
+    <PackageReference Include="Devon4Net.Infrastructure.JWT" Version="6.0.0" />
+    <PackageReference Include="Devon4Net.Infrastructure.Kafka" Version="6.0.0" />
+    <PackageReference Include="Devon4Net.Infrastructure.LiteDb" Version="6.0.0" />
+    <PackageReference Include="Devon4Net.Infrastructure.Logger" Version="6.0.0" />
+    <PackageReference Include="Devon4Net.Infrastructure.MediatR" Version="6.0.0" />
+    <PackageReference Include="Devon4Net.Infrastructure.Middleware" Version="6.0.0" />
+    <PackageReference Include="Devon4Net.Infrastructure.RabbitMQ" Version="6.0.0" />
+    <PackageReference Include="Devon4Net.Infrastructure.SmaxHcm" Version="6.0.0" />
+    <PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="6.0.0" />
+    <PackageReference Include="Devon4Net.Infrastructure.UnitOfWork" Version="6.0.0" />
+    <PackageReference Include="Devon4Net.Infrastructure.WebAPI" Version="6.0.0" />
+    <ProjectReference Include="..\Devon4Net.Application.WebAPI.Implementation\Devon4Net.Application.WebAPI.Implementation" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.Development.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Certificates\localhost.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Devon4Net.Application.WebAPI.XML">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

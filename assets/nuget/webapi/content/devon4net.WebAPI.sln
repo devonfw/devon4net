@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{DE117EB7-E593-4898-8F84-F3F93BC9D362}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebAPI", "WebAPI", "{4C3B8AF7-BC50-4706-B1C2-505077B30886}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Application.WebAPI", "Templates\WebAPI\Devon4Net.Application.WebAPI\Devon4Net.Application.WebAPI.csproj", "{91867541-3220-4C47-A4A2-34BC20B098F4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Application.WebAPI.Implementation", "Templates\WebAPI\Devon4Net.Application.WebAPI.Implementation\Devon4Net.Application.WebAPI.Implementation.csproj", "{47DD9A55-8421-493A-86F5-6FB48B1848C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{91867541-3220-4C47-A4A2-34BC20B098F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91867541-3220-4C47-A4A2-34BC20B098F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91867541-3220-4C47-A4A2-34BC20B098F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91867541-3220-4C47-A4A2-34BC20B098F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47DD9A55-8421-493A-86F5-6FB48B1848C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47DD9A55-8421-493A-86F5-6FB48B1848C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47DD9A55-8421-493A-86F5-6FB48B1848C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47DD9A55-8421-493A-86F5-6FB48B1848C8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4C3B8AF7-BC50-4706-B1C2-505077B30886} = {DE117EB7-E593-4898-8F84-F3F93BC9D362}
+		{91867541-3220-4C47-A4A2-34BC20B098F4} = {4C3B8AF7-BC50-4706-B1C2-505077B30886}
+		{47DD9A55-8421-493A-86F5-6FB48B1848C8} = {4C3B8AF7-BC50-4706-B1C2-505077B30886}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B0967205-4814-4D3A-907B-2BC885FA488C}
+	EndGlobalSection
+EndGlobal

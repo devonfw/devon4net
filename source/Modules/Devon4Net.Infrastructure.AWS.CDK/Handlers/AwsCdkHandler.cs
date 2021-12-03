@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Amazon.CDK;
+﻿using Amazon.CDK;
 using Amazon.CDK.AWS.EC2;
 using Amazon.CDK.AWS.IAM;
 using Amazon.CDK.AWS.KMS;

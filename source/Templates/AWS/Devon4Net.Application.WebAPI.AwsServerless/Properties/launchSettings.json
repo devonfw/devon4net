@@ -1,33 +1,31 @@
-{
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:49387/",
-      "sslPort": 44317
+      "applicationUrl": "http://localhost:15187",
+      "sslPort": 0
     }
   },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
+    "Devon4Net.Application.WebAPI.AwsServerless": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
       "launchBrowser": true,
+      "launchUrl": "weatherforecast",
+      "applicationUrl": "http://localhost:5065",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Devon4Net.Application.WebAPI.AwsServerless": {
-      "commandName": "Project",
+    "IIS Express": {
+      "commandName": "IISExpress",
       "launchBrowser": true,
+      "launchUrl": "weatherforecast",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "launchUrl": "https://localhost:5001/swagger/index.html"
-    },
-    "Mock Lambda Test Tool": {
-      "commandName": "Executable",
-      "commandLineArgs": "--port 5050",
-      "workingDirectory": ".\\bin\\$(Configuration)\\netcoreapp3.1",
-      "executablePath": "%USERPROFILE%\\.dotnet\\tools\\dotnet-lambda-test-tool-3.1.exe"
+      }
     }
   }
 }

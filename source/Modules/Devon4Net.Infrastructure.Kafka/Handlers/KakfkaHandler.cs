@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 using Confluent.Kafka.Admin;
 using Devon4Net.Infrastructure.Common.Options.Kafka;
 using Devon4Net.Infrastructure.Kafka.Common.Const;
@@ -30,13 +26,17 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
             try
             {
                 result = await producer.ProduceAsync(producerOptions.Topic, new Message<T, TV> { Key = key, Value = value }).ConfigureAwait(false);
-                producer.Flush();
-                producer.Dispose();
+
             }
             catch (ProduceException<string, string> e)
             {
                 Devon4NetLogger.Error(e);
                 throw;
+            }
+            finally
+            {
+                producer?.Flush();
+                producer?.Dispose();
             }
 
             return result;
@@ -59,9 +59,9 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
         {
             var producer = new ProducerBuilder<T, TV>(configuration);
 
-            producer.SetErrorHandler((_, e) => Devon4NetLogger.Error(new ConsumerException($"Error code {e.Code} : {e.Reason}")));
-            producer.SetStatisticsHandler((_, json) => Devon4NetLogger.Information($"Statistics: {json}"));
-            producer.SetLogHandler((c, partitions) =>{Devon4NetLogger.Information($"Kafka log handler: [{string.Join(", ", partitions)}]");});
+            producer = producer.SetErrorHandler((_, e) => Devon4NetLogger.Error(new ConsumerException($"Error code {e.Code} : {e.Reason}")));
+            producer = producer.SetStatisticsHandler((_, json) => Devon4NetLogger.Information($"Statistics: {json}"));
+            producer = producer.SetLogHandler((_, partitions) => Devon4NetLogger.Information($"Kafka log handler: [{string.Join(", ", partitions)}]"));
             return producer;
         }
 
@@ -192,7 +192,7 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
             using var adminClient = GetAdminClientBuilder(adminId);
             try
             {
-                await adminClient.CreateTopicsAsync(new[] {new TopicSpecification { Name = topicName, ReplicationFactor = replicationFactor, NumPartitions = numPartitions } });
+                await adminClient.CreateTopicsAsync(new[] {new TopicSpecification { Name = topicName, ReplicationFactor = replicationFactor, NumPartitions = numPartitions } }).ConfigureAwait(false);
                 return true;
             }
             catch (CreateTopicsException ex)
@@ -208,7 +208,7 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
             using var adminClient = GetAdminClientBuilder(adminId);
             try
             {
-                await adminClient.DeleteTopicsAsync(topicsName);
+                await adminClient.DeleteTopicsAsync(topicsName).ConfigureAwait(false);
                 return true;
             }
             catch (CreateTopicsException ex)

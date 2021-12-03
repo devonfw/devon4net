@@ -19,7 +19,7 @@ All the  guidelines shown and used in this document are a set of rules and conve
 
 == [navy]#The package#
 
-Devon4Net package solution contains:
+``Devon4Net`` package solution contains:
 
 [options="header"]
 |=======================
@@ -46,13 +46,13 @@ At the moment .net Core template is supported. The template is ready to be used 
 
 ==== [navy]#My Thai Star#
 
-You can find My Thai Star .NET port application at https://github.com/oasp/my-thai-star/tree/develop/net[Github].
+You can find My Thai Star .NET port application at https://github.com/devonfw/my-thai-star/tree/develop/net[Github].
 
 NOTE: As devon4net has been migrated to the latest version of .net core, the template is not finished yet.
 
 == [navy]#Cookbook#
 === [navy]#Data management#
-To use EF Core, install the package for the database provider(s) you want to target. This walk-through uses SQL Server.
+To use Entity Framework Core, install the package for the database provider(s) you want to target. This walk-through uses SQL Server.
 
 For a list of available providers see https://docs.microsoft.com/en-us/ef/core/providers/index[Database Providers]
     
@@ -70,22 +70,21 @@ We will be using some ASP.NET Core Scaffolding tools to create controllers and v
 
 
 
-==== [navy]#EF Code first#
+==== [navy]#Entity Framework Code first#
 
 In order to design your database model from scratch, we encourage to follow the Microsoft guidelines described  https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/complex-data-model[here].
  
  
  
-==== [navy]#EF Database first#
+==== [navy]#Entity Framework Database first#
 
 * Go to *Tools > NuGet Package Manager > Package Manager Console*
 
 * Run the following command to create a model from the existing database:
 
-[Source,c#]
-----
+```
 Scaffold-DbContext "Your connection string to existing database" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
-----
+```
 
 The command will create the database context and the mapped entities as well inside of Models folder.
 
@@ -96,22 +95,21 @@ Services are registered with dependency injection during application startup.
 In order to register your database context (or multiple database context as well) you can add the following line at ConfigureDbService method at startup.cs:
 
 
-[source, C#]
-----
+```
        private void SetupDatabase(IServiceCollection services)
         {
             services.SetupDatabase<TodoContext>(Configuration, "Default", WebAPI.Configuration.Enums.DatabaseType.InMemory);
         }
-----
+```
 
 Where: 
 
 [options="header"]
 |=======================
 |*Param*|*Description*
-|TodoContext| Is the database context definition
-|Default| Is the connection string defined at _ConnectionString_ node at the appsettings configuration file 
-|WebAPI.Configuration.Enums.DatabaseType.InMemory| Is the database driver selection. In this case InMemory data base is chosen
+|`TodoContext`| Is the database context definition
+|Default| Is the connection string defined at `_ConnectionString_` node at the appsettings configuration file 
+|`WebAPI.Configuration.Enums.DatabaseType.InMemory`| Is the database driver selection. In this case `InMemory` data base is chosen
 |=======================
 
 The supported databases are:
@@ -155,7 +153,7 @@ For example, My Thai Star Booking controller constructor looks like this:
 
 Currently devon4net has a _Unit of Work_ class in order to perform CRUD operations to database making use of your designed model context.
 
-_Repositories_ are declared at _devon4net.Domain.UnitOfWork_ project and make use of _Unit of Work_ class.
+_Repositories_ are declared at `_devon4net.Domain.UnitOfWork_` project and make use of _Unit of Work_ class.
 
 
 The common methods to perform CRUD operations (where <T> is an entity from your model) are:
@@ -223,9 +221,9 @@ In order to be effective and make use of the comments to build the API contract,
 .Project settings tab
 image::images/project_doc.png["technical architecture", width="450", link="images/project_doc.png"]
 
-We propose to generate the file under the XmlDocumentation folder. For example in devon4net.Domain.Entities project in My Thai Star .NET implementation the output folder is:
+We propose to generate the file under the `XmlDocumentation` folder. For example in devon4net.Domain.Entities project in My Thai Star .NET implementation the output folder is:
 
-    XmlDocumentation\devon4net.Business.Common.xml
+    `XmlDocumentation\devon4net.Business.Common.xml`
 
 
 The file _devon4net.Business.Common.xml_ won't appear until you build the project. Once the file is generated, please modify its properties as a resource and set it to be _Copy always_ .
@@ -256,19 +254,19 @@ Please check https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/xm
 
 An important part of life software is the need of using log and traces. devon4net has a log module pre-configured to achieve this important point.
 
-By default Microsoft provides a logging module on .NET Core applications. This module is open and can it can be extended. devon4net uses the https://serilog.net/[serilog] implementation. This implementation provides a huge quantity information about events and traces.
+By default Microsoft provides a logging module on .NET Core applications. This module is open and can it can be extended. devon4net uses the https://serilog.net/[Serilog] implementation. This implementation provides a huge quantity information about events and traces.
 
 ==== [navy]#Log file#
-devon4net can write the log information to a simple text file. You can configure the file name and folder at appsettings.json file (LogFile attribute) at devon4net.Application.WebApi project.
+devon4net can write the log information to a simple text file. You can configure the file name and folder at appsettings.json file (`LogFile` attribute) at devon4net.Application.WebApi project.
 
 
 ==== [navy]#Database log#
-devon4net can write the log information to a SQLite database. You can configure the file name and folder at appsettings.json file (LogDatabase attribute) at devon4net.Application.WebApi project.
+devon4net can write the log information to a SQLite database. You can configure the file name and folder at appsettings.json file (`LogDatabase` attribute) at devon4net.Application.WebApi project.
 
 With this method you can launch queries in order to search the information you are looking for.
 
 ==== [navy]#Seq log#
-devon4net can write the log information to a serilog server. You can configure the serilog URL at appsettings.json file (SeqLogServerUrl attribute) at devon4net.Application.WebApi project.
+devon4net can write the log information to a Serilog server. You can configure the Serilog URL at appsettings.json file `(SeqLogServerUrl attribute)` at devon4net.Application.WebApi project.
 
 With this method you can make queries via HTTP.
 
@@ -300,9 +298,9 @@ You can find more information about JWT at  https://jwt.io[jwt.io]
 
 === [navy]#AOP module#
 
-AOP (Aspect Oriented Programming) tracks al information when a method is call. AOP also tracks the input and output data when a method is call.
+AOP (Aspect Oriented Programming) tracks all information when a method is call.`AOP` also tracks the input and output data when a method is call.
 
-By default devon4net has AOP module pre-configured and activated for controllers at Startup.cs file at devon4net.Application.WebApi:
+By default devon4net has `AOP` module pre-configured and activated for controllers at Startup.cs file at devon4net.Application.WebApi:
 
 
 [Source,c#]
@@ -319,7 +317,7 @@ This configuration allows all Controller classes to be tracked. If you don't nee
 
 devon4net Core projects are ready to be integrated with docker. 
 
-https://github.com/oasp/my-thai-star/tree/develop/net[My Thai Star application] sample is ready to be use with linux docker containers. The Readme file explains how to launch and setup the sample application.
+https://github.com/devonfw/my-thai-star/tree/develop/net[My Thai Star application] sample is ready to be use with linux docker containers. The Readme file explains how to launch and setup the sample application.
 
 * *angular* : Angular client to support backend. Just binaries.
 
@@ -338,7 +336,7 @@ Docker configuration and docker-compose files are provided.
 == [navy]#Testing with XUnit#
 [quote, About xUnit.net, https://xunit.github.io/#documentation]
 ____
-xUnit.net is a free, open source, community-focused unit testing tool for the .NET Framework. Written by the original inventor of NUnit v2, xUnit.net is the latest technology for unit testing C#, F#, VB.NET and other .NET languages. xUnit.net works with ReSharper, CodeRush, TestDriven.NET and Xamarin. It is part of the .NET Foundation, and operates under their code of conduct. It is licensed under Apache 2 (an OSI approved license).
+xUnit.net is a free, open source, community-focused unit testing tool for the .NET Framework. Written by the original inventor of NUnit v2, xUnit.net is the latest technology for unit testing C#, F#, VB.NET and other .NET languages. xUnit.net works with `ReSharper`, `CodeRush`, `TestDriven.NET` and Xamarin. It is part of the .NET Foundation, and operates under their code of conduct. It is licensed under Apache 2 (an OSI approved license).
 ____
 
 _Facts_ are tests which are always true. They test invariant conditions.
@@ -401,6 +399,9 @@ bool IsOdd(int value)
 
 [Fact]
 
+[Source,c#]
+----
+
 public void Test() 
 {
 }
@@ -423,6 +424,8 @@ public void Dispose() {
  }
  
 }
+
+----
 |=======================
 
 
@@ -451,7 +454,7 @@ Supported operating systems:
 * Windows 7 and newer
 * Windows Server 2008 R2 and newer*
 
-WebListener server will not work in a reverse-proxy configuration with IIS. You must use the https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?tabs=aspnetcore2x[Kestrel server].
+`WebListener` server will not work in a reverse-proxy configuration with IIS. You must use the https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?tabs=aspnetcore2x[Kestrel server].
 
 [underline]#IIS configuration#
 
@@ -478,14 +481,14 @@ Proceed through the Confirmation step to install the web server role and service
 
 [underline]#Install the .NET Core Windows Server Hosting bundle#
 
-. Install the .NET Core Windows Server Hosting bundle on the hosting system. The bundle will install the .NET Core Runtime, .NET Core Library, and the ASP.NET Core Module. The module creates the reverse-proxy between IIS and the Kestrel server. Note: If the system doesn't have an Internet connection, obtain and install the Microsoft Visual C++ 2015 Redistributable before installing the .NET Core Windows Server Hosting bundle.
+. Install the .NET Core Windows Server Hosting bundle on the hosting system. The bundle will install the .NET Core Runtime, .NET Core Library, and the ASP.NET Core Module. The module creates the reverse-proxy between IIS and the Kestrel server. Note: If the system doesn't have an Internet connection, obtain and install the Microsoft Visual C++ 2015 Re-distributable before installing the .NET Core Windows Server Hosting bundle.
 
-. Restart the system or execute net stop was /y followed by net start w3svc from a command prompt to pick up a change to the system PATH.
+. Restart the system or execute net stop was /y followed by net start w3svc from a command prompt to pick up a change to the system `PATH`.
 
 
 NOTE: If you use an IIS Shared Configuration, see ASP.NET Core Module with IIS Shared Configuration.
 
-To configure IISIntegration service options, include a service configuration for IISOptions in ConfigureServices:
+To configure IISIntegration service options, include a service configuration for IISOptions in `ConfigureServices`:
 
 [source, c#]
 ----
@@ -499,15 +502,15 @@ services.Configure<IISOptions>(options =>
 [options="header"]
 |=======================
 |Option|Default|Setting
-|AutomaticAuthentication| true |If true, the authentication middleware sets the HttpContext.User and responds to generic challenges. If false, the authentication middleware only provides an identity (HttpContext.User) and responds to challenges when explicitly requested by the AuthenticationScheme. Windows Authentication must be enabled in IIS for AutomaticAuthentication to function.
-|AuthenticationDisplayName | null| 	Sets the display name shown to users on login pages.
-|ForwardClientCertificate |true|If true and the  MS-ASPNETCORE-CLIENTCERT request header is present, the HttpContext.Connection.ClientCertificate is populated.
+|`AutomaticAuthentication`| true |If true, the authentication middleware sets the `HttpContext.User` and responds to generic challenges. If false, the authentication middleware only provides an identity (`HttpContext.User`) and responds to challenges when explicitly requested by the Authentication Scheme. Windows Authentication must be enabled in IIS for `AutomaticAuthentication` to function.
+|`AuthenticationDisplayName` | null| 	Sets the display name shown to users on login pages.
+|`ForwardClientCertificate` |true|If true and the `MS-ASPNETCORE-CLIENTCERT` request header is present, the `HttpContext.Connection.ClientCertificate` is populated.
 |=======================
 
 
 [underline]#web.config#
 
-The web.config file configures the ASP.NET Core Module and provides other IIS configuration. Creating, transforming, and publishing web.config is handled by Microsoft.NET.Sdk.Web, which is included when you set your project's SDK at the top of your .csproj file, <Project Sdk="Microsoft.NET.Sdk.Web">. To prevent the MSBuild target from transforming your web.config file, add the <IsTransformWebConfigDisabled> property to your project file with a setting of true:
+The web.config file configures the ASP.NET Core Module and provides other IIS configuration. Creating, transforming, and publishing web.config is handled by Microsoft.NET.Sdk.Web, which is included when you set your project's SDK at the top of your .csproj file, <Project Sdk="Microsoft.NET.Sdk.Web">. To prevent the `MSBuild` target from transforming your web.config file, add the `<IsTransformWebConfigDisabled>` property to your project file with a setting of true:
 
 [source, xml]
 ----
@@ -657,7 +660,7 @@ image::./offline/azure_files/register.png[Web application opened in Microsoft Ed
 
 *Update the app*
 
-*   Edit the&nbsp;__Pages/About.cshtml__&nbsp;Razor page and change its contents. For example, you can modify the paragraph to say "Hello ASP.NET Core!":
+*   Edit `the&nbsp;__Pages/About.cshtml__&nbsp;Razor` page and change its contents. For example, you can modify the paragraph to say "Hello ASP.NET Core!":
 
     html<button class="action copy" data-bi-name="copy">Copy</button>
 
@@ -708,7 +711,7 @@ https://docs.microsoft.com/en-us/aspnet/core/publishing/docker[Publishing to Doc
 
 https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-strings[Connection strings]
 
-https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/new-db#create-the-model[EF basics]
+https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/new-db#create-the-model[Entity Framework basics]
 
 https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/complex-data-model[Entity framework advanced design]
 

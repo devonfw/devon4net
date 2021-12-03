@@ -36,10 +36,10 @@ An in-depth documentation on basic Git syntax and usage can be found on the http
 
 In total, there are three GitHub projects regarding OASP and devon:
 
-* link:https://github.com/oasp-forge[*oasp-forge*]
+* link:https://github.com/devonfw-forge[*devonfw-forge*]
 +
-Repository used for work on the guide - Similar to the according devon repository link:https://github.com/devonfw/devon-guide/wiki[*devon-guide*]
-* link:https://github.com/oasp/[*oasp*]
+Repository used for work on the guide - Similar to the according devon repository link:https://github.com/devonfw/devonfw-guide/wiki[*devonfw-guide*]
+* link:https://github.com/devonfw/[*devonfw*]
 +
 The official _Open Application Standard Platform_ project repository. Usually, two main branches exist:
 
@@ -61,8 +61,8 @@ This is a private repository. You have to be logged in and have permissions to a
 
 In order to contribute to our projects, developers must follow the following <<Development Guidelines,development guidelines>>. Other sources about contributing to devon/OASP:
 
-* https://github.com/oasp/oasp4j/wiki/oasp-code-contributions[OASP code contributions]
-* https://github.com/oasp/oasp4j/wiki/oasp-documentation[OASP documentation]
+* https://github.com/devonfw/devon4j/wiki/devonfw-code-contributions[devonfw code contributions]
+* https://github.com/devonfw/devon4j/wiki/devonfw-documentation[devonfw documentation]
 * https://troom.capgemini.com/sites/vcc/devon/collaboration.aspx[Devon collaboration]
 
 *Every project must include the following files* in order to establish the contributing rules and facilitate the process:
@@ -98,7 +98,7 @@ git checkout develop-x.y.z
 ----
 git checkout -b myBranchName
 ----
-* Apply your modifications according to the https://github.com/oasp/oasp4j/wiki/coding-conventions[coding conventions] to the newly created branch
+* Apply your modifications according to the https://github.com/devonfw/devon4j/wiki/coding-conventions[coding conventions] to the newly created branch
 * Verify your changes to only include relevant and required changes.
 * Commit your changes locally
 ** When commiting changes please follow this pattern for your commit message:
@@ -157,3 +157,4 @@ CI Systems like https://jenkins.io/[Jenkins] or https://travis-ci.org/[Travis.ci
 image::images/contributing/travis_failure.png[Travis failed to build, width="450", link="images/contributing/travis_failure.png"]
 +
 Combining these two possibilities should accelerate the reviewing process of pull requests.
+

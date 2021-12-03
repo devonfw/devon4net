@@ -1,7 +1,4 @@
-﻿using System.Text.Json;
-using System.Threading.Tasks;
-
-namespace Devon4Net.Infrastructure.AWS.Common.Helper
+﻿namespace Devon4Net.Infrastructure.AWS.Common.Helper
 {
     public interface IJsonHelper
     {

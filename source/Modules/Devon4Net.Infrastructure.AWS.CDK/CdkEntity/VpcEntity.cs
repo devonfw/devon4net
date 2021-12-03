@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Amazon.CDK.AWS.EC2;
+﻿using Amazon.CDK.AWS.EC2;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.CdkEntity
 {

@@ -1,0 +1,173 @@
+2021-11-12 08:39:43.647 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 08:39:44.005 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 08:39:44.010 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-12 08:39:48.936 +01:00 [INF] User profile is available. Using 'C:\Users\W11x64\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2021-11-12 08:39:49.330 +01:00 [INF] Now listening on: https://localhost:7229
+2021-11-12 08:39:49.334 +01:00 [INF] Now listening on: http://localhost:5229
+2021-11-12 08:39:49.336 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-11-12 08:39:49.338 +01:00 [INF] Hosting environment: Development
+2021-11-12 08:39:49.339 +01:00 [INF] Content root path: C:\projects\devon4net6\Templates\WebAPI\Devon4Net.Application.WebAPI\
+2021-11-12 08:39:51.294 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7229/swagger/index.html - -
+2021-11-12 08:39:51.769 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7229/swagger/index.html - - - 200 - text/html;charset=utf-8 476.0926ms
+2021-11-12 08:39:51.785 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7229/_framework/aspnetcore-browser-refresh.js - -
+2021-11-12 08:39:51.793 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7229/_framework/aspnetcore-browser-refresh.js - - - 200 11962 application/javascript;+charset=utf-8 7.9285ms
+2021-11-12 08:39:51.919 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7229/swagger/v1/swagger.json - -
+2021-11-12 08:39:52.345 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7229/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 425.6634ms
+2021-11-12 09:33:59.537 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 09:33:59.776 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 09:33:59.778 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-12 09:39:10.151 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 09:39:10.355 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 09:39:10.358 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-12 09:39:41.694 +01:00 [INF] User profile is available. Using 'C:\Users\W11x64\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2021-11-12 09:39:41.794 +01:00 [WRN] Overriding address(es) 'https://localhost:7229, http://localhost:5229'. Binding to endpoints defined via IConfiguration and/or UseKestrel() instead.
+2021-11-12 09:39:41.832 +01:00 [INF] Now listening on: https://0.0.0.0:8085
+2021-11-12 09:39:41.834 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-11-12 09:39:41.834 +01:00 [INF] Hosting environment: Development
+2021-11-12 09:39:41.837 +01:00 [INF] Content root path: C:\projects\devon4net6\Templates\WebAPI\Devon4Net.Application.WebAPI\
+2021-11-12 09:40:26.064 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger - -
+2021-11-12 09:40:26.157 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger - - - 301 0 - 93.3252ms
+2021-11-12 09:40:26.160 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/index.html - -
+2021-11-12 09:40:26.339 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/index.html - - - 200 - text/html;charset=utf-8 179.0109ms
+2021-11-12 09:40:26.347 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/swagger-ui-bundle.js - -
+2021-11-12 09:40:26.347 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/swagger-ui.css - -
+2021-11-12 09:40:26.347 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/swagger-ui-standalone-preset.js - -
+2021-11-12 09:40:26.348 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/_framework/aspnetcore-browser-refresh.js - -
+2021-11-12 09:40:26.357 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/_framework/aspnetcore-browser-refresh.js - - - 200 11962 application/javascript;+charset=utf-8 8.8957ms
+2021-11-12 09:40:26.394 +01:00 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2021-11-12 09:40:26.400 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/swagger-ui.css - - - 200 143632 text/css 53.4290ms
+2021-11-12 09:40:26.402 +01:00 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
+2021-11-12 09:40:26.414 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/swagger-ui-standalone-preset.js - - - 200 337162 application/javascript 66.7732ms
+2021-11-12 09:40:26.437 +01:00 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
+2021-11-12 09:40:26.441 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/swagger-ui-bundle.js - - - 200 1092889 application/javascript 93.8989ms
+2021-11-12 09:40:26.585 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/v1/swagger.json - -
+2021-11-12 09:40:26.631 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/favicon-32x32.png - -
+2021-11-12 09:40:26.636 +01:00 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2021-11-12 09:40:26.643 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/favicon-32x32.png - - - 200 628 image/png 10.7475ms
+2021-11-12 09:40:27.081 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 495.6704ms
+2021-11-12 09:52:16.272 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 09:52:16.460 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 09:52:16.462 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-12 09:52:25.292 +01:00 [INF] User profile is available. Using 'C:\Users\W11x64\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2021-11-12 09:52:25.384 +01:00 [WRN] Overriding address(es) 'https://localhost:7229, http://localhost:5229'. Binding to endpoints defined via IConfiguration and/or UseKestrel() instead.
+2021-11-12 09:52:25.421 +01:00 [INF] Now listening on: https://0.0.0.0:8085
+2021-11-12 09:52:25.424 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-11-12 09:52:25.426 +01:00 [INF] Hosting environment: Development
+2021-11-12 09:52:25.427 +01:00 [INF] Content root path: C:\projects\devon4net6\Templates\WebAPI\Devon4Net.Application.WebAPI\
+2021-11-12 09:52:41.103 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/index.html - -
+2021-11-12 09:52:41.376 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/index.html - - - 200 - text/html;charset=utf-8 274.6373ms
+2021-11-12 09:52:41.378 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/swagger-ui-bundle.js - -
+2021-11-12 09:52:41.379 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/_framework/aspnetcore-browser-refresh.js - -
+2021-11-12 09:52:41.379 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/swagger-ui-standalone-preset.js - -
+2021-11-12 09:52:41.379 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/swagger-ui.css - -
+2021-11-12 09:52:41.411 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/_framework/aspnetcore-browser-refresh.js - - - 200 11962 application/javascript;+charset=utf-8 32.4650ms
+2021-11-12 09:52:41.477 +01:00 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
+2021-11-12 09:52:41.477 +01:00 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2021-11-12 09:52:41.487 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/swagger-ui-standalone-preset.js - - - 200 337162 application/javascript 108.4443ms
+2021-11-12 09:52:41.509 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/swagger-ui.css - - - 200 143632 text/css 130.0027ms
+2021-11-12 09:52:41.510 +01:00 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
+2021-11-12 09:52:41.521 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/swagger-ui-bundle.js - - - 200 1092889 application/javascript 142.5889ms
+2021-11-12 09:52:41.741 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/v1/swagger.json - -
+2021-11-12 09:52:42.262 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 520.3400ms
+2021-11-12 11:04:55.093 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 11:04:55.295 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 11:04:55.297 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-12 11:05:08.468 +01:00 [INF] User profile is available. Using 'C:\Users\W11x64\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2021-11-12 11:05:08.556 +01:00 [WRN] Overriding address(es) 'https://localhost:7229, http://localhost:5229'. Binding to endpoints defined via IConfiguration and/or UseKestrel() instead.
+2021-11-12 11:05:08.592 +01:00 [INF] Now listening on: https://0.0.0.0:8085
+2021-11-12 11:05:08.595 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-11-12 11:05:08.596 +01:00 [INF] Hosting environment: Development
+2021-11-12 11:05:08.598 +01:00 [INF] Content root path: C:\projects\devon4net6\Templates\WebAPI\Devon4Net.Application.WebAPI\
+2021-11-12 11:07:49.416 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 11:07:49.629 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 11:07:49.630 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-12 11:09:11.829 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 11:09:12.024 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 11:09:12.027 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-12 11:09:16.464 +01:00 [INF] User profile is available. Using 'C:\Users\W11x64\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2021-11-12 11:09:16.551 +01:00 [WRN] Overriding address(es) 'https://localhost:7229, http://localhost:5229'. Binding to endpoints defined via IConfiguration and/or UseKestrel() instead.
+2021-11-12 11:09:16.588 +01:00 [INF] Now listening on: https://0.0.0.0:8085
+2021-11-12 11:09:16.590 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-11-12 11:09:16.592 +01:00 [INF] Hosting environment: Development
+2021-11-12 11:09:16.594 +01:00 [INF] Content root path: C:\projects\devon4net6\Templates\WebAPI\Devon4Net.Application.WebAPI\
+2021-11-12 11:09:23.993 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/index.html - -
+2021-11-12 11:09:24.221 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/index.html - - - 200 - text/html;charset=utf-8 226.4839ms
+2021-11-12 11:09:24.233 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/_framework/aspnetcore-browser-refresh.js - -
+2021-11-12 11:09:24.233 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/swagger-ui.css - -
+2021-11-12 11:09:24.239 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/_framework/aspnetcore-browser-refresh.js - - - 200 11962 application/javascript;+charset=utf-8 5.6671ms
+2021-11-12 11:09:24.253 +01:00 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2021-11-12 11:09:24.256 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/swagger-ui.css - - - 200 143632 text/css 22.8231ms
+2021-11-12 11:09:24.481 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/favicon-32x32.png - -
+2021-11-12 11:09:24.481 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/v1/swagger.json - -
+2021-11-12 11:09:24.486 +01:00 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2021-11-12 11:09:24.489 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/favicon-32x32.png - - - 200 628 image/png 7.5685ms
+2021-11-12 11:09:24.886 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 405.1818ms
+2021-11-12 11:48:20.494 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 11:48:20.743 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 11:48:20.746 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-12 11:48:25.296 +01:00 [INF] User profile is available. Using 'C:\Users\W11x64\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2021-11-12 11:48:25.397 +01:00 [WRN] Overriding address(es) 'https://localhost:7229, http://localhost:5229'. Binding to endpoints defined via IConfiguration and/or UseKestrel() instead.
+2021-11-12 11:48:25.442 +01:00 [INF] Now listening on: https://0.0.0.0:8085
+2021-11-12 11:48:25.445 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-11-12 11:48:25.447 +01:00 [INF] Hosting environment: Development
+2021-11-12 11:48:25.450 +01:00 [INF] Content root path: C:\projects\devon4net6\Templates\WebAPI\Devon4Net.Application.WebAPI\
+2021-11-12 11:48:34.225 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/index.html - -
+2021-11-12 11:48:34.506 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/index.html - - - 200 - text/html;charset=utf-8 284.3027ms
+2021-11-12 11:48:34.509 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/_framework/aspnetcore-browser-refresh.js - -
+2021-11-12 11:48:34.509 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/swagger-ui.css - -
+2021-11-12 11:48:34.523 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/_framework/aspnetcore-browser-refresh.js - - - 200 11962 application/javascript;+charset=utf-8 13.7207ms
+2021-11-12 11:48:34.536 +01:00 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2021-11-12 11:48:34.539 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/swagger-ui.css - - - 200 143632 text/css 30.0083ms
+2021-11-12 11:48:34.727 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/favicon-32x32.png - -
+2021-11-12 11:48:34.727 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/v1/swagger.json - -
+2021-11-12 11:48:34.739 +01:00 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2021-11-12 11:48:34.742 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/favicon-32x32.png - - - 200 628 image/png 14.6602ms
+2021-11-12 11:48:35.213 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 485.8533ms
+2021-11-12 14:52:09.448 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 14:52:09.738 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 14:52:09.740 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-12 14:52:14.374 +01:00 [INF] User profile is available. Using 'C:\Users\W11x64\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2021-11-12 14:52:14.464 +01:00 [WRN] Overriding address(es) 'https://localhost:7229, http://localhost:5229'. Binding to endpoints defined via IConfiguration and/or UseKestrel() instead.
+2021-11-12 14:52:14.501 +01:00 [INF] Now listening on: https://0.0.0.0:8085
+2021-11-12 14:52:14.505 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-11-12 14:52:14.507 +01:00 [INF] Hosting environment: Development
+2021-11-12 14:52:14.509 +01:00 [INF] Content root path: C:\projects\devon4net6\Templates\WebAPI\Devon4Net.Application.WebAPI\
+2021-11-12 14:57:54.499 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 14:57:54.701 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-12 14:57:54.702 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-12 14:57:59.195 +01:00 [INF] User profile is available. Using 'C:\Users\W11x64\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2021-11-12 14:57:59.301 +01:00 [WRN] Overriding address(es) 'https://localhost:7229, http://localhost:5229'. Binding to endpoints defined via IConfiguration and/or UseKestrel() instead.
+2021-11-12 14:57:59.344 +01:00 [INF] Now listening on: https://0.0.0.0:8085
+2021-11-12 14:57:59.346 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-11-12 14:57:59.348 +01:00 [INF] Hosting environment: Development
+2021-11-12 14:57:59.351 +01:00 [INF] Content root path: C:\projects\devon4net6\Templates\WebAPI\Devon4Net.Application.WebAPI\
+2021-11-12 14:58:07.753 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/index.html - -
+2021-11-12 14:58:07.984 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/index.html - - - 200 - text/html;charset=utf-8 231.6451ms
+2021-11-12 14:58:07.990 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/swagger-ui.css - -
+2021-11-12 14:58:08.005 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/_framework/aspnetcore-browser-refresh.js - -
+2021-11-12 14:58:08.011 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/_framework/aspnetcore-browser-refresh.js - - - 200 11962 application/javascript;+charset=utf-8 5.8832ms
+2021-11-12 14:58:08.026 +01:00 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
+2021-11-12 14:58:08.030 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/swagger-ui.css - - - 200 143632 text/css 40.3196ms
+2021-11-12 14:58:08.199 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/v1/swagger.json - -
+2021-11-12 14:58:08.199 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/swagger/favicon-32x32.png - -
+2021-11-12 14:58:08.207 +01:00 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
+2021-11-12 14:58:08.220 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/favicon-32x32.png - - - 200 628 image/png 19.9765ms
+2021-11-12 14:58:08.615 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 415.2498ms
+2021-11-12 14:58:25.377 +01:00 [INF] Request starting HTTP/2 POST https://localhost:8085/Todo?todoDescription=asasas - 0
+2021-11-12 14:58:25.386 +01:00 [INF] CORS policy execution successful.
+2021-11-12 14:58:25.395 +01:00 [INF] Executing endpoint 'Devon4Net.Application.WebAPI.Implementation.Business.TodoManagement.Controllers.TodoController.Create (Devon4Net.Application.WebAPI.Implementation)'
+2021-11-12 14:58:25.495 +01:00 [INF] Route matched with {action = "Create", controller = "Todo"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] Create(System.String) on controller Devon4Net.Application.WebAPI.Implementation.Business.TodoManagement.Controllers.TodoController (Devon4Net.Application.WebAPI.Implementation).
+2021-11-12 14:58:26.122 +01:00 [INF] Entity Framework Core 6.0.0 initialized 'TodoContext' using provider 'Microsoft.EntityFrameworkCore.InMemory:6.0.0' with options: StoreName=Todos 
+2021-11-12 14:58:26.208 +01:00 [INF] Saved 1 entities to in-memory store.
+2021-11-12 14:58:26.223 +01:00 [INF] Executing ObjectResult, writing value of type 'Devon4Net.Application.WebAPI.Implementation.Domain.Entities.Todos'.
+2021-11-12 14:58:26.234 +01:00 [INF] Executed action Devon4Net.Application.WebAPI.Implementation.Business.TodoManagement.Controllers.TodoController.Create (Devon4Net.Application.WebAPI.Implementation) in 727.5031ms
+2021-11-12 14:58:26.237 +01:00 [INF] Executed endpoint 'Devon4Net.Application.WebAPI.Implementation.Business.TodoManagement.Controllers.TodoController.Create (Devon4Net.Application.WebAPI.Implementation)'
+2021-11-12 14:58:26.242 +01:00 [INF] Request finished HTTP/2 POST https://localhost:8085/Todo?todoDescription=asasas - 0 - 201 - application/json;+charset=utf-8 865.3841ms
+2021-11-12 14:58:35.757 +01:00 [INF] Request starting HTTP/2 GET https://localhost:8085/v1/MediatR/gettodobyid?todoId=1 - -
+2021-11-12 14:58:35.763 +01:00 [INF] Executing endpoint 'Devon4Net.Application.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController.GetTodoById (Devon4Net.Application.WebAPI.Implementation)'
+2021-11-12 14:58:35.770 +01:00 [INF] Route matched with {action = "GetTodoById", controller = "MediatR"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetTodoById(Int64) on controller Devon4Net.Application.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController (Devon4Net.Application.WebAPI.Implementation).
+2021-11-12 14:58:36.133 +01:00 [INF] Entity Framework Core 6.0.0 initialized 'TodoContext' using provider 'Microsoft.EntityFrameworkCore.InMemory:6.0.0' with options: StoreName=Todos 
+2021-11-12 14:58:36.331 +01:00 [INF] Executing OkObjectResult, writing value of type 'Devon4Net.Application.WebAPI.Implementation.Business.MediatRManagement.Dto.TodoResultDto'.
+2021-11-12 14:58:36.338 +01:00 [INF] Executed action Devon4Net.Application.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController.GetTodoById (Devon4Net.Application.WebAPI.Implementation) in 536.3726ms
+2021-11-12 14:58:36.341 +01:00 [INF] Executed endpoint 'Devon4Net.Application.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController.GetTodoById (Devon4Net.Application.WebAPI.Implementation)'
+2021-11-12 14:58:36.343 +01:00 [INF] Request finished HTTP/2 GET https://localhost:8085/v1/MediatR/gettodobyid?todoId=1 - - - 200 - application/json;+charset=utf-8 586.3869ms

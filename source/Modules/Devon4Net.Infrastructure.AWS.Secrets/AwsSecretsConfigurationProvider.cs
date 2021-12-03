@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Amazon;
+﻿using Amazon;
 using Amazon.Runtime;
 using Amazon.SecretsManager;
 using Amazon.SecretsManager.Model;
@@ -12,7 +8,6 @@ namespace Devon4Net.Infrastructure.AWS.Secrets
 {
     public class AwsSecretsConfigurationProvider : ConfigurationProvider, IDisposable
     {
-        private static bool IsJson(string str) => str.StartsWith("[") || str.StartsWith("{");
         private IAwsSecretsHandler AwsSecretsHandler { get; set; }
 
         public AwsSecretsConfigurationProvider(AWSCredentials awsCredentials = null, RegionEndpoint regionEndpoint = null)
@@ -27,7 +22,14 @@ namespace Devon4Net.Infrastructure.AWS.Secrets
 
         public void Dispose()
         {
-            AwsSecretsHandler.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing) return;
+            ((AwsSecretsHandler)AwsSecretsHandler).Dispose();
         }
 
         private async Task<Dictionary<string, string>> GetAwsSecretsData(CancellationToken cancellationToken)
@@ -45,7 +47,6 @@ namespace Devon4Net.Infrastructure.AWS.Secrets
                         continue;
 
                     result.Add(secret.Name, secretValueString);
-
                 }
                 catch (ResourceNotFoundException ex)
                 {

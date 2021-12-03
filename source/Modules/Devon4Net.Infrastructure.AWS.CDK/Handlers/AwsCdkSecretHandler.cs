@@ -1,5 +1,4 @@
-﻿using System;
-using Amazon.CDK;
+﻿using Amazon.CDK;
 using Amazon.CDK.AWS.KMS;
 using Amazon.CDK.AWS.SecretsManager;
 

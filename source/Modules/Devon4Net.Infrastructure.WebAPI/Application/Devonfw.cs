@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Devon4Net.Application.WebAPI.Configuration.Common;
-using Devon4Net.Infrastructure.Common;
-using Devon4Net.Infrastructure.Common.Options;
+﻿using Devon4Net.Application.WebAPI.Configuration.Common;
+using Devon4Net.Infrastructure.Common.Common.IO;
+using Devon4Net.Infrastructure.Common.Handlers;
 using Devon4Net.Infrastructure.Common.Options.Devon;
-using Devon4Net.Infrastructure.Extensions.Helpers;
 using Devon4Net.Infrastructure.Log;
-using Devon4Net.Infrastructure.Middleware.Headers;
-using Microsoft.AspNetCore.Builder;
+using Devon4Net.Infrastructure.WebAPI.Common.Attributes;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,14 +23,14 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             WebHostBuilder = builder;
             LoadConfiguration();
 
-            var useDetailedErrorsKey = Configuration[$"{DevonFwConst.DevonFwAppSettingsNodeName}:UseDetailedErrorsKey"];
+            var useDetailedErrorsKey = Configuration[$"{DevonFwConst.OptionsNodeName}:UseDetailedErrorsKey"];
             WebHostBuilder.UseSetting(WebHostDefaults.DetailedErrorsKey, useDetailedErrorsKey);
 
-            var useIis = Convert.ToBoolean(Configuration[$"{DevonFwConst.DevonFwAppSettingsNodeName}:UseIIS"], System.Globalization.CultureInfo.InvariantCulture);
+            var useIis = Convert.ToBoolean(Configuration[$"{DevonFwConst.OptionsNodeName}:UseIIS"], System.Globalization.CultureInfo.InvariantCulture);
 
             if (useIis)
             {
-                ConfigureIis();
+                WebHostBuilder.UseIISIntegration();
             }
             else
             {
@@ -49,60 +43,40 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             return builder;
         }
 
-        public static void SetupDevonfw(this IServiceCollection services, ref IConfiguration configuration)
+        public static void SetupDevonfw(this IServiceCollection services, IConfiguration configuration)
         {
-
-            DevonfwOptions = services.GetTypedOptions<DevonfwOptions>(configuration, DevonFwConst.DevonFwAppSettingsNodeName);
+            DevonfwOptions = services.GetTypedOptions<DevonfwOptions>(configuration, DevonFwConst.OptionsNodeName);
 
             if (DevonfwOptions == null || string.IsNullOrEmpty(DevonfwOptions.Environment) || DevonfwOptions.Kestrel == null)
             {
-                throw new ApplicationException("Please check the devonfw options node in your configuration file");
+                throw new ArgumentException("Please check the devonfw options node in your configuration file");
             }
 
-            services.ConfigureIIS(ref configuration);
-            services.SetupKillSwitch(ref configuration);
-            services.AddTransient(typeof(IObjectTypeHelper), typeof(ObjectTypeHelper));
-            services.AddTransient(typeof(IJsonHelper), typeof(JsonHelper));
-            services.ConfigureXsrf();
-        }
+            if (DevonfwOptions.UseModelStateValidation)
+            {
+                services.AddMvc(options => options.Filters.Add(typeof(ModelStateCheckerAttribute)));
+            }
 
-        public static void InitializeDevonFw(this IApplicationBuilder app)
-        {
-            app.UseRequestLocalization();
-            app.SetupDevonfwMiddleware();
-
-            bool.TryParse(Configuration[$"{DevonFwConst.DevonFwAppSettingsNodeName}:UseSwagger"], out bool useSwagger);
-
-            if (!useSwagger) return;
-            
-            var swaggerEndpoint = Configuration["Swagger:Endpoint:Url"];
-            var swaggerName = Configuration["Swagger:Endpoint:Name"];
-            
-            if (!string.IsNullOrEmpty(swaggerEndpoint) && !string.IsNullOrEmpty(swaggerName)) app.ConfigureSwaggerApplication(swaggerEndpoint, swaggerName);
-        }
-
-        private static void ConfigureIis()
-        {
-            WebHostBuilder.UseIISIntegration();
+            if (DevonfwOptions.UseIIS) services.ConfigureIIS(DevonfwOptions.IIS);
         }
 
         private static void LoadConfiguration()
         {
             SetupConfigurationBuilder();
-            AddConfigurationSettingsFile("appsettings.json", false, true);
-            AddConfigurationSettingsFile($"appsettings.{Configuration[$"{DevonFwConst.DevonFwAppSettingsNodeName}:Environment"]}.json", true, true);
+            AddConfigurationSettingsFile("appsettings.json", true, true);
+            AddConfigurationSettingsFile($"appsettings.{Configuration[$"{DevonFwConst.OptionsNodeName}:Environment"]}.json", true, true);
             CheckExtraSettingsFiles();
         }
 
         private static void CheckExtraSettingsFiles()
         {
-            Devon4NetLogger.Information($"CheckExtraSettingsFiles Initialized");
+            Devon4NetLogger.Information("CheckExtraSettingsFiles Initialized");
             var appSettingsList = new List<string>();
             Configuration.GetSection("ExtraSettingsFiles").Bind(appSettingsList);
 
-            if (!appSettingsList.Any())
+            if (appSettingsList?.Any() != true)
             {
-                Devon4NetLogger.Information($"CheckExtraSettingsFiles does not contains any settings file to be managed");
+                Devon4NetLogger.Information("CheckExtraSettingsFiles does not contains any settings file to be managed");
                 return;
             }
 
@@ -112,10 +86,10 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
 
         private static void ManageSettingsFiles(IReadOnlyCollection<string> settingsItemList)
         {
-            Devon4NetLogger.Information($"Managing settings global settings files ...");
-            if (settingsItemList == null || !settingsItemList.Any())
+            Devon4NetLogger.Information("Managing settings global settings files ...");
+            if (settingsItemList?.Any() != true)
             {
-                Devon4NetLogger.Information($"No global settings files found!");
+                Devon4NetLogger.Information("No global settings files found!");
                 return;
             }
 
@@ -181,16 +155,6 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             ConfigurationBuilder = new ConfigurationBuilder();
             ConfigurationBuilder.SetBasePath(Directory.GetCurrentDirectory());
             Configuration = ConfigurationBuilder.Build();
-        }
-
-        private static void ConfigureXsrf(this IServiceCollection services)
-        {
-            if(DevonfwOptions == null || !DevonfwOptions.UseXsrf) return;
-            services.AddAntiforgery(options =>
-            {
-                options.HeaderName = CustomMiddlewareHeaderTypeConst.XsrfToken;
-                options.SuppressXFrameOptionsHeader = false;
-            });
         }
     }
 }

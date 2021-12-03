@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Concurrent;
 
 namespace Devon4Net.Infrastructure.AWS.Lambda.Extensions
 {
@@ -16,7 +12,7 @@ namespace Devon4Net.Infrastructure.AWS.Lambda.Extensions
                 {
                     using (partition)
                         while (partition.MoveNext())
-                            await body(partition.Current);
+                            await body(partition.Current).ConfigureAwait(false);
                 }));
         }
     }

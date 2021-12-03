@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.IO;
-using System.Linq;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using Devon4Net.Infrastructure.Common;
+using Devon4Net.Infrastructure.Common.Common.IO;
 using Devon4Net.Infrastructure.Common.Options.JWT;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -32,7 +28,7 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
             }
             else
             {
-                throw new ArgumentNullException($"Cannot create the JWT Handler. JWTOptions are null");
+                throw new ArgumentException("Cannot create the JWT Handler. JWTOptions are null");
             }
         }
 

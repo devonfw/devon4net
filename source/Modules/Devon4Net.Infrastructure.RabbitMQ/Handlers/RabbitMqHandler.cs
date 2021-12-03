@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Devon4Net.Infrastructure.Log;
+﻿using Devon4Net.Infrastructure.Log;
 using Devon4Net.Infrastructure.RabbitMQ.Commands;
 using Devon4Net.Infrastructure.RabbitMQ.Common;
 using Devon4Net.Infrastructure.RabbitMQ.Domain.ServiceInterfaces;
@@ -40,65 +38,64 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
 
         public async Task<bool> Publish(T command)
         {
-            var status = QueueActionsEnum.SetUp;
+            var status = QueueActions.SetUp;
 
             try
             {
-                status = QueueActionsEnum.SetUp;
+                status = QueueActions.SetUp;
 
-                await ServiceBus.PubSub.PublishAsync(command).ContinueWith(task => { status = PublishCommandTaskResult(command, task);}).ConfigureAwait(false);
+                await ServiceBus.PubSub.PublishAsync(command).ContinueWith(task => status = PublishCommandTaskResult(command, task)).ConfigureAwait(false);
                 await BackUpMessage(command, status).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                await BackUpMessage(command, QueueActionsEnum.Error, false, string.Empty, $"{ex.Message} : {ex.InnerException}").ConfigureAwait(false);
+                await BackUpMessage(command, QueueActions.Error, false, string.Empty, $"{ex.Message} : {ex.InnerException}").ConfigureAwait(false);
                 Devon4NetLogger.Error($"Error publishing message: {ex.Message}/{ex.InnerException}");
                 Devon4NetLogger.Error(ex);
             }
 
-            return status == QueueActionsEnum.Sent;
+            return status == QueueActions.Sent;
         }
 
-        public T GetInstance<T>()
+        public S GetInstance<S>() where S : class
         {
-            var sp = Services.BuildServiceProvider();
-            return sp.GetService<T>();
+            return Services.BuildServiceProvider().GetService<S>();
         }
 
         private async Task<bool> BackupAndHandleCommand(T message)
         {
-            var status = QueueActionsEnum.SetUp;
+            var status = QueueActions.SetUp;
             var errorMessage = string.Empty;
             try
             {
-                await HandleCommand(message).ContinueWith(task => { status = HandleCommandTaskResult(message, task, out errorMessage);}).ConfigureAwait(false);
+                await HandleCommand(message).ContinueWith(task => status = HandleCommandTaskResult(message, task, out errorMessage)).ConfigureAwait(false);
                 await BackUpMessage(message, status,false,string.Empty, errorMessage).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                await BackUpMessage(message, QueueActionsEnum.Error, false, string.Empty, $"{ex.Message} : {ex.InnerException}").ConfigureAwait(false);
+                await BackUpMessage(message, QueueActions.Error, false, string.Empty, $"{ex.Message} : {ex.InnerException}").ConfigureAwait(false);
                 Devon4NetLogger.Error($"Error handling message: {ex.Message}/{ex.InnerException}");
                 Devon4NetLogger.Error(ex);
                 return false;
             }
 
-            return status == QueueActionsEnum.Handled;
+            return status == QueueActions.Handled;
         }
 
-        private static QueueActionsEnum HandleCommandTaskResult(T message, Task<bool> task, out string errorMessage)
+        private static QueueActions HandleCommandTaskResult(T message, Task<bool> task, out string errorMessage)
         {
-            var status = QueueActionsEnum.SetUp;
+            var status = QueueActions.SetUp;
             errorMessage = string.Empty;
 
             if (task.IsCompleted)
             {
-                status = QueueActionsEnum.Handled;
+                status = QueueActions.Handled;
                 Devon4NetLogger.Information($"Message {message.MessageType} with identifier '{message.InternalMessageIdentifier}' published");
             }
 
             if (!task.IsFaulted) return status;
 
-            status = QueueActionsEnum.Error;
+            status = QueueActions.Error;
             errorMessage = $"Message {message.MessageType} with identifier '{message.InternalMessageIdentifier}' NOT published. {task.Exception?.Message} | {task.Exception?.InnerExceptions}";
             Devon4NetLogger.Error(errorMessage);
             Devon4NetLogger.Error(task.Exception);
@@ -106,19 +103,19 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
             return status;
         }
 
-        private static QueueActionsEnum PublishCommandTaskResult(T command, Task task)
+        private static QueueActions PublishCommandTaskResult(T command, Task task)
         {
-            var status = QueueActionsEnum.SetUp;
+            var status = QueueActions.SetUp;
 
             if (task.IsCompleted)
             {
-                status = QueueActionsEnum.Sent;
+                status = QueueActions.Sent;
                 Devon4NetLogger.Information($"Message {command.MessageType} with identifier '{command.InternalMessageIdentifier}' published");
             }
 
             if (!task.IsFaulted) return status;
 
-            status = QueueActionsEnum.Error;
+            status = QueueActions.Error;
             Devon4NetLogger.Error($"Message {command.MessageType} with identifier '{command.InternalMessageIdentifier}' NOT published");
             Devon4NetLogger.Error(task.Exception);
 
@@ -145,7 +142,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
             }
         }
 
-        private async Task BackUpMessage(T command, QueueActionsEnum queueAction = QueueActionsEnum.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null)
+        private async Task BackUpMessage(T command, QueueActions queueAction = QueueActions.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null)
         {
             try
             {

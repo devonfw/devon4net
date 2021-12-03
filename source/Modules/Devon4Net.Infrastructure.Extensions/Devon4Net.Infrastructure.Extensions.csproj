@@ -1,29 +1,45 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
-        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <Version>3.1.10</Version>
-        <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
-        <Company>Capgemini S.A.</Company>
-        <Description>Common extensions for devon4net</Description>
-        <Copyright>Copyright © Capgemini</Copyright>
-        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <PackageProjectUrl>https://www.devonfw.com</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
-        <RepositoryType />
-        <license>http://www.devonfw.com/terms-of-use/</license>
-        <PackageTags>devonfw devon4net Capgemini extension httpcontext</PackageTags>
-        <PackageReleaseNotes>Netstandard 2.1 for devonfw net core 3.1 compatibility version</PackageReleaseNotes>
-        <icon>https://avatars2.githubusercontent.com/u/7803029?s=200&amp;v=4</icon>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
+    <Company>Capgemini S.A.</Company>
+    <Description>Common extensions for devon4net</Description>
+    <Version>6.0.1</Version>
+    <Copyright>Copyright © Capgemini</Copyright>
+    <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
+    <license>https://github.com/devonfw/ide/blob/master/LICENSE/</license>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>devonfw;devon4net;Capgemini;GUID;context</PackageTags>
+    <PackageReleaseNotes>NET 6.0+ compatibility version</PackageReleaseNotes>
+    <PackageIcon>devonfw.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>	 
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>	 	  
+  </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="3.1.10" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.12" />
       <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
-      <PackageReference Include="System.Text.Json" Version="4.7.2" />
+      <PackageReference Include="System.Text.Json" Version="6.0.0" />
     </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\..\assets\images\devonfw.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+	  <None Include="..\..\..\LICENSE">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+	  </None>	  
+  </ItemGroup>	
 </Project>

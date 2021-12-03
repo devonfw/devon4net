@@ -1,5 +1,4 @@
-﻿using System;
-using Devon4Net.Infrastructure.Extensions;
+﻿using Devon4Net.Infrastructure.Extensions;
 using Devon4Net.Infrastructure.LiteDb.Repository;
 using Devon4Net.Infrastructure.Log;
 using Devon4Net.Infrastructure.MediatR.Common;
@@ -21,7 +20,7 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
             JsonHelper = jsonHelper;
         }
 
-        public BsonValue CreateMessageBackup<T>(ActionBase<T> command, MediatRActionsEnum action = MediatRActionsEnum.Sent,
+        public BsonValue CreateMessageBackup<T>(ActionBase<T> command, MediatrActions action = MediatrActions.Sent,
             bool increaseRetryCounter = false, string additionalData = null, string errorData = null) where T : class
         {
             try
@@ -54,7 +53,7 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
             }
         }
 
-        public BsonValue CreateResponseMessageBackup(object command, MediatRActionsEnum action = MediatRActionsEnum.Sent,
+        public BsonValue CreateResponseMessageBackup(object command, MediatrActions action = MediatrActions.Sent,
             bool increaseRetryCounter = false, string additionalData = null, string errorData = null)
         {
             try
@@ -83,7 +82,7 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
         private string GetSerializedContent(object command)
         {
             var typedCommand = Convert.ChangeType(command, command.GetType());
-            var serializedContent = JsonHelper.Serialize(typedCommand);
+            var serializedContent = JsonHelper.Serialize(typedCommand, false);
             return serializedContent;
         }
     }

@@ -61,7 +61,7 @@ PE: devon4Net API template shows how to implement the TODOs service as follows:
     public class TodoService: Service<TodoContext>, ITodoService
 ----
 
-Where _Service_ is the base service class to be inherited and have full access for the _Unit of work_, _TodoContext_ is the TODOs database context and _ITodoService_ is the interface of the service, which exposes the public extended methods to be implemented.
+Where _Service_ is the base service class to be inherited and have full access for the _Unit of work_, `_TodoContext_` is the TODOs database context and _ITodoService_ is the interface of the service, which exposes the public extended methods to be implemented.
 
 
 ==== Data layer
@@ -112,14 +112,14 @@ The repository and unit of work patterns are create an abstraction layer between
 
 NOTE: Domain Layer has no dependencies with other layers. It contains the Entities, datasources and the Repository Interfaces.
 
-=== devon4Net architecture layer implementaion
+=== devon4Net architecture layer implementation
 
-The next picture shows how the devon4Net API template implements the architectured described in previous points:
+The next picture shows how the devon4Net API template implements the architecture described in previous points:
 
 
 [[img-t-architecture]]
 .devon4Net architecture implementations
-image::images/onion_architecture_solution.png["devon4Net api templare architecture implementation", width="400", link="images/onion_architecture_solution.png"]
+image::images/onion_architecture_solution.png["devon4Net api template architecture implementation", width="400", link="images/onion_architecture_solution.png"]
 
 ==== Cross-Cutting concerns
 
@@ -141,14 +141,14 @@ The provided _Data Layer_ contains the abstract classes to inherit from. All new
 
 [[img-t-architecture]]
 .Architecture representation in deep
-image::images/laryer_arch_detail.png["technical architecture", width="750", link="images/laryer_arch_detail.png"]
+image::images/layer_arch_detail.png["technical architecture", width="750", link="images/layer_arch_detail.png"]
 
 == Templates
 === State of the art
 
 The provided bundle contains the devon4Net API template based on .net core. The template allows to create a microservice solution with minimal configuration. 
 
-Also, the devon4Net framework can be added to third party templates such as the Amazon API template to use lambdas in serverless envirnments.
+Also, the devon4Net framework can be added to third party templates such as the Amazon API template to use lambdas in serverless environments.
 
 Included features:
 
@@ -177,10 +177,10 @@ Included features:
 
 - Headers:
               - Automatic header injection with middleware.
-              - Supported header definitions: AccessControlExposeHeader, StrictTransportSecurityHeader, XFrameOptionsHeader, XssProtectionHeader, XContentTypeOptionsHeader, ContentSecurityPolicyHeader, PermittedCrossDomainPoliciesHeader, ReferrerPolicyHeader
+              - Supported header definitions: `AccessControlExposeHeader, StrictTransportSecurityHeader, XFrameOptionsHeader, XssProtectionHeader, XContentTypeOptionsHeader, ContentSecurityPolicyHeader, PermittedCrossDomainPoliciesHeader, ReferrerPolicyHeader`
 
 - Reporting server:
-              - Partial implementation of reporting server based on My-FyiReporting (now runs on linux container)
+              - Partial implementation of reporting server based on `My-FyiReporting` (now runs on linux container)
 
 - Testing:
               - Integration test template with sqlite support
@@ -192,28 +192,28 @@ Included features:
               - Client Certificate customization
               - Number of retries customizables
 
-- LiteDb:
+- LiteDB:
             - Support for LiteDB
             - Provided basic repository for CRUD operations
 
-- RabbitMq:
+- `RabbitMq`:
             - Use of EasyQNet library to perform CQRS main functions between different microservices
             - Send commands / Subscribe queues with one C# sentence
             - Events management: Handled received commands to subscribed messages
             - Automatic messaging backup when sent and handled (Internal database via LiteDB and database backup via Entity Framework)
 
-- MediatR:
-            - Use of MediatR library to perform CQRS main functions in memory
+- `MediatR`:
+            - Use of `MediatR` library to perform CQRS main functions in memory
             - Send commands / Subscribe queues with one C# sentence
             - Events management: Handled received commands to subscribed messages
             - Automatic messaging backup when sent and handled (Internal database via LiteDB and database backup via Entity Framework)
-- SmaxHcm:
-            - Component to manage Microfocus SMAX for cloud infrastructure services management
+- `SmaxHcm`:
+            - Component to manage Microfocus `SMAX` for cloud infrastructure services management
 
 - CyberArk:
             - Manage safe credentials with CyberArk
 
-- AnsibleTower:
+- `AnsibleTower`:
             - Ansible automates the cloud infrastructure. devon4net integrates with Ansible Tower via API consumption endpoints
 
 - gRPC+Protobuf:
@@ -234,12 +234,12 @@ Included features:
 |link:guide-service-layer[service]|link:guide-service-layer#rest[REST services]|https://www.asp.net/web-api[Web API]
 |link:guide-service-layer[service - integration to external systems - optional]|link:guide-service-layer#soap[SOAP services]|https://msdn.microsoft.com/en-us/library/dd456779(v=vs.110).aspx[WCF]
 |link:guide-logging[logging]|framework|https://github.com/serilog/serilog-extensions-logging[Serilog]
-|link:guide-validation[validation]|framework| https://www.newtonsoft.com/jsonschema/help/html/GenerateWithDataAnnotations.htm[NewtonSoft Json], http://www.asp.net/mvc/overview/older-versions-1/models-data/validation-with-the-data-annotation-validators-cs[DataAnnotations]
+|link:guide-validation[validation]|framework| https://www.newtonsoft.com/jsonschema/help/html/GenerateWithDataAnnotations.htm[`NewtonSoft` Json], http://www.asp.net/mvc/overview/older-versions-1/models-data/validation-with-the-data-annotation-validators-cs[`DataAnnotations`]
 |component management|link:guide-dependency-injection[dependency injection]| https://unity.codeplex.com[Unity]
 |link:guide-security[security]|Authentication & Authorization| https://jwt.io[JWT] https://msdn.microsoft.com/en-us/library/fkytk30f(v=vs.110).aspx[.Net Security - Token based, local Authentication Provider]
-|unit tests|framework|https://xunit.github.io/[xUnit]
+|unit tests|framework|https://github.com/xunit/xunit[xUnit]
 |Circuit breaker|framework, allows retry pattern on http calls|https://github.com/App-vNext/Polly[Polly]
-|CQRS|Memory events and queue events| https://github.com/jbogard/MediatR[MediatR] - https://github.com/EasyNetQ/EasyNetQ[EasyNetQ] - https://github.com/confluentinc/confluent-kafka-dotnet[Kafka]
+|CQRS|Memory events and queue events| https://github.com/jbogard/MediatR[`MediatR`] - https://github.com/EasyNetQ/EasyNetQ[EasyNetQ] - https://github.com/confluentinc/confluent-kafka-dotnet[Kafka]
 |Kafka| Kafka support for enterprise applications| https://github.com/confluentinc/confluent-kafka-dotnet[Confluent.Kafka]
 |Fluent Validation| Fluent validation for class instances|https://fluentvalidation.net/[Fluent validation]
 |=======================
@@ -247,7 +247,7 @@ Included features:
 
 === Target platforms
 
-Thanks to the new .Net Core platform from Microsoft, the developed software can be published Windows, Linux, OS X and Android platforms.
+Thanks to the new .Net Core platform from Microsoft, the developed software can be published Windows, Linux, OS, X and Android platforms.
 
 
 

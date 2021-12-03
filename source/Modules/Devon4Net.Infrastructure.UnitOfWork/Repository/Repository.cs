@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Devon4Net.Domain.UnitOfWork.Exceptions;
 using Devon4Net.Domain.UnitOfWork.Pagination;
 using Microsoft.EntityFrameworkCore;
@@ -137,9 +133,9 @@ namespace Devon4Net.Domain.UnitOfWork.Repository
             return GetPagedResult(currentPage, pageSize, GetResultSetWithNestedProperties(includedNestedFiels, predicate));
         }
 
-        private async Task<PaginationResult<T>> GetPagedResult(int currentPage, int pageSize, IQueryable<T> resultList)
+        private static async Task<PaginationResult<T>> GetPagedResult(int currentPage, int pageSize, IQueryable<T> resultList)
         {
-            var pagedResult = new PaginationResult<T>() { CurrentPage = currentPage, PageSize = pageSize, RowCount = resultList.Count() };
+            var pagedResult = new PaginationResult<T>() { CurrentPage = currentPage, PageSize = pageSize, RowCount = await resultList.CountAsync().ConfigureAwait(false) };
 
             var pageCount = (double)pagedResult.RowCount / pageSize;
             pagedResult.PageCount = (int)Math.Ceiling(pageCount);
@@ -150,10 +146,10 @@ namespace Devon4Net.Domain.UnitOfWork.Repository
             return pagedResult;
         }
 
-        private IQueryable<T> SetQuery<T>() where T : class
+        private IQueryable<S> SetQuery<S>() where S : class
         {
             SetContextBehaviour(DbContextBehaviour);
-            return DbContext.Set<T>().AsNoTracking();
+            return DbContext.Set<S>().AsNoTracking();
         }
 
         private void SetContextBehaviour( bool enabled)

@@ -1,7 +1,0 @@
-{
-  "KillSwitchConfiguration": {
-    "UseKillSwitch": true,
-    "EnableRequests": true,
-    "HttpStatusCode" : 403
-  }
-}

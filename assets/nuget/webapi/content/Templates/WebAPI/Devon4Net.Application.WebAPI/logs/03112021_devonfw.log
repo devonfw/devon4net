@@ -1,0 +1,94 @@
+2021-11-03 11:57:52.371 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 11:57:58.636 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 11:58:38.866 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 11:58:38.907 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 12:00:26.870 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 12:00:26.923 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 12:01:40.223 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 12:01:40.256 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 12:04:17.500 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 12:04:17.563 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 12:04:57.112 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 12:04:57.157 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 12:08:42.752 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 12:08:45.362 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 12:10:19.668 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 12:10:19.700 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 13:20:02.577 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 13:20:08.712 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 13:22:44.732 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 13:22:44.759 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 13:44:56.823 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 13:44:56.859 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 13:50:01.513 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 13:50:01.559 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 13:52:49.028 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 13:52:49.057 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 13:56:18.138 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 13:56:18.177 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 13:58:03.357 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 13:58:03.397 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 14:10:08.526 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 14:10:08.565 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 14:12:20.416 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 14:12:20.445 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 14:12:51.049 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 14:12:51.088 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 14:14:17.752 +01:00 [ERR] Exception Type: InvalidOperationException | Message: Endpoint Devon4Net.Application.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController.CreateTodo (Devon4Net.Application.WebAPI.Implementation) contains CORS metadata, but a middleware was not found that supports CORS.
+Configure your application startup by adding app.UseCors() inside the call to Configure(..) in the application startup code. The call to app.UseCors() must appear between app.UseRouting() and app.UseEndpoints(...). | InnerException: No InnerException exception data found
+2021-11-03 14:19:01.937 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 14:19:01.990 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 14:20:21.681 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 14:20:21.717 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 14:20:44.970 +01:00 [ERR] Exception Type: InvalidOperationException | Message: Endpoint Devon4Net.Application.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController.CreateTodo (Devon4Net.Application.WebAPI.Implementation) contains CORS metadata, but a middleware was not found that supports CORS.
+Configure your application startup by adding app.UseCors() inside the call to Configure(..) in the application startup code. The call to app.UseCors() must appear between app.UseRouting() and app.UseEndpoints(...). | InnerException: No InnerException exception data found
+2021-11-03 14:22:39.396 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 14:22:39.437 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 14:22:59.575 +01:00 [ERR] Exception Type: InvalidOperationException | Message: Endpoint Devon4Net.Application.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController.CreateTodo (Devon4Net.Application.WebAPI.Implementation) contains CORS metadata, but a middleware was not found that supports CORS.
+Configure your application startup by adding app.UseCors() inside the call to Configure(..) in the application startup code. The call to app.UseCors() must appear between app.UseRouting() and app.UseEndpoints(...). | InnerException: No InnerException exception data found
+2021-11-03 14:24:26.213 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 14:24:26.254 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 14:24:58.975 +01:00 [ERR] Exception Type: InvalidOperationException | Message: Endpoint Devon4Net.Application.WebAPI.Implementation.Business.MediatRManagement.Controllers.MediatRController.CreateTodo (Devon4Net.Application.WebAPI.Implementation) contains CORS metadata, but a middleware was not found that supports CORS.
+Configure your application startup by adding app.UseCors() inside the call to Configure(..) in the application startup code. The call to app.UseCors() must appear between app.UseRouting() and app.UseEndpoints(...). | InnerException: No InnerException exception data found
+2021-11-03 14:28:02.518 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 14:28:02.557 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 14:29:40.068 +01:00 [ERR] Exception Type: InvalidOperationException | Message: No service for type 'Microsoft.AspNetCore.Mvc.ViewFeatures.Filters.ValidateAntiforgeryTokenAuthorizationFilter' has been registered. | InnerException: No InnerException exception data found
+2021-11-03 14:33:12.172 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 14:33:12.222 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 17:36:56.248 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 17:36:56.578 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 17:36:56.579 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 17:37:14.994 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 17:37:15.299 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 17:37:15.303 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 17:37:34.498 +01:00 [INF] Message TodoCommand with identifier '36817e15-219e-4506-a0c4-c645d8eb9013' published
+2021-11-03 17:37:34.500 +01:00 [ERR] Message TodoCommand with identifier '36817e15-219e-4506-a0c4-c645d8eb9013' NOT published
+2021-11-03 17:37:34.503 +01:00 [ERR] Exception Type: AggregateException | Message: One or more errors occurred. (None of the specified endpoints were reachable) | InnerException: None of the specified endpoints were reachable
+2021-11-03 17:46:41.608 +01:00 [INF] Connected to broker 127.0.0.1, port 5672
+2021-11-03 17:46:41.745 +01:00 [INF] Message TodoCommand with identifier 'e9ab0514-37e6-4061-a514-32728e562ff7' published
+2021-11-03 17:48:34.573 +01:00 [INF] Message TodoCommand with identifier '137a6c6b-e130-43c7-b416-6f2bc127da89' published
+2021-11-03 17:49:25.900 +01:00 [INF] Message TodoCommand with identifier '6d1bc605-14df-4a1f-9bbb-a6c4bcafc00a' published
+2021-11-03 17:49:38.116 +01:00 [INF] Message TodoCommand with identifier '6d1bc605-14df-4a1f-9bbb-a6c4bcafc00a' published
+2021-11-03 17:49:51.671 +01:00 [INF] Message TodoCommand with identifier '411bd49c-c800-409c-a04b-10f59ccb68c6' published
+2021-11-03 17:51:55.343 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 17:51:55.569 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 17:51:55.570 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 17:52:27.420 +01:00 [INF] Connected to broker 127.0.0.1, port 5672
+2021-11-03 17:52:27.471 +01:00 [INF] Declared consumer with consumerTag 01b730f4-ffef-4ced-9306-10a4aa27c904 on queue Devon4Net.Infrastructure.RabbitMQ.Samples.Commads.UserSampleCommand, Devon4Net.Infrastructure.RabbitMQ_UserSampleCommand and configuration EasyNetQ.ConsumerConfiguration
+2021-11-03 17:53:07.004 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 17:53:07.033 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 17:53:07.241 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 17:53:07.243 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 17:53:17.960 +01:00 [INF] Connected to broker 127.0.0.1, port 5672
+2021-11-03 17:53:18.009 +01:00 [INF] Declared consumer with consumerTag 6afeea2d-6eb4-4d27-86df-412f477a3785 on queue Devon4Net.Infrastructure.RabbitMQ.Samples.Commads.UserSampleCommand, Devon4Net.Infrastructure.RabbitMQ_UserSampleCommand and configuration EasyNetQ.ConsumerConfiguration
+2021-11-03 17:53:22.874 +01:00 [INF] Declared consumer with consumerTag 3a36a6ab-3e01-442d-96e2-f1a44f3a631e on queue Devon4Net.Application.WebAPI.Implementation.Business.RabbitMqManagement.Commands.TodoCommand, Devon4Net.Application.WebAPI.Implementation_TodoCommand and configuration EasyNetQ.ConsumerConfiguration
+2021-11-03 17:53:53.545 +01:00 [INF] Message TodoCommand with identifier 'c5026a6d-3bfe-4c44-8e53-04d0336c7b16' published
+2021-11-03 17:53:56.880 +01:00 [INF] Message TodoCommand with identifier 'c5026a6d-3bfe-4c44-8e53-04d0336c7b16' published
+2021-11-03 17:59:33.914 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 17:59:34.154 +01:00 [INF] Please setup your database in order to have the RabbitMq messaging backup feature
+2021-11-03 17:59:34.155 +01:00 [INF] RabbitMq messaging backup feature is going to be used via LiteDb
+2021-11-03 17:59:36.361 +01:00 [INF] Connected to broker 127.0.0.1, port 5672
+2021-11-03 17:59:36.402 +01:00 [INF] Declared consumer with consumerTag 21e37549-4bfa-45ba-8d55-68f5c3010fcf on queue Devon4Net.Infrastructure.RabbitMQ.Samples.Commads.UserSampleCommand, Devon4Net.Infrastructure.RabbitMQ_UserSampleCommand and configuration EasyNetQ.ConsumerConfiguration
+2021-11-03 17:59:38.327 +01:00 [INF] Declared consumer with consumerTag bd745ffe-8dc5-4d07-a4af-3da790677288 on queue Devon4Net.Application.WebAPI.Implementation.Business.RabbitMqManagement.Commands.TodoCommand, Devon4Net.Application.WebAPI.Implementation_TodoCommand and configuration EasyNetQ.ConsumerConfiguration
+2021-11-03 17:59:55.446 +01:00 [INF] Message TodoCommand with identifier '7a732ccc-3aaa-4015-80f6-1e3adf5e9196' published
+2021-11-03 18:00:01.544 +01:00 [INF] Message TodoCommand with identifier '7a732ccc-3aaa-4015-80f6-1e3adf5e9196' published

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Devon4Net.Infrastructure.Extensions;
+﻿using Devon4Net.Infrastructure.Extensions;
 using Devon4Net.Infrastructure.Extensions.Helpers;
 using Devon4Net.Infrastructure.Log;
 using Devon4Net.Infrastructure.RabbitMQ.Commands;
@@ -33,7 +31,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
             JsonHelper = jsonHelper;
         }
 
-        public async Task<RabbitBackup> CreateMessageBackup(Command command, QueueActionsEnum action = QueueActionsEnum.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null)
+        public async Task<RabbitBackup> CreateMessageBackup(Command command, QueueActions action = QueueActions.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null)
         {
             RabbitMqBackupContext ctx = null;
 
@@ -41,21 +39,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
             {
                 ctx = CreateContext();
 
-                if (ctx == null)
-                {
-                    throw new ArgumentException("The database provider is not supported to host threads");
-                }
-
-                if (!UseExternalDatabase)
-                {
-                    throw new ArgumentException(
-                        "Please setup your RabbitMqBackupContext database context to use RabbitMqBackupService");
-                }
-
-                if (command?.InternalMessageIdentifier == null || command.InternalMessageIdentifier.IsNullOrEmptyGuid())
-                {
-                    throw new ArgumentException($"The provided command  and the command identifier cannot be null ");
-                }
+                CheckParamContext(command, ctx);
 
                 var backUp = new RabbitBackup
                 {
@@ -64,7 +48,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
                     Retries = increaseRetryCounter ? 1 : 0,
                     AdditionalData = string.IsNullOrEmpty(additionalData) ? string.Empty : additionalData,
                     IsError = false,
-                    MessageContent =  GetSerializedContent(command),
+                    MessageContent = GetSerializedContent(command),
                     MessageType = command.MessageType,
                     TimeStampUTC = command.Timestamp.ToUniversalTime(),
                     Action = action.ToString(),
@@ -73,6 +57,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
 
                 var result = await ctx.RabbitBackup.AddAsync(backUp).ConfigureAwait(false);
                 await ctx.SaveChangesAsync().ConfigureAwait(false);
+
                 return result.Entity;
             }
             catch (Exception ex)
@@ -83,6 +68,25 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
             finally
             {
                 if (ctx != null) await ctx.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        private void CheckParamContext(Command command, RabbitMqBackupContext ctx)
+        {
+            if (ctx == null)
+            {
+                throw new ArgumentException("The database provider is not supported to host threads");
+            }
+
+            if (!UseExternalDatabase)
+            {
+                throw new ArgumentException(
+                    "Please setup your RabbitMqBackupContext database context to use RabbitMqBackupService");
+            }
+
+            if (command?.InternalMessageIdentifier == null || command.InternalMessageIdentifier.IsNullOrEmptyGuid())
+            {
+                throw new ArgumentException($"The provided command  and the command identifier cannot be null ");
             }
         }
 
@@ -113,7 +117,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
                     break;
                 case DatabaseConst.MySql:
                 case DatabaseConst.MySqlPomelo:
-                    optionsBuilder.UseMySql(ContextConnectionString);
+                    optionsBuilder.UseMySql(ServerVersion.AutoDetect(ContextConnectionString));
                     break;
                 case DatabaseConst.FireBirdSql:
                 case DatabaseConst.FireBirdSqlV:
@@ -122,17 +126,6 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
                 case DatabaseConst.SqlLite:
                     optionsBuilder.UseSqlite(ContextConnectionString);
                     break;
-
-                //Oracle does not support EF Core 3.1 yet
-                //case DatabaseConst.Oracle:
-                //    optionsBuilder.UseOracle(ContextConnectionString,sqlOptions => { });
-                //    break;
-
-                //IBM does not support EF Core 3.1 yet
-                //case DatabaseConst.Ibm:
-                //    optionsBuilder.UseDb2(ContextConnectionString, sqlOptions => { });
-                //    break;
-
                 default:
                     Devon4NetLogger.Error(errorMessage);
                     throw new ArgumentException(errorMessage);
@@ -144,18 +137,15 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
         private string GetSerializedContent(Command command)
         {
             var typedCommand = Convert.ChangeType(command, command.GetType());
-            var serializedContent = JsonHelper.Serialize(typedCommand);
-            return serializedContent;
+            return JsonHelper.Serialize(typedCommand, false);
         }
 
         private void GetContextConnectionAndProvider(RabbitMqBackupContext context)
         {
-            
             try
             {
                 ContextProvider = context.Database.ProviderName;
                 ContextConnectionString = context.Database.GetDbConnection().ConnectionString;
-                
             }
             catch (Exception ex)
             {

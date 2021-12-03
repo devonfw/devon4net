@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Devon4Net.Domain.UnitOfWork.Pagination;
 
 namespace Devon4Net.Domain.UnitOfWork.Repository

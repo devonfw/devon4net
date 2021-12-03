@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
 namespace Devon4Net.Infrastructure.AWS.Common.Helper
 {
@@ -11,18 +8,26 @@ namespace Devon4Net.Infrastructure.AWS.Common.Helper
 
         public T Deserialize<T>(string input)
         {
-            return string.IsNullOrEmpty(input)
-                ? default
-                : BuiltInTypeObjectNames.Contains(typeof(T).Name) ? (T)Convert.ChangeType(input, typeof(T)) : JsonSerializer.Deserialize<T>(input);
+            if (string.IsNullOrEmpty(input))
+            {
+                return default;
+            }
+
+            if (BuiltInTypeObjectNames.Contains(typeof(T).Name))
+            {
+                return (T)Convert.ChangeType(input, typeof(T));
+            }
+
+            return JsonSerializer.Deserialize<T>(input);
         }
 
         public async Task<string> SerializeAsync<T>(T input)
         {
             using var stream = new MemoryStream();
-            await JsonSerializer.SerializeAsync(stream, input, input.GetType());
+            await JsonSerializer.SerializeAsync(stream, input, input.GetType()).ConfigureAwait(false);
             stream.Position = 0;
             using var reader = new StreamReader(stream);
-            return await reader.ReadToEndAsync();
+            return await reader.ReadToEndAsync().ConfigureAwait(false);
         }
 
         public string Serialize<T>(T input)

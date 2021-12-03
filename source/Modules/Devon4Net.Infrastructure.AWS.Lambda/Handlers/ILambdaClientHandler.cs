@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Amazon.Lambda;
+﻿using Amazon.Lambda;
 
 namespace Devon4Net.Infrastructure.AWS.Lambda.Handlers
 {

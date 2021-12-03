@@ -18,7 +18,8 @@ namespace Devon4Net.Application.Lambda.Business.SnsManagement.Handlers
 
         public Task<SnsMessageHandlerResult> HandleMessage(SnsCustomMessage notification, ILambdaContext context)
         {
-            _logger.LogInformation($"Handling notification: {notification?.Message}");
+            var message = notification?.Message;
+            _logger.LogInformation("Handling notification: {message}", message);
 
             return Task.FromResult(new SnsMessageHandlerResult{Content = notification?.Message });
         }

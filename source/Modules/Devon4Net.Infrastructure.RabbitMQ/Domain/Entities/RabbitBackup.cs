@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Devon4Net.Infrastructure.RabbitMQ.Domain.Entities
+﻿namespace Devon4Net.Infrastructure.RabbitMQ.Domain.Entities
 {
     public partial class RabbitBackup
     {

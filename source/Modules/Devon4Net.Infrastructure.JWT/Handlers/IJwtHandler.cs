@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Devon4Net.Infrastructure.JWT.Handlers

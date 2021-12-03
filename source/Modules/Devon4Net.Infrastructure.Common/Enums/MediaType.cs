@@ -1,6 +1,6 @@
 namespace Devon4Net.Infrastructure.CircuitBreaker.Common.Enums
 {
-    public class MediaType
+    public static class MediaType
     {
         public const string Application = "application/*";
         public const string ApplicationEcmascript = "application/ecmascript";

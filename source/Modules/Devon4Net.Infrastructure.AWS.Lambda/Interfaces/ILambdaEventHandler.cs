@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Amazon.Lambda.Core;
+﻿using Amazon.Lambda.Core;
 
 namespace Devon4Net.Infrastructure.AWS.Lambda.Interfaces
 {

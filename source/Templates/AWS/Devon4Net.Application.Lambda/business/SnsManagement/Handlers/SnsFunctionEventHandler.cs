@@ -35,14 +35,14 @@ namespace Devon4Net.Application.Lambda.Business.SnsManagement.Handlers
                 var messageValue = record.Sns.Message;
                 var message = JsonSerializer.Deserialize<TMessage>(messageValue);
                 
-                _logger.LogDebug($"Message : {messageValue}");
+                _logger.LogDebug("Message : {messageValue}", messageValue);
 
                 var messageHandler = scope.ServiceProvider.GetService<IMessageHandler<TMessage, SnsMessageHandlerResult>>();
                 if (messageHandler == null)
                 {
-                    var errorMessage = $"No IMessageHandler<{typeof(TMessage).Name}> found";
-                    _logger.LogCritical(errorMessage);
-                    throw new InvalidOperationException(errorMessage);
+                    var messageHandlerName = typeof(TMessage).Name;
+                    _logger.LogCritical("No IMessageHandler<{messageHandlerName}> found", messageHandlerName);
+                    throw new InvalidOperationException($"No IMessageHandler<{messageHandlerName}> found");
                 }
 
                 await messageHandler.HandleMessage(message, context).ConfigureAwait(false);

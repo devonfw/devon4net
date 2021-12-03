@@ -18,7 +18,7 @@ NOTE: _devon4Net_ is composed by a number of packages that increases the functio
 You can get the devon4Net packages on https://www.nuget.org/packages?q=devonfw[nuget.org].
 
 
-=== Devon4Net.Application.WebAPI.Configuration
+=== `Devon4Net`.Application.WebAPI.Configuration
 ==== Description
 The devon4Net web API configuration core.
 
@@ -28,10 +28,9 @@ The devon4Net web API configuration core.
 
     PM> Install-Package Devon4Net.Application.WebAPI.Configuration
 
-==== Defaul configuration values
+==== Default configuration values
 
-[source, json]
-----
+```
 
   "devonfw": {
     "UseDetailedErrorsKey": true,
@@ -76,11 +75,11 @@ The devon4Net web API configuration core.
       "AuthenticationDisplayName" : ""
     }
   }
-----
+```
 
 === Devon4Net.Infrastructure.CircuitBreaker
 ==== Description
-The Devon4Net.Infrastructure.CircuitBreaker componnet implements the retry pattern for HTTP/HTTPS calls.
+The Devon4Net.Infrastructure.CircuitBreaker component implements the retry pattern for HTTP/HTTPS calls.
 
 ==== Configuration
 
@@ -88,10 +87,9 @@ The Devon4Net.Infrastructure.CircuitBreaker componnet implements the retry patte
 
     PM> Install-Package Devon4Net.Infrastructure.CircuitBreaker
 
-==== Defaul configuration values
+==== Default configuration values
 
-[source, json]
-----
+```
   "CircuitBreaker": {
     "CheckCertificate": true,
     "Endpoints": [
@@ -113,17 +111,17 @@ The Devon4Net.Infrastructure.CircuitBreaker componnet implements the retry patte
       }
     ]
   }
-----
+```
 [options="header"]
 |=======================
 |*Property*|*Description*
-|CheckCertificate| True if HTTPS is requiered. This is usefull when developing an API Gateway needs a secured HTTP, disabling this on development we can use communications with a valid server certificate
+|`CheckCertificate`| True if HTTPS is required. This is useful when developing an API Gateway needs a secured HTTP, disabling this on development we can use communications with a valid server certificate
 |Endpoints| Array with predefined sites to connect with
-|Name| The name key to identificate the destination URL
+|Name| The name key to identify the destination URL
 |Headers| Not ready yet
-|WaitAndRetrySeconds| Array which determinates the number of retruies and the lapse period between each retry. The value is in milliseconds.
+|WaitAndRetrySeconds| Array which determines the number of retries and the lapse period between each retry. The value is in milliseconds.
 |Certificate| Ceritificate client to use to perform the HTTP call
-|SslProtocol| The secure protocol to use on the call
+|`SslProtocol`| The secure protocol to use on the call
 |=======================
 
 ==== Protocols
@@ -171,9 +169,9 @@ Where:
 |*Property*|*Description*
 |YourOutputClass| The type of the class that you are expecting to retrieve from the POST call 
 |NameOftheService| The key name of the endpoint provided in the appsettings.json file at Endpoints[] node
-|EndPoint|Part of the url to use with the base address. PE: _/validate_
-|InputData| Your instance of the class with values that you want to use in the POST call
-|MediaType.ApplicationJson| The media type flag for the POST call
+|`EndPoint`|Part of the url to use with the base address. PE: _/validate_
+|`InputData`| Your instance of the class with values that you want to use in the POST call
+|`MediaType.ApplicationJson`| The media type flag for the POST call
 |=======================
 
 
@@ -191,7 +189,7 @@ NOTE: This component will move on next releases to Infrastructure instead of bei
 
 - Adding the database connection information:
 
-Add the databse connection on the SetupDatabase method at Startup.cs
+Add the database connection on the `SetupDatabase` method at Startup.cs
     
 [source, C#]
 ----
@@ -206,21 +204,21 @@ Where:
 [options="header"]
 |=======================
 |*Param*|*Description*
-|TodoContext| Is the database context definition
+|`TodoContext`| Is the database context definition
 |Default| Is the connection string defined at _ConnectionString_ node at the appsettings configuration file 
-|WebAPI.Configuration.Enums.DatabaseType.InMemory| Is the database driver selection. In this case InMemory data base is chosen
+|WebAPI.Configuration.Enums.DatabaseType.InMemory| Is the database driver selection. In this case `InMemory` data base is chosen
 |=======================
 
 The supported databases are:
 
-        - SqlServer
+        - `SqlServer`
         - Sqlite
-        - InMemory
+        - `InMemory`
         - Cosmos
         - PostgreSQL
-        - MySql
-        - MariaDb
-        - FireBird
+        - `MySql`
+        - `MariaDb`
+        - `FireBird`
         - Oracle
         - MSAccess
 
@@ -230,10 +228,10 @@ Now you can use the unit of work via dependency injection on your classes:
 
 [[img-t-architecture]]
 .Use of Unit of work via dependency injection
-image::images/uow_sample.png["UOW DI Sample", width="*", link="images/uow_sample.png"]
+image::images/uow_sample.png["UOW `DI` Sample", width="*", link="images/uow_sample.png"]
 
 
-As you can see in the image, you can use Unit Of Work class with your defined ModelContext classes.
+As you can see in the image, you can use Unit Of Work class with your defined `ModelContext` classes.
 
 
 _Predicate expression builder_
@@ -243,7 +241,7 @@ _Predicate expression builder_
     var predicate =  PredicateBuilder.True<T>();
 
     
-Where T is a class. At this moment, you can build your expression and apply it to obtain your results in a efficient way and not retrieving data each time you apply an expression.
+Where `T` is a class. At this moment, you can build your expression and apply it to obtain your results in a efficient way and not retrieving data each time you apply an expression.
     
 - Example from My Thai Star .Net Core implementation:
 
@@ -291,9 +289,9 @@ public async Task<PaginationResult<Dish>> GetpagedDishListFromFilter(int current
 ==== Description
 Miscellaneous extension library which contains :
 - Predicate expression builder
-- DateTime formatter
-- HttpClient 
-- HttpContext (Middleware support)
+- `DateTime` formatter
+- `HttpClient` 
+- `HttpContext` (Middleware support)
 
 ==== Configuration
 - Install package on your solution:
@@ -312,11 +310,11 @@ _HttpContext_
 
 [quote, What is JSON Web Token?, https://jwt.io/introduction/]
 ____
-JSON Web Token (JWT) is an open standard (RFC 7519) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object. This information can be verified and trusted because it is digitally signed. JWTs can be signed using a secret (with the HMAC algorithm) or a public/private key pair using RSA or ECDSA.
+JSON Web Token (JWT) is an open standard (RFC 7519) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object. This information can be verified and trusted because it is digitally signed. JWTs can be signed using a secret (with the` HMAC` algorithm) or a public/private key pair using `RSA` or `ECDSA`.
 ____
 
 
-- devon4Net component to manage JWT standard to provide security to .Net API applications.
+- devon4Net component to manage  JWT standard to provide security to .Net API applications.
 
 ==== Configuration
 
@@ -325,10 +323,9 @@ ____
     PM> devon4Net.Infrastructure.JWT
 
 
-==== Defaul configuration values
+==== Default configuration values
 
-[source, json]
-----
+```
 "JWT": {
     "Audience": "devon4Net",
     "Issuer": "devon4Net",
@@ -345,38 +342,38 @@ ____
       "CertificateEncryptionAlgorithm": ""
     }
   }
-----
+```
 
 
-- _ClockSkew_ indicates the token expiration time in minutes
+- `_ClockSkew_` indicates the token expiration time in minutes
 
-- _Certificate_ you can specify the name of your certificate (if it is on the same path) or the full path of the certificate. If the certificate does not exists an exception will be raised.
+- `_Certificate_` you can specify the name of your certificate (if it is on the same path) or the full path of the certificate. If the certificate does not exists an exception will be raised.
 
-- _SecretKeyLengthAlgorithm_, _SecretKeyEncryptionAlgorithm_ and _CertificateEncryptionAlgorithm_ supported algorithms are:
+- `_SecretKeyLengthAlgorithm_`, `_SecretKeyEncryptionAlgorithm_` and `_CertificateEncryptionAlgorithm_` supported algorithms are:
 
 [options="header"]
 |=======================
 |*Algorithm*|*Description*
-|Aes128Encryption|"http://www.w3.org/2001/04/xmlenc#aes128-cbc"
-|Aes192Encryption|"http://www.w3.org/2001/04/xmlenc#aes192-cbc"
-|Aes256Encryption|"http://www.w3.org/2001/04/xmlenc#aes256-cbc"
-|DesEncryption|"http://www.w3.org/2001/04/xmlenc#des-cbc"
+|`Aes128Encryption`|"http://www.w3.org/2001/04/xmlenc#aes128-cbc"
+|`Aes192Encryption`|"http://www.w3.org/2001/04/xmlenc#aes192-cbc"
+|`Aes256Encryption`|"http://www.w3.org/2001/04/xmlenc#aes256-cbc"
+|`DesEncryption`|"http://www.w3.org/2001/04/xmlenc#des-cbc"
 |Aes128KeyWrap|"http://www.w3.org/2001/04/xmlenc#kw-aes128"
 |Aes192KeyWrap|"http://www.w3.org/2001/04/xmlenc#kw-aes192"
 |Aes256KeyWrap|"http://www.w3.org/2001/04/xmlenc#kw-aes256"
 |RsaV15KeyWrap|"http://www.w3.org/2001/04/xmlenc#rsa-1_5"
-|Ripemd160Digest|"http://www.w3.org/2001/04/xmlenc#ripemd160"
+|`Ripemd160Digest`|"http://www.w3.org/2001/04/xmlenc#ripemd160"
 |RsaOaepKeyWrap|"http://www.w3.org/2001/04/xmlenc#rsa-oaep"
 |Aes128KW|"A128KW"
 |Aes256KW|"A256KW"
 |RsaPKCS1|"RSA1_5"
 |RsaOAEP|"RSA-OAEP"
-|ExclusiveC14n|"http://www.w3.org/2001/10/xml-exc-c14n#"
+|`ExclusiveC14n`|"http://www.w3.org/2001/10/xml-exc-c14n#"
 |ExclusiveC14nWithComments|"http://www.w3.org/2001/10/xml-exc-c14n#WithComments"
-|EnvelopedSignature|"http://www.w3.org/2000/09/xmldsig#enveloped-signature"
-|Sha256Digest|"http://www.w3.org/2001/04/xmlenc#sha256"
-|Sha384Digest|"http://www.w3.org/2001/04/xmldsig-more#sha384"
-|Sha512Digest|"http://www.w3.org/2001/04/xmlenc#sha512"
+|`EnvelopedSignature`|"http://www.w3.org/2000/09/xmldsig#enveloped-signature"
+|`Sha256Digest`|"http://www.w3.org/2001/04/xmlenc#sha256"
+|`Sha384Digest`|"http://www.w3.org/2001/04/xmldsig-more#sha384"
+|`Sha512Digest`|"http://www.w3.org/2001/04/xmlenc#sha512"
 |Sha256|"SHA256"
 |Sha384|"SHA384"
 |Sha512|"SHA512"
@@ -392,16 +389,16 @@ ____
 |RsaSsaPssSha256Signature|"http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1"
 |RsaSsaPssSha384Signature|"http://www.w3.org/2007/05/xmldsig-more#sha384-rsa-MGF1"
 |RsaSsaPssSha512Signature|"http://www.w3.org/2007/05/xmldsig-more#sha512-rsa-MGF1"
-|EcdsaSha256|"ES256"
-|EcdsaSha384|"ES384"
-|EcdsaSha512|"ES512"
-|HmacSha256|"HS256"
-|HmacSha384|"HS384"
-|HmacSha512|"HS512"
+|`EcdsaSha256`|"ES256"
+|`EcdsaSha384`|"ES384"
+|`EcdsaSha512`|"ES512"
+|`HmacSha256`|"HS256"
+|`HmacSha384`|"HS384"
+|`HmacSha512`|"HS512"
 |None|"none"
-|RsaSha256|"RS256"
-|RsaSha384|"RS384"
-|RsaSha512|"RS512"
+|`RsaSha256`|"RS256"
+|`RsaSha384`|"RS384"
+|`RsaSha512`|"RS512"
 |RsaSsaPssSha256|"PS256"
 |RsaSsaPssSha384|"PS384"
 |RsaSsaPssSha512|"PS512"
@@ -418,10 +415,9 @@ NOTE: Please check https://github.com/AzureAD/azure-activedirectory-identitymode
 
 - Add this line of code  (only if you use this component stand alone):
 
-[source, C#]
-----
+```
 services.AddBusinessCommonJwtPolicy();
-----
+```
 
 
 On
@@ -434,7 +430,7 @@ or on:
 
 
 
-- Inside the _AddBusinessCommonJwtPolicy_ method you can add your JWT Policy like in My Thai Star application sample:
+- Inside the `_AddBusinessCommonJwtPolicy_` method you can add your  JWT Policy like in My Thai Star application sample:
 
 [source, C#]
 ----
@@ -461,14 +457,14 @@ or on:
 
 - devon4Net supports the following automatic response headers:
 
-* AccessControlExposeHeader
-* StrictTransportSecurityHeader
-* XFrameOptionsHeader
-* XssProtectionHeader
-* XContentTypeOptionsHeader
-* ContentSecurityPolicyHeader
-* PermittedCrossDomainPoliciesHeader
-* ReferrerPolicyHeader:toc: macro
+* `AccessControlExposeHeader`
+* `StrictTransportSecurityHeader`
+* `XFrameOptionsHeader`
+* `XssProtectionHeader`
+* `XContentTypeOptionsHeader`
+* `ContentSecurityPolicyHeader`
+* `PermittedCrossDomainPoliciesHeader`
+* `ReferrerPolicyHeader:toc: macro`
 
 ==== Configuration
 - Install package on your solution:
@@ -478,8 +474,7 @@ or on:
 - You can configure your Middleware configuration on _appsettings.{environment}.json_:
 
 
-[source, json]
-----
+```
 
 "Middleware": {
     "Headers": {
@@ -493,9 +488,9 @@ or on:
       "ReferrerPolicyHeader": ""
     }
 }
-----
+```
 
-- On the above sample, the server application will add to response header the AccessControlExposeHeader, XFrameOptionsHeader, XssProtectionHeader and XContentTypeOptionsHeader headers.
+- On the above sample, the server application will add to response header the `AccessControlExposeHeader`, XFrameOptionsHeader, XssProtectionHeader and XContentTypeOptionsHeader headers.
 - If the header response type does not have a value, it will not be added to the response headers.
 
 
@@ -517,8 +512,7 @@ or on:
 
 
 
-[source, json]
-----
+```
 "Swagger": {
     "Version": "v1",
     "Title": "devon4net API",
@@ -540,7 +534,7 @@ or on:
       "RouteTemplate": "swagger/v1/{documentName}/swagger.json"
     }
   }
-----
+```
 
 - Add this line of code (only if you use this component stand alone):
 
@@ -577,8 +571,7 @@ On
 
 - In order to generate the documentation annotate your actions with summary, remarks and response tags:
 
-[sourcecode, C#]
-----
+```
 /// <summary>
 /// Method to make a reservation with potential guests. The method returns the reservation token with the format: {(CB_|GB_)}{now.Year}{now.Month:00}{now.Day:00}{_}{MD5({Host/Guest-email}{now.Year}{now.Month:00}{now.Day:00}{now.Hour:00}{now.Minute:00}{now.Second:00})}
 /// </summary>
@@ -593,16 +586,16 @@ On
 [Route("/mythaistar/services/rest/bookingmanagement/v1/booking")]
 [AllowAnonymous]
 [EnableCors("CorsPolicy")]
-public async Task<IActionResult> BookingBooking([FromBody]BookingDto bookingDto)
+public async Task<IActionResult> Booking([FromBody]BookingDto bookingDto)
 {
     try
     {
 
     ...
 
-----
+```
 
-- Ensure that your project has the _generate XML documentation file_ check active on build menu:
+- Ensure that your project has the _generateXMLdocumentationfile_ check active on build menu:
 
 
 [[img-t-architecture]]
@@ -620,7 +613,7 @@ image::images/swaggerDoc.png["Generate documentation XML check", width="*", link
 
 === devon4Net.Infrastructure.Test
 ==== Description
-devon4Net Base classes to create unit tests and integration tests with Moq and xUnit.
+devon4Net Base classes to create unit tests and integration tests with Moq and `xUnit`.
 
 ==== Configuration
 - Load the template:
@@ -632,7 +625,7 @@ devon4Net Base classes to create unit tests and integration tests with Moq and x
 ==== Notes
 - At this point you can find this classes:
 * BaseManagementTest
-* DatabaseManagementTest<T> (Where T is a _devon4NetBaseContext_ class)
+* DatabaseManagementTest<T> (Where `T` is a _devon4NetBaseContext_ class)
 
 
     
@@ -655,8 +648,7 @@ devon4Net.Domain.Context contains the extended class devon4NetBaseContext in ord
 
 - Add to _appsettings.{environment}.json_ file your database connections:
 
-[source,json]
-----
+```
 "ConnectionStrings": 
 {
 "DefaultConnection": 
@@ -667,7 +659,7 @@ devon4Net.Domain.Context contains the extended class devon4NetBaseContext in ord
     
 "SqliteConnection": "Data Source=c:\\tmp\\membership.db;"
 }
-----
+```
 
 
 
@@ -700,22 +692,20 @@ devon4Net Application user classes to implement basic Microsoft's basic authenti
 
 - Add the database connection string for user management on _appsettings.{environment}.json_:
 
-[source,json]
-----
+```
 "ConnectionStrings": 
 {
 "AuthConnection":
 "Server=(localdb)\\mssqllocaldb;Database=aspnet-DualAuthCore-5E206A0B-D4DA-4E71-92D3-87FD6B120C5E;Trusted_Connection=True;MultipleActiveResultSets=true"
 }
-----
+```
 
 
 - Add the following line of code
 
-[source, C#]
-----
+```
 services.AddApplicationUserDependencyInjection();
-----
+```
 
 On
 
@@ -747,23 +737,23 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataSeed
 ==== Notes
 
 - You can use the following methods to set up the database configuration:
-[source, C#]
-----
+
+```
 public static void AddApplicationUserDbContextInMemoryService(this IServiceCollection services)
 
 public static void AddApplicationUserDbContextSQliteService(this IServiceCollection services, string connectionString)
 
 public static void AddApplicationUserDbContextSQlServerService(this IServiceCollection services, string connectionString)
-----
+```
 
-- The method _AddApplicationUserDbContextInMemoryService_ uses the _AuthContext_ connection string name to set up the database.
+- The method `_AddApplicationUserDbContextInMemoryService_` uses the _AuthContext_ connection string name to set up the database.
 
 - This component is used with the components _devon4Net.Infrastructure.JWT_ and _devon4Net.Infrastructure.JWT.MVC_.
 
 
 === devon4Net.Infrastructure.Communication
 ==== Description
-Basic client classes to  invoke GET/POST methods asynchronously. This component has the minimal classes to send basic data. For more complex operations please use _ASP4Net.Infrastructure.Extensions_.
+Basic client classes to  invoke` GET`/POST methods asynchronously. This component has the minimal classes to send basic data. For more complex operations please use _ASP4Net.Infrastructure.Extensions_.
 
 ==== Configuration
 
@@ -774,13 +764,12 @@ Basic client classes to  invoke GET/POST methods asynchronously. This component 
 - Create an instance of _RestManagementService_ class.
 - Use next methods to use GET/POST basic options:
 
-[source, C#]
-----
+```
 public Task<string> CallGetMethod(string url);
 public Task<Stream> CallGetMethodAsStream(string url);
 public Task<string> CallPostMethod<T>(string url, T dataToSend);
 public Task<string> CallPutMethod<T>(string url, T dataToSend);
-----
+```
 
 
 ==== Notes
@@ -800,7 +789,7 @@ private async Task RestManagementServiceSample(EmailDto dataToSend)
 
 === devon4Net.Infrastructure.JWT.MVC
 ==== Description
-- devon4Net Extended controller to interact with JWT features
+- devon4Net Extended controller to interact with  JWT features
 
 ==== Configuration
 
@@ -822,10 +811,9 @@ public class LoginController : devon4NetJWTController
 
 ==== Notes
 
-- In order to generate a JWT, you should implement the JWT generation on user login. For example, in My Thai Star is created as follows:
+- In order to generate a  JWT, you should implement the  JWT generation on user login. For example, in My Thai Star is created as follows:
 
-[source, C#]
-----
+```
 public async Task<IActionResult> Login([FromBody]LoginDto loginDto)
 {
     try
@@ -857,9 +845,9 @@ public async Task<IActionResult> Login([FromBody]LoginDto loginDto)
         return StatusCode((int)HttpStatusCode.InternalServerError, $"{ex.Message} : {ex.InnerException}");
     }
 }
-----
+```
 
-- In My Thai Star the JWT will contain the user information such id, roles...
+- In My Thai Star the  JWT will contain the user information such id, roles...
 
 - Once you extend your controller with _devon4NetJWTController_ you will have available these methods to simplify user management:
 
@@ -939,12 +927,11 @@ Simple AOP Exception handler for .Net Controller classes integrated with Serilog
 
 
 
-Add this line of code on ConfigureServices method on Startup.cs
+Add this line of code on `ConfigureServices` method on Startup.cs
 
-[source, C#]
-----
+```
 services.AddAopAttributeService();
-----
+```
 
 
 
@@ -977,7 +964,7 @@ Please refer to https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=
 
 - You can configure your Cors configuration on _appsettings.{environment}.json_:
 
-    CorsPolicy: indicates the name of the policy. You can use this name to add security headers on your API exposed methods.
+    `CorsPolicy`: indicates the name of the policy. You can use this name to add security headers on your API exposed methods.
 
     Origins: The allowed domains
     
@@ -993,8 +980,7 @@ Please refer to https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=
 
 - On the other hand, you can specify different Cors policies in your solution as follows:
 
-[source,json]
-----
+```
 
 "Cors": []
 [
@@ -1013,19 +999,18 @@ Please refer to https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=
     "AllowCredentials": true
   }
 ]
-----
+```
 
 ==== Notes
 
 - To use CORS in your API methods, use the next notation:
 
-[source,C#]
-----    
+```    
 [EnableCors("YourCorsPolicy")] 
 public IActionResult Index() {  
     return View();  
 }  
-----
+```
     
     
 - if you want to disable the CORS check use the following annotation:

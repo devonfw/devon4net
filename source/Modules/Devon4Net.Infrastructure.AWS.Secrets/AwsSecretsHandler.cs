@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Amazon;
+﻿using Amazon;
 using Amazon.Runtime;
 using Amazon.SecretsManager;
 using Amazon.SecretsManager.Extensions.Caching;
@@ -10,7 +7,7 @@ using Devon4Net.Infrastructure.AWS.Common.Helper;
 
 namespace Devon4Net.Infrastructure.AWS.Secrets
 {
-    public class AwsSecretsHandler : IAwsSecretsHandler 
+    public class AwsSecretsHandler : IAwsSecretsHandler, IDisposable
     {
         private readonly JsonHelper _jsonHelper = new JsonHelper();
         private IAmazonSecretsManager SecretsManager { get; }
@@ -23,7 +20,7 @@ namespace Devon4Net.Infrastructure.AWS.Secrets
             Cache = new SecretsManagerCache(SecretsManager);
         }
 
-        private AmazonSecretsManagerClient GetAmazonSecretsManagerClient(AWSCredentials awsCredentials, RegionEndpoint regionEndpoint)
+        private static AmazonSecretsManagerClient GetAmazonSecretsManagerClient(AWSCredentials awsCredentials, RegionEndpoint regionEndpoint)
         {
             if (awsCredentials != null && regionEndpoint != null)
             {
@@ -35,7 +32,7 @@ namespace Devon4Net.Infrastructure.AWS.Secrets
 
         public async Task<T> GetSecretString<T>(string secretId) 
         {
-            var sec = await Cache.GetSecretString(secretId);
+            var sec = await Cache.GetSecretString(secretId).ConfigureAwait(false);
             return _jsonHelper.Deserialize<T>(sec);
         }
 
@@ -69,6 +66,13 @@ namespace Devon4Net.Infrastructure.AWS.Secrets
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing) return;
             SecretsManager.Dispose();
             Cache.Dispose();
         }

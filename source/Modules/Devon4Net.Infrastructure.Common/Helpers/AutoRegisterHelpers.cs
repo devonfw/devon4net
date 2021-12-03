@@ -1,8 +1,6 @@
 ﻿// Copyright (c) 2018 Inventory Innovations, Inc. - build by Jon P Smith (GitHub JonPSmith)
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
-using System;
-using System.Linq;
 using System.Reflection;
 using Devon4Net.Infrastructure.Common.Common;
 using Microsoft.Extensions.DependencyInjection;
@@ -86,6 +84,39 @@ namespace Devon4Net.Infrastructure.Common.Helpers
             }
 
             return autoRegData.Services;
+        }
+
+        public static void AutoRegisterClasses(this IServiceCollection services, List<Type> assemblyContainerToScan, string sufixName = "Service")
+        {
+            if (assemblyContainerToScan == null || assemblyContainerToScan.Count == 0|| string.IsNullOrEmpty(sufixName)) return;
+
+            foreach (var assembly in assemblyContainerToScan)
+            {
+                var assemblyToScan = Assembly.GetAssembly(assembly);
+                if (assemblyToScan == null) continue;
+
+                services.RegisterAssemblyPublicNonGenericClasses(assemblyToScan)
+                .Where(x => x.Name.EndsWith(sufixName))
+                .AsPublicImplementedInterfaces();
+            }
+        }
+
+        public static void AutoRegisterClasses(this IServiceCollection services, List<Type> assemblyContainerToScan, List<string> sufixNames)
+        {
+            if (assemblyContainerToScan == null || assemblyContainerToScan.Count == 0 || sufixNames == null || sufixNames.Count == 0) return;
+
+            foreach (var assembly in assemblyContainerToScan)
+            {
+                var assemblyToScan = Assembly.GetAssembly(assembly);
+                if (assemblyToScan == null) continue;
+
+                foreach (var sufixName in sufixNames)
+                {
+                    services.RegisterAssemblyPublicNonGenericClasses(assemblyToScan)
+                    .Where(x => x.Name.EndsWith(sufixName))
+                    .AsPublicImplementedInterfaces();
+                }
+            }
         }
     }
 }

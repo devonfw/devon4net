@@ -1,4 +1,4 @@
-﻿:toc: macro
+:toc: macro
 toc::[]
 :icons: font
 :iconfont-remote!:
@@ -36,8 +36,8 @@ You are ready to start developing with devon4Net
 ==== Option 2
 [listing]
 ....
-Create a new dotnet API project from scracht
-Add the nuget package reference to your project:
+Create a new dotnet` API` project from scratch
+Add the NuGet package reference to your project:
 Install-Package Devon4Net.Application.WebAPI.Configuration
 ....
 
@@ -62,8 +62,7 @@ Set up your project as follows in program.cs file:
 
 Set up your project as follows in startup.cs file:
 
-[source, c#]
-----
+```
 
     private IConfiguration Configuration { get; }
 
@@ -95,14 +94,14 @@ Set up your project as follows in startup.cs file:
         ...
     }
     
-----
+```
 
 Add the devonfw configuration options in your appsettings.json file
 
 
 === devon4net configuration files
 
-To start usinf devon4net in your .net core application add this configuration in your appsettings.json file:
+To start using devon4net in your .net core application add this configuration in your appsettings.json file:
 
 [source, json]
 ----
@@ -155,8 +154,7 @@ To start usinf devon4net in your .net core application add this configuration in
 Also, for start using the devon4net components, you should add the next json options in your appsettings.json or appsettings.Development.json file:
 
 
-[source, json]
-----
+```
 {
   "ExtraSettingsFiles": [
     "Put a directory path (relative/absolute/linux-like) like /run/secrets/global where there are many settings/secret files to load",
@@ -422,7 +420,7 @@ Also, for start using the devon4net components, you should add the next json opt
 }
 
 
-----
+```
 
 == devon4net Cobigen Guide
 
@@ -464,7 +462,7 @@ You can read more information about how to configure your OpenAPI file and a wor
 
 === Generating files
 
-Cobigen allow us to generate the files in two different ways. One of them is using Eclipse which it can be done by using the its graphical interface. The other way to generate the code is using the Cobigen CLI tool.
+Cobigen allow us to generate the files in two different ways. One of them is using Eclipse which it can be done by using the its graphical interface. The other way to generate the code is using the Cobigen` CLI` tool.
 
 ==== Generating files through Eclipse
 In order to generate the files using Eclipse we need to follow some simple steps.
@@ -491,9 +489,9 @@ image::images/cobigen_generate1.png["cobigen", width=="800", link=="images/cobig
 
 Ones you select all the files that you want to generate, click on the _“Finish”_ button to generate all the source code.
 
-==== Generating files through Cobigen CLI
+==== Generating files through Cobigen` CLI`
 
-In order to generate the files using the Cobigen CLI it is needed to do the following steps:
+In order to generate the files using the Cobigen` CLI` it is needed to do the following steps:
 
 1. Go to devonfw distribution folder
 2. Run *console.bat*, this will open a console.
@@ -519,14 +517,14 @@ Repositories location:
 image::images/Repositories.png["cobigen", width=="300", link=="images/Repositories.png]
 
 Now, we are going to open the following file *Devon4Net.WebAPI.Implementation\Configure\DevonConfiguration.cs*.
-In there we have to add the Dependency Inyection for the services and the repositories that Cobigen has generated. The following image is an example of what is needed to add.
+In there we have to add the Dependency Injection for the services and the repositories that Cobigen has generated. The following image is an example of what is needed to add.
 
 [[img-cobigen]]
 image::images/BussinessConfiguration.png["cobigen", width=="800", link=="images/BussinessConfiguration.png]
 
 Moreover it is needed to remove the last line in order to be able to run the application:
 
-    throw new NotImplementedException(...);
+    `throw new NotImplementedException(...);`
 
 ==== Configure data base
 
@@ -539,7 +537,7 @@ image::images/CobigenContextLocation.png["cobigen", width=="350", link=="images/
 
 In order to finish the configuration of the services it is needed to go to each service file of the managements generated. 
 
-In there we will see some "NotImplementedExceptions", so it is needed to read carefully each comment inside of each exception in order to be able to use the service. It can be shown an example of the service with its NotImplementedExceptions comments:
+In there we will see some `"NotImplementedExceptions"`, so it is needed to read carefully each comment inside of each exception in order to be able to use the service. It can be shown an example of the service with its `NotImplementedExceptions` comments:
 
 [[img-cobigen]]
 image::images/ServiceExample.png["cobigen", width=="800", link=="images/ServiceExample.png]
@@ -555,23 +553,23 @@ This will deploy our application in our localhost with the port 8081, so when yo
 
 == Use HTTP2 protocol
 
-You can specify the HTTP protocol to be used on your devon4net application modifying some node values at _devonfw_ node in your appsettings configuration file.
+You can specify the` HTTP` protocol to be used on your devon4net application modifying some node values at _devonfw_ node in your appsettings configuration file.
 
 === HttpProtocol
 The supported protocols are:
 
 [options="header"]
 |=======================
-|*Protocl*|*Description*
+|*Protocol*|*Description*
 |Http1| Http1 protocol
 |Http2| Http2 Protocol
 |Http1AndHttp2| Both supported
 |=======================
 
-=== SSL
+===` SSL`
 To activate the HTTP2, the _SslProtocol_ node must be set to _Tls12_ value.
 
-The SSL protocol supported version values are: 
+The` SSL` protocol supported version values are: 
 
 - Tls
 - Tls11
@@ -583,7 +581,7 @@ The SSL protocol supported version values are:
 
 == Create a certificate for development purposes
 
-In order to create a valid certificate for development purposes the Open SSL tools are needed. 
+In order to create a valid certificate for development purposes the Open` SSL` tools are needed. 
 
 
 
@@ -646,24 +644,23 @@ openssl pkcs12 -export -out localhost.pfx -inkey localhost.key -in localhost.crt
 
 == Setup the database driver
 
-Add the databse connection on the SetupDatabase method at Startup.cs
+Add the database connection on the `SetupDatabase` method at Startup.cs
     
-[source, C#]
-----
+```
        private void SetupDatabase(IServiceCollection services)
         {
             services.SetupDatabase<TodoContext>(Configuration, "Default", WebAPI.Configuration.Enums.DatabaseType.InMemory);
         }
-----
+```
 
 Where: 
 
 [options="header"]
 |=======================
 |*Param*|*Description*
-|TodoContext| Is the database context definition
-|Default| Is the connection string defined at _ConnectionString_ node at the appsettings configuration file 
-|WebAPI.Configuration.Enums.DatabaseType.InMemory| Is the database driver selection. In this case InMemory data base is chosen
+|`TodoContext`| Is the database context definition
+|Default| Is the connection string defined at `_ConnectionString_` node at the appsettings configuration file 
+|`WebAPI.Configuration.Enums.DatabaseType.InMemory`| Is the database driver selection. In this case InMemory data base is chosen
 |=======================
 
 The supported databases are:
@@ -682,64 +679,62 @@ The supported databases are:
 
 == Change the JWT encryption algorithm
 
-In the appsettings.json configuration file, you can use the next values on the _SecretKeyLengthAlgorithm_ and _SecretKeyEncryptionAlgorithm_ nodes at JWT configuration:
+In the appsettings.json configuration file, you can use the next values on the `_SecretKeyLengthAlgorithm_` and `_SecretKeyEncryptionAlgorithm_` nodes at JWT configuration:
 
 
 [options="header"]
 |=======================
 |*Algorithm*|*Description*
-|Aes128Encryption|"http://www.w3.org/2001/04/xmlenc#aes128-cbc"
-|Aes192Encryption|"http://www.w3.org/2001/04/xmlenc#aes192-cbc"
-|Aes256Encryption|"http://www.w3.org/2001/04/xmlenc#aes256-cbc"
-|DesEncryption|"http://www.w3.org/2001/04/xmlenc#des-cbc"
-|Aes128KeyWrap|"http://www.w3.org/2001/04/xmlenc#kw-aes128"
-|Aes192KeyWrap|"http://www.w3.org/2001/04/xmlenc#kw-aes192"
-|Aes256KeyWrap|"http://www.w3.org/2001/04/xmlenc#kw-aes256"
-|RsaV15KeyWrap|"http://www.w3.org/2001/04/xmlenc#rsa-1_5"
-|Ripemd160Digest|"http://www.w3.org/2001/04/xmlenc#ripemd160"
-|RsaOaepKeyWrap|"http://www.w3.org/2001/04/xmlenc#rsa-oaep"
-|Aes128KW|"A128KW"
-|Aes256KW|"A256KW"
-|RsaPKCS1|"RSA1_5"
-|RsaOAEP|"RSA-OAEP"
-|ExclusiveC14n|"http://www.w3.org/2001/10/xml-exc-c14n#"
-|ExclusiveC14nWithComments|"http://www.w3.org/2001/10/xml-exc-c14n#WithComments"
-|EnvelopedSignature|"http://www.w3.org/2000/09/xmldsig#enveloped-signature"
-|Sha256Digest|"http://www.w3.org/2001/04/xmlenc#sha256"
-|Sha384Digest|"http://www.w3.org/2001/04/xmldsig-more#sha384"
-|Sha512Digest|"http://www.w3.org/2001/04/xmlenc#sha512"
-|Sha256|"SHA256"
-|Sha384|"SHA384"
-|Sha512|"SHA512"
-|EcdsaSha256Signature|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"
-|EcdsaSha384Signature|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384"
-|EcdsaSha512Signature|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512"
-|HmacSha256Signature|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha256"
-|HmacSha384Signature|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha384"
-|HmacSha512Signature|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha512"
-|RsaSha256Signature|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
-|RsaSha384Signature|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha384"
-|RsaSha512Signature|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"
-|RsaSsaPssSha256Signature|"http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1"
-|RsaSsaPssSha384Signature|"http://www.w3.org/2007/05/xmldsig-more#sha384-rsa-MGF1"
-|RsaSsaPssSha512Signature|"http://www.w3.org/2007/05/xmldsig-more#sha512-rsa-MGF1"
-|EcdsaSha256|"ES256"
-|EcdsaSha384|"ES384"
-|EcdsaSha512|"ES512"
-|HmacSha256|"HS256"
-|HmacSha384|"HS384"
-|HmacSha512|"HS512"
+|`Aes128Encryption`|"http://www.w3.org/2001/04/xmlenc#aes128-cbc"
+|`Aes192Encryption`|"http://www.w3.org/2001/04/xmlenc#aes192-cbc"
+|`Aes256Encryption`|"http://www.w3.org/2001/04/xmlenc#aes256-cbc"
+|`DesEncryption`|"http://www.w3.org/2001/04/xmlenc#des-cbc"
+|`Aes128KeyWrap`|"http://www.w3.org/2001/04/xmlenc#kw-aes128"
+|`Aes192KeyWrap`|"http://www.w3.org/2001/04/xmlenc#kw-aes192"
+|`Aes256KeyWrap`|"http://www.w3.org/2001/04/xmlenc#kw-aes256"
+|`RsaV15KeyWrap`|"http://www.w3.org/2001/04/xmlenc#rsa-1_5"
+|`Ripemd160Digest`|"http://www.w3.org/2001/04/xmlenc#ripemd160"
+|`RsaOaepKeyWrap`|"http://www.w3.org/2001/04/xmlenc#rsa-oaep"
+|`Aes128KW`|"A128KW"
+|`Aes256KW`|"A256KW"
+|`RsaPKCS1`|`"RSA1_5"`
+|`RsaOAEP`|`"RSA-OAEP"`
+|`ExclusiveC14n`|"http://www.w3.org/2001/10/xml-exc-c14n#"
+|`ExclusiveC14nWithComments`|"http://www.w3.org/2001/10/xml-exc-c14n#WithComments"
+|`EnvelopedSignature`|"http://www.w3.org/2000/09/xmldsig#enveloped-signature"
+|`Sha256Digest`|"http://www.w3.org/2001/04/xmlenc#sha256"
+|`Sha384Digest`|"http://www.w3.org/2001/04/xmldsig-more#sha384"
+|`Sha512Digest`|"http://www.w3.org/2001/04/xmlenc#sha512"
+|`Sha256`|"SHA256"
+|`Sha384`|"SHA384"
+|`Sha512`|"SHA512"
+|`EcdsaSha256Signature`|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"
+|`EcdsaSha384Signature`|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384"
+|`EcdsaSha512Signature`|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512"
+|`HmacSha256Signature`|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha256"
+|`HmacSha384Signature`|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha384"
+|`HmacSha512Signature`|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha512"
+|`RsaSha256Signature`|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
+|`RsaSha384Signature`|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha384"
+|`RsaSha512Signature`|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"
+|`RsaSsaPssSha256Signature`|"http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1"
+|`RsaSsaPssSha384Signature`|"http://www.w3.org/2007/05/xmldsig-more#sha384-rsa-MGF1"
+|`RsaSsaPssSha512Signature`|"http://www.w3.org/2007/05/xmldsig-more#sha512-rsa-MGF1"
+|`EcdsaSha256`|"ES256"
+|`EcdsaSha384`|"ES384"
+|`EcdsaSha512`|"ES512"
+|`HmacSha256`|"HS256"
+|`HmacSha384`|"HS384"
+|`HmacSha512`|"HS512"
 |None|"none"
-|RsaSha256|"RS256"
-|RsaSha384|"RS384"
-|RsaSha512|"RS512"
-|RsaSsaPssSha256|"PS256"
-|RsaSsaPssSha384|"PS384"
-|RsaSsaPssSha512|"PS512"
-|Aes128CbcHmacSha256|"A128CBC-HS256"
-|Aes192CbcHmacSha384|"A192CBC-HS384"
-|Aes256CbcHmacSha512|"A256CBC-HS512"
+|`RsaSha256`|"RS256"
+|`RsaSha384`|"RS384"
+|`RsaSha512`|"RS512"
+|`RsaSsaPssSha256`|"PS256"
+|`RsaSsaPssSha384`|"PS384"
+|`RsaSsaPssSha512`|"PS512"
+|`Aes128CbcHmacSha256`|"A128CBC-HS256"
+|`Aes192CbcHmacSha384`|"A192CBC-HS384"
+|`Aes256CbcHmacSha512`|"A256CBC-HS512"
 |=======================
-
-
 

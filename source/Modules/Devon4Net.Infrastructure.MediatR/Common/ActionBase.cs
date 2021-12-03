@@ -1,5 +1,4 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 
 namespace Devon4Net.Infrastructure.MediatR.Common
 {

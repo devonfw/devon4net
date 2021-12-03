@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using Confluent.Kafka;
-using Devon4Net.Infrastructure.Common.Options;
+﻿using Devon4Net.Infrastructure.Common.Handlers;
 using Devon4Net.Infrastructure.Common.Options.Kafka;
 using Devon4Net.Infrastructure.Kafka.Handlers;
 using Microsoft.Extensions.Configuration;
@@ -11,8 +8,6 @@ namespace Devon4Net.Infrastructure.Kafka
 {
     public static class KafkaConfiguration
     {
-        private static ProducerConfig KafkaOptions { get; set; }
-
         public static void SetupKafka(this IServiceCollection services, IConfiguration configuration)
         {
             var kafkaOptions = services.GetTypedOptions<KafkaOptions>(configuration, "Kafka");
@@ -25,7 +20,7 @@ namespace Devon4Net.Infrastructure.Kafka
         public static void AddKafkaConsumer<T>(this IServiceCollection services, string consumerId, bool commit = false, int commitPeriod = 5) where T : class 
         {
             var memberInfo = typeof(T).BaseType;
-            if (memberInfo != null && !memberInfo.Name.Contains("KafkaConsumerHandler"))
+            if (memberInfo?.Name.Contains("KafkaConsumerHandler") == false)
             {
                 throw new ArgumentException($"The provided type {typeof(T).FullName} does not inherit from KafkaConsumerHandler");
             }
@@ -41,7 +36,7 @@ namespace Devon4Net.Infrastructure.Kafka
         public static void AddKafkaProducer<T>(this IServiceCollection services, string producerId) where T : class
         {
             var memberInfo = typeof(T).BaseType;
-            if (memberInfo != null && !memberInfo.Name.Contains("KafkaProducerHandler"))
+            if (memberInfo?.Name.Contains("KafkaProducerHandler") == false)
             {
                 throw new ArgumentException($"The provided type {typeof(T).FullName} does not inherit from KafkaProducerHandler");
             }

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 using Devon4Net.Infrastructure.Log;
 using Microsoft.Extensions.DependencyInjection;
 

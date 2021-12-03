@@ -1,5 +1,4 @@
-﻿using System;
-using Amazon.CDK;
+﻿using Amazon.CDK;
 using Amazon.CDK.AWS.EC2;
 using Devon4Net.Infrastructure.AWS.CDK.Interfaces;
 
@@ -15,7 +14,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Handlers
 
         public ISecurityGroup Locate(string securityId, string securityGroupId)
         {
-            return SecurityGroup.FromLookup(Scope, securityId, securityGroupId);
+            return SecurityGroup.FromLookupById(Scope, securityId, securityGroupId);
         }
 
         public ISecurityGroup Create(string identification, string groupName, bool allowGroupAllOutbound, IVpc vpc, IPeer ingressPeer, Port ingressPort, IPeer egressPeer, Port egressPort)

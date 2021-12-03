@@ -1,7 +1,5 @@
-﻿    using System;
-using System.IO;
-using System.Threading.Tasks;
-using Amazon.Lambda.Core;
+﻿using Amazon.Lambda.Core;
+using Devon4Net.Infrastructure.AWS.Common.Consts;
 using Devon4Net.Infrastructure.AWS.Lambda.Interfaces;
 using Devon4Net.Infrastructure.AWS.Secrets;
 using Microsoft.Extensions.Configuration;
@@ -37,20 +35,39 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
             Logger = ServiceProvider.GetRequiredService<ILogger<TInput>>();
         }
 
-        public Task<TOutput> FunctionHandler(TInput input, ILambdaContext context)
+        public async Task<TOutput> FunctionHandler(TInput input, ILambdaContext context)
         {
-            using var scope = ServiceProvider.CreateScope();
-            var handler = scope.ServiceProvider.GetService<ILambdaEventHandler<TInput, TOutput>>();
+            var scope = ServiceProvider.CreateScope();
+            var name = typeof(TInput).Name;
 
-            if (handler == null)
+            try
             {
-                var message = $"EventHandler<{typeof(TInput).Name}> Not found. Please check the dependency injection declaration";
-                Logger.LogError(message);
-                throw new InvalidOperationException(message);
-            }
+                var handler = scope.ServiceProvider.GetService<ILambdaEventHandler<TInput, TOutput>>();
 
-            Logger.LogInformation("Invoking handler");
-            return handler.FunctionHandler(input, context);
+                if (handler == null)
+                {
+                    var message = $"EventHandler<{name}> Not found. Please check the dependency injection declaration";
+                    Logger.LogError("EventHandler<{name}> Not found. Please check the dependency injection declaration", name);
+
+                    throw new InvalidOperationException(message);
+                }
+
+                Logger.LogInformation("Invoking handler {name}", name);
+
+                return await handler.FunctionHandler(input, context).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                var message = ex?.Message;
+                var innerException = ex?.InnerException;
+                Logger.LogError("Message '{name}': \"{message}\" | InnerException: \"{innerException}\"", name, message, innerException);
+                throw;
+            }
+            finally
+            {
+                Logger.LogInformation("Disposing {name} function scope", name);
+                scope?.Dispose();
+            }
         }
 
         protected void ConfigureLogging(ILoggingBuilder logging)
@@ -63,14 +80,24 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
                 IncludeNewline = true
             });
         }
+
         protected void SetupConfiguration()
         {
-            Configuration = new ConfigurationBuilder()
+            var builder =
+            new ConfigurationBuilder()
                 .AddEnvironmentVariables()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddSecretsHandler()
-                .Build();
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            Configuration = builder.Build();
+
+            _ = bool.TryParse(Configuration[ConfigurationConsts.AwsSecretsNodeName], out bool useSecrets);
+
+            if (useSecrets)
+            {
+                builder.AddSecretsHandler();
+                Configuration = builder.Build();
+            }
         }
     }
 }

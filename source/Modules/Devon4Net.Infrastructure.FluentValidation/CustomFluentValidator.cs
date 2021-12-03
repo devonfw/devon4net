@@ -1,5 +1,4 @@
-﻿using System;
-using Devon4Net.Infrastructure.Log;
+﻿using Devon4Net.Infrastructure.Log;
 using FluentValidation;
 using FluentValidation.Results;
 
@@ -7,15 +6,27 @@ namespace Devon4Net.Infrastructure.FluentValidation
 {
     public abstract class CustomFluentValidator<T> : AbstractValidator<T> where T : class
     {
+        public abstract void CustomValidate();
         private bool LaunchExceptionWhenError { get; }
 
         protected CustomFluentValidator(bool launchExceptionWhenError)
         {
-           LaunchExceptionWhenError = launchExceptionWhenError;
-           CustomValidate();
+            LaunchExceptionWhenError = launchExceptionWhenError;
+            try
+            {
+                CallCustomValidationImplementation();
+            }
+            catch (Exception ex)
+            {
+                Devon4NetLogger.Error(ex);
+                throw;
+            }
         }
 
-        public abstract void CustomValidate();
+        private void CallCustomValidationImplementation()
+        {
+            CustomValidate();
+        }
 
         public override ValidationResult Validate(ValidationContext<T> context)
         {
@@ -23,8 +34,8 @@ namespace Devon4Net.Infrastructure.FluentValidation
 
             if (result.IsValid) return result;
 
-            var errorMessage = $"Error validating object type {typeof(T).FullName} : {string.Join(",", result.Errors)}";
-            
+            var errorMessage = $"Object validation error type {typeof(T).FullName} : {string.Join(",", result.Errors)}";
+
             Devon4NetLogger.Error(errorMessage);
 
             if (LaunchExceptionWhenError)

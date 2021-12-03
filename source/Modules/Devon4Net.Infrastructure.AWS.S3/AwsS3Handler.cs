@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using Amazon;
+﻿using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
@@ -35,27 +31,11 @@ namespace Devon4Net.Infrastructure.AWS.S3
         {
             try
             {
-                if (streamFile == null || streamFile.Length == 0 || !streamFile.CanRead)
-                {
-                    Devon4NetLogger.Fatal("No base64Image to create the S3 upload");
-                    throw new ArgumentException("No base64Image to create the S3 upload");
-                }
-
-                if (string.IsNullOrEmpty(keyName))
-                {
-                    Devon4NetLogger.Fatal("No keyName provided to create the S3 upload");
-                    throw new ArgumentException("No keyName provided to create the S3 upload");
-                }
-
-                if (string.IsNullOrEmpty(bucketName))
-                {
-                    Devon4NetLogger.Fatal("No bucketName provided to create the S3 upload");
-                    throw new ArgumentException("No bucketName provided to create the S3 upload");
-                }
+                CheckUploadObjectParams(streamFile, keyName, bucketName);
 
                 using var s3Client = GetS3Client(AwsRegion, AwsSecretAccessKeyId, AwsSecretAccessKey);
                 using var fileTransferUtility = new TransferUtility(s3Client);
-                
+
                 var transferUtilityUploadRequest = new TransferUtilityUploadRequest
                 {
                     InputStream = streamFile,
@@ -68,7 +48,7 @@ namespace Devon4Net.Infrastructure.AWS.S3
                 };
 
                 await fileTransferUtility.UploadAsync(transferUtilityUploadRequest).ConfigureAwait(false);
-                if (autoCloseStream == false) streamFile.Position = 0;
+                if (!autoCloseStream) streamFile.Position = 0;
             }
             catch (Exception ex)
             {
@@ -79,7 +59,28 @@ namespace Devon4Net.Infrastructure.AWS.S3
             return true;
         }
 
-        private IAmazonS3 GetS3Client(string awsRegion, string awsSecretAccessKeyId, string awsSecretAccessKey)
+        private static void CheckUploadObjectParams(Stream streamFile, string keyName, string bucketName)
+        {
+            if (streamFile == null || streamFile.Length == 0 || !streamFile.CanRead)
+            {
+                Devon4NetLogger.Fatal("No base64Image to create the S3 upload");
+                throw new ArgumentException("No base64Image to create the S3 upload");
+            }
+
+            if (string.IsNullOrEmpty(keyName))
+            {
+                Devon4NetLogger.Fatal("No keyName provided to create the S3 upload");
+                throw new ArgumentException("No keyName provided to create the S3 upload");
+            }
+
+            if (string.IsNullOrEmpty(bucketName))
+            {
+                Devon4NetLogger.Fatal("No bucketName provided to create the S3 upload");
+                throw new ArgumentException("No bucketName provided to create the S3 upload");
+            }
+        }
+
+        private static IAmazonS3 GetS3Client(string awsRegion, string awsSecretAccessKeyId, string awsSecretAccessKey)
         {
             if (string.IsNullOrEmpty(awsRegion))
             {
@@ -109,7 +110,7 @@ namespace Devon4Net.Infrastructure.AWS.S3
             try
             {
                 using var s3Client = GetS3Client(AwsRegion, AwsSecretAccessKeyId, AwsSecretAccessKey);
-                return await s3Client.GetObjectMetadataAsync(new GetObjectMetadataRequest {Key = key, BucketName = bucketName});
+                return await s3Client.GetObjectMetadataAsync(new GetObjectMetadataRequest {Key = key, BucketName = bucketName}).ConfigureAwait(false);
             }
             catch (AmazonS3Exception ex)
             {
@@ -123,7 +124,7 @@ namespace Devon4Net.Infrastructure.AWS.S3
             try
             {
                 using var s3Client = GetS3Client(AwsRegion, AwsSecretAccessKeyId, AwsSecretAccessKey);
-                var response = await s3Client.GetObjectMetadataAsync(new GetObjectMetadataRequest { Key = key, BucketName = bucketName });
+                var response = await s3Client.GetObjectMetadataAsync(new GetObjectMetadataRequest { Key = key, BucketName = bucketName }).ConfigureAwait(false);
                 if (response.HttpStatusCode == System.Net.HttpStatusCode.NotFound) return false;
                 return response.HttpStatusCode == System.Net.HttpStatusCode.OK && response.LastModified != DateTime.MinValue && response.LastModified != DateTime.MaxValue && response.LastModified != default;
             }

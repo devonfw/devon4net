@@ -34,8 +34,8 @@ To start developing with devon4Net template, please follow this instructions:
 
 
 ==== Option 2
-. Create a new dotnet API project from scracht
-. Add the nuget package reference to your project
+. Create a new dotnet API project from scratch
+. Add the NuGet package reference to your project
 . Type _dotnet new --install Devon4Net.WebAPI.Template_
 
 
@@ -56,11 +56,11 @@ To start developing with devon4Net template, please follow this instructions:
 . You are ready to start developing with _devon4Net_
 
 
-NOTE: For the latest updates on references packages, please get the sorces from https://github.com/devonfw/devon4net/tree/core2.1.x[Github]
+NOTE: For the latest updates on references packages, please get the sources from https://github.com/devonfw/devon4net[Github]
 
 == Links
 
-icon:= fa-floppy-o[]  link:https://github.com/devonfw/devon4net/tree/develop/Templates[.Net templates]
+icon:= fa-floppy-o[]  link:https://github.com/devonfw/devon4net/tree/develop/source/Templates[.Net templates]
 
 
 

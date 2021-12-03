@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Devon4Net.Infrastructure.Extensions.Helpers
+﻿namespace Devon4Net.Infrastructure.Extensions.Helpers
 {
     public class ObjectTypeHelper : IObjectTypeHelper
     {

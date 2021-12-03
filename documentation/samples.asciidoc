@@ -36,7 +36,7 @@ video::videos/mts_startup.mp4[width=640, start=0, options=autoplay]
 
 ==== [navy]#Basic architecture details#
 
-Following the OASP conventions the .Net Core 2.0 My Thai Star backend is going to be developed dividing the application in _Components_ and using a n-layer architecture.
+Following the devonfw conventions the .Net Core 2.0 My Thai Star backend is going to be developed dividing the application in _Components_ and using a n-layer architecture.
 
 image::images/project_modules.png[, link="images/project_modules.png"]
 
@@ -48,13 +48,13 @@ image::images/mtsn_components.png[, link="images/mtsn_components.png"]
 
 As _main components_ we will find:
 
-- _BookingService: Manages the bookings part of the application. With this component the users (anonymous/logged in) can create new bookings or cancel an existing booking. The users with waiter role can see all scheduled bookings.
+- `_BookingService`: Manages the bookings part of the application. With this component the users (anonymous/logged in) can create new bookings or cancel an existing booking. The users with waiter role can see all scheduled bookings.
 
-- _OrderService_: This component handles the process to order dishes (related to bookings). A user (as a host or as a guest) can create orders (that contain dishes) or cancel an existing one. The users with waiter role can see all ordered orders.
+-`_OrderService_`: This component handles the process to order dishes (related to bookings). A user (as a host or as a guest) can create orders (that contain dishes) or cancel an existing one. The users with waiter role can see all ordered orders.
 
-- _DishService_: This component groups the logic related to the menu (dishes) view. Its main feature is to provide the client with the data of the available dishes but also can be used by other components (Ordermanagement) as a data provider in some processes.
+- `_DishService_`: This component groups the logic related to the menu (dishes) view. Its main feature is to provide the client with the data of the available dishes but also can be used by other components (Ordermanagement) as a data provider in some processes.
 
-- _UserService_: Takes care of the User Profile management, allowing to create and update the data profiles.
+- `_UserService_`: Takes care of the User Profile management, allowing to create and update the data profiles.
 
 As _common components_ (that don't exactly represent an application's area but provide functionalities that can be used by the _main components_):
 
@@ -71,7 +71,7 @@ Other components:
 ==== [navy]#Introduction#
 The .Net Core backend for My Thai Star application is going to be based on:
 
-- *OASP4NET* as the .Net Core framework
+- *devon4NET* as the .Net Core framework
 - *VSCode* as the Development environment
 - *TOBAGO* as code generation tool
 
@@ -92,7 +92,7 @@ The layer in charge of hosting the business logic of the application. Also orche
 The layer to communicate with the data base.
 
 Data layer makes use of _Entity Framework_.
-The Database context is defined on _DataAccessLayer_ assembly (ModelContext). 
+The Database context is defined on `_DataAccessLayer_` assembly (`ModelContext`). 
 
 This layer makes use of the _Repository pattern_ and _Unit of work_ in order to encapsulate the complexity. Making use of this combined patterns we ensure an organized and easy work model.
 
@@ -108,20 +108,20 @@ the layer to make use of transversal components such JWT and mailing.
 
 - The auth server will try to identify the user and, if the credentials match, will issue a token.
 
-- The user will send the token as the _Authorization_ header to access resources on server protected by JWT Authentication.
+- The user will send the token as the _Authorization_ header to access resources on server protected by  JWT Authentication.
 
 image::images/jwt_schema.png[, link="images/jwt_schema.png"]
 
 === [navy]#Jwt implementation details#
 
-The _Json Web Token_ pattern will be implemented based on the https://blogs.msdn.microsoft.com/webdev/2017/04/06/jwt-validation-and-authorization-in-asp-net-core/[_jwt on .net core_] framework that is provided by default in the _Oasp4Net_ projects.
+The _Json Web Token_ pattern will be implemented based on the https://blogs.msdn.microsoft.com/webdev/2017/04/06/jwt-validation-and-authorization-in-asp-net-core/[_jwt on .net core_] framework that is provided by default in the _devon4Net_ projects.
 
 
 === [navy]#Authentication#
 
 Based on _Microsoft_ approach, we will implement a class to define the security _entry point_ and filters. Also, as _My Thai Star_ is a mainly _public_ application, we will define here the resources that won't be secured.
 
-On Oasp4Net.Infrastructure.JWT assembly is defined a subset of _Microsoft's authorization schema_ Database. It is started up the first time the application launches.
+On devon4Net.Infrastructure.JWT assembly is defined a subset of _Microsoft's authorization schema_ Database. It is started up the first time the application launches.
 
 You can read more about _Authorization on: 
 
@@ -145,7 +145,7 @@ The connection between layers, to access to the functionalities of each one, wil
 
 image::images/layer_impl.png[, link="images/layer_impl.png"]
 
-*Connection BookingService - Logic*
+*Connection `BookingService` - Logic*
 [source, c#]
 ----
  public class BookingService : EntityService<Booking>, IBookingService
@@ -188,7 +188,7 @@ To give service to the defined _User Stories_ we will need to implement the foll
 - provide the _current user_ data (see the _Security_ section)
 
 
-Following the [naming conventions] proposed for _Oasp4Net_ applications we will define the following _end points_ for the listed services.
+Following the [naming conventions] proposed for _devon4Net_ applications we will define the following _end points_ for the listed services.
 
 - (POST) `/mythaistar/services/rest/dishmanagement/v1/dish/search`.
 
@@ -207,11 +207,11 @@ Following the [naming conventions] proposed for _Oasp4Net_ applications we will 
 - (GET) `/mythaistar/services/rest/security/v1/currentuser/`.
 
 
-You can find all the details for the services implementation in the https://github.com/oasp/my-thai-star/blob/develop/swagger/mythaistar.yaml[Swagger definition] included in the My Thai Star project on Github.
+You can find all the details for the services implementation in the https://github.com/devonfw/my-thai-star/blob/develop/swagger/mythaistar.yaml[Swagger definition] included in the My Thai Star project on Github.
 
 === [navy]#Api Exposed#
 
-The _Oasp4Net.Business.Controller_ assembly in the _business_ layer of a _component_ will store the definition of the service by a  _interface_. In this definition of the service we will set-up the _endpoints_ of the service, the type of data expected and returned, the _HTTP_ method for each endpoint of the service and other configurations if needed.
+The _devon4Net.Business.Controller_ assembly in the _business_ layer of a _component_ will store the definition of the service by a  _interface_. In this definition of the service we will set-up the _endpoints_ of the service, the type of data expected and returned, the _HTTP_ method for each endpoint of the service and other configurations if needed.
 
 [source, c#]
 ----
@@ -235,7 +235,7 @@ The _Oasp4Net.Business.Controller_ assembly in the _business_ layer of a _compon
 ...
 ----
 
-Using the summary annotations and attributes will tell to swagger the contract via the XML doc generated on compiling time. This doc will be stored in _XmlDocumentation_ folder.
+Using the summary annotations and attributes will tell to swagger the contract via the XML doc generated on compiling time. This doc will be stored in `_XmlDocumentation_` folder.
 
 The Api methods will be exposed on the application layer.
 
@@ -247,13 +247,13 @@ icon:= fa-floppy-o[]  link:resources/samples/components/GMailAPIConsumer.zip[Goo
 
 [options=""]
 |=======================
-|Application| MyThaiStarEmailService.exe
-|Config file| MyThaiStarEmailService.exe.Config
+|Application| `MyThaiStarEmailService.exe`
+|Config file| `MyThaiStarEmailService.exe.Config`
 |Default port|8080
 |=======================
 
 === [navy]#Overview#
-. Execute MyThaiStarEmailService.exe.
+. Execute `MyThaiStarEmailService.exe`.
 . The first time google will ask you for credentials
 (just one time) in your default browser:
 
@@ -300,7 +300,7 @@ This is the JSON example to test with swagger client. Please read the swagger do
 === [navy]#Configure the service port#
 
 If you want to change the default port, please edit the config file and
-change the next entry in appSettings node:
+change the next entry in `appSettings` node:
 
 [source,xml]
 ----
@@ -319,6 +319,4 @@ https://developers.google.com/gmail/api/auth/scopes[About Scopes]
 
 == [navy]#Downloads#
 
-icon:= fa-floppy-o[]  link:https://github.com/oasp/my-thai-star/tree/develop/net[My Thai Star (.Net Core Server + Angular client)]
-
-icon:= fa-floppy-o[]  link:https://github.com/oasp/oasp4net/tree/pre/Samples[Google Mail API Consumer]
+icon:= fa-floppy-o[]  link:https://github.com/devonfw/my-thai-star/tree/develop/net[My Thai Star (.Net Core Server + Angular client)]

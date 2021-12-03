@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Devon4Net.Infrastructure.Extensions;
+﻿using Devon4Net.Infrastructure.Extensions;
 using Devon4Net.Infrastructure.Extensions.Helpers;
 using Devon4Net.Infrastructure.Log;
 using Devon4Net.Infrastructure.MediatR.Common;
@@ -47,7 +45,7 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
             JsonHelper = jsonHelper;
         }
 
-        public async Task<MediatRBackup> CreateMessageBackup<T>(ActionBase<T> command, MediatRActionsEnum action = MediatRActionsEnum.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null) where T : class
+        public async Task<MediatRBackup> CreateMessageBackup<T>(ActionBase<T> command, MediatrActions action = MediatrActions.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null) where T : class
         {
             MediatRBackupContext ctx = null;
 
@@ -55,20 +53,7 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
             {
                 ctx = CreateContext();
 
-                if (ctx == null)
-                {
-                    throw new ArgumentException("The database provider is not supported to host threads");
-                }
-
-                if (!UseExternalDatabase)
-                {
-                    throw new ArgumentException("Please setup your MeadiatRBackupContext database context to use MediatRBackupService");
-                }
-
-                if (command?.InternalMessageIdentifier == null || command.InternalMessageIdentifier.IsNullOrEmptyGuid())
-                {
-                    throw new ArgumentException($"The provided command  and the command identifier cannot be null ");
-                }
+                CheckCommandContext(command, ctx);
 
                 var backUp = new MediatRBackup
                 {
@@ -85,8 +70,8 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
                 };
 
                 var result = await ctx.MediatRBackup.AddAsync(backUp).ConfigureAwait(false);
-                await ctx.SaveChangesAsync();
-                await ctx.DisposeAsync();
+                await ctx.SaveChangesAsync().ConfigureAwait(false);
+                await ctx.DisposeAsync().ConfigureAwait(false);
                 return result.Entity;
             }
             catch (Exception ex)
@@ -100,7 +85,7 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
             }
         }
 
-        public async Task<MediatRBackup> CreateResponseMessageBackup(object command, MediatRActionsEnum action = MediatRActionsEnum.Sent,
+        public async Task<MediatRBackup> CreateResponseMessageBackup(object command, MediatrActions action = MediatrActions.Sent,
             bool increaseRetryCounter = false, string additionalData = null, string errorData = null)
         {
             try
@@ -120,8 +105,8 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
                 };
 
                 var result = await ctx.MediatRBackup.AddAsync(backUp).ConfigureAwait(false);
-                await ctx.SaveChangesAsync();
-                await ctx.DisposeAsync();
+                await ctx.SaveChangesAsync().ConfigureAwait(false);
+                await ctx.DisposeAsync().ConfigureAwait(false);
                 return result.Entity;
             }
             catch (Exception ex)
@@ -158,7 +143,7 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
                     break;
                 case DatabaseConst.MySql:
                 case DatabaseConst.MySqlPomelo:
-                    optionsBuilder.UseMySql(ContextConnectionString);
+                    optionsBuilder.UseMySql(ServerVersion.AutoDetect(ContextConnectionString));
                     break;
                 case DatabaseConst.FireBirdSql:
                 case DatabaseConst.FireBirdSqlV:
@@ -167,16 +152,6 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
                 case DatabaseConst.SqlLite:
                     optionsBuilder.UseSqlite(ContextConnectionString);
                     break;
-
-                //Oracle does not support EF Core 3.1 yet
-                //case DatabaseConst.Oracle:
-                //    optionsBuilder.UseOracle(ContextConnectionString,sqlOptions => { });
-                //    break;
-
-                //IBM does not support EF Core 3.1 yet
-                //case DatabaseConst.Ibm:
-                //    optionsBuilder.UseDb2(ContextConnectionString, sqlOptions => { });
-                //    break;
 
                 default:
                     Devon4NetLogger.Error(errorMessage);
@@ -189,8 +164,25 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
         private string GetSerializedContent(object command)
         {
             var typedCommand = Convert.ChangeType(command, command.GetType());
-            var serializedContent = JsonHelper.Serialize(typedCommand);
-            return serializedContent;
+            return JsonHelper.Serialize(typedCommand, false);
+        }
+
+        private void CheckCommandContext<T>(ActionBase<T> command, MediatRBackupContext ctx) where T : class
+        {
+            if (ctx == null)
+            {
+                throw new ArgumentException("The database provider is not supported to host threads");
+            }
+
+            if (!UseExternalDatabase)
+            {
+                throw new ArgumentException("Please setup your MeadiatRBackupContext database context to use MediatRBackupService");
+            }
+
+            if (command?.InternalMessageIdentifier == null || command.InternalMessageIdentifier.IsNullOrEmptyGuid())
+            {
+                throw new ArgumentException($"The provided command  and the command identifier cannot be null ");
+            }
         }
     }
 }
