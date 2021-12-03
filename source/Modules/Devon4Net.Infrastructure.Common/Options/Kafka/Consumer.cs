@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Devon4Net.Infrastructure.Common.Options.Kafka
+﻿namespace Devon4Net.Infrastructure.Common.Options.Kafka
 {
     public class Consumer
     {

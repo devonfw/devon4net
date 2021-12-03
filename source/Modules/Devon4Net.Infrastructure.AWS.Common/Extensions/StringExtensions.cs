@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Devon4Net.Infrastructure.AWS.Common.Extensions
+﻿namespace Devon4Net.Infrastructure.AWS.Common.Extensions
 {
     public static class StringExtensions
     {

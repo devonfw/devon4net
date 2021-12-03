@@ -1,13 +1,10 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 using Devon4Net.Infrastructure.Log;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Devon4Net.Infrastructure.Kafka.Handlers
 {
-    public abstract class KafkaConsumerHandler<T, TV>: IKafkaConsumerHandler where T : class where TV : class
+    public abstract class KafkaConsumerHandler<T, TV> : IKafkaConsumerHandler where T : class where TV : class
     {
         public abstract void HandleCommand(T key, TV value);
         private IKakfkaHandler KafkaHandler { get; set; }
@@ -56,59 +53,41 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
         /// <typeparam name="TV"></typeparam>
         /// <param name="commit"></param>
         /// <param name="commitPeriod"></param>
-        private void Consume(bool commit, int commitPeriod) 
+        private void Consume(bool commit, int commitPeriod)
         {
             var cancellationToken = new CancellationTokenSource();
-            
-            try
+
+            Task.Run(() =>
             {
-                Task.Run(() =>
+                try
                 {
                     using var consumer = KafkaHandler.GetConsumerBuilder<T, TV>(ConsumerId);
                     while (EnableConsumerFlag)
                     {
-                        try
+                        var consumeResult = consumer?.Consume(cancellationToken.Token);
+                        if (consumeResult?.Message == null) continue;
+
+                        HandleCommand(consumeResult.Message.Key, consumeResult.Message.Value);
+
+                        if (consumeResult.IsPartitionEOF)
                         {
-                            var consumeResult = consumer?.Consume(cancellationToken.Token);
-                            if (consumeResult?.Message == null) continue;
-
-                            HandleCommand(consumeResult.Message.Key, consumeResult.Message.Value);
-                            if (consumeResult.IsPartitionEOF)
-                            {
-                                Devon4NetLogger.Information($"Reached end of topic {consumeResult.Topic}, partition {consumeResult.Partition}, offset {consumeResult.Offset}.");
-                                continue;
-                            }
-
-                            Devon4NetLogger.Debug($"Received message at {consumeResult.TopicPartitionOffset}: {consumeResult.Message.Value}");
-
-                            if (!commit) continue;
-
-                            if (consumeResult.Offset % commitPeriod != 0) continue;
-
-                            try
-                            {
-                                consumer.Commit(consumeResult);
-                            }
-                            catch (KafkaException e)
-                            {
-                                Devon4NetLogger.Error($"Commit error: {e.Error.Reason}");
-                                consumer.Close();
-                            }
+                            Devon4NetLogger.Information($"Reached end of topic {consumeResult.Topic}, partition {consumeResult.Partition}, offset {consumeResult.Offset}.");
+                            continue;
                         }
-                        catch (ConsumeException e)
-                        {
-                            Devon4NetLogger.Error($"Consume error: {e.Error.Reason}");
-                            consumer?.Close();
-                        }
+
+                        Devon4NetLogger.Debug($"Received message at {consumeResult.TopicPartitionOffset}: {consumeResult.Message.Value}");
+
+                        if (!commit || consumeResult.Offset % commitPeriod != 0) continue;
+
+                        consumer?.Commit(consumeResult);
+                        consumer?.Close();
                     }
-                }, cancellationToken.Token);
-            }
-            catch (OperationCanceledException e)
-            {
-                Devon4NetLogger.Error("Closing consumer.");
-                Devon4NetLogger.Error(e);
-                
-            }
+                }
+                catch (Exception ex)
+                {
+                    Devon4NetLogger.Error(ex);
+                }
+            }, cancellationToken.Token);
         }
     }
 }

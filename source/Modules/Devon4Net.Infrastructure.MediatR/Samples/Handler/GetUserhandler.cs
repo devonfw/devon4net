@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Devon4Net.Infrastructure.MediatR.Domain.ServiceInterfaces;
+﻿using Devon4Net.Infrastructure.MediatR.Domain.ServiceInterfaces;
 using Devon4Net.Infrastructure.MediatR.Handler;
 using Devon4Net.Infrastructure.MediatR.Samples.Model;
 using Devon4Net.Infrastructure.MediatR.Samples.Query;

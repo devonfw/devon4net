@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Devon4Net.Infrastructure.MediatR.Model
+﻿namespace Devon4Net.Infrastructure.MediatR.Model
 {
     public class ModelBase
     {

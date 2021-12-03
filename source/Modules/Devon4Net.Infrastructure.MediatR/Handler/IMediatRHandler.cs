@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Devon4Net.Infrastructure.MediatR.Common;
-using MediatR;
+﻿using Devon4Net.Infrastructure.MediatR.Common;
 
 namespace Devon4Net.Infrastructure.MediatR.Handler
 {

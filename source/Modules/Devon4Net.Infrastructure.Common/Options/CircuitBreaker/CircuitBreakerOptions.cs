@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Devon4Net.Infrastructure.Common.Options.CircuitBreaker
+﻿namespace Devon4Net.Infrastructure.Common.Options.CircuitBreaker
 {
     public class CircuitBreakerOptions
     {

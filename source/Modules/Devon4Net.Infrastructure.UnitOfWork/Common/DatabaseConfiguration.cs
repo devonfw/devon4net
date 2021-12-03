@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Devon4Net.Domain.UnitOfWork.Enums;
+﻿using Devon4Net.Domain.UnitOfWork.Enums;
 using Devon4Net.Infrastructure.Log;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,25 +14,31 @@ namespace Devon4Net.Domain.UnitOfWork.Common
 
         public static void SetupDatabase<T>(this IServiceCollection services, string connectionString, DatabaseType databaseType, ServiceLifetime serviceLifetime = ServiceLifetime.Transient, CosmosConfigurationParams cosmosConfigurationParams = null) where T : DbContext
         {
-            if (string.IsNullOrWhiteSpace(connectionString) || string.IsNullOrEmpty(connectionString)) throw new ArgumentException($"The provided connection string ({connectionString}) provided does not exists.");
+            if (string.IsNullOrWhiteSpace(connectionString)) throw new ArgumentException($"The provided connection string ({connectionString}) provided does not exists.");
             ServiceLifetime = serviceLifetime;
             SetDatabase<T>(services, databaseType, cosmosConfigurationParams, connectionString);
         }
 
-        public static void SetupDatabase<T>(this IServiceCollection services, IConfiguration configuration, string connectionStringName, DatabaseType databaseType, ServiceLifetime serviceLifetime = ServiceLifetime.Transient, bool migrate = false, CosmosConfigurationParams cosmosConfigurationParams = null) where T : DbContext 
+        public static async Task SetupDatabase<T>(this IServiceCollection services, IConfiguration configuration, string connectionStringName, DatabaseType databaseType, ServiceLifetime serviceLifetime = ServiceLifetime.Transient, bool migrate = false, CosmosConfigurationParams cosmosConfigurationParams = null) where T : DbContext
         {
+            IConfigurationSection connectionString = GetConnectionString(configuration, connectionStringName);
+            
             ServiceLifetime = serviceLifetime;
-            var applicationConnectionStrings = configuration.GetSection("ConnectionStrings").GetChildren();
-            if (applicationConnectionStrings == null) throw new ArgumentException("There are no connection strings provided.");
-            var connectionString = applicationConnectionStrings.FirstOrDefault(c => c.Key.ToLower() == connectionStringName.ToLower());
-            if (connectionString == null || string.IsNullOrEmpty(connectionString.Value)) throw new ArgumentException($"The provided connection string ({connectionStringName}) provided does not exists.");
 
             SetDatabase<T>(services, databaseType, cosmosConfigurationParams, connectionString.Value);
-            if (migrate) Migrate<T>(services);
-
+            if (migrate) await Migrate<T>(services).ConfigureAwait(false);
         }
 
-        private static void Migrate<T>(IServiceCollection services) where T : DbContext
+        private static IConfigurationSection GetConnectionString(IConfiguration configuration, string connectionStringName)
+        {
+            var applicationConnectionStrings = configuration.GetSection("ConnectionStrings").GetChildren();
+            if (applicationConnectionStrings == null) throw new ArgumentException("There are no connection strings provided.");
+            var connectionString = applicationConnectionStrings.FirstOrDefault(c => string.Equals(c.Key, connectionStringName, StringComparison.CurrentCultureIgnoreCase));
+            if (connectionString == null || string.IsNullOrEmpty(connectionString.Value)) throw new ArgumentException($"The provided connection string ({connectionStringName}) provided does not exists.");
+            return connectionString;
+        }
+
+        private static async Task Migrate<T>(IServiceCollection services) where T : DbContext
         {
             try
             {
@@ -53,7 +56,7 @@ namespace Devon4Net.Domain.UnitOfWork.Common
                     }
 
                     ((T)context)?.Database.Migrate();
-                    sp.DisposeAsync();
+                    await sp.DisposeAsync().ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
@@ -81,7 +84,7 @@ namespace Devon4Net.Domain.UnitOfWork.Common
                     services.AddDbContext<T>(options => options.UseInMemoryDatabase(connectionString), ServiceLifetime);
                     break;
                 case DatabaseType.MySql:
-                    services.AddDbContext<T>(options => options.UseMySql(connectionString, sqlOptions =>
+                    services.AddDbContext<T>(options => options.UseMySql(ServerVersion.AutoDetect(connectionString), sqlOptions =>
                     {
                         sqlOptions.EnableRetryOnFailure(
                             maxRetryCount: MaxRetryCount,
@@ -90,7 +93,7 @@ namespace Devon4Net.Domain.UnitOfWork.Common
                     }),ServiceLifetime);
                     break;
                 case DatabaseType.MariaDb:
-                    services.AddDbContext<T>(options => options.UseMySql(connectionString, sqlOptions =>
+                    services.AddDbContext<T>(options => options.UseMySql(ServerVersion.AutoDetect(connectionString), sqlOptions =>
                     {
                         sqlOptions.EnableRetryOnFailure(
                             maxRetryCount: MaxRetryCount,
@@ -122,10 +125,6 @@ namespace Devon4Net.Domain.UnitOfWork.Common
                 case DatabaseType.Oracle:
                     services.AddDbContext<T>(options => options.UseOracle(connectionString), ServiceLifetime);
                     break;
-                //MSAccess not updated to .net core 3.1
-                //case DatabaseType.MSAccess:
-                //    services.AddDbContext<T>(options => options.UseJet(connectionString), ServiceLifetime);
-                //    break;
                 default:
                     throw new ArgumentException("Not provided a database driver");
             }

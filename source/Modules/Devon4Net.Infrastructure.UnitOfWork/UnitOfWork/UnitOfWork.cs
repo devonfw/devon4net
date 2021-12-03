@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Devon4Net.Domain.UnitOfWork.Exceptions;
+﻿using Devon4Net.Domain.UnitOfWork.Exceptions;
 using Devon4Net.Domain.UnitOfWork.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -85,7 +83,7 @@ namespace Devon4Net.Domain.UnitOfWork.UnitOfWork
             return repository;
         }
 
-        private void RollbackTransaction(IDbContextTransaction transaction)
+        private static void RollbackTransaction(IDbContextTransaction transaction)
         {
             if (transaction == null)
             {

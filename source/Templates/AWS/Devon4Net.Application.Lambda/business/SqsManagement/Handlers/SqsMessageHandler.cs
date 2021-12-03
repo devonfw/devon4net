@@ -19,7 +19,9 @@ namespace Devon4Net.Application.Lambda.Business.SqsManagement.Handlers
 
         public Task<SqsMessageHandlerResult> HandleMessage(SqsCustomMessage message, ILambdaContext context)
         {
-            _logger.LogInformation($"Handling message: {message?.Message}");
+            var messageContent = message?.Message;
+            _logger.LogInformation("Handling notification: {messageContent}", messageContent);
+
             return Task.FromResult(new SqsMessageHandlerResult{Content = message?.Message});
         }
     }

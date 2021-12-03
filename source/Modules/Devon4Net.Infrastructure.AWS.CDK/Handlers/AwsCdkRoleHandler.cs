@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Amazon.CDK;
+﻿using Amazon.CDK;
 using Amazon.CDK.AWS.IAM;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Handlers

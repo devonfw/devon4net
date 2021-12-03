@@ -1,6 +1,6 @@
 ﻿namespace Devon4Net.Infrastructure.JWT.Common.Const
 {
-    public class AuthConst
+    public static class AuthConst
     {
         /// <summary>
         /// Default value for AuthenticationScheme property in the JwtBearerAuthenticationOptions

@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 using Devon4Net.Application.Kafka.Business.KafkaManagement.Handlers;
 using Devon4Net.Infrastructure.Kafka.Handlers;
 using Devon4Net.Infrastructure.Log;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Devon4Net.Application.Kafka.Business.Controllers
@@ -47,7 +44,7 @@ namespace Devon4Net.Application.Kafka.Business.Controllers
         public async Task<IActionResult> DeliverMessage(string key, string value)
         {
             Devon4NetLogger.Debug("Executing DeliverMessage from controller KafkaController");
-            var result = await MessageProducer.SendMessage(key, value);
+            var result = await MessageProducer.SendMessage(key, value).ConfigureAwait(false);
             return Ok(result);
         }
 
@@ -66,7 +63,7 @@ namespace Devon4Net.Application.Kafka.Business.Controllers
         public async Task<IActionResult> CreateTopic(string topicName)
         {
             Devon4NetLogger.Debug("Executing CreateTopic from controller KafkaController");
-            return Ok(await KafkaHandler.CreateTopic("Admin1", topicName));
+            return Ok(await KafkaHandler.CreateTopic("Admin1", topicName).ConfigureAwait(false));
 
         }
 
@@ -85,7 +82,7 @@ namespace Devon4Net.Application.Kafka.Business.Controllers
         public async Task<IActionResult> DeleteTopicMessage(string topicName)
         {
             Devon4NetLogger.Debug("Executing DeleteTopicMessage from controller KafkaController");
-            return Ok(await KafkaHandler.DeleteTopic("Admin1", new List<string>{ topicName }));
+            return Ok(await KafkaHandler.DeleteTopic("Admin1", new List<string>{ topicName }).ConfigureAwait(false));
 
         }
     }

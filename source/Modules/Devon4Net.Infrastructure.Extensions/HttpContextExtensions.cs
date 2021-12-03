@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace Devon4Net.Infrastructure.Extensions
 {
@@ -23,7 +22,7 @@ namespace Devon4Net.Infrastructure.Extensions
                 return false;
             }
         }
-        
+
         public static bool TryRemoveHeader(this HttpContext httpContext, string headerName)
         {
             if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));

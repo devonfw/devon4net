@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Devon4Net.Infrastructure.CircuitBreaker.Common
+﻿namespace Devon4Net.Infrastructure.CircuitBreaker.Common
 {
     public class BuiltInTypes : IBuiltInTypes
     {
@@ -18,6 +14,5 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Common
         {
             return BuiltInTypeObjecNames;
         }
-
     }
 }

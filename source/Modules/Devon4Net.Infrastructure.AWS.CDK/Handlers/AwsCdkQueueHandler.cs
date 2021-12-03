@@ -1,7 +1,4 @@
-﻿
-using System;
-using Amazon.CDK;
-using Amazon.CDK.AWS.CloudWatch;
+﻿using Amazon.CDK;
 using Amazon.CDK.AWS.SQS;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Handlers

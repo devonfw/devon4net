@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Devon4Net.Infrastructure.LiteDb.LiteDb;
+﻿using Devon4Net.Infrastructure.LiteDb.LiteDb;
 using Devon4Net.Infrastructure.Log;
 using LiteDB;
 

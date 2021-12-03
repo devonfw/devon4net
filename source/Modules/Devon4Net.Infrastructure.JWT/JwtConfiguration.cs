@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Devon4Net.Infrastructure.Common.Options;
+﻿using Devon4Net.Infrastructure.Common.Handlers;
 using Devon4Net.Infrastructure.Common.Options.JWT;
 using Devon4Net.Infrastructure.JWT.Common.Const;
 using Devon4Net.Infrastructure.JWT.Handlers;
@@ -12,7 +10,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
 {
     public static class JwtConfiguration
     {
-        public static void SetupJwtConf(this IServiceCollection services, ref IConfiguration configuration)
+        public static void SetupJwt(this IServiceCollection services, IConfiguration configuration)
         {
             var jwtOptions = services.GetTypedOptions<JwtOptions>(configuration, "JWT");
 
@@ -20,13 +18,11 @@ namespace Devon4Net.Application.WebAPI.Configuration
             
             var jwtHandler = new JwtHandler(jwtOptions);
             services.AddSingleton<IJwtHandler>(jwtHandler);
-            SetupJwtNetCore(services, jwtOptions, jwtHandler);
-            
+            SetupJwtParameters(services, jwtOptions, jwtHandler);
         }
 
-        private static void SetupJwtNetCore(IServiceCollection services, JwtOptions jwtOptions, JwtHandler jwtHandler)
+        private static void SetupJwtParameters(IServiceCollection services, JwtOptions jwtOptions, JwtHandler jwtHandler)
         {
-#if NETCOREAPP
             services.AddAuthentication(options => options.DefaultScheme = AuthConst.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -47,7 +43,6 @@ namespace Devon4Net.Application.WebAPI.Configuration
                         ValidIssuers = new List<string> {jwtOptions.Issuer}
                     };
                 });
-#endif
         }
     }
 }

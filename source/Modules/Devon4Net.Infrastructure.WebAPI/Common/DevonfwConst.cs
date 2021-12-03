@@ -2,6 +2,6 @@
 {
     public static class DevonFwConst
     {
-        public const string DevonFwAppSettingsNodeName = "devonfw";
+        public const string OptionsNodeName = "devonfw";
     }
 }

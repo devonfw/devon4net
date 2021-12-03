@@ -1,16 +1,47 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <LangVersion>8</LangVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
+		<Company>Capgemini S.A.</Company>
+		<Description>Configuration library for devon4net webapi template</Description>
+		<Version>6.0.1</Version>
+		<Copyright>Copyright © Capgemini</Copyright>
+		<PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
+		<license>https://github.com/devonfw/ide/blob/master/LICENSE/</license>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>devonfw;devon4net;Capgemini;webapi;API</PackageTags>
+		<PackageReleaseNotes>NET 6.0+ compatibility version</PackageReleaseNotes>
+		<PackageIcon>devonfw.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AWSSDK.S3" Version="3.5.6.2" />
+	<ItemGroup>
+		<None Include="..\..\..\assets\images\devonfw.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.7.7.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Devon4Net.Infrastructure.AWS.Common\Devon4Net.Infrastructure.AWS.Common.csproj" />
-    <ProjectReference Include="..\Devon4Net.Infrastructure.Log\Devon4Net.Infrastructure.Log.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Devon4Net.Infrastructure.Common.Options.RabbitMq
+﻿namespace Devon4Net.Infrastructure.Common.Options.RabbitMq
 {
     public class RabbitMqOptions
     {

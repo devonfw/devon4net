@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Amazon.CDK;
+﻿using Amazon.CDK;
 using Amazon.CDK.AWS.EC2;
 using Amazon.CDK.AWS.IAM;
 using Amazon.CDK.AWS.KMS;
@@ -121,9 +119,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Handlers
 
         #region S3
 
-        public IBucket AddS3Bucket(string bucketName, int expirationDays, RemovalPolicy removalPolicy = RemovalPolicy.DESTROY, BucketEncryption encryption = BucketEncryption.KMS_MANAGED, string webSiteRedirectHost = "", bool versioned = true)
+        public IBucket AddS3Bucket(string bucketName, int expirationDays = 0, IList<ILifecycleRule> lifecycleRules = null, RemovalPolicy removalPolicy = RemovalPolicy.DESTROY, BucketEncryption encryption = BucketEncryption.KMS_MANAGED, string webSiteRedirectHost = "", bool versioned = true)
         {
-            return AwsCdkS3Handler.Create(bucketName, expirationDays, removalPolicy, encryption, webSiteRedirectHost, versioned);
+            return AwsCdkS3Handler.Create(bucketName, expirationDays, lifecycleRules, removalPolicy, encryption, webSiteRedirectHost, versioned);
         }
 
         #endregion

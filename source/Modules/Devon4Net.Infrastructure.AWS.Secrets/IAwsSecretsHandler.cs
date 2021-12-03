@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Amazon.SecretsManager.Model;
+﻿using Amazon.SecretsManager.Model;
 
 namespace Devon4Net.Infrastructure.AWS.Secrets
 {
-    public interface IAwsSecretsHandler : IDisposable
+    public interface IAwsSecretsHandler
     {
         Task<IReadOnlyList<SecretListEntry>> GetAllSecrets(CancellationToken cancellationToken);
         Task<T> GetSecretString<T>(string secretId);

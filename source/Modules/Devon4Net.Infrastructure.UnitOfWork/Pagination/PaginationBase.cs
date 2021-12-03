@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Devon4Net.Domain.UnitOfWork.Pagination
+﻿namespace Devon4Net.Domain.UnitOfWork.Pagination
 {
     public abstract class PaginationBase
     {

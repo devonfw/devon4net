@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Devon4Net.Infrastructure.RabbitMQ.Events
+﻿namespace Devon4Net.Infrastructure.RabbitMQ.Events
 {
     public abstract class Message 
     {

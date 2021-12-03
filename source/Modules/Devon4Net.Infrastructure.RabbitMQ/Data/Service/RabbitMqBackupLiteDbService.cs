@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Devon4Net.Infrastructure.Extensions;
+﻿using Devon4Net.Infrastructure.Extensions;
 using Devon4Net.Infrastructure.Extensions.Helpers;
 using Devon4Net.Infrastructure.Log;
 using Devon4Net.Infrastructure.RabbitMQ.Commands;
@@ -21,7 +19,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
             RabbitMqBackupLiteDbRepository = rabbitMqBackupLiteDbRepository;
             JsonHelper = jsonHelper;
         }
-        public BsonValue CreateMessageBackup(Command command, QueueActionsEnum action = QueueActionsEnum.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null) 
+        public BsonValue CreateMessageBackup(Command command, QueueActions action = QueueActions.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null) 
         {
             try
             {
@@ -59,7 +57,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
         private string GetSerializedContent(Command command)
         {
             var typedCommand = Convert.ChangeType(command, command.GetType());
-            var serializedContent = JsonHelper.Serialize(typedCommand);
+            var serializedContent = JsonHelper.Serialize(typedCommand, false);
             return serializedContent;
         }
     }

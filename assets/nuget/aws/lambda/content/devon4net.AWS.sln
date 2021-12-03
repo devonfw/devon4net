@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{DE117EB7-E593-4898-8F84-F3F93BC9D362}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AWS", "AWS", "{28A34213-7851-4CB7-99E6-02D530D2F59F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Application.Lambda", "Templates\Devon4Net.Application.Lambda\Devon4Net.Application.Lambda.csproj", "{A1FF06D7-5E99-4F4C-977F-BD4BB74E0F4B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1FF06D7-5E99-4F4C-977F-BD4BB74E0F4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1FF06D7-5E99-4F4C-977F-BD4BB74E0F4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1FF06D7-5E99-4F4C-977F-BD4BB74E0F4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1FF06D7-5E99-4F4C-977F-BD4BB74E0F4B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{28A34213-7851-4CB7-99E6-02D530D2F59F} = {DE117EB7-E593-4898-8F84-F3F93BC9D362}
+		{A1FF06D7-5E99-4F4C-977F-BD4BB74E0F4B} = {28A34213-7851-4CB7-99E6-02D530D2F59F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B0967205-4814-4D3A-907B-2BC885FA488C}
+	EndGlobalSection
+EndGlobal

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Devon4Net.Infrastructure.Log;
+﻿using Devon4Net.Infrastructure.Log;
 using Devon4Net.Infrastructure.MediatR.Common;
 using Devon4Net.Infrastructure.MediatR.Domain.ServiceInterfaces;
 using MediatR;
@@ -35,19 +32,19 @@ namespace Devon4Net.Infrastructure.MediatR.Handler
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
         {
-            MediatRActionsEnum status;
+            MediatrActions status;
             TResponse result = default;
             try
             {
                 result = await HandleAction(request, cancellationToken).ConfigureAwait(false);
-                status = MediatRActionsEnum.Handled;
+                status = MediatrActions.Handled;
             }
             catch (Exception ex)
             {
                 Devon4NetLogger.Error(ex);
-                status = MediatRActionsEnum.Error;
+                status = MediatrActions.Error;
             }
-            await BackUpMessage(request, status);
+            await BackUpMessage(request, status).ConfigureAwait(false);
             return result;
 
         }
@@ -60,7 +57,7 @@ namespace Devon4Net.Infrastructure.MediatR.Handler
             MediatRBackupLiteDbService = mediatRBackupLiteDbService;
         }
 
-        private async Task BackUpMessage(TRequest request, MediatRActionsEnum queueAction = MediatRActionsEnum.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null)
+        private async Task BackUpMessage(TRequest request, MediatrActions queueAction = MediatrActions.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null)
         {
             MediatRBackupLiteDbService?.CreateResponseMessageBackup(request, queueAction, increaseRetryCounter, additionalData, errorData);
 

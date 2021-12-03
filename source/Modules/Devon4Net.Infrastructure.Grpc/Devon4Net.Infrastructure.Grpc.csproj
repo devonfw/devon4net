@@ -1,24 +1,56 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;netstandard2.1</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
+    <Company>Capgemini S.A.</Company>
+    <Description>Google protobuf configuration library for devon4net</Description>
+    <Version>6.0.1</Version>
+    <Copyright>Copyright © Capgemini</Copyright>
+    <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
+    <license>https://github.com/devonfw/ide/blob/master/LICENSE/</license>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>devonfw;devon4net;Capgemini;protobuf</PackageTags>
+    <PackageReleaseNotes>NET 6.0+ compatibility version</PackageReleaseNotes>
+    <PackageIcon>devonfw.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>	  
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>	 	  
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.Net.Client" Version="2.33.1" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />	  
+    <PackageReference Include="Google.Protobuf" Version="3.19.1" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.40.0" />
+	  <PackageReference Include="Grpc.Tools" Version="2.42.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.10" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.10" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="Grpc.AspNetCore">
-      <Version>2.33.1</Version>
-    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="System.Collections" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Devon4Net.Infrastructure.Common\Devon4Net.Infrastructure.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\..\assets\images\devonfw.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+	  <None Include="..\..\..\LICENSE">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+	  </None>	  
+  </ItemGroup>		
 </Project>

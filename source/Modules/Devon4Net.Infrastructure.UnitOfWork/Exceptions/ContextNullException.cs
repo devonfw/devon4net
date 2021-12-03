@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Devon4Net.Domain.UnitOfWork.Exceptions
+﻿namespace Devon4Net.Domain.UnitOfWork.Exceptions
 {
     [Serializable]
     public class ContextNullException : Exception

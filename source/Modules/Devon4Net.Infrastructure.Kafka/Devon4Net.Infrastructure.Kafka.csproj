@@ -1,7 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
+    <Company>Capgemini S.A.</Company>
+    <Description>Kafka accelerator for stream applications</Description>
+    <Version>6.0.1</Version>
+    <Copyright>Copyright © Capgemini</Copyright>
+    <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
+    <license>https://github.com/devonfw/ide/blob/master/LICENSE/</license>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>devonfw;devon4net;Capgemini;kafka;stream</PackageTags>
+    <PackageReleaseNotes>NET 6.0+ compatibility version</PackageReleaseNotes>
+    <PackageIcon>devonfw.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>	 
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>	 	  
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,16 +27,30 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Confluent.Kafka" Version="1.5.2" />
-    <PackageReference Include="Confluent.SchemaRegistry" Version="1.5.2" />
-    <PackageReference Include="Confluent.SchemaRegistry.Serdes.Avro" Version="1.5.2" />
-    <PackageReference Include="Confluent.SchemaRegistry.Serdes.Json" Version="1.5.2" />
-    <PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" Version="1.5.2" />
+    <PackageReference Include="Confluent.Kafka" Version="1.8.2" />
+    <PackageReference Include="Confluent.SchemaRegistry" Version="1.8.2" />
+    <PackageReference Include="Confluent.SchemaRegistry.Serdes.Avro" Version="1.8.2" />
+    <PackageReference Include="Confluent.SchemaRegistry.Serdes.Json" Version="1.8.2" />
+    <PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" Version="1.8.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Devon4Net.Infrastructure.Common\Devon4Net.Infrastructure.Common.csproj" />
-    <ProjectReference Include="..\Devon4Net.Infrastructure.Log\Devon4Net.Infrastructure.Log.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\..\assets\images\devonfw.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+	  <None Include="..\..\..\LICENSE">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+	  </None>	  
+  </ItemGroup>		
 </Project>

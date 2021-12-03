@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Devon4Net.Infrastructure.MediatR.Domain.Entities
+﻿namespace Devon4Net.Infrastructure.MediatR.Domain.Entities
 {
     public partial class MediatRBackup
     {

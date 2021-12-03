@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Devon4Net.Infrastructure.Common.Options.Cors
+﻿namespace Devon4Net.Infrastructure.Common.Options.Cors
 {
     public class Origin
     {

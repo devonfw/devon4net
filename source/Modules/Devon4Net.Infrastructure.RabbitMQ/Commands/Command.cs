@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text.Json;
-using Devon4Net.Infrastructure.RabbitMQ.Events;
+﻿using Devon4Net.Infrastructure.RabbitMQ.Events;
 
 namespace Devon4Net.Infrastructure.RabbitMQ.Commands
 {

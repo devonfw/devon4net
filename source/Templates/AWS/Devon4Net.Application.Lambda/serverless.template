@@ -43,8 +43,8 @@
     "ToLowerFunction": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
-        "Handler": "Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.Business.StringManagement.Functions.Lower.LowerFunction::FunctionHandler",
-        "Runtime": "dotnetcore3.1",
+        "Handler": "Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.business.StringManagement.Functions.Lower.LowerFunction::FunctionHandler",
+        "Runtime": "dotnetcore6.0",
         "CodeUri": "",
         "MemorySize": 512,
         "Timeout": 30,
@@ -79,7 +79,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.Business.SnsManagement.Functions.SnsFunction::FunctionHandler",
-        "Runtime": "dotnetcore3.1",
+        "Runtime": "dotnetcore6.0",
         "CodeUri": "",
         "MemorySize": 512,
         "Timeout": 30,
@@ -114,7 +114,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.Business.SqsManagement.Functions.SqsFunction::FunctionHandler",
-        "Runtime": "dotnetcore3.1",
+        "Runtime": "dotnetcore6.0",
         "CodeUri": "",
         "MemorySize": 512,
         "Timeout": 30,

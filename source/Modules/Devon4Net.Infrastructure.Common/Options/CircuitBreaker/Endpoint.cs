@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Devon4Net.Infrastructure.Common.Options.CircuitBreaker
+﻿namespace Devon4Net.Infrastructure.Common.Options.CircuitBreaker
 {
     public class Endpoint
     {
@@ -21,7 +18,7 @@ namespace Devon4Net.Infrastructure.Common.Options.CircuitBreaker
 
         public Endpoint(string name, string baseAddress)
         {
-            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(baseAddress)) throw new ArgumentNullException("name", "Name or BaseAddress cannot be null");
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(baseAddress)) throw new ArgumentNullException(nameof(name), "Name or BaseAddress cannot be null");
 
             Name = name;
             BaseAddress = baseAddress;
@@ -42,13 +39,13 @@ namespace Devon4Net.Infrastructure.Common.Options.CircuitBreaker
 
         public void AddWaitAndRetry(int secondsToWait)
         {
-            if (secondsToWait <= 0) throw new ArgumentNullException("secondsToWait", "The seconds to wait must be greater than zero");
+            if (secondsToWait <= 0) throw new ArgumentNullException(nameof(secondsToWait), "The seconds to wait must be greater than zero");
             WaitAndRetrySeconds.Add(secondsToWait);
         }
 
         public void AddRequestHeader(string key, string value, bool overwriteValue = false)
         {
-            if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value)) throw new ArgumentNullException("key", "Key or Value cannot be null");
+            if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value)) throw new ArgumentNullException(nameof(key), "Key or Value cannot be null");
             var keyExists = Headers.ContainsKey(key);
 
             if (Headers == null)
@@ -66,7 +63,7 @@ namespace Devon4Net.Infrastructure.Common.Options.CircuitBreaker
             }
             else
             {
-                if (keyExists) throw new ArgumentNullException("key", "The provided key already exits");
+                if (keyExists) throw new ArgumentNullException(nameof(key), "The provided key already exits");
                 Headers.Add(key, value);
             }
         }        

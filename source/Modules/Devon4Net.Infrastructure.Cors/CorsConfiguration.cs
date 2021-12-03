@@ -1,5 +1,7 @@
-﻿using Devon4Net.Infrastructure.Common.Options;
+﻿using Devon4Net.Infrastructure.Common.Handlers;
 using Devon4Net.Infrastructure.Common.Options.Cors;
+using Devon4Net.Infrastructure.Log;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -7,30 +9,46 @@ namespace Devon4Net.Application.WebAPI.Configuration
 {
     public static class CorsConfiguration
     {
-        public static void SetupCors(this IServiceCollection services, ref IConfiguration configuration)
+        /// <summary>
+        /// Sets up the CORS policy. Please be aware to put your CORS domains to be allowed to avoid security hot spots
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        public static void SetupCors(this IServiceCollection services, IConfiguration configuration)
         {
-            var CorsOptions = services.GetTypedOptions<CorsOptions>(configuration, "devonfw");
+            var corsOptions = services.GetTypedOptions<List<Origin>>(configuration, "Cors");
 
-            if (CorsOptions?.Origins == null)
+            if (corsOptions == null || corsOptions.Count == 0)
             {
                 SetCorsAnyOriginAllowed(ref services);
             }
             else
             {
-                SetupCorsOrigins(ref services, ref configuration);
+                SetupCorsOrigins(ref services, corsOptions);
             }
         }
 
+        public static void SetupCors(this IApplicationBuilder builder)
+        {
+            builder.UseCors();
+        }
+
+        /// <summary>
+        /// Disables the check of the CORS origins. Be aware of this.
+        /// Sonar exclussion added to allow development purposes.
+        /// </summary>
+        /// <param name="services"></param>
         private static void SetCorsAnyOriginAllowed(ref IServiceCollection services)
         {
-            ////enables CORS and httpoptions
+            Devon4NetLogger.Warning("CORS Options set to allow any origin!. Please review it in production environments.");
+            //enables CORS and httpoptions
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder =>
                 {
-                    builder.AllowAnyOrigin();
+                    builder.AllowAnyOrigin(); // NOSONAR
                     builder.AllowAnyHeader();
-                    builder.AllowAnyMethod();                    
+                    builder.AllowAnyMethod();
                 });
             });
         }
@@ -40,29 +58,20 @@ namespace Devon4Net.Application.WebAPI.Configuration
         /// </summary>
         /// <param name="services"></param>
         /// <param name="corsOptions"></param>
-        private static void SetupCorsOrigins(ref IServiceCollection services, ref IConfiguration configuration)
+        private static void SetupCorsOrigins(ref IServiceCollection services, List<Origin> corsOriginList)
         {
-            var corsOptions = services.GetTypedOptions<CorsOptions>(configuration, "Cors");
-
-            if (corsOptions == null)
+            foreach (var definition in corsOriginList)
             {
-                SetCorsAnyOriginAllowed(ref services);
-            }
-            else
-            {
-                foreach (var definition in corsOptions.Origins)
+                services.AddCors(options =>
                 {
-                    services.AddCors(options =>
+                    options.AddPolicy(definition.CorsPolicy, builder =>
                     {
-                        options.AddPolicy(definition.CorsPolicy, builder =>
-                        {
-                            builder.WithOrigins(definition.GetOriginsList().ToArray());
-                            builder.WithHeaders(definition.GetHeadersList().ToArray());
-                            builder.WithMethods(definition.GetMethodsList().ToArray());
-                            if (definition.AllowCredentials) builder.AllowCredentials();
-                        });
+                        builder.WithOrigins(definition.GetOriginsList().ToArray());
+                        builder.WithHeaders(definition.GetHeadersList().ToArray());
+                        builder.WithMethods(definition.GetMethodsList().ToArray());
+                        if (definition.AllowCredentials) builder.AllowCredentials();
                     });
-                }
+                });
             }
         }
     }

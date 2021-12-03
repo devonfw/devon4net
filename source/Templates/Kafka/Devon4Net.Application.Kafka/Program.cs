@@ -1,22 +1,37 @@
+using Devon4Net.Application.Kafka.Business.KafkaManagement.Handlers;
+using Devon4Net.Application.WebAPI.Configuration;
 using Devon4Net.Application.WebAPI.Configuration.Application;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+using Devon4Net.Infrastructure.Kafka;
+using Devon4Net.Infrastructure.Middleware.Middleware;
+using Devon4Net.Infrastructure.Swagger;
 
-namespace Devon4Net.Application.Kafka
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+var builder = WebApplication.CreateBuilder(args);
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                    webBuilder.InitializeDevonFw();
-                });
-    }
-}
+builder.WebHost.InitializeDevonFw();
+
+
+#region services
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.SetupDevonfw(builder.Configuration);
+builder.Services.SetupMiddleware(builder.Configuration);
+builder.Services.SetupLog(builder.Configuration);
+builder.Services.SetupSwagger(builder.Configuration);
+builder.Services.SetupKafka(builder.Configuration);
+builder.Services.AddKafkaProducer<MessageProducerHandler>("Producer1");
+builder.Services.AddKafkaConsumer<MessageConsumerHandler>("Consumer1");
+#endregion
+
+var app = builder.Build();
+
+#region devon app
+app.ConfigureSwaggerEndPoint();
+app.SetupMiddleware(builder.Services);
+app.SetupCors();
+#endregion
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();

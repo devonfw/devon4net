@@ -1,5 +1,4 @@
-﻿using System;
-using Grpc.Net.Client;
+﻿using Grpc.Net.Client;
 
 namespace Devon4Net.Infrastructure.Grpc.Handlers
 {

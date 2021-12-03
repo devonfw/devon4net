@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Devon4Net.Application.Kafka.Business.Messages
+﻿namespace Devon4Net.Application.Kafka.Business.Messages
 {
     public class KafkaMessage
     {
@@ -10,6 +8,7 @@ namespace Devon4Net.Application.Kafka.Business.Messages
         public KafkaMessage(string messageContent = "")
         {
             MessageId = Guid.NewGuid().ToString();
+            MessageContent = messageContent;
         }
     }
 }

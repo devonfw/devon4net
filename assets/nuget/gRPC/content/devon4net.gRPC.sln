@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{DE117EB7-E593-4898-8F84-F3F93BC9D362}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gRPC", "gRPC", "{2480AD81-0114-42DE-89FC-F8507D87DFE2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Application.GrpcClient", "Templates\Devon4Net.Application.GrpcClient\Devon4Net.Application.GrpcClient.csproj", "{6AD204EF-E6AE-46FA-BBC8-840AC5241FA0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Application.GrpcServer", "Templates\Devon4Net.Application.GrpcServer\Devon4Net.Application.GrpcServer.csproj", "{9F6CBD9A-A75C-42F6-870B-C1A283F9E475}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6AD204EF-E6AE-46FA-BBC8-840AC5241FA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AD204EF-E6AE-46FA-BBC8-840AC5241FA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AD204EF-E6AE-46FA-BBC8-840AC5241FA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AD204EF-E6AE-46FA-BBC8-840AC5241FA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F6CBD9A-A75C-42F6-870B-C1A283F9E475}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F6CBD9A-A75C-42F6-870B-C1A283F9E475}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F6CBD9A-A75C-42F6-870B-C1A283F9E475}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F6CBD9A-A75C-42F6-870B-C1A283F9E475}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2480AD81-0114-42DE-89FC-F8507D87DFE2} = {DE117EB7-E593-4898-8F84-F3F93BC9D362}
+		{6AD204EF-E6AE-46FA-BBC8-840AC5241FA0} = {2480AD81-0114-42DE-89FC-F8507D87DFE2}
+		{9F6CBD9A-A75C-42F6-870B-C1A283F9E475} = {2480AD81-0114-42DE-89FC-F8507D87DFE2}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B0967205-4814-4D3A-907B-2BC885FA488C}
+	EndGlobalSection
+EndGlobal

@@ -1,5 +1,4 @@
-﻿using System;
-using Devon4Net.Infrastructure.MediatR.Model;
+﻿using Devon4Net.Infrastructure.MediatR.Model;
 
 namespace Devon4Net.Infrastructure.MediatR.Samples.Model
 {

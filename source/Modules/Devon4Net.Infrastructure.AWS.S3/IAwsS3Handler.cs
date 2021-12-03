@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using Amazon.S3.Model;
+﻿using Amazon.S3.Model;
 
 namespace Devon4Net.Infrastructure.AWS.S3
 {

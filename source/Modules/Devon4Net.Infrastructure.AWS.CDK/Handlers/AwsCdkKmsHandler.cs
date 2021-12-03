@@ -1,5 +1,4 @@
-﻿using System;
-using Amazon.CDK;
+﻿using Amazon.CDK;
 using Amazon.CDK.AWS.KMS;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Handlers
