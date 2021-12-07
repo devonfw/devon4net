@@ -30,6 +30,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker
 
             CheckCertificate = circuitBreakerOptions.CheckCertificate;
             services.AddHttpClient(circuitBreakerOptions.Endpoints);
+            services.AddTransient<IHttpRequestFromContextHandler, HttpRequestFromContextHandler>();
             services.AddTransient<IHttpClientHandler, HttpClientHandler>();
         }
 

@@ -1,9 +1,5 @@
 ﻿using System.Net.Http.Headers;
-using System.Net.Sockets;
-using System.Text;
-using System.Text.Json;
 using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
-using Devon4Net.Infrastructure.CircuitBreaker.Constants;
 using Devon4Net.Infrastructure.Common.Exceptions;
 using Devon4Net.Infrastructure.Extensions.Helpers;
 using Devon4Net.Infrastructure.Log;
@@ -13,19 +9,22 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
 {
     public class HttpClientHandler : IHttpClientHandler
     {
-        private IHttpClientFactory HttpClientFactory { get; set; }
+        private IHttpClientFactory HttpClientFactory { get; }
+        private IHttpRequestFromContextHandler HttpRequestRedirectHandler { get; }
         private IJsonHelper JsonHelper { get; }
         private const string SoapAction = "SOAPAction";
 
-        public HttpClientHandler(IHttpClientFactory httpClientFactory, IJsonHelper jsonHelper)
+        public HttpClientHandler(IHttpClientFactory httpClientFactory, IHttpRequestFromContextHandler httpRequestRedirectHandler, IJsonHelper jsonHelper)
         {
             HttpClientFactory = httpClientFactory;
+            HttpRequestRedirectHandler = httpRequestRedirectHandler;
             JsonHelper = jsonHelper;
         }
 
         public HttpClientHandler(IHttpClientFactory httpClientFactory)
         {
             HttpClientFactory = httpClientFactory;
+            HttpRequestRedirectHandler = new HttpRequestFromContextHandler();
             JsonHelper = new JsonHelper();
         }
 
@@ -37,7 +36,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             }
             catch (Exception ex)
             {
-                LogException(ref ex);
+                Devon4NetLogger.Error(ex);
                 throw;
             }
         }
@@ -51,7 +50,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             }
             catch (Exception ex)
             {
-                LogException(ref ex);
+                Devon4NetLogger.Error(ex);
                 throw;
             }
         }
@@ -69,7 +68,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             }
             catch (Exception ex)
             {
-                LogException(ref ex);
+                Devon4NetLogger.Error(ex);
                 throw;
             }
         }
@@ -84,7 +83,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             }
             catch (Exception ex)
             {
-                LogException(ref ex);
+                Devon4NetLogger.Error(ex);
                 throw;
             }
         }
@@ -103,7 +102,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             }
             catch (Exception ex)
             {
-                LogException(ref ex);
+                Devon4NetLogger.Error(ex);
                 throw;
             }
         }
@@ -121,7 +120,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             }
             catch (Exception ex)
             {
-                LogException(ref ex);
+                Devon4NetLogger.Error(ex);
                 throw;
             }
         }
@@ -145,13 +144,13 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             try
             {
                 using var httpClient = GetDefaultClient(endPointName, null);
-                var request = GetHttpRequestMessageFromContext(sourceContext, uriDestination, addForwardedHeaders, content, contentMediaType, contentAsJson, contentUseCamelCase);
+                var request = HttpRequestRedirectHandler.GetHttpRequestMessageFromContext(sourceContext, uriDestination, addForwardedHeaders, content, contentMediaType, contentAsJson, contentUseCamelCase);
                 httpResponseMessage = await httpClient.SendAsync(request).ConfigureAwait(false);
                 await LogHttpResponse(httpResponseMessage, endPointName).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                LogException(ref ex);
+                Devon4NetLogger.Error(ex);
                 throw;
             }
 
@@ -192,7 +191,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
                 {
                     if (content is IFormCollection)
                     {
-                        using var data = ToHttpContent(content as IFormCollection, mediaType);
+                        using var data = FormCollectionToHttpContent(content as IFormCollection, mediaType);
                         request.Content = content as HttpContent;
                     }
                     else
@@ -206,7 +205,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             }
             catch (Exception ex)
             {
-                LogException(ref ex);
+                Devon4NetLogger.Error(ex);
                 throw;
             }
 
@@ -241,11 +240,6 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             }
 
             return httpContent;
-        }
-
-        private static void LogException(ref Exception exception)
-        {
-            Devon4NetLogger.Error(exception);
         }
 
         private static async Task CheckHttpResponse(HttpResponseMessage httpResponseMessage, string endPointName)
@@ -344,7 +338,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
                 result = $"{baseAddress}/{endPoint}";
             }
 
-            if (!endPoint.StartsWith("/") || baseAddress.EndsWith("/") && !endPoint.StartsWith("/") || !baseAddress.EndsWith("/") && endPoint.StartsWith("/"))
+            if (!endPoint.StartsWith("/") || (baseAddress.EndsWith("/") && !endPoint.StartsWith("/")) || (!baseAddress.EndsWith("/") && endPoint.StartsWith("/")))
             {
                 result = $"{baseAddress}{endPoint}";
             }
@@ -352,110 +346,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             return Uri.EscapeDataString(result);
         }
 
-        private HttpRequestMessage GetHttpRequestMessageFromContext(HttpContext context, string uriDestination, bool addForwardedHeaders, object content = null, string contentMediaType = MediaType.ApplicationJson, bool contentAsJson = true, bool contentUseCamelCase = false)
-        {
-            try
-            {
-                var uri = new Uri(uriDestination);
-                var request = context.Request;
-                var requestMessage = new HttpRequestMessage();
-                var requestMethod = request.Method;
-                var usesStreamContent = SetupContent(content, contentMediaType, contentAsJson, contentUseCamelCase, request, requestMessage, requestMethod);
-
-                ManageHeaders(context, addForwardedHeaders, request, requestMessage, usesStreamContent);
-
-                requestMessage.Headers.Host = uri.Authority;
-                requestMessage.RequestUri = uri;
-                requestMessage.Method = new HttpMethod(requestMethod);
-
-                return requestMessage;
-            }
-            catch (Exception ex)
-            {
-                LogException(ref ex);
-                throw;
-            }
-        }
-
-        private static void ManageHeaders(HttpContext context, bool addForwardedHeaders, HttpRequest request, HttpRequestMessage requestMessage, bool usesStreamContent)
-        {
-            foreach (var header in request.Headers)
-            {
-                if (!usesStreamContent && (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase) || header.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase)))
-                    continue;
-                if (!requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()))
-                    requestMessage.Content?.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
-            }
-
-            if (addForwardedHeaders)
-            {
-                AddForwardedHeadersToHttpRequest(context, requestMessage);
-            }
-        }
-
-        private bool SetupContent(object content, string contentMediaType, bool contentAsJson, bool contentUseCamelCase, HttpRequest request, HttpRequestMessage requestMessage, string requestMethod)
-        {
-            if (!HttpMethods.IsGet(requestMethod) && !HttpMethods.IsHead(requestMethod) && !HttpMethods.IsDelete(requestMethod) && !HttpMethods.IsTrace(requestMethod))
-            {
-                if (request.HasFormContentType)
-                {
-                    var dataToSend = content != null ? content as IFormCollection : request.Form;
-                    requestMessage.Content = ToHttpContent(dataToSend, request.ContentType);
-                    return false;
-                }
-                else
-                {
-                    requestMessage.Content = content != null ? CreateHttpContent(content, contentMediaType, contentAsJson, contentUseCamelCase) : new StreamContent(request.Body);
-                }
-            }
-
-            return true;
-        }
-
-        private static void AddForwardedHeadersToHttpRequest(HttpContext context, HttpRequestMessage requestMessage)
-        {
-            var request = context.Request;
-            var connection = context.Connection;
-
-            var host = request.Host.ToString();
-            var protocol = request.Scheme;
-
-            var localIp = connection.LocalIpAddress?.ToString();
-            var isLocalIpV6 = connection.LocalIpAddress?.AddressFamily == AddressFamily.InterNetworkV6;
-
-            var remoteIp = context.Connection.RemoteIpAddress?.ToString();
-            var isRemoteIpV6 = connection.RemoteIpAddress?.AddressFamily == AddressFamily.InterNetworkV6;
-
-            if (remoteIp != null)
-            {
-                requestMessage.Headers.TryAddWithoutValidation(CircuitBreakerConsts.XForwardedFor, remoteIp);
-            }
-
-            requestMessage.Headers.TryAddWithoutValidation(CircuitBreakerConsts.XForwardedProto, protocol);
-            requestMessage.Headers.TryAddWithoutValidation(CircuitBreakerConsts.XForwardedHost, host);
-
-            var forwardedHeader = new StringBuilder($"proto={protocol};host={host};");
-
-            if (localIp != null)
-            {
-                if (isLocalIpV6)
-                    localIp = $"\"[{localIp}]\"";
-
-                forwardedHeader.Append("by=").Append(localIp).Append(';');
-            }
-
-            if (remoteIp != null)
-            {
-                if (isRemoteIpV6)
-                    remoteIp = $"\"[{remoteIp}]\"";
-
-                forwardedHeader.Append("for=").Append(remoteIp).Append(';');
-            }
-
-            requestMessage.Headers.TryAddWithoutValidation(CircuitBreakerConsts.Forwarded, forwardedHeader.ToString());
-        }
-
-        private static HttpContent ToHttpContent(IFormCollection collection, string contentTypeHeader)
+        private static HttpContent FormCollectionToHttpContent(IFormCollection collection, string contentTypeHeader)
         {
             var contentType = MediaTypeHeaderValue.Parse(contentTypeHeader);
 
