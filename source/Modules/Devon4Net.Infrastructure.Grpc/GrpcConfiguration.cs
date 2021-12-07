@@ -3,7 +3,9 @@ using Devon4Net.Infrastructure.Common.Handlers;
 using Devon4Net.Infrastructure.Common.Options;
 using Devon4Net.Infrastructure.Grpc.Constants;
 using Devon4Net.Infrastructure.Grpc.Helpers;
+using Grpc.Core;
 using Grpc.Net.Client;
+using Grpc.Net.Client.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -21,6 +23,7 @@ namespace Devon4Net.Infrastructure.Grpc
     public static class GrpcConfiguration
     {
         private static GrpcOptions GrpcOptions { get; set; }
+
         public static void SetupGrpc(this IServiceCollection services, IConfiguration configuration)
         {
             GrpcOptions = services.GetTypedOptions<GrpcOptions>(configuration, "Grpc");
@@ -32,6 +35,12 @@ namespace Devon4Net.Infrastructure.Grpc
                 options.MaxReceiveMessageSize = GrpcOptions.MaxReceiveMessageSize * 1024 * 1024; // 16 MB
             });
 
+            var defaultMethodConfig = new MethodConfig
+            {
+                Names = { MethodName.Default },
+                RetryPolicy = GetRetryPolicy(GrpcOptions.RetryPatternOptions)
+            };
+
             if (GrpcOptions.UseDevCertificate)
             {
                 var httpHandler = new HttpClientHandler
@@ -39,11 +48,14 @@ namespace Devon4Net.Infrastructure.Grpc
                     ServerCertificateCustomValidationCallback = GetBypass
                 };
 
-                services.AddSingleton(GrpcChannel.ForAddress(GrpcOptions.GrpcServer, new GrpcChannelOptions { HttpHandler = httpHandler }));
+                services.AddSingleton(GrpcChannel.ForAddress(GrpcOptions.GrpcServer, new GrpcChannelOptions { HttpHandler = httpHandler, ServiceConfig = new ServiceConfig { MethodConfigs = { defaultMethodConfig } } }));
             }
             else
             {
-                services.AddSingleton(GrpcChannel.ForAddress(GrpcOptions.GrpcServer));
+                services.AddSingleton(GrpcChannel.ForAddress(GrpcOptions.GrpcServer, new GrpcChannelOptions
+                {
+                    ServiceConfig = new ServiceConfig { MethodConfigs = { defaultMethodConfig } }
+                }));
             }
         }
 
@@ -96,5 +108,25 @@ namespace Devon4Net.Infrastructure.Grpc
             return GrpcOptions.UseDevCertificate;
         }
 
+        private static StatusCode GetRetryStatusCode(string statusCode)
+        {
+            if (string.IsNullOrWhiteSpace(statusCode)) return StatusCode.Unavailable;
+
+            var parseOk = Enum.TryParse(statusCode, out StatusCode result);
+
+            return parseOk ? result : StatusCode.Unavailable;
+        }
+
+        private static RetryPolicy GetRetryPolicy(GrpcRetrypatternOptions retryPatternOptions)
+        {
+            return new RetryPolicy
+            {
+                BackoffMultiplier = retryPatternOptions.BackoffMultiplier > 0 ? retryPatternOptions.BackoffMultiplier : 1.5,
+                InitialBackoff = TimeSpan.FromSeconds(retryPatternOptions.InitialBackoffSeconds > 0 ? retryPatternOptions.InitialBackoffSeconds : 1),
+                MaxBackoff = TimeSpan.FromSeconds(retryPatternOptions.MaxBackoffSeconds > 0 ? retryPatternOptions.MaxBackoffSeconds : 5),
+                MaxAttempts = retryPatternOptions.MaxBackoffSeconds > 0 ? retryPatternOptions.MaxBackoffSeconds : 5,
+                RetryableStatusCodes = { GetRetryStatusCode(retryPatternOptions.RetryableStatus) }
+            };
+        }
     }
 }

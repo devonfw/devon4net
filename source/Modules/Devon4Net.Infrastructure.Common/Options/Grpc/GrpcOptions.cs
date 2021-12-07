@@ -6,5 +6,7 @@
         public bool UseDevCertificate { get; set; }
         public string GrpcServer { get; set; }
         public int MaxReceiveMessageSize { get; set; }
+        public GrpcRetrypatternOptions RetryPatternOptions { get; set; }
     }
+
 }
