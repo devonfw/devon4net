@@ -263,6 +263,6 @@ https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection[D
 
 https://jwt.io[Json Web Token]
 
-https://xunit.github.io/[Unit Testing (xUnit)]
+https://github.com/xunit/xunit[Unit Testing (xUnit)]
 
 https://docs.microsoft.com/en-us/dotnet/core/rid-catalog[Runtime IDentifier for publishing]
