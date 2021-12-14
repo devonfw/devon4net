@@ -8,13 +8,13 @@
 		<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
 		<Company>Capgemini S.A.</Company>
 		<Description>Configuration library for DynamoDB repository management</Description>
-		<Version>6.0.1</Version>
+		<Version>6.0.2</Version>
 		<Copyright>Copyright © Capgemini</Copyright>
 		<PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
 		<license>https://github.com/devonfw/ide/blob/master/LICENSE/</license>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>devonfw;devon4net;Capgemini;DynamoDB</PackageTags>
+		<PackageTags>devonfw;devon4net;Capgemini;DynamoDB;AWS</PackageTags>
 		<PackageReleaseNotes>Netstandard, NET 6.0+ compatibility version</PackageReleaseNotes>
 		<PackageIcon>devonfw.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
