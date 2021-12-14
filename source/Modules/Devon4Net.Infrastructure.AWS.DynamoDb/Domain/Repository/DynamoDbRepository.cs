@@ -6,6 +6,7 @@ using Amazon.Lambda.Core;
 using Amazon.Runtime;
 using Devon4Net.Infrastructure.AWS.DynamoDb.Common;
 using Microsoft.Extensions.Logging;
+using System.Xml.Linq;
 
 namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
 {
@@ -273,8 +274,10 @@ namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
 
         private void LogDynamoException(ref Exception exception)
         {
-            LambdaLogger?.Log($"Error performing the DynamoDB action:{exception.Message} {exception.InnerException}");
-            Logger?.LogError($"Error performing the DynamoDB action:{exception.Message} {exception.InnerException}");
+            var message = exception?.Message;
+            var innerException = exception?.InnerException;
+            Logger?.LogError("Error performing the DynamoDB action: \"{message}\" | InnerException: \"{innerException}\"", message, innerException);
+            LambdaLogger?.Log($"Error performing the DynamoDB action:{message} {innerException}");
         }
 
         private static void CheckScanConditions(List<ScanCondition> searchCriteria)
@@ -291,7 +294,7 @@ namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
                 throw new ArgumentNullException(nameof(id));
             }
         }
-        private void CheckInputIdGuid(Guid id)
+        private static void CheckInputIdGuid(Guid id)
         {
             if (id.Equals(Guid.Empty))
             {
