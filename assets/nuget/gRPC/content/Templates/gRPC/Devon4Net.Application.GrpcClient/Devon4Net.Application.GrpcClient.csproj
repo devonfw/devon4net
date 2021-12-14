@@ -20,11 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Grpc\Devon4Net.Infrastructure.Grpc.csproj" />
-    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
-    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Middleware\Devon4Net.Infrastructure.Middleware.csproj" />
-    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Swagger\Devon4Net.Infrastructure.Swagger.csproj" />
-    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.WebAPI\Devon4Net.Infrastructure.WebAPI.csproj" />    
+	<PackageReference Include="Devon4Net.Infrastructure.Grpc" Version="6.0.2" />
+    <PackageReference Include="Devon4Net.Infrastructure.Logger" Version="6.0.2" />
+    <PackageReference Include="Devon4Net.Infrastructure.Middleware" Version="6.0.2" />
+    <PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="6.0.2" />
+    <PackageReference Include="Devon4Net.Infrastructure.WebAPI" Version="6.0.2" />
   </ItemGroup>
 
   <ItemGroup>
