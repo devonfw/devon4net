@@ -3,6 +3,7 @@
     public static class ConfigurationConsts
     {
         public const string DefaultSettingsNodeName = "devonfw";
+        public const string AwsOptionsNodeName = "AWS";
         public const string AwsSecretsNodeName = "UseSecrets";
         public const string AuthenticationScheme = "Bearer";
     }

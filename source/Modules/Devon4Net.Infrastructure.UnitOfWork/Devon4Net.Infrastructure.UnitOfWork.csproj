@@ -44,8 +44,8 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.0" />
-      <PackageReference Include="Oracle.EntityFrameworkCore" Version="5.21.4" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.1" />
+      <PackageReference Include="Oracle.EntityFrameworkCore" Version="6.21.4" />
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.0" />
       <PackageReference Include="EntityFrameworkCore.FirebirdSQL" Version="2.1.2.2" />
     </ItemGroup>

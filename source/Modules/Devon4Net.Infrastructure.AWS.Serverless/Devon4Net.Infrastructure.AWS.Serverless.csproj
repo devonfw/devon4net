@@ -41,6 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Devon4Net.Infrastructure.AWS.ParameterStore\Devon4Net.Infrastructure.AWS.ParameterStore.csproj" />
     <ProjectReference Include="..\Devon4Net.Infrastructure.WebAPI\Devon4Net.Infrastructure.WebAPI.csproj" />
     <ProjectReference Include="..\Devon4Net.Infrastructure.AWS.Secrets\Devon4Net.Infrastructure.AWS.Secrets.csproj" />
   </ItemGroup>

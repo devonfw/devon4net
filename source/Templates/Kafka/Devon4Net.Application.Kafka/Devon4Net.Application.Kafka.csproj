@@ -20,6 +20,7 @@
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Middleware\Devon4Net.Infrastructure.Middleware.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Swagger\Devon4Net.Infrastructure.Swagger.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.WebAPI\Devon4Net.Infrastructure.WebAPI.csproj" />
+    <ProjectReference Include="..\..\gRPC\Devon4Net.Application.GrpcServer\Devon4Net.Application.GrpcServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

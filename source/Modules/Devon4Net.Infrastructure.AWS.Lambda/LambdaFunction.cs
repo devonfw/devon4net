@@ -1,7 +1,13 @@
-﻿using Amazon.Lambda.Core;
+﻿using Amazon;
+using Amazon.Lambda.Core;
+using Amazon.Runtime;
+using Amazon.Runtime.CredentialManagement;
 using Devon4Net.Infrastructure.AWS.Common.Consts;
+using Devon4Net.Infrastructure.AWS.Common.Options;
 using Devon4Net.Infrastructure.AWS.Lambda.Interfaces;
+using Devon4Net.Infrastructure.AWS.ParameterStore;
 using Devon4Net.Infrastructure.AWS.Secrets;
+using Devon4Net.Infrastructure.Common.Handlers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -11,12 +17,14 @@ using Microsoft.Extensions.Logging;
 #endif
 namespace Devon4Net.Infrastructure.AWS.Lambda
 {
-    public abstract class LambdaFunction<TInput,TOutput> where TInput : class
+    public abstract class LambdaFunction<TInput, TOutput> where TInput : class
     {
         protected IConfigurationRoot Configuration { get; set; }
+        protected IConfigurationBuilder ConfigurationBuilder { get; set; }
         protected IServiceProvider ServiceProvider { get; set; }
         protected IServiceCollection ServiceCollection = new ServiceCollection();
         protected ILogger Logger { get; set; }
+        protected AwsOptions AwsOptions { get; set; }
         protected abstract void ConfigureServices(IServiceCollection services);
 
         protected LambdaFunction()
@@ -27,12 +35,12 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
         public void Setup()
         {
             SetupConfiguration();
-            ServiceCollection.AddOptions();
-            ServiceCollection.AddSingleton(Configuration);
-            ServiceCollection.AddLogging(ConfigureLogging); //NOSONAR false positive
+            LoadAwsConfigurationSources();
+            LoadAwsCredentials(ServiceCollection);
+            LoadAwsRegionEndpoint(ServiceCollection);
+            SetupServiceActions();
             ConfigureServices(ServiceCollection);
-            ServiceProvider = ServiceCollection.BuildServiceProvider();
-            Logger = ServiceProvider.GetRequiredService<ILogger<TInput>>();
+            FinalizeSetupServiceProviderActions();
         }
 
         public async Task<TOutput> FunctionHandler(TInput input, ILambdaContext context)
@@ -58,46 +66,107 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
             }
             catch (Exception ex)
             {
+                var lambdaMessage = $"Message '{name}': \"{ex?.Message}\" | InnerException: \"{ex?.InnerException}\"";
+                LambdaLogger.Log(lambdaMessage);
+
                 var message = ex?.Message;
                 var innerException = ex?.InnerException;
                 Logger.LogError("Message '{name}': \"{message}\" | InnerException: \"{innerException}\"", name, message, innerException);
+
                 throw;
             }
             finally
             {
+                LambdaLogger.Log($"Disposing {name} function scope");
                 Logger.LogInformation("Disposing {name} function scope", name);
                 scope?.Dispose();
             }
         }
 
-        protected void ConfigureLogging(ILoggingBuilder logging)
+        #region provate methods
+        private void ConfigureLogging(ILoggingBuilder logging)
         {
             logging.AddConfiguration(Configuration.GetSection("Logging"));
             logging.AddLambdaLogger(new LambdaLoggerOptions
             {
                 IncludeCategory = true,
                 IncludeLogLevel = true,
-                IncludeNewline = true
+                IncludeNewline = true,
+                IncludeEventId = true,
+                IncludeException = true
             });
+        }
+
+        private void SetupServiceActions()
+        {
+            ServiceCollection.AddOptions();
+            ServiceCollection.AddSingleton(Configuration);
+            ServiceCollection.AddLogging(ConfigureLogging); //NOSONAR false positive
+        }
+
+        private void FinalizeSetupServiceProviderActions()
+        {
+            ServiceProvider = ServiceCollection.BuildServiceProvider();
+            Logger = ServiceProvider.GetRequiredService<ILogger<TInput>>();
         }
 
         protected void SetupConfiguration()
         {
-            var builder =
-            new ConfigurationBuilder()
+            ConfigurationBuilder = new ConfigurationBuilder()
                 .AddEnvironmentVariables()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
-            Configuration = builder.Build();
+            Configuration = ConfigurationBuilder.Build();
+            AwsOptions = ServiceCollection.GetTypedOptions<AwsOptions>(Configuration, ConfigurationConsts.AwsOptionsNodeName);
+        }
 
-            _ = bool.TryParse(Configuration[ConfigurationConsts.AwsSecretsNodeName], out bool useSecrets);
-
-            if (useSecrets)
+        private void LoadAwsConfigurationSources()
+        {
+            if (AwsOptions.UseSecrets)
             {
-                builder.AddSecretsHandler();
-                Configuration = builder.Build();
+                ConfigurationBuilder.AddSecretsHandler();
+            }
+
+            if (AwsOptions.UseParameterStore)
+            {
+                ConfigurationBuilder.AddParameterStoreHandler();
+            }
+
+            if (AwsOptions.UseParameterStore || AwsOptions.UseSecrets)
+            {
+                Configuration = ConfigurationBuilder.Build();
             }
         }
+
+        private void LoadAwsRegionEndpoint(IServiceCollection services)
+        {
+            if (!string.IsNullOrEmpty(AwsOptions.Credentials.Region))
+            {
+                services.AddSingleton(RegionEndpoint.GetBySystemName(AwsOptions.Credentials.Region));
+            }
+        }
+
+        private void LoadAwsCredentials(IServiceCollection services)
+        {
+            AWSCredentials credentials = null;
+
+            if (!string.IsNullOrEmpty(AwsOptions.Credentials.AccessKeyId) && !string.IsNullOrEmpty(AwsOptions.Credentials.SecretAccessKey))
+            {
+                credentials = new BasicAWSCredentials(AwsOptions.Credentials.AccessKeyId, AwsOptions.Credentials.SecretAccessKey);
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(AwsOptions.Credentials.Profile))
+                {
+                    var sharedFile = new SharedCredentialsFile();
+                    sharedFile.TryGetProfile(AwsOptions.Credentials.Profile, out var profile);
+                    AWSCredentialsFactory.TryGetAWSCredentials(profile, sharedFile, out credentials);
+                }
+            }
+
+            if (credentials != null) services.AddSingleton(credentials);
+        }
+        #endregion
     }
 }

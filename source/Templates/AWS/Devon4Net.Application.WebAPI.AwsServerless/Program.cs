@@ -11,8 +11,7 @@ builder.WebHost.InitializeDevonFw();
 #region services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.SetupDevonfw(builder.Configuration);
-builder.Services.ConfigureDevonfwAWS(builder.Configuration, builder.Host);
+builder.Services.ConfigureDevonfwAWS(builder.Configuration, true);
 builder.Services.SetupMiddleware(builder.Configuration);
 builder.Services.SetupLog(builder.Configuration);
 builder.Services.SetupSwagger(builder.Configuration);
@@ -21,6 +20,7 @@ builder.Services.SetupSwagger(builder.Configuration);
 var app = builder.Build();
 
 #region devon app
+
 app.ConfigureSwaggerEndPoint();
 app.SetupMiddleware(builder.Services);
 app.SetupCors();

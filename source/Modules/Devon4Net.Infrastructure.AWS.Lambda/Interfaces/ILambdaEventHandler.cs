@@ -1,4 +1,5 @@
 ﻿using Amazon.Lambda.Core;
+using Microsoft.Extensions.Logging;
 
 namespace Devon4Net.Infrastructure.AWS.Lambda.Interfaces
 {
