@@ -2,11 +2,12 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
+using Amazon.DynamoDBv2.Model;
 using Amazon.Lambda.Core;
 using Amazon.Runtime;
 using Devon4Net.Infrastructure.AWS.DynamoDb.Common;
+using Devon4Net.Infrastructure.AWS.DynamoDb.Extensions;
 using Microsoft.Extensions.Logging;
-using System.Xml.Linq;
 
 namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
 {
@@ -15,54 +16,55 @@ namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
         private IDynamoDBContext DynamoDBContext { get; }
         private ILogger Logger { get; }
         private ILambdaLogger LambdaLogger { get; }
+        private AmazonDynamoDBClient AmazonDynamoDBClient { get; }
+        private JsonHelper JsonHelper { get; }
+        private const string AttributeKey = "key";
+        private const string AttributeObjectType = "objectType";
+        private const string AttributeObjectValue = "objectValue";
 
-        public DynamoDbRepository(AWSCredentials awsCredentials, RegionEndpoint awsRegion)
+        public DynamoDbRepository(AWSCredentials awsCredentials, RegionEndpoint awsRegion, JsonHelper jsonHelper = null)
         {
             Logger = null;
             LambdaLogger = null;
-            DynamoDBContext = new DynamoDBContext(new AmazonDynamoDBClient(awsCredentials, awsRegion));
+            AmazonDynamoDBClient = new AmazonDynamoDBClient(awsCredentials, awsRegion);
+            DynamoDBContext = new DynamoDBContext(AmazonDynamoDBClient);
+            JsonHelper = jsonHelper ?? new JsonHelper();
         }
 
-        public DynamoDbRepository(AWSCredentials awsCredentials, RegionEndpoint awsRegion, ILogger logger)
+        public DynamoDbRepository(AWSCredentials awsCredentials, RegionEndpoint awsRegion, ILogger logger, JsonHelper jsonHelper = null)
         {
             Logger = logger;
             LambdaLogger = null;
-            DynamoDBContext = new DynamoDBContext(new AmazonDynamoDBClient(awsCredentials, awsRegion));
+            AmazonDynamoDBClient = new AmazonDynamoDBClient(awsCredentials, awsRegion);
+            DynamoDBContext = new DynamoDBContext(AmazonDynamoDBClient);
+            JsonHelper = jsonHelper ?? new JsonHelper();
         }
 
-        public DynamoDbRepository(AWSCredentials awsCredentials, RegionEndpoint awsRegion, ILambdaLogger logger)
+        public DynamoDbRepository(AWSCredentials awsCredentials, RegionEndpoint awsRegion, ILambdaLogger logger, JsonHelper jsonHelper = null)
         {
             LambdaLogger = logger;
             Logger = null;
-            DynamoDBContext = new DynamoDBContext(new AmazonDynamoDBClient(awsCredentials, awsRegion));
+            AmazonDynamoDBClient = new AmazonDynamoDBClient(awsCredentials, awsRegion);
+            DynamoDBContext = new DynamoDBContext(AmazonDynamoDBClient);
+            JsonHelper = jsonHelper ?? new JsonHelper();
         }
 
-        public DynamoDbRepository(IDynamoDBContext dynamoDBContext, ILogger logger)
-        {
-            Logger = logger;
-            LambdaLogger = null;
-            DynamoDBContext = dynamoDBContext;
-        }
-
-        public DynamoDbRepository(IDynamoDBContext dynamoDBContext, ILambdaLogger lambdaLogger)
-        {
-            LambdaLogger = lambdaLogger;
-            Logger = null;
-            DynamoDBContext = dynamoDBContext;
-        }
-
-        public DynamoDbRepository(AmazonDynamoDBClient dynamoDBClient, ILogger logger)
+        public DynamoDbRepository(AmazonDynamoDBClient dynamoDBClient, ILogger logger, JsonHelper jsonHelper = null)
         {
             Logger = logger;
             LambdaLogger = null;
             DynamoDBContext = new DynamoDBContext(dynamoDBClient);
+            AmazonDynamoDBClient = dynamoDBClient;
+            JsonHelper = jsonHelper ?? new JsonHelper();
         }
 
-        public DynamoDbRepository(AmazonDynamoDBClient dynamoDBClient, ILambdaLogger lambdaLogger)
+        public DynamoDbRepository(AmazonDynamoDBClient dynamoDBClient, ILambdaLogger lambdaLogger, JsonHelper jsonHelper = null)
         {
             LambdaLogger = lambdaLogger;
             Logger = null;
             DynamoDBContext = new DynamoDBContext(dynamoDBClient);
+            AmazonDynamoDBClient = dynamoDBClient;
+            JsonHelper = jsonHelper ?? new JsonHelper();
         }
 
         public Task Create(T entity, CancellationToken cancellationToken = default)
@@ -103,6 +105,42 @@ namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
         public Task<IList<T>> Get(DynamoSearchCriteria searchCriteria)
         {
             return Get(searchCriteria.GetCriteriaScanConditions());
+        }
+
+        public async Task<S> Get<S>(string tableName, string key, bool consistentRead = true, CancellationToken cancellationToken = default) where S : class
+        {
+            try
+            {
+                var result = await Get(tableName, key, consistentRead, cancellationToken).ConfigureAwait(false);
+
+                return JsonHelper.Deserialize<S>(result.Item[AttributeObjectValue].S);
+            }
+            catch (Exception ex)
+            {
+                LogDynamoException(ref ex);
+                throw;
+            }
+        }
+
+        public async Task<GetItemResponse> Get(string tableName, string key, bool consistentRead = true, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                await InputChecksForGetOperation(tableName, key).ConfigureAwait(false);
+
+                var attributes = new Dictionary<string, AttributeValue>
+                {
+                    [AttributeKey] = new AttributeValue { S = key }
+                };
+
+                return await AmazonDynamoDBClient.GetItemAsync(tableName, attributes, consistentRead, cancellationToken).ConfigureAwait(false);
+
+            }
+            catch (Exception ex)
+            {
+                LogDynamoException(ref ex);
+                throw;
+            }
         }
 
         public Task<T> GetById(int id, CancellationToken cancellationToken = default)
@@ -250,7 +288,6 @@ namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
             try
             {
                 CheckInputGenericEntity(entity);
-
                 await DynamoDBContext.SaveAsync(entity).ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -260,7 +297,137 @@ namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
             }
         }
 
+        public async Task<PutItemResponse> Put(string tableName, string key, object objectValue, bool createTable = false, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                await InputChecksForPutOperation(tableName, createTable).ConfigureAwait(false);
+
+                var attributes = new Dictionary<string, AttributeValue>
+                {
+                    [AttributeKey] = new AttributeValue { S = key },
+                    [AttributeObjectType] = new AttributeValue { S = objectValue.GetType().ToString() },
+                    [AttributeObjectValue] = new AttributeValue { S = await JsonHelper.Serialize(objectValue).ConfigureAwait(false) }
+                };
+
+                var request = new PutItemRequest
+                {
+                    TableName = tableName,
+                    Item = attributes
+                };
+
+                return await AmazonDynamoDBClient.PutItemAsync(request, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LogDynamoException(ref ex);
+                throw;
+            }
+        }
+
+        public async Task<bool> TableExists(string tableName, bool createTable = false)
+        {
+            var request = new ListTablesRequest
+            {
+                Limit = 10, // Page size.
+                ExclusiveStartTableName = null
+            };
+
+            var response = await AmazonDynamoDBClient.ListTablesAsync(request).ConfigureAwait(false);
+            var result = response.TableNames;
+            var tableExists =  result.Find(x=>x == tableName)!=null;
+            if (!tableExists && createTable) await CreateTable(tableName).ConfigureAwait(false);
+            return tableExists;
+        }
+
+        public async Task<CreateTableResponse> CreateTable(string tableName, long readCapacityUnits = 5, long writeCapacityUnits = 5, bool streamEnabled = true, StreamViewType streamViewType = default)
+        {
+            try
+            {
+                var request = new CreateTableRequest
+                {
+                    TableName = tableName,
+                    KeySchema = new List<KeySchemaElement>
+                    {
+                        new KeySchemaElement
+                        {
+                            AttributeName = AttributeKey,
+                            KeyType = "HASH"
+                        }
+                    },
+                    AttributeDefinitions = new List<AttributeDefinition>
+                    {
+                        new AttributeDefinition
+                        {
+                            AttributeName = AttributeKey,
+                            AttributeType = "S"
+                        }
+                    },
+                    ProvisionedThroughput = new ProvisionedThroughput
+                    {
+                        ReadCapacityUnits = readCapacityUnits,
+                        WriteCapacityUnits = writeCapacityUnits
+                    },
+                    StreamSpecification = new StreamSpecification
+                    {
+                        StreamEnabled = streamEnabled,
+                        StreamViewType = streamViewType ?? StreamViewType.NEW_AND_OLD_IMAGES
+                    }
+                };
+
+                return await AmazonDynamoDBClient.CreateTableAsync(request).ConfigureAwait(false);                
+            }
+            catch (Exception ex)
+            {
+                LogDynamoException(ref ex);
+                throw;
+            }
+        }
+
         #region private methods
+
+        private async Task InputChecksForGetOperation(string tableName, string key)
+        {
+            CheckTableNameAndKey(tableName, key, true);
+
+            var tableExists = await TableExists(tableName, false).ConfigureAwait(false);
+
+            if (!tableExists)
+            {
+                throw new ArgumentException($"The provided table does not exist. Cannot perform the 'Get' operation the key {key}");
+            }
+        }
+
+        private static void CheckTableNameAndKey(string tableName, string key, bool checkKey = false)
+        {
+            if (string.IsNullOrWhiteSpace(tableName))
+            {
+                throw new ArgumentException("The DynamoDb table name cannot be null");
+            }
+
+
+            if (checkKey && string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException("The provided key cannot be null. Cannot perform the 'Get' operation");
+            }
+        }
+
+        private async Task InputChecksForPutOperation(string tableName, bool createTable)
+        {
+            CheckTableNameAndKey(tableName, string.Empty);
+
+            var tableExists = await TableExists(tableName).ConfigureAwait(false);
+
+            if (!tableExists && !createTable)
+            {
+                throw new InvalidOperationException("Cannot put the object on DynamoDb. The table does not exists. Set to true the create table param.");
+            }
+
+            if (!tableExists)
+            {
+                await CreateTable(tableName).ConfigureAwait(false);
+            }
+        }
 
         private Task<T> Get(object id, CancellationToken cancellationToken)
         {

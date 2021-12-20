@@ -39,6 +39,41 @@
           }
         }
       }
+    },
+    "DynamoDbComplesObjectFunctionEventHandler": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "Devon4Net.Application.DynamoDb::Devon4Net.Application.DynamoDb.business.DynamoDbManagement.Functions.DynamoDbComplexObjectFunction::FunctionHandler",
+        "Runtime": "net6.0",
+        "CodeUri": "",
+        "MemorySize": 512,
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [
+          "AWSLambdaFullAccess",
+          "AmazonSSMReadOnlyAccess",
+          "AWSLambdaVPCAccessExecutionRole"
+        ],
+        "Environment": {
+          "Variables": {}
+        },
+        "Events": {
+          "ProxyResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/{proxy+}",
+              "Method": "ANY"
+            }
+          },
+          "RootResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/",
+              "Method": "ANY"
+            }
+          }
+        }
+      }
     }
   },
   "Outputs": {

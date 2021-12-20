@@ -8,7 +8,7 @@
 		<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
 		<Company>Capgemini S.A.</Company>
 		<Description>Configuration library for DynamoDB repository management</Description>
-		<Version>6.0.3</Version>
+		<Version>6.0.4</Version>
 		<Copyright>Copyright © Capgemini</Copyright>
 		<PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
@@ -26,6 +26,7 @@
 		<PackageReference Include="Amazon.Lambda.Core" Version="2.1.0" />
 		<PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.2.2" />
 		<PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.1" />
+		<PackageReference Include="System.Text.Json" Version="6.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>

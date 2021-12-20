@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Devon4Net.Application.DynamoDb.business.DynamoDbManagement.Handlers
 {
-    internal class DynamoDbFunctionEventHandler : ILambdaEventHandler<string, DynamoTable>
+    public class DynamoDbFunctionEventHandler : ILambdaEventHandler<string, DynamoTable>
     {
         private IDynamoDbRepository<DynamoTable> DynamoDbRepository { get; set; }
         public DynamoDbFunctionEventHandler(IDynamoDbRepository<DynamoTable> dynamoDbRepository)
