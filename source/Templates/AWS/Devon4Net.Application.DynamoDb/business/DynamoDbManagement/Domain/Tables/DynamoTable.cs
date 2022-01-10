@@ -7,8 +7,8 @@ namespace Devon4Net.Application.DynamoDb.business.DynamoDbManagement.Domain.Tabl
     public class DynamoTable
     {
         [DynamoDBHashKey]
-        [DynamoDBProperty("id")]
-        public string Id { get; set; }
+        [DynamoDBProperty("key")]
+        public string Key { get; set; }
 
         [DynamoDBProperty("services")]
         public List<string> ServiceList{ get; set; }

@@ -1,7 +1,5 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Entities
 {
@@ -15,7 +13,7 @@ namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Entities
         [DynamoDBProperty("value")]
         public string Value { get; set; }
 
-        [DynamoDBProperty("objectType")]
+        [DynamoDBProperty("type")]
         public Type ObjectType { get; set; }
     }
 }

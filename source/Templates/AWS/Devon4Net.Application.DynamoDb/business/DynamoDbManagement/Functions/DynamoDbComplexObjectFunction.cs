@@ -15,7 +15,7 @@ namespace Devon4Net.Application.DynamoDb.business.DynamoDbManagement.Functions
     {
         protected override void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IDynamoDbRepository<DynamicObjectEntity>, DynamoDbRepository<DynamicObjectEntity>>();
+            services.AddTransient<IDynamoDbTableRepository, DynamoDbTableRepository>();
             services.AddTransient<ILambdaEventHandler<string, ObjectTest>, ComplexObjectFunctionEventHandler>();
         }
     }

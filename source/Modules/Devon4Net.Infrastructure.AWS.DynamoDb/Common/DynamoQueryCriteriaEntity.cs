@@ -2,10 +2,11 @@
 
 namespace Devon4Net.Infrastructure.AWS.DynamoDb.Common
 {
-    public class DynamoSearchCriteriaEntity
+    public class DynamoQueryCriteriaEntity
     {
         public string PropertyName { get; set; }
         public object Value { get; set; }
-        public ScanOperator Operator { get; set; }
+        public object SecondValue { get; set; }
+        public QueryOperator QueryOperator { get; set; }
     }
 }
