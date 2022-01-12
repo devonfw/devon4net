@@ -4,6 +4,7 @@ using Devon4Net.Infrastructure.Common.Handlers;
 using Devon4Net.Infrastructure.Common.Options.Devon;
 using Devon4Net.Infrastructure.Log;
 using Devon4Net.Infrastructure.WebAPI.Common.Attributes;
+using Devon4Net.Infrastructure.WebAPI.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,6 +59,8 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             }
 
             if (DevonfwOptions.UseIIS) services.ConfigureIIS(DevonfwOptions.IIS);
+
+            if (DevonfwOptions.UseXsrf) services.ConfigureXsrf();
         }
 
         private static void LoadConfiguration()

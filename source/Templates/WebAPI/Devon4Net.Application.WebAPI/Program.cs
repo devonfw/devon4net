@@ -22,7 +22,6 @@ builder.Services.AddEndpointsApiExplorer();
 #region devon services
 builder.Services.SetupDevonfw(builder.Configuration);
 builder.Services.SetupMiddleware(builder.Configuration);
-builder.Services.ConfigureXsrf(builder.Configuration); 
 builder.Services.SetupLog(builder.Configuration);
 builder.Services.SetupSwagger(builder.Configuration);
 builder.Services.SetupCircuitBreaker(builder.Configuration);
