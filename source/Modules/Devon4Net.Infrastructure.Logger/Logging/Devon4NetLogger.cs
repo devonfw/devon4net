@@ -5,7 +5,9 @@ namespace Devon4Net.Infrastructure.Log
     {
         public static void Debug(Exception exception)
         {
-            Serilog.Log.Debug(GetExceptionMessage(ref exception));
+            var message = GetExceptionMessage(ref exception);
+            Serilog.Log.Debug(message);
+            Console.WriteLine(message);
         }
 
         public static void Debug(string message)
@@ -32,7 +34,9 @@ namespace Devon4Net.Infrastructure.Log
 
         public static void Fatal(Exception exception)
         {
-            Serilog.Log.Fatal(GetExceptionMessage(ref exception));
+            var message = GetExceptionMessage(ref exception);
+            Serilog.Log.Fatal(message);
+            Console.WriteLine(message);
         }
 
         public static void Information(string message)
@@ -43,7 +47,9 @@ namespace Devon4Net.Infrastructure.Log
 
         public static void Information(Exception exception)
         {
-            Serilog.Log.Information(GetExceptionMessage(ref exception));
+            var message = GetExceptionMessage(ref exception);
+            Serilog.Log.Information(message);
+            Console.WriteLine(message);
         }
 
         public static void Warning(string message)
@@ -54,17 +60,18 @@ namespace Devon4Net.Infrastructure.Log
 
         public static void Warning(Exception exception)
         {
-            Serilog.Log.Warning(GetExceptionMessage(ref exception));
+            var message = GetExceptionMessage(ref exception);
+            Serilog.Log.Warning(message);
+            Console.WriteLine(message);
         }
 
         private static string GetExceptionMessage(ref Exception exception)
         {
             var message = !string.IsNullOrEmpty(exception.Message) ? exception.Message : "No Exception Message";
-            var innerException = exception.InnerException != null && exception.InnerException.Message != null ? exception.InnerException.Message : "No InnerException exception data found";
-            var fullMessage = $"Exception Type: {exception.GetType().Name} | Message: {message} | InnerException: {innerException}";
+            var innerException = exception.InnerException?.Message != null ? exception.InnerException.Message : "No InnerException exception data found";
+            var fullMessage = $"Exception Type: {exception.GetType().Name} | Message: {message} | InnerException: {innerException} | StackTrace = {exception.StackTrace}";
             Console.WriteLine(fullMessage);
             return fullMessage;
         }
-
     }
 }
