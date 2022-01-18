@@ -23,6 +23,7 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
         protected IConfigurationBuilder ConfigurationBuilder { get; set; }
         protected IServiceProvider ServiceProvider { get; set; }
         protected IServiceCollection ServiceCollection = new ServiceCollection();
+        protected AWSCredentials AWSCredentials { get; set; }
         protected ILogger Logger { get; set; }
         protected AwsOptions AwsOptions { get; set; }
         protected abstract void ConfigureServices(IServiceCollection services);
@@ -35,8 +36,8 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
         public void Setup()
         {
             SetupConfiguration();
-            LoadAwsConfigurationSources();
             LoadAwsCredentials(ServiceCollection);
+            LoadAwsConfigurationSources();
             LoadAwsRegionEndpoint(ServiceCollection);
             SetupServiceActions();
             ConfigureServices(ServiceCollection);
@@ -125,12 +126,12 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
         {
             if (AwsOptions.UseSecrets)
             {
-                ConfigurationBuilder.AddSecretsHandler();
+                ConfigurationBuilder.AddSecretsHandler(AWSCredentials);
             }
 
             if (AwsOptions.UseParameterStore)
             {
-                ConfigurationBuilder.AddParameterStoreHandler();
+                ConfigurationBuilder.AddParameterStoreHandler(AWSCredentials);
             }
 
             if (AwsOptions.UseParameterStore || AwsOptions.UseSecrets)
@@ -150,10 +151,11 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
         private void LoadAwsCredentials(IServiceCollection services)
         {
             AWSCredentials credentials = null;
+            AWSCredentials = null;
 
             if (!string.IsNullOrEmpty(AwsOptions.Credentials.AccessKeyId) && !string.IsNullOrEmpty(AwsOptions.Credentials.SecretAccessKey))
             {
-                credentials = new BasicAWSCredentials(AwsOptions.Credentials.AccessKeyId, AwsOptions.Credentials.SecretAccessKey);
+                AWSCredentials = new BasicAWSCredentials(AwsOptions.Credentials.AccessKeyId, AwsOptions.Credentials.SecretAccessKey);
             }
             else
             {
@@ -162,10 +164,11 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
                     var sharedFile = new SharedCredentialsFile();
                     sharedFile.TryGetProfile(AwsOptions.Credentials.Profile, out var profile);
                     AWSCredentialsFactory.TryGetAWSCredentials(profile, sharedFile, out credentials);
+                    AWSCredentials = credentials;
                 }
             }
 
-            if (credentials != null) services.AddSingleton(credentials);
+            if (AWSCredentials != null) services.AddSingleton(AWSCredentials);
         }
         #endregion
     }
