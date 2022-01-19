@@ -10,6 +10,7 @@ namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
     public interface IDynamoDbEntityRepository<T> : IDynamoDbBaseRepository where T : class
     {
         Task Create(T entity, CancellationToken cancellationToken = default);
+        Task Create(List<T> entityList, CancellationToken cancellationToken = default);
         Task Update(T entity);
         Task<IList<T>> Get(string paginationToken = null, CancellationToken cancellationToken = default);
         Task<IList<T>> Get(List<ScanCondition> searchCriteria);
@@ -26,5 +27,7 @@ namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
         Task DeleteById(Guid id, CancellationToken cancellationToken = default);
         Task DeleteById(DateTime id, CancellationToken cancellationToken = default);
         Task DeleteById(object id, CancellationToken cancellationToken = default);
+        Task Delete(List<T> entityList, CancellationToken cancellationToken = default);
+        Task Put(List<T> entityList, CancellationToken cancellationToken = default);
     }
 }

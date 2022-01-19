@@ -51,6 +51,21 @@ namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
             }
         }
 
+        public async Task Create(List<T> entityList, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var batch = DynamoDBContext.CreateBatchWrite<T>();
+                batch.AddPutItems(entityList);
+                await batch.ExecuteAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LogDynamoException(ref ex);
+                throw;
+            }
+        }
+
         public async Task Update(T entity)
         {
             try
@@ -232,6 +247,36 @@ namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
                 CheckInputIdObject(id);
 
                 await Delete(id, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LogDynamoException(ref ex);
+                throw;
+            }
+        }
+
+        public async Task Delete(List<T> entityList, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var batch = DynamoDBContext.CreateBatchWrite<T>();
+                batch.AddDeleteItems(entityList);
+                await batch.ExecuteAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LogDynamoException(ref ex);
+                throw;
+            }
+        }
+
+        public async Task Put(List<T> entityList, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var batch = DynamoDBContext.CreateBatchWrite<T>();
+                batch.AddPutItems(entityList);
+                await batch.ExecuteAsync(cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

@@ -150,7 +150,6 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
 
         private void LoadAwsCredentials(IServiceCollection services)
         {
-            AWSCredentials credentials = null;
             AWSCredentials = null;
 
             if (!string.IsNullOrEmpty(AwsOptions.Credentials.AccessKeyId) && !string.IsNullOrEmpty(AwsOptions.Credentials.SecretAccessKey))
@@ -163,7 +162,7 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
                 {
                     var sharedFile = new SharedCredentialsFile();
                     sharedFile.TryGetProfile(AwsOptions.Credentials.Profile, out var profile);
-                    AWSCredentialsFactory.TryGetAWSCredentials(profile, sharedFile, out credentials);
+                    AWSCredentialsFactory.TryGetAWSCredentials(profile, sharedFile, out AWSCredentials credentials);
                     AWSCredentials = credentials;
                 }
             }
