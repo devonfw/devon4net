@@ -8,11 +8,7 @@ namespace Devon4Net.Infrastructure.AWS.Secrets
     {
         public static IConfigurationBuilder AddSecretsHandler(this IConfigurationBuilder configurationBuilder, AWSCredentials awsCredentials= null, RegionEndpoint regionEndpoint = null)
         {
-            if (awsCredentials != null)
-            {
-                configurationBuilder.Add(new AwsSecretsConfigurationSource(awsCredentials, regionEndpoint));
-            }
-
+            configurationBuilder.Add(new AwsSecretsConfigurationSource(awsCredentials, regionEndpoint));
             return configurationBuilder;
         }
     }
