@@ -19,7 +19,6 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
         {
             if (CdkOptions == null || CdkOptions.Pipelines?.Any() != true) return;
 
-
             foreach (var pipelineOption in CdkOptions.Pipelines)
             {
                 GetPipelineResources(pipelineOption, out var bucket, out var role);
