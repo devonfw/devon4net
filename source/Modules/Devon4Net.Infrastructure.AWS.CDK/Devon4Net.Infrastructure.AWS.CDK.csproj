@@ -1,54 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
-    <Company>Capgemini S.A.</Company>
-    <Description>Configuration library for devon4net webapi template</Description>
-    <Version>6.0.1</Version>
-    <Copyright>Copyright © Capgemini</Copyright>
-    <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
-    <license>https://github.com/devonfw/ide/blob/master/LICENSE/</license>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>devonfw;devon4net;Capgemini;webapi;API</PackageTags>
-    <PackageReleaseNotes>NET 6.0+ compatibility version</PackageReleaseNotes>
-    <PackageIcon>devonfw.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>	  
+	  <TargetFramework>net6.0</TargetFramework>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
+	  <Company>Capgemini S.A.</Company>
+	  <Description>AWS CDK library for devon4net</Description>
+	  <Version>6.0.3</Version>
+	  <Copyright>Copyright © Capgemini</Copyright>
+	  <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
+	  <license>https://github.com/devonfw/ide/blob/master/LICENSE/</license>
+	  <RepositoryType>git</RepositoryType>
+	  <PackageTags>devonfw;devon4net;Capgemini;webapi;API;AWS;CDK</PackageTags>
+	  <PackageReleaseNotes>NET 6.0+ compatibility version</PackageReleaseNotes>
+	  <PackageIcon>devonfw.png</PackageIcon>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 	
-  <ItemGroup>
-    <None Include="..\..\..\assets\images\devonfw.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-	  <None Include="..\..\..\LICENSE">
-		  <Pack>True</Pack>
-		  <PackagePath>\</PackagePath>
-	  </None>	  
-  </ItemGroup>		
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+		<NoWarn>1701;1702;NU1608;CA1822</NoWarn>
+	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+		<NoWarn>1701;1702;NU1608;CA1822</NoWarn>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<None Include="..\..\..\assets\images\devonfw.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Amazon.CDK" Version="1.134.0" />
-    <PackageReference Include="Amazon.CDK.AWS.IAM" Version="1.134.0" />
-    <PackageReference Include="Amazon.CDK.AWS.KMS" Version="1.134.0" />
-    <PackageReference Include="Amazon.CDK.AWS.S3" Version="1.134.0" />
-    <PackageReference Include="Amazon.CDK.AWS.RDS" Version="1.134.0" />
-    <PackageReference Include="AWS.Logger.AspNetCore" Version="3.2.0" />
-    <PackageReference Include="AWS.Logger.Core" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+    <PackageReference Include="Amazon.CDK.Lib" Version="2.8.0" />
+    <PackageReference Include="Constructs" Version="10.0.40" />
   </ItemGroup>
+
 </Project>
