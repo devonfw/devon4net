@@ -6,7 +6,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.DMS
 {
     public class AwsCdkDmsHandler : AwsCdkBaseHandler, IAwsCdkDmsHandler
     {
-        public AwsCdkDmsHandler(Construct scope, string applicationName, string environmentName) : base(scope, applicationName, environmentName)
+        public AwsCdkDmsHandler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region)
         {
         }
 

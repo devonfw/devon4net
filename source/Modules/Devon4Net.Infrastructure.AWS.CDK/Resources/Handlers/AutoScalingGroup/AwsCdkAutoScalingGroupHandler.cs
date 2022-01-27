@@ -12,7 +12,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.AutoScalingGroup
     {
         private TagHandler TagHandler { get; }
 
-        public AwsCdkAutoScalingGroupHandler(Construct scope, string applicationName, string environmentName) : base(scope, applicationName, environmentName)
+        public AwsCdkAutoScalingGroupHandler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region)
         {
             TagHandler = new TagHandler();
         }

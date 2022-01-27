@@ -9,7 +9,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECR
     {
         private TagHandler TagHandler { get; }
 
-        public AwsCdkEcrHandler(Construct scope, string applicationName, string environmentName) : base(scope, applicationName, environmentName)
+        public AwsCdkEcrHandler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region)
         {
             TagHandler = new TagHandler();
         }

@@ -10,7 +10,7 @@ namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
 {
     public class AwsCdkApiGatewayHandler : AwsCdkBaseHandler, IAwsCdkApiGatewayHandler
     {
-        public AwsCdkApiGatewayHandler(Construct scope, string applicationName, string environmentName) : base(scope, applicationName, environmentName)
+        public AwsCdkApiGatewayHandler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region)
         {
         }
 

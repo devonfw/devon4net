@@ -11,7 +11,7 @@ namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
     {
         private TagHandler TagHandler { get; }
 
-        public AwsCdkRoleHandler(Construct scope, string applicationName, string environmentName) : base(scope, applicationName, environmentName)
+        public AwsCdkRoleHandler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region)
         {
             TagHandler = new TagHandler();
         }

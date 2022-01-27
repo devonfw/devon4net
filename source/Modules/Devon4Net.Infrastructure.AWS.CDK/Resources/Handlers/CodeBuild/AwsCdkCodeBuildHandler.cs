@@ -6,7 +6,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers
 {
     public class AwsCdkCodeBuildHandler : AwsCdkBaseHandler, IAwsCdkCodeBuildHandler
     {
-        public AwsCdkCodeBuildHandler(Construct scope, string applicationName, string environmentName) : base(scope, applicationName, environmentName)
+        public AwsCdkCodeBuildHandler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region)
         {
         }
 

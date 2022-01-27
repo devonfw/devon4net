@@ -7,7 +7,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.PolicyDocuments
 {
     public class AwsCdkPolicyDocumentHandler : AwsCdkBaseHandler, IAwsCdkPolicyDocumentHandler
     {
-        public AwsCdkPolicyDocumentHandler(Construct scope, string applicationName, string environmentName) : base(scope, applicationName, environmentName)
+        public AwsCdkPolicyDocumentHandler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region)
         {
         }
 

@@ -13,7 +13,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.orig
 {
     public class AwsCdkPipelineHandler : AwsCdkBaseHandler, IAwsCdkPipelineHandler
     {
-        public AwsCdkPipelineHandler(Construct scope, string applicationName, string environmentName) : base(scope, applicationName, environmentName)
+        public AwsCdkPipelineHandler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region)
         {
         }
 

@@ -53,7 +53,7 @@ namespace Cdk
 
             Configuration = new ConfigurationBuilder().AddJsonFile(file, true, true).Build();
 
-            var environmentFileName = Configuration.GetSection("EnvironmentToDeploy").Value;
+            var environmentFileName = Configuration.GetSection("Environment").Value;
 
             var environmentFile = FileOperationsHelper.GetFilesFromPath($"appsettings.{environmentFileName}.json")?.FirstOrDefault();
             Configuration = new ConfigurationBuilder().AddConfiguration(Configuration).AddJsonFile(environmentFile, true, true).Build();

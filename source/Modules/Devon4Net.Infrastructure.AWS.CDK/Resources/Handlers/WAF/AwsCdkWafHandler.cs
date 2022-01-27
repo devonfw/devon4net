@@ -5,7 +5,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.WAF
 {
     public class AwsCdkWafHandler : AwsCdkBaseHandler, IAwsCdkWafHandler
     {
-        public AwsCdkWafHandler(Construct scope, string applicationName, string environmentName) : base(scope, applicationName, environmentName)
+        public AwsCdkWafHandler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region)
         {
         }
 

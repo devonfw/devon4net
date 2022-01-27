@@ -6,7 +6,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ELB
 {
     public class AwsCdkElbHandler : AwsCdkBaseHandler, IAwsCdkElbHandler
     {
-        public AwsCdkElbHandler(Construct scope, string applicationName, string environmentName) : base(scope, applicationName, environmentName) { }
+        public AwsCdkElbHandler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region) { }
 
         public INetworkTargetGroup CreateNetworkTargetGroup(string id, string name, double port, IVpc vpc, int healthCheckCount)
         {

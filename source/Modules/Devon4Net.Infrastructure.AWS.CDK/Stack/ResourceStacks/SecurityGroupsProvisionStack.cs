@@ -19,8 +19,8 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 }
                 else
                 {
-                    var vpc = AwsCdkHandler.LocateVpc(securityGroupOption.VpcId,
-                        $"The Vpc id {securityGroupOption.VpcId} of the security group {securityGroupOption.SecurityGroupName} was not found");
+                    var vpcResource = StackResources.Vpcs.FirstOrDefault(v => v.Key == securityGroupOption.VpcId);
+                    var vpc = vpcResource.Value ?? AwsCdkHandler.LocateVpc(securityGroupOption.VpcId, $"The Vpc id {securityGroupOption.VpcId} of the security group {securityGroupOption.SecurityGroupName} was not found");
 
                     var securityGroup = AwsCdkHandler.AddSecurityGroup(securityGroupOption.SecurityGroupName, securityGroupOption.SecurityGroupName, vpc, securityGroupOption.AllowAllOutbound, securityGroupOption.DisableInlineRules);
                     AddSecurityGroupRules(securityGroupOption, securityGroup, SecurityGroupRuleType.IngressRule);

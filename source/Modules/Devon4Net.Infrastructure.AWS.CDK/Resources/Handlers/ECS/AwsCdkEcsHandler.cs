@@ -12,14 +12,14 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
     {
         private TagHandler TagHandler { get; }
 
-        public AwsCdkEcsHandler(Construct scope, string applicationName, string environmentName) : base(scope, applicationName, environmentName)
+        public AwsCdkEcsHandler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region)
         {
             TagHandler = new TagHandler();
         }
 
-        public void AddAutoScalingGroupToCluster(Amazon.CDK.AWS.AutoScaling.AutoScalingGroup autoScalingGroup, Cluster cluster)
+        public void AddAutoScalingGroupToCluster(string asgId, Amazon.CDK.AWS.AutoScaling.AutoScalingGroup autoScalingGroup, Cluster cluster)
         {
-            cluster.AddAsgCapacityProvider(new AsgCapacityProvider(Scope, $"ecs{autoScalingGroup.AutoScalingGroupArn}capacityprovider", new AsgCapacityProviderProps
+            cluster.AddAsgCapacityProvider(new AsgCapacityProvider(Scope, $"{asgId}-capacityprovider", new AsgCapacityProviderProps
             {
                 AutoScalingGroup = autoScalingGroup
             }));

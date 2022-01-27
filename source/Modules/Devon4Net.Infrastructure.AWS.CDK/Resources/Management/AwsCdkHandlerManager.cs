@@ -23,7 +23,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
             ApplicationName = applicationName;
             EnvironmentName = environmentName;
             StackProps = stackProps;
-            HandlerResources = new ResourceCollectionHandler(scope, applicationName, environmentName, stackProps);
+            HandlerResources = new ResourceCollectionHandler(this, applicationName, environmentName, stackProps);
         }
     }
 }

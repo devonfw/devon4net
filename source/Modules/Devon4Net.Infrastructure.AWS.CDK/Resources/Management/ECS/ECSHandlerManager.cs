@@ -10,9 +10,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
 {
     public partial class AwsCdkHandlerManager 
     {
-        public void AddAutoScalingGroupToCluster(AutoScalingGroup autoScalingGroup, Cluster cluster)
+        public void AddAutoScalingGroupToCluster(string asgId, AutoScalingGroup autoScalingGroup, Cluster cluster)
         {
-            HandlerResources.AwsCdkEcsHandler.AddAutoScalingGroupToCluster(autoScalingGroup, cluster);
+            HandlerResources.AwsCdkEcsHandler.AddAutoScalingGroupToCluster(asgId, autoScalingGroup, cluster);
         }
 
         internal CapacityProviderStrategy CreateCapacityProviderStrategy(AsgCapacityProvider capacityProvider, int capWeigth, int capBase)

@@ -5,7 +5,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ParameterStore
 {
     public class AwsCdkSsmParameterStoreHandler : AwsCdkBaseHandler, IAwsCdkSsmParameterStoreHandler
     {
-        public AwsCdkSsmParameterStoreHandler(Construct scope, string applicationName, string enviromentName) : base(scope, applicationName, enviromentName) { }
+        public AwsCdkSsmParameterStoreHandler(Construct scope, string applicationName, string enviromentName, string region) : base(scope, applicationName, enviromentName, region) { }
 
         public IParameter LocateParameterFromName(string identification, string paramterName)
         {

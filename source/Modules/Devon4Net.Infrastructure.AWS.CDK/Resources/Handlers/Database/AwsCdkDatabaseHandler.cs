@@ -17,7 +17,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Database
         private AwsCdkVpcHandler AwsCdkVpcHandler { get; }
         private AwsCdkSecretHandler AwsCdkSecretHandler { get; }
 
-        public AwsCdkDatabaseHandler(Construct scope, string applicationName, string environmentName, IAwsSecurityGroupHandler awsSecurityGroupHandler, AwsCdkVpcHandler awsCdkVpcHandler, AwsCdkSecretHandler awsCdkSecretHandler) : base(scope, applicationName, environmentName)
+        public AwsCdkDatabaseHandler(Construct scope, string applicationName, string environmentName, IAwsSecurityGroupHandler awsSecurityGroupHandler, AwsCdkVpcHandler awsCdkVpcHandler, AwsCdkSecretHandler awsCdkSecretHandler, string region) : base(scope, applicationName, environmentName, region)
         {
             AwsSecurityGroupHandler = awsSecurityGroupHandler;
             AwsCdkVpcHandler = awsCdkVpcHandler;

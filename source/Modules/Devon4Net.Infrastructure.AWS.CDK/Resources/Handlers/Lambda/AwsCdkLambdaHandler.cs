@@ -15,7 +15,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Lambda
 {
     public class AwsCdkLambdaHandler : AwsCdkBaseHandler, IAwsCdkLambdaHandler
     {
-        public AwsCdkLambdaHandler(Construct scope, string applicationName, string environmentName) : base(scope, applicationName, environmentName)
+        public AwsCdkLambdaHandler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region)
         {
         }
 

@@ -3,9 +3,6 @@ using Amazon.CDK.AWS.AutoScaling;
 using Amazon.CDK.AWS.EC2;
 using Amazon.CDK.AWS.ECS;
 using Devon4Net.Infrastructure.AWS.CDK.Options.Resources;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Stack
 {
@@ -104,7 +101,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                     foreach (var asgId in cluster.AutoScalingGroupIDs)
                     {
                         var asg = LocateAutoScalingGroup(asgId, "Could not found the autoScalingGroupneeded for the cluster");
-                        AwsCdkHandler.AddAutoScalingGroupToCluster(asg as AutoScalingGroup, ec2Cluster as Cluster);
+                        AwsCdkHandler.AddAutoScalingGroupToCluster(asgId, asg as AutoScalingGroup, ec2Cluster as Cluster);
                     }
                 }
             }

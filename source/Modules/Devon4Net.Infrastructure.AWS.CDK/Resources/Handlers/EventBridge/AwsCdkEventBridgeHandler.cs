@@ -6,7 +6,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.EventBridge
 {
     public class AwsCdkEventBridgeHandler : AwsCdkBaseHandler, IAwsCdkEventBridgeHandler
     {
-        public AwsCdkEventBridgeHandler(Construct scope, string applicationName, string environmentName) : base(scope, applicationName, environmentName)
+        public AwsCdkEventBridgeHandler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region)
         {
         }
 

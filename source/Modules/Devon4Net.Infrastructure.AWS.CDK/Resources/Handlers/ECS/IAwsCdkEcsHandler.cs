@@ -10,7 +10,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
     public interface IAwsCdkEcsHandler
     {
         void AddAsgCapacityProviderToCluster(AsgCapacityProvider asgCapacityProvider, Cluster cluster);
-        void AddAutoScalingGroupToCluster(Amazon.CDK.AWS.AutoScaling.AutoScalingGroup autoScalingGroup, Cluster cluster);
+        void AddAutoScalingGroupToCluster(string asgId, Amazon.CDK.AWS.AutoScaling.AutoScalingGroup autoScalingGroup, Cluster cluster);
         ContainerDefinition AddContainerToTaskDefinition(ref ITaskDefinition taskDefinition, string containerId, IContainerDefinitionOptions containerDefinitionOptions);
         void AddEc2ServiceECSDependencies(IService ecsService, List<AsgCapacityProvider> capacityProviders);
         ILoadBalancerTargetProps AddEc2ServiceToNetworkTargetGroup(IService service, INetworkTargetGroup targetGroup, string containerName, double containerPort);

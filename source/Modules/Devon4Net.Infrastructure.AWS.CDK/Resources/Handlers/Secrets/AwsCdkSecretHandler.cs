@@ -1,5 +1,4 @@
-﻿using System;
-using Amazon.CDK;
+﻿using Amazon.CDK;
 using Amazon.CDK.AWS.KMS;
 using Amazon.CDK.AWS.Lambda;
 using Amazon.CDK.AWS.SecretsManager;
@@ -10,12 +9,11 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Secrets
 {
     public class AwsCdkSecretHandler : AwsCdkBaseHandler, IAwsCdkSecretHandler
     {
-        private string Region { get; }
         private string AccountId { get; }
         private AwsCdkKmsHandler AwsCdkKmsHandler { get; }
         private TagHandler TagHandler { get; }
 
-        public AwsCdkSecretHandler(Construct scope, string applicationName, string environmentName, AwsCdkKmsHandler awsCdkKmsHandler, string region, string accountId) : base(scope, applicationName, environmentName)
+        public AwsCdkSecretHandler(Construct scope, string applicationName, string environmentName, AwsCdkKmsHandler awsCdkKmsHandler, string region, string accountId) : base(scope, applicationName, environmentName, region)
         {
             if (string.IsNullOrEmpty(region) || string.IsNullOrEmpty(accountId))
             {

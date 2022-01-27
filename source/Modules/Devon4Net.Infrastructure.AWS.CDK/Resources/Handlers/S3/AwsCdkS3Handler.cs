@@ -9,7 +9,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.S3
 {
     public class AwsCdkS3Handler : AwsCdkBaseHandler, IAwsCdkS3Handler
     {
-        public AwsCdkS3Handler(Construct scope, string applicationName, string environmentName) : base(scope, applicationName, environmentName)
+        public AwsCdkS3Handler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region)
         {
         }
 

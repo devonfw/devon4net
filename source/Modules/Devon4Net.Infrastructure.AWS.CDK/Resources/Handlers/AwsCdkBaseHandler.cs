@@ -8,8 +8,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers
         protected Construct Scope { get; set; }
         protected string ApplicationName { get; set; }
         protected string EnvironmentName { get; set; }
+        protected string Region { get; set; }
 
-        protected AwsCdkBaseHandler(Construct scope, string applicationName, string environmentName)
+        protected AwsCdkBaseHandler(Construct scope, string applicationName, string environmentName, string region)
         {
             if (string.IsNullOrEmpty(applicationName) || string.IsNullOrEmpty(environmentName))
             {
@@ -19,6 +20,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers
             Scope = scope;
             ApplicationName = applicationName;
             EnvironmentName = environmentName;
+            Region = region;
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Amazon.CDK;
+﻿using Amazon.CDK;
 using Amazon.CDK.AWS.EC2;
 using Constructs;
 
@@ -9,7 +6,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.VPC
 {
     public class AwsCdkVpcHandler : AwsCdkBaseHandler, IAwsCdkVpcHandler
     {
-        public AwsCdkVpcHandler(Construct scope, string applicationName, string environmentName) : base(scope, applicationName, environmentName)
+        public AwsCdkVpcHandler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region)
         {
         }
 
@@ -20,10 +17,12 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.VPC
                 throw new ArgumentException("The VPC id cannot be null ");
             }
 
+
             var result = Vpc.FromLookup(Scope, string.IsNullOrEmpty(identification) ? $"{ApplicationName}{EnvironmentName}vpc" : identification, new VpcLookupOptions
             {
                 IsDefault = isDefault,
-                VpcId = vpcId
+                VpcId = vpcId,
+                Region = Region
             });
 
             if (result == null)

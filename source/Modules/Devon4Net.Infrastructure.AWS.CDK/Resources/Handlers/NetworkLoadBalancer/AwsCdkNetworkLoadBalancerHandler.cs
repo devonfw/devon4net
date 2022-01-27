@@ -8,7 +8,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.NetworkLoadBalance
 {
     public class AwsCdkNetworkLoadBalancerHandler : AwsCdkBaseHandler, IAwsCdkNetworkLoadBalancerHandler
     {
-        public AwsCdkNetworkLoadBalancerHandler(Construct scope, string applicationName, string environmentName) : base(scope, applicationName, environmentName)
+        public AwsCdkNetworkLoadBalancerHandler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region)
         {
         }
 

@@ -55,16 +55,6 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
         public AwsCdkWafHandler AwsCdkWafHandler { get; set; }
         #endregion
 
-        //private AwsCdkQueueHandler AwsCdkQueueHandler { get; }
-        //
-
-        //
-        //private AwsCdkEc2InstanceHandler AwsCdkEc2InstanceHandler { get; }
-        //private AwsCdkElbHandler AwsCdkElbHandler { get; }
-        //private AwsCdkNetworkLoadBalancerHandler AwsCdkNetworkLoadBalancerHandler { get; }
-        //
-        //private AwsCdkEventBridgeHandler AwsCdkEventBridgeHandler { get; }
-
         public ResourceCollectionHandler(Construct scope, string applicationName, string environmentName, IStackProps stackProps)
         {
             Scope = scope;
@@ -77,28 +67,28 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
 
         private void InitializeHandlers()
         {
-            AwsCdkVpcHandler = new AwsCdkVpcHandler(Scope,ApplicationName,EnvironmentName);
-            AwsCdkDynamoDBHandler = new AwsCdkDynamoDBHandler(Scope,ApplicationName,EnvironmentName);
-            AwsCdkRoleHandler = new AwsCdkRoleHandler(Scope,ApplicationName,EnvironmentName);
-            AwsCdkPolicyDocumentHandler = new AwsCdkPolicyDocumentHandler(Scope, ApplicationName, EnvironmentName);
-            AwsCdkKmsHandler = new AwsCdkKmsHandler(Scope, ApplicationName, EnvironmentName);
+            AwsCdkVpcHandler = new AwsCdkVpcHandler(Scope,ApplicationName,EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkDynamoDBHandler = new AwsCdkDynamoDBHandler(Scope,ApplicationName,EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkRoleHandler = new AwsCdkRoleHandler(Scope,ApplicationName,EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkPolicyDocumentHandler = new AwsCdkPolicyDocumentHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkKmsHandler = new AwsCdkKmsHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
             AwsCdkSecretHandler = new AwsCdkSecretHandler(Scope, ApplicationName, EnvironmentName, AwsCdkKmsHandler, EnvironmentProperties.Region, EnvironmentProperties.Account);
-            AwsSecurityGroupHandler = new AwsSecurityGroupHandler(Scope, ApplicationName, EnvironmentName, AwsCdkVpcHandler);
-            AwsCdkDatabaseHandler = new AwsCdkDatabaseHandler(Scope, ApplicationName, EnvironmentName, AwsSecurityGroupHandler, AwsCdkVpcHandler, AwsCdkSecretHandler);
-            AwsCdkS3Handler = new AwsCdkS3Handler(Scope, ApplicationName, EnvironmentName);
-            AwsCdkLambdaHandler = new AwsCdkLambdaHandler(Scope, ApplicationName, EnvironmentName);
-            AwsCdkECRHandler = new AwsCdkEcrHandler(Scope, ApplicationName, EnvironmentName);
-            AwsCdkEventBridgeHandler = new AwsCdkEventBridgeHandler(Scope, ApplicationName, EnvironmentName);
-            AwsCdkApiGatewayHandler = new AwsCdkApiGatewayHandler(Scope, ApplicationName, EnvironmentName);
-            AwsCdkCodeBuildHandler = new AwsCdkCodeBuildHandler(Scope, ApplicationName, EnvironmentName);
-            AwsCdkSsmParameterStoreHandler = new AwsCdkSsmParameterStoreHandler(Scope, ApplicationName, EnvironmentName);
-            AwsCdkNetworkLoadBalancerHandler = new AwsCdkNetworkLoadBalancerHandler(Scope, ApplicationName, EnvironmentName);
-            AwsCdkElbHandler = new AwsCdkElbHandler(Scope, ApplicationName, EnvironmentName);
-            AwsCdkAutoScalingGroupHandler = new AwsCdkAutoScalingGroupHandler(Scope, ApplicationName, EnvironmentName);
-            AwsCdkEcsHandler = new AwsCdkEcsHandler(Scope, ApplicationName, EnvironmentName);
-            AwsCdkPipelineHandler = new AwsCdkPipelineHandler(Scope, ApplicationName, EnvironmentName);
-            AwsCdkDmsHandler = new AwsCdkDmsHandler(Scope, ApplicationName, EnvironmentName);
-            AwsCdkWafHandler = new AwsCdkWafHandler(Scope, ApplicationName, EnvironmentName);
+            AwsSecurityGroupHandler = new AwsSecurityGroupHandler(Scope, ApplicationName, EnvironmentName, AwsCdkVpcHandler, EnvironmentProperties.Region);
+            AwsCdkDatabaseHandler = new AwsCdkDatabaseHandler(Scope, ApplicationName, EnvironmentName, AwsSecurityGroupHandler, AwsCdkVpcHandler, AwsCdkSecretHandler, EnvironmentProperties.Region);
+            AwsCdkS3Handler = new AwsCdkS3Handler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkLambdaHandler = new AwsCdkLambdaHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkECRHandler = new AwsCdkEcrHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkEventBridgeHandler = new AwsCdkEventBridgeHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkApiGatewayHandler = new AwsCdkApiGatewayHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkCodeBuildHandler = new AwsCdkCodeBuildHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkSsmParameterStoreHandler = new AwsCdkSsmParameterStoreHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkNetworkLoadBalancerHandler = new AwsCdkNetworkLoadBalancerHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkElbHandler = new AwsCdkElbHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkAutoScalingGroupHandler = new AwsCdkAutoScalingGroupHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkEcsHandler = new AwsCdkEcsHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkPipelineHandler = new AwsCdkPipelineHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkDmsHandler = new AwsCdkDmsHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkWafHandler = new AwsCdkWafHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.SecurityGroupHandl
     {
         private AwsCdkVpcHandler AwsCdkVpcHandler { get; }
         private TagHandler TagHandler { get; }
-        public AwsSecurityGroupHandler(Construct scope, string applicationName, string environmentName, AwsCdkVpcHandler awsCdkVpcHandler) : base(scope, applicationName, environmentName)
+        public AwsSecurityGroupHandler(Construct scope, string applicationName, string environmentName, AwsCdkVpcHandler awsCdkVpcHandler, string region) : base(scope, applicationName, environmentName, region)
         {
             AwsCdkVpcHandler = awsCdkVpcHandler;
             TagHandler = new TagHandler();
