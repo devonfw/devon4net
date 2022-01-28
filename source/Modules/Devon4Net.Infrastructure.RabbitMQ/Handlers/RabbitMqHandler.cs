@@ -42,15 +42,13 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
 
             try
             {
-                status = QueueActions.SetUp;
-
                 await ServiceBus.PubSub.PublishAsync(command).ContinueWith(task => status = PublishCommandTaskResult(command, task)).ConfigureAwait(false);
                 await BackUpMessage(command, status).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 await BackUpMessage(command, QueueActions.Error, false, string.Empty, $"{ex.Message} : {ex.InnerException}").ConfigureAwait(false);
-                Devon4NetLogger.Error($"Error publishing message: {ex.Message}/{ex.InnerException}");
+                Devon4NetLogger.Error($"Error publishing message: {ex.Message}/{ex.InnerException}/{ex.StackTrace}");
                 Devon4NetLogger.Error(ex);
             }
 
@@ -148,7 +146,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Handlers
             {
                 RabbitMqBackupLiteDbService?.CreateMessageBackup(command, queueAction, increaseRetryCounter, additionalData, errorData);
 
-                if (RabbitMqBackupService != null && RabbitMqBackupService.UseExternalDatabase)
+                if (RabbitMqBackupService?.UseExternalDatabase == true)
                 {
                     await RabbitMqBackupService.CreateMessageBackup(command, queueAction, increaseRetryCounter, additionalData, errorData).ConfigureAwait(false);
                 }

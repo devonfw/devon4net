@@ -52,7 +52,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker
 
             }).ConfigurePrimaryHttpMessageHandler(() =>
             {
-                var handler = GetHttpMessageHandler();
+                var handler = GetHttpMessageHandler(endPointEntity.CompressionSupport);
 
                 if (!endPointEntity.UseCertificate)
                 {
@@ -92,11 +92,12 @@ namespace Devon4Net.Infrastructure.CircuitBreaker
             }
         }
 
-        private static System.Net.Http.HttpClientHandler GetHttpMessageHandler()
+        private static System.Net.Http.HttpClientHandler GetHttpMessageHandler(bool compressionSupport)
         {
             return new System.Net.Http.HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (m, c, a, e) => !CheckCertificate,
+                AutomaticDecompression = compressionSupport ? System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate : System.Net.DecompressionMethods.None
             };
         }
     }

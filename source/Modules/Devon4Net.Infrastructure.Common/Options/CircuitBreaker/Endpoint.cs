@@ -11,6 +11,9 @@
         public string Certificate { get; set; }
         public string CertificatePassword { get; set; }
         public string SslProtocol { get; set; }
+        public bool CompressionSupport { get; set; }
+        public bool AllowAutoRedirect { get; set; }
+        
 
         public Endpoint()
         {
