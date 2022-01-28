@@ -97,7 +97,8 @@ namespace Devon4Net.Infrastructure.CircuitBreaker
             return new System.Net.Http.HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (m, c, a, e) => !CheckCertificate,
-                AutomaticDecompression = compressionSupport ? System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate : System.Net.DecompressionMethods.None
+                AutomaticDecompression = compressionSupport ? System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate : System.Net.DecompressionMethods.None,
+                AllowAutoRedirect
             };
         }
     }
