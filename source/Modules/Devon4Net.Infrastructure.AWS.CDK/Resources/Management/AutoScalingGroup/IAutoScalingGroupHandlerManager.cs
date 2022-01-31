@@ -8,6 +8,6 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
 {
     public interface IAutoScalingGroupHandlerManager
     {
-        IAutoScalingGroup AddAutoScalingGroup(string id, string autoScalingGroupName, string instanceType, string machineImage, string machineAmiImage, IVpc vpc, bool allowAllOutbound, int minCapacity, int maxCapacity, int desiredCapacity, string region, ISecurityGroup securityGroup, string timeOutCreation, IRole role, ISubnet[] subnets, string keyPairName, bool enableProtectionFromScaleIn, List<BlockDevicesOptions> blockDevices = null, List<string> userData = null);
+        IAutoScalingGroup AddAutoScalingGroup(string id, string autoScalingGroupName, string instanceType, string machineImage, string machineAmiImage, IVpc vpc, bool allowAllOutbound, int minCapacity, int maxCapacity, int desiredCapacity, string region, ISecurityGroup securityGroup, string timeOutCreation, IRole role, ISubnet[] subnets, string keyPairName, bool enableProtectionFromScaleIn, List<BlockDevicesOptions> blockDevices = null, List<string> userData = null); //NOSONAR number of params
     }
 }

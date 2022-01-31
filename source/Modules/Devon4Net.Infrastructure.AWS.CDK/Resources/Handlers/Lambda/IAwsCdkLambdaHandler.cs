@@ -13,8 +13,8 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Lambda
         IFunction AddLogGroupTriggerToLambda(string id, IFunction lambdaFunction, ILogGroup logGroup);
         IFunction AddPermissionToLambda(string permissionId, IFunction lambdaFunction, string principal, string action);
         IFunction Create(string id, IFunctionProps lambdaProperties);
-        IFunctionProps CreateLambdaProperties(IBucket codeBucket, string codeFileName, string lambdaHandler, IRole lambdaRole, Runtime runtime, string lambdaName, IVpc vpc, ISecurityGroup securityGroup, ISubnet[] subnets, double memorySize = 512, int timeOutSeconds = 30, IDictionary<string, string> environmentVariables = null);
-        IFunctionProps CreateLambdaProperties(string codeFilePath, string lambdaHandler, IRole lambdaRole, Runtime runtime, string lambdaName, IVpc vpc, ISecurityGroup securityGroup, ISubnet[] subnets, double memorySize = 512, int timeOutSeconds = 30, IDictionary<string, string> environmentVariables = null);
+        IFunctionProps CreateLambdaProperties(IBucket codeBucket, string codeFileName, string lambdaHandler, IRole lambdaRole, Runtime runtime, string lambdaName, IVpc vpc, ISecurityGroup securityGroup, ISubnet[] subnets, double memorySize = 512, int timeOutSeconds = 30, IDictionary<string, string> environmentVariables = null); //NOSONAR number of params
+        IFunctionProps CreateLambdaProperties(string codeFilePath, string lambdaHandler, IRole lambdaRole, Runtime runtime, string lambdaName, IVpc vpc, ISecurityGroup securityGroup, ISubnet[] subnets, double memorySize = 512, int timeOutSeconds = 30, IDictionary<string, string> environmentVariables = null); //NOSONAR number of params
         ILogGroup CreateLogGroup(string id, string lambdaName, RetentionDays retentionTime);
         IRule CreateRuleForLambda(string id, string ruleName, string hour, string minute, IFunction targetFunction, bool enabled = true);
     }

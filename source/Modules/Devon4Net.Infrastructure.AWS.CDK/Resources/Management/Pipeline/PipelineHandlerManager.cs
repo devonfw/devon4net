@@ -12,7 +12,6 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
 {
     public partial class AwsCdkHandlerManager
     {
-
         public Pipeline CreatePipeline(string identification, string pipelineName, IBucket artifactBucket = null, IRole role = null, bool crossAccountKeys = false)
         {
             return HandlerResources.AwsCdkPipelineHandler.CreatePipeline(identification, pipelineName, artifactBucket, role, crossAccountKeys);
@@ -24,14 +23,14 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
             return pipeline.AddStage(stage);
         }
 
-        public IStage CreateS3ActionInStage(IStage stage, string actionName, IBucket sourceCodeBucket, string bucketKey, Artifact_ outputArtifact, IRole role = null, S3Trigger s3Trigger = S3Trigger.POLL, double? runOrder = null)
+        public IStage CreateS3ActionInStage(IStage stage, string actionName, IBucket sourceCodeBucket, string bucketKey, Artifact_ outputArtifact, IRole role = null, S3Trigger s3Trigger = S3Trigger.POLL, double? runOrder = null) //NOSONAR number of params
         {
             var action = HandlerResources.AwsCdkPipelineHandler.CreateS3Action(actionName, sourceCodeBucket, bucketKey, outputArtifact, role, s3Trigger, runOrder);
             stage.AddAction(action);
             return stage;
         }
 
-        public IStage CreateCloudFormationCreateUpdateStackActionInStage(IStage stage, string actionName, Artifact_ inputArtifact, string templatePath, string stackName, IRole deploymentRole, IRole role, CfnCapabilities[] cfnCapabilities)
+        public IStage CreateCloudFormationCreateUpdateStackActionInStage(IStage stage, string actionName, Artifact_ inputArtifact, string templatePath, string stackName, IRole deploymentRole, IRole role, CfnCapabilities[] cfnCapabilities) //NOSONAR number of params
         {
             var action = HandlerResources.AwsCdkPipelineHandler.CreateCloudFormationCreateUpdateStackAction(actionName, inputArtifact, templatePath, stackName, deploymentRole, role, cfnCapabilities);
             stage.AddAction(action);
@@ -40,7 +39,6 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
 
         public IStage CreateCodeBuildActionInStage(IStage stage, string actionName, Artifact_ inputArtifact, Artifact_ outputArtifact, IProject codeBuildProject, Dictionary<string, string> environmentVariables)
         {
-
             var environmentVariablesPlain = new Dictionary<string, IBuildEnvironmentVariable>();
 
             if (environmentVariables != null)
@@ -53,25 +51,23 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
                         Value = keyValue.Value
                     });
                 }
-
             }
             var action = HandlerResources.AwsCdkPipelineHandler.CreateCodeBuildAction(actionName, inputArtifact, outputArtifact, codeBuildProject, environmentVariablesPlain);
             stage.AddAction(action);
             return stage;
         }
-        public IStage CreateEcsDeployActionInStage(IStage stage, string actionName, IBaseService service, uint deploymentTimeout, Artifact_ inputArtifact, IRole role = null, string variableNamespace = null, double? runOrder = null)
+        public IStage CreateEcsDeployActionInStage(IStage stage, string actionName, IBaseService service, uint deploymentTimeout, Artifact_ inputArtifact, IRole role = null, string variableNamespace = null, double? runOrder = null) //NOSONAR number of params
         {
             var action = HandlerResources.AwsCdkPipelineHandler.CreateEcsDeployAction(actionName, service, deploymentTimeout, inputArtifact, role, variableNamespace, runOrder);
             stage.AddAction(action);
             return stage;
         }
 
-        public IStage CreateEcrActionInStage(IStage stage, string actionName, string imageTag, Artifact_ outputArtifact, IRepository repositoryInstance, IRole role = null, string variableNamespace = null, double? runOrder = null)
+        public IStage CreateEcrActionInStage(IStage stage, string actionName, string imageTag, Artifact_ outputArtifact, IRepository repositoryInstance, IRole role = null, string variableNamespace = null, double? runOrder = null) //NOSONAR number of params
         {
             var action = HandlerResources.AwsCdkPipelineHandler.CreateEcrAction(actionName, imageTag, outputArtifact, repositoryInstance, role, variableNamespace, runOrder);
             stage.AddAction(action);
             return stage;
         }
-
     }
 }

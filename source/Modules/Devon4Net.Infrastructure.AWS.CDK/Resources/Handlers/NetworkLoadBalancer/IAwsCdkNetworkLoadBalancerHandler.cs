@@ -5,6 +5,6 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.NetworkLoadBalance
 {
     public interface IAwsCdkNetworkLoadBalancerHandler
     {
-        INetworkLoadBalancer Create(string loadBalancerId, bool crossZoneEnabled, bool deletionProtection, bool internetFacing, string loadBalancerName, IVpc vpc, ISubnet[] subnets = null, CfnLoadBalancer.ISubnetMappingProperty[] subnetMappingProperties = null);
+        INetworkLoadBalancer Create(string loadBalancerId, bool crossZoneEnabled, bool deletionProtection, bool internetFacing, string loadBalancerName, IVpc vpc, ISubnet[] subnets = null, CfnLoadBalancer.ISubnetMappingProperty[] subnetMappingProperties = null); //NOSONAR number of params
     }
 }

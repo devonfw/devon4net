@@ -9,7 +9,7 @@ namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
         void AddRolePolicyStatement(ref RoleProps roleProperty, string policyName, string[] actions, string[] resources, Effect effect = Effect.ALLOW);
         IRole Create(string identification, IRoleProps roleProperties);
         IRoleProps CreateRoleProperties(string roleName, string[] assumedBy, IManagedPolicy[] managedPolicies, Dictionary<string, PolicyDocument> inlinePolicies = null);
-        IRoleProps CreateRoleProperties(string roleName, string[] assumedBy, string policyName, string[] actions, string[] resources, IManagedPolicy[] managedPolicies = null, Effect effect = Effect.ALLOW, Dictionary<string, PolicyDocument> inlinePolicies = null);
+        IRoleProps CreateRoleProperties(string roleName, string[] assumedBy, string policyName, string[] actions, string[] resources, IManagedPolicy[] managedPolicies = null, Effect effect = Effect.ALLOW, Dictionary<string, PolicyDocument> inlinePolicies = null); //NOSONAR number of params
         IManagedPolicy LocateAwsManagedPolicyByName(string policyName);
         IManagedPolicy LocateManagedPolicyByName(string policyName);
         IRole LocateRoleByArn(string id, string arn, IFromRoleArnOptions fromRoleArnOptions = null);

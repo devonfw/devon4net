@@ -21,7 +21,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker
         {
             var circuitBreakerOptions = services.GetTypedOptions<CircuitBreakerOptions>(configuration, "CircuitBreaker");
 
-            if (circuitBreakerOptions?.Endpoints == null || !circuitBreakerOptions.Endpoints.Any())
+            if (circuitBreakerOptions?.Endpoints == null || circuitBreakerOptions.Endpoints.Count == 0)
             {
                 return;
             }
@@ -49,7 +49,6 @@ namespace Devon4Net.Infrastructure.CircuitBreaker
                 {
                     client.DefaultRequestHeaders.Add(key, value);
                 }
-
             }).ConfigurePrimaryHttpMessageHandler(() =>
             {
                 var handler = GetHttpMessageHandler(endPointEntity.CompressionSupport, endPointEntity.AllowAutoRedirect);
@@ -69,9 +68,8 @@ namespace Devon4Net.Infrastructure.CircuitBreaker
                 handler.ClientCertificates.Add(certificate);
                 handler.ClientCertificateOptions = ClientCertificateOption.Manual;
                 return handler;
-
             })
-                .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(waitAndSyncList, (result, timeSpan, retryCount, context) =>
+                .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(waitAndSyncList, (result, _, retryCount, _) =>
                 {
                     if (waitAndSyncList.Count != retryCount) return;
                     throw new HttpRequestException($"Error getting {endPointEntity.Name} ({endPointEntity.BaseAddress})", result.Exception);
@@ -96,7 +94,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker
         {
             return new System.Net.Http.HttpClientHandler
             {
-                ServerCertificateCustomValidationCallback = (m, c, a, e) => !CheckCertificate,
+                ServerCertificateCustomValidationCallback = (_, _, _, _) => !CheckCertificate,
                 AutomaticDecompression = compressionSupport ? System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate : System.Net.DecompressionMethods.None,
                 AllowAutoRedirect = allowRedirect
             };

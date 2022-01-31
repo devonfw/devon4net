@@ -8,7 +8,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management.S3
 {
     public interface IS3BucketsManager
     {
-        IBucket AddS3Bucket(string bucketName, int expirationDays = 0, IList<ILifecycleRule> lifecycleRules = null, RemovalPolicy removalPolicy = RemovalPolicy.DESTROY, BucketEncryption encryption = BucketEncryption.KMS_MANAGED, string webSiteRedirectHost = "", bool versioned = true, bool enforceSSL = false, bool blockPublicAccess = true);
+        IBucket AddS3Bucket(string bucketName, int expirationDays = 0, IList<ILifecycleRule> lifecycleRules = null, RemovalPolicy removalPolicy = RemovalPolicy.DESTROY, BucketEncryption encryption = BucketEncryption.KMS_MANAGED, string webSiteRedirectHost = "", bool versioned = true, bool enforceSSL = false, bool blockPublicAccess = true); //NOSONAR number of params
         IBucket LocateBucketByName(string identification, string bucketName);
         IBucket LocateBucketByArn(string identification, string arn);
         ILifecycleRule CreateLifecycleRule(string id, int expirationTime, string expirationTagName, string expirationTagValue, bool isVersionedBucket, int? previousVersionsExpirationDays = null);

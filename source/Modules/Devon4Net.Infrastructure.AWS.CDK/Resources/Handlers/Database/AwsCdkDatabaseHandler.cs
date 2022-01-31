@@ -251,9 +251,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Database
             throw new ArgumentException($"Could not parse {instanceSize} to the desired enum, please check the documentation");
         }
 
-        private void BasicDatabaseInfra(IVpc vpc, string secretName, string securityId, string securityGroupId,
-            SubnetType subnetType, string defaultSubnetDomainSeparator, string subnets, out ISecurityGroup securityGroup,
-            out ISecret secret, out ISubnetSelection subnetSelection)
+        private void BasicDatabaseInfra(IVpc vpc, string secretName, string securityId, string securityGroupId,             SubnetType subnetType, string defaultSubnetDomainSeparator, string subnets, out ISecurityGroup securityGroup,             out ISecret secret, out ISubnetSelection subnetSelection) //NOSONAR number of params
         {
             if (vpc == null)
             {

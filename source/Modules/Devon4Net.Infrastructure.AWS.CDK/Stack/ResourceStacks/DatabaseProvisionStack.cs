@@ -24,7 +24,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 {
                     case "sqlserver":
                         var secGroup = LocateSecurityGroup(databaseOption.SecurityGroupId, $"SG ith id {databaseOption.SecurityGroupId} not found in the JSON.");
-                        database = AwsCdkHandler.AddDatabase(SqlServerEngineVersion.VER_13, databaseOption.DatabaseName, databaseOption.DatabaseName, databaseOption.UserName, databaseOption.Password, StorageType.STANDARD, InstanceClass.BURSTABLE3, databaseOption.InstanceSize, vpc, secGroup, databaseOption.SecurityGroupId, storageEncrypted: true, allocatedStorageGb: databaseOption.AllocatedStorageGb, licenseOption: databaseOption.LicenseOption, edition: databaseOption.Edition);
+                        database = AwsCdkHandler.AddDatabase(SqlServerEngineVersion.VER_13, databaseOption.DatabaseName, databaseOption.DatabaseName, databaseOption.UserName, databaseOption.Password, StorageType.STANDARD, InstanceClass.BURSTABLE3, databaseOption.InstanceSize, vpc, secGroup, storageEncrypted: true, allocatedStorageGb: databaseOption.AllocatedStorageGb, licenseOption: databaseOption.LicenseOption, edition: databaseOption.Edition);
                         break;
                     default:
                         StackResources.DynamicSecrets.Add(databaseOption.Secrets[DatabaseOptionConsts.PasswordAttributeName], passwordSecret);
@@ -35,7 +35,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             }
         }
 
-        private void GetDatabaseResources(DatabaseOptions databaseOption, out double? databasePort, out IVpc vpc, out ISecurityGroup securityGroup, out ISubnetGroup subnetGroup, out bool deletionProtection, out Duration enchancedMonitoringInterval, out ISecret passwordSecret, out IParameterGroup parameterGroup)
+        private void GetDatabaseResources(DatabaseOptions databaseOption, out double? databasePort, out IVpc vpc, out ISecurityGroup securityGroup, out ISubnetGroup subnetGroup, out bool deletionProtection, out Duration enchancedMonitoringInterval, out ISecret passwordSecret, out IParameterGroup parameterGroup) //NOSONAR number of params
         {
             // Parse database port
             databasePort = ParseDatabasePort(databaseOption);

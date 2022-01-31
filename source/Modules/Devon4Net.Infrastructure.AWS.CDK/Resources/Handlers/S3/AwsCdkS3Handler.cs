@@ -13,7 +13,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.S3
         {
         }
 
-        public IBucket Create(string bucketName, int expirationDays, IList<ILifecycleRule> lifecycleRules = null, RemovalPolicy removalPolicy = RemovalPolicy.DESTROY, BucketEncryption encryption = BucketEncryption.KMS_MANAGED, string webSiteRedirectHost = "", bool versioned = true, bool enforceSSL = false, bool blockPublicAccess = true)
+        public IBucket Create(string bucketName, int expirationDays, IList<ILifecycleRule> lifecycleRules = null, RemovalPolicy removalPolicy = RemovalPolicy.DESTROY, BucketEncryption encryption = BucketEncryption.KMS_MANAGED, string webSiteRedirectHost = "", bool versioned = true, bool enforceSSL = false, bool blockPublicAccess = true) //NOSONAR number of params
         {
             return CreateBucket(new BucketEntity
             {

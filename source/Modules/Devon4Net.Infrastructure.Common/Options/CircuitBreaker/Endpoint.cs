@@ -13,7 +13,6 @@
         public string SslProtocol { get; set; }
         public bool CompressionSupport { get; set; }
         public bool AllowAutoRedirect { get; set; }
-        
 
         public Endpoint()
         {
@@ -38,7 +37,6 @@
         {
             return WaitAndRetrySeconds ?? new List<double> { 0.001 };
         }
-
 
         public void AddWaitAndRetry(int secondsToWait)
         {
@@ -69,6 +67,6 @@
                 if (keyExists) throw new ArgumentNullException(nameof(key), "The provided key already exits");
                 Headers.Add(key, value);
             }
-        }        
+        }
     }
 }
