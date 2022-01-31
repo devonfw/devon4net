@@ -5,7 +5,6 @@ using Amazon.Lambda.Core;
 using Devon4Net.Application.DynamoDb.business.DynamoDbManagement.Dto;
 using Devon4Net.Infrastructure.AWS.DynamoDb.Common;
 using Devon4Net.Infrastructure.AWS.DynamoDb.Constants;
-using Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Entities;
 using Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository;
 using Devon4Net.Infrastructure.AWS.Lambda.Interfaces;
 using System;
