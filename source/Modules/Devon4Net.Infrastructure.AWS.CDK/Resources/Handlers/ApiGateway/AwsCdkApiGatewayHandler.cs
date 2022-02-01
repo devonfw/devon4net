@@ -5,6 +5,7 @@ using Amazon.CDK.AWS.Lambda;
 using Amazon.CDK.AWS.Logs;
 using Constructs;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers;
+using Microsoft.Extensions.Options;
 
 namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
 {
@@ -122,6 +123,15 @@ namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
                 RemovalPolicy = RemovalPolicy.DESTROY,
                 Retention = retentionTime
             });
+        }
+
+        public void AddApiGatewayResourceMethod(Amazon.CDK.AWS.APIGateway.Resource apiResource, Devon4Net.Infrastructure.AWS.CDK.Options.Resources.Method method, IFunction apiLambdaFunction)
+        {
+            apiResource.AddMethod(method.HttpMethod, new LambdaIntegration(apiLambdaFunction, new LambdaIntegrationOptions
+            {
+                AllowTestInvoke = method.IntegrationLambdaOptions.AllowTestInvoke,
+                Proxy = method.IntegrationLambdaOptions.Proxy
+            }));
         }
     }
 }

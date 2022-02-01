@@ -9,5 +9,10 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
         {
             return HandlerResources.AwsCdkApiGatewayHandler.CreateLambdaRestApi(identification, restApiName, handler, binaryMediaTypes, allowedIps, deniedIps, stageName, endpointType, enableAccessLogging, tracingEnabled, cloudWatchLoggingLevel);
         }
+
+        public void AddApiGatewayResourceMethod(Amazon.CDK.AWS.APIGateway.Resource apiResource, Devon4Net.Infrastructure.AWS.CDK.Options.Resources.Method method, IFunction apiLambdaFunction)
+        {
+            HandlerResources.AwsCdkApiGatewayHandler.AddApiGatewayResourceMethod(apiResource, method, apiLambdaFunction);
+        }
     }
 }
