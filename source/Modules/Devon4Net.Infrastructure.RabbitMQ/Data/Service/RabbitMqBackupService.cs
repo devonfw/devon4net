@@ -1,6 +1,6 @@
 ﻿using Devon4Net.Infrastructure.Extensions;
 using Devon4Net.Infrastructure.Extensions.Helpers;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Devon4Net.Infrastructure.RabbitMQ.Commands;
 using Devon4Net.Infrastructure.RabbitMQ.Common;
 using Devon4Net.Infrastructure.RabbitMQ.Domain.Database;
@@ -13,10 +13,9 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
     public class RabbitMqBackupService : IRabbitMqBackupService
     {
         public bool UseExternalDatabase { get; set; }
-        private IJsonHelper JsonHelper { get; set; }
+        private IJsonHelper JsonHelper { get; }
         private string ContextConnectionString { get; set; }
         private string ContextProvider { get; set; }
-
 
         public RabbitMqBackupService(RabbitMqBackupContext context, IJsonHelper jsonHelper)
         {
@@ -86,7 +85,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
 
             if (command?.InternalMessageIdentifier == null || command.InternalMessageIdentifier.IsNullOrEmptyGuid())
             {
-                throw new ArgumentException($"The provided command  and the command identifier cannot be null ");
+                throw new ArgumentException("The provided command  and the command identifier cannot be null");
             }
         }
 
@@ -99,7 +98,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
         /// <returns>The database context to backup the messages</returns>
         private RabbitMqBackupContext CreateContext()
         {
-            var errorMessage = "The connection string from context cannot be null or the database provider is not supported";
+            const string errorMessage = "The connection string from context cannot be null or the database provider is not supported";
             if (string.IsNullOrEmpty(ContextConnectionString))
             {
                 Devon4NetLogger.Error(errorMessage);

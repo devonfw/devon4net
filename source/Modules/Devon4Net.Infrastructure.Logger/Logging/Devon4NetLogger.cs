@@ -1,5 +1,5 @@
 ﻿
-namespace Devon4Net.Infrastructure.Log
+namespace Devon4Net.Infrastructure.Logger.Logging
 {
     public static class Devon4NetLogger
     {

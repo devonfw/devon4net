@@ -1,5 +1,5 @@
 ﻿using Devon4Net.Application.GrpcClient.Protos;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +12,7 @@ namespace Devon4Net.Application.GrpcClient.Controllers
     [Route("[controller]")]
     public class GrpcGreeterClientController : ControllerBase
     {
-        private GrpcChannel GrpcChannel { get; set; }
+        private GrpcChannel GrpcChannel { get; }
 
         /// <summary>
         /// GrpcGreeterClientController

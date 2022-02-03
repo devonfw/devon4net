@@ -1,6 +1,6 @@
 ﻿using Devon4Net.Infrastructure.Extensions;
 using Devon4Net.Infrastructure.Extensions.Helpers;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Devon4Net.Infrastructure.RabbitMQ.Commands;
 using Devon4Net.Infrastructure.RabbitMQ.Common;
 using Devon4Net.Infrastructure.RabbitMQ.Domain.Entities;
@@ -11,21 +11,21 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
 {
     public class RabbitMqBackupLiteDbService : IRabbitMqBackupLiteDbService
     {
-        private LiteDb.Repository.IRepository<RabbitBackup> RabbitMqBackupLiteDbRepository { get; set; }
-        private IJsonHelper JsonHelper { get; set; }
+        private LiteDb.Repository.IRepository<RabbitBackup> RabbitMqBackupLiteDbRepository { get; }
+        private IJsonHelper JsonHelper { get; }
 
         public RabbitMqBackupLiteDbService(LiteDb.Repository.IRepository<RabbitBackup> rabbitMqBackupLiteDbRepository, IJsonHelper jsonHelper)
         {
             RabbitMqBackupLiteDbRepository = rabbitMqBackupLiteDbRepository;
             JsonHelper = jsonHelper;
         }
-        public BsonValue CreateMessageBackup(Command command, QueueActions action = QueueActions.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null) 
+        public BsonValue CreateMessageBackup(Command command, QueueActions action = QueueActions.Sent, bool increaseRetryCounter = false, string additionalData = null, string errorData = null)
         {
             try
             {
                 if (command?.InternalMessageIdentifier == null || command.InternalMessageIdentifier.IsNullOrEmptyGuid())
                 {
-                    throw new ArgumentException($"The provided command  and the command identifier cannot be null ");
+                    throw new ArgumentException("The provided command  and the command identifier cannot be null ");
                 }
 
                 var backUp = new RabbitBackup
@@ -42,9 +42,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
                     Error = string.IsNullOrEmpty(errorData) ? string.Empty : errorData
                 };
 
-                var result = RabbitMqBackupLiteDbRepository.Create(backUp);
-                
-                return result;
+                return RabbitMqBackupLiteDbRepository.Create(backUp);
             }
             catch (Exception ex)
             {

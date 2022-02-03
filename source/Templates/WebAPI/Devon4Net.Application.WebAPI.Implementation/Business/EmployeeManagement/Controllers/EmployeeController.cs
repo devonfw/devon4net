@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Devon4Net.Application.WebAPI.Implementation.Business.EmployeeManagement.Service;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Devon4Net.Application.WebAPI.Implementation.Business.EmployeeManagement.Dto;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;

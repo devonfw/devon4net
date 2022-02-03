@@ -1,6 +1,7 @@
 using Devon4Net.Application.WebAPI.Configuration;
 using Devon4Net.Application.WebAPI.Configuration.Application;
 using Devon4Net.Infrastructure.AWS.Serverless;
+using Devon4Net.Infrastructure.Logger;
 using Devon4Net.Infrastructure.Middleware.Middleware;
 using Devon4Net.Infrastructure.Swagger;
 
@@ -20,7 +21,6 @@ builder.Services.SetupSwagger(builder.Configuration);
 var app = builder.Build();
 
 #region devon app
-
 app.ConfigureSwaggerEndPoint();
 app.SetupMiddleware(builder.Services);
 app.SetupCors();

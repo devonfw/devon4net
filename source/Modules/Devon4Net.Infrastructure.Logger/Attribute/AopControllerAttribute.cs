@@ -2,13 +2,14 @@
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Devon4Net.Infrastructure.Log.Attribute
+namespace Devon4Net.Infrastructure.Logger.Attribute
 {
     public class AopControllerAttribute : ActionFilterAttribute
     {
-        private bool UseAopObjectTrace { get; set; }
+        private bool UseAopObjectTrace { get; }
 
         public AopControllerAttribute(bool useAop)
         {
@@ -91,12 +92,12 @@ namespace Devon4Net.Infrastructure.Log.Attribute
             }
         }
 
-        public override Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
+        public override async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
             try
             {
                 if (context.Result != null) LogEvent("OnResultExecutionAsync", context.Result as Microsoft.AspNetCore.Mvc.ObjectResult);
-                return base.OnResultExecutionAsync(context, next);
+                await base.OnResultExecutionAsync(context, next).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -183,6 +184,5 @@ namespace Devon4Net.Infrastructure.Log.Attribute
                 ActionArguments = UseAopObjectTrace ? PrettyPrint(actionArguments) : "AOP Arguments not enabled!"
             };
         }
-
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Devon4Net.Domain.UnitOfWork.Enums;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +22,7 @@ namespace Devon4Net.Domain.UnitOfWork.Common
         public static async Task SetupDatabase<T>(this IServiceCollection services, IConfiguration configuration, string connectionStringName, DatabaseType databaseType, ServiceLifetime serviceLifetime = ServiceLifetime.Transient, bool migrate = false, CosmosConfigurationParams cosmosConfigurationParams = null) where T : DbContext
         {
             IConfigurationSection connectionString = GetConnectionString(configuration, connectionStringName);
-            
+
             ServiceLifetime = serviceLifetime;
 
             SetDatabase<T>(services, databaseType, cosmosConfigurationParams, connectionString.Value);
@@ -106,7 +106,7 @@ namespace Devon4Net.Domain.UnitOfWork.Common
                     break;
                 case DatabaseType.Cosmos:
                     if (cosmosConfigurationParams == null)
-                        throw new ArgumentException($"The Cosmos configuration can not be null.");
+                        throw new ArgumentException("The Cosmos configuration can not be null.");
                     services.AddDbContext<T>(options => options.UseCosmos(cosmosConfigurationParams.Endpoint,
                         cosmosConfigurationParams.Key, cosmosConfigurationParams.DatabaseName), ServiceLifetime);
                     break;

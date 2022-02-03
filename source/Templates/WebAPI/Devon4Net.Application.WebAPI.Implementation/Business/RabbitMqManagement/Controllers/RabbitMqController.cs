@@ -1,5 +1,5 @@
 ﻿using Devon4Net.Infrastructure.Common.Options.RabbitMq;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Devon4Net.Application.WebAPI.Implementation.Business.RabbitMqManagement.Commands;
 using Devon4Net.Application.WebAPI.Implementation.Business.RabbitMqManagement.Handlers;
 using Microsoft.AspNetCore.Authorization;
@@ -19,8 +19,8 @@ namespace Devon4Net.Application.WebAPI.Implementation.Business.RabbitMqManagemen
     [EnableCors("CorsPolicy")]
     public class RabbitMqController : ControllerBase
     {
-        private TodoRabbitMqHandler TodoRabbitMqHandler { get; set; }
-        private RabbitMqOptions RabbitMqOptions { get; set; }
+        private TodoRabbitMqHandler TodoRabbitMqHandler { get; }
+        private RabbitMqOptions RabbitMqOptions { get; }
 
         /// <summary>
         /// Class constructor
@@ -50,8 +50,10 @@ namespace Devon4Net.Application.WebAPI.Implementation.Business.RabbitMqManagemen
         {
             Devon4NetLogger.Debug("Executing CreateTodo from controller RabbitMqController");
 
-            if (RabbitMqOptions?.Hosts == null || !RabbitMqOptions.Hosts.Any())
+            if (RabbitMqOptions?.Hosts == null || RabbitMqOptions.Hosts.Count == 0)
+            {
                 return StatusCode(StatusCodes.Status500InternalServerError, "No RabbitMq instance set up");
+            }
 
             if (string.IsNullOrEmpty(todoDescription))
             {

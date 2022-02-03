@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Devon4Net.Infrastructure.Common.Exceptions;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.AspNetCore.Http;
 
 namespace Devon4Net.Infrastructure.Middleware.Middleware.Exception
@@ -20,9 +20,7 @@ namespace Devon4Net.Infrastructure.Middleware.Middleware.Exception
             {
                 await _next(context).ConfigureAwait(false);
             }
-#pragma warning disable CA1031 // #warning directive
             catch (System.Exception ex)
-#pragma warning restore CA1031 // #warning directive
             {
                 await HandleException(ref context, ref ex).ConfigureAwait(false);
             }

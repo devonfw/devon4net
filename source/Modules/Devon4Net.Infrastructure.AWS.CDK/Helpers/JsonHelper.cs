@@ -8,13 +8,14 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Helpers
     public class JsonHelper : IJsonHelper
     {
         private const string BuiltInTypes = "String, DateTime, DateTimeKind, DateTimeOffset, AsyncCallback, AttributeTargets, AttributeUsageAttribute, Boolean, Byte, Char, CharEnumerator, Base64FormattingOptions, DayOfWeek, DBNull, Decimal, Double, EnvironmentVariableTarget, EventHandler, GCCollectionMode, Guid, Int16, Int32, Int64, IntPtr, SByte, Single, TimeSpan, TimeZoneInfo, TypeCode, UInt16, UInt32, UInt64, UIntPtr";
-        private readonly JsonSerializerOptions CamelJsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull };
+        private JsonSerializerOptions CamelJsonSerializerOptions { get; }
 
-        private JsonSerializerOptions JsonSerializerOptions { get; set; }
+        private JsonSerializerOptions JsonSerializerOptions { get; }
 
         public JsonHelper()
         {
             JsonSerializerOptions = null;
+            CamelJsonSerializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull };
         }
 
         public JsonHelper(JsonSerializerOptions jsonSerializerOptions)

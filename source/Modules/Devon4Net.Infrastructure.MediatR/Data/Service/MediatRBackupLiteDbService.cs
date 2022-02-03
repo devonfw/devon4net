@@ -1,6 +1,6 @@
 ﻿using Devon4Net.Infrastructure.Extensions;
 using Devon4Net.Infrastructure.LiteDb.Repository;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Devon4Net.Infrastructure.MediatR.Common;
 using Devon4Net.Infrastructure.MediatR.Domain.Entities;
 using Devon4Net.Infrastructure.MediatR.Domain.ServiceInterfaces;
@@ -11,8 +11,8 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
 {
     public class MediatRBackupLiteDbService : IMediatRBackupLiteDbService
     {
-        private IRepository<MediatRBackup> MediatRBackupLiteDbRepository { get; set; }
-        private IJsonHelper JsonHelper { get; set; }
+        private IRepository<MediatRBackup> MediatRBackupLiteDbRepository { get; }
+        private IJsonHelper JsonHelper { get; }
 
         public MediatRBackupLiteDbService(IRepository<MediatRBackup> mediatRBackupLiteDbRepository, IJsonHelper jsonHelper)
         {
@@ -27,7 +27,7 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
             {
                 if (command?.InternalMessageIdentifier == null || command.InternalMessageIdentifier.IsNullOrEmptyGuid())
                 {
-                    throw new ArgumentException($"The provided command  and the command identifier cannot be null ");
+                    throw new ArgumentException("The provided command  and the command identifier cannot be null");
                 }
 
                 var backUp = new MediatRBackup

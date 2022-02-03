@@ -1,4 +1,4 @@
-﻿namespace Devon4Net.Infrastructure.Log.Attribute
+﻿namespace Devon4Net.Infrastructure.Logger.Attribute
 {
     public class AopController
     {

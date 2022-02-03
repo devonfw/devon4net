@@ -26,5 +26,4 @@
 
         public const string XsrfToken = "XSRF-TOKEN";
     }
-
 }

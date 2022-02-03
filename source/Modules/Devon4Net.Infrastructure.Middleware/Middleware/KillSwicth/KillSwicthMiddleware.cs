@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Devon4Net.Infrastructure.Common.Exceptions;
 using Devon4Net.Infrastructure.Common.Options.KillSwitch;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 

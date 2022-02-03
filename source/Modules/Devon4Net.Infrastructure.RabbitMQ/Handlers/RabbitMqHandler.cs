@@ -1,4 +1,4 @@
-﻿using Devon4Net.Infrastructure.Log;
+﻿using Devon4Net.Infrastructure.Logger.Logging;
 using Devon4Net.Infrastructure.RabbitMQ.Commands;
 using Devon4Net.Infrastructure.RabbitMQ.Common;
 using Devon4Net.Infrastructure.RabbitMQ.Domain.ServiceInterfaces;

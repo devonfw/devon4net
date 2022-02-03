@@ -1,4 +1,4 @@
-﻿using Devon4Net.Infrastructure.Log;
+﻿using Devon4Net.Infrastructure.Logger.Logging;
 using Devon4Net.Infrastructure.MediatR.Common;
 using Devon4Net.Infrastructure.MediatR.Domain.ServiceInterfaces;
 using MediatR;
@@ -46,7 +46,6 @@ namespace Devon4Net.Infrastructure.MediatR.Handler
             }
             await BackUpMessage(request, status).ConfigureAwait(false);
             return result;
-
         }
 
         public abstract Task<TResponse> HandleAction(TRequest request, CancellationToken cancellationToken);
@@ -61,12 +60,10 @@ namespace Devon4Net.Infrastructure.MediatR.Handler
         {
             MediatRBackupLiteDbService?.CreateResponseMessageBackup(request, queueAction, increaseRetryCounter, additionalData, errorData);
 
-            if (MediatRBackupService != null && MediatRBackupService.UseExternalDatabase)
+            if (MediatRBackupService?.UseExternalDatabase == true)
             {
                 await MediatRBackupService.CreateResponseMessageBackup(request, queueAction, increaseRetryCounter, additionalData, errorData).ConfigureAwait(false);
             }
         }
-
     }
-
 }

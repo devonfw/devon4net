@@ -72,7 +72,8 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
 
                 var message = ex?.Message;
                 var innerException = ex?.InnerException;
-                Logger.LogError("Message '{name}': \"{message}\" | InnerException: \"{innerException}\"", name, message, innerException);
+                var stackTrace = ex?.StackTrace;
+                Logger.LogError("Message '{name}': \"{message}\" | InnerException: \"{innerException}\" | StackTrace: \"{stacktrace}\"", name, message, innerException, stackTrace);
 
                 throw;
             }

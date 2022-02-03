@@ -1,4 +1,4 @@
-﻿using Devon4Net.Infrastructure.Log;
+﻿using Devon4Net.Infrastructure.Logger.Logging;
 using FluentValidation;
 using FluentValidation.Results;
 

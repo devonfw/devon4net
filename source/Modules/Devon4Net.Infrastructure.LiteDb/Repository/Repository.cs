@@ -1,13 +1,13 @@
 ﻿using Devon4Net.Infrastructure.LiteDb.LiteDb;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using LiteDB;
 
 namespace Devon4Net.Infrastructure.LiteDb.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private LiteDatabase LiteDb { get; set; }
-        private string CollectionName { get; set; }
+        private LiteDatabase LiteDb { get; }
+        private string CollectionName { get; }
 
         public Repository(ILiteDbContext liteDbContext)
         {
@@ -18,7 +18,7 @@ namespace Devon4Net.Infrastructure.LiteDb.Repository
         public BsonValue Create(T entity)
         {
             var result = LiteDb.GetCollection<T>(CollectionName).Insert(entity);
-            
+
             return result;
         }
 
@@ -39,7 +39,7 @@ namespace Devon4Net.Infrastructure.LiteDb.Repository
                 return LiteDb.GetCollection<T>(CollectionName).DeleteAll();
             }
 
-            var errorMessage = "Please check the predicate is null and the deleteAllCheck param as well. The provided predicate is null and the input param deleteAllCheck is to false. If you want to delete all the collection please set the deleteAllCheck param to true.";
+            const string errorMessage = "Please check the predicate is null and the deleteAllCheck param as well. The provided predicate is null and the input param deleteAllCheck is to false. If you want to delete all the collection please set the deleteAllCheck param to true.";
             Devon4NetLogger.Error(errorMessage);
             throw new ArgumentException(errorMessage);
         }

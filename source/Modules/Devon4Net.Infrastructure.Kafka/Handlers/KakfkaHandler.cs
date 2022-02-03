@@ -3,7 +3,7 @@ using Confluent.Kafka.Admin;
 using Devon4Net.Infrastructure.Common.Options.Kafka;
 using Devon4Net.Infrastructure.Kafka.Common.Const;
 using Devon4Net.Infrastructure.Kafka.Exceptions;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Devon4Net.Infrastructure.Kafka.Handlers
@@ -26,7 +26,6 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
             try
             {
                 result = await producer.ProduceAsync(producerOptions.Topic, new Message<T, TV> { Key = key, Value = value }).ConfigureAwait(false);
-
             }
             catch (ProduceException<string, string> e)
             {
@@ -69,10 +68,10 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
         {
             if (string.IsNullOrEmpty(producerId))
             {
-                throw new ProducerNotFoundException($"The producerId param can not be null or empty");
+                throw new ProducerNotFoundException("The producerId param can not be null or empty");
             }
 
-            var producerOptions = KafkaOptions.Producers.FirstOrDefault(p => p.ProducerId == producerId);
+            var producerOptions = KafkaOptions.Producers.Find(p => p.ProducerId == producerId);
 
             if (producerOptions == null)
             {
@@ -111,7 +110,6 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
             return result;
         }
 
-
         #endregion
 
         #region Consumer
@@ -120,10 +118,10 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
         {
             if (string.IsNullOrEmpty(consumerId))
             {
-                throw new ConsumerNotFoundException($"The consumerId param can not be null or empty");
+                throw new ConsumerNotFoundException("The consumerId param can not be null or empty");
             }
 
-            var consumerOptions = KafkaOptions.Consumers.FirstOrDefault(p => p.ConsumerId == consumerId);
+            var consumerOptions = KafkaOptions.Consumers.Find(p => p.ConsumerId == consumerId);
 
             if (consumerOptions == null)
             {
@@ -140,14 +138,8 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
             {
                 consumer.SetErrorHandler((_, e) => Devon4NetLogger.Error(new ConsumerException($"Error code {e.Code} : {e.Reason}")));
                 consumer.SetStatisticsHandler((_, json) => Devon4NetLogger.Information($"Statistics: {json}"));
-                consumer.SetPartitionsAssignedHandler((c, partitions) =>
-                {
-                    Devon4NetLogger.Information($"Assigned partitions: [{string.Join(", ", partitions)}]");
-                });
-                consumer.SetPartitionsRevokedHandler((c, partitions) =>
-                {
-                    Devon4NetLogger.Information($"Revoking assignment: [{string.Join(", ", partitions)}]");
-                });
+                consumer.SetPartitionsAssignedHandler((_, partitions) => Devon4NetLogger.Information($"Assigned partitions: [{string.Join(", ", partitions)}]"));
+                consumer.SetPartitionsRevokedHandler((_, partitions) => Devon4NetLogger.Information($"Revoking assignment: [{string.Join(", ", partitions)}]"));
 
                 result = consumer.Build();
                 if (!string.IsNullOrEmpty(consumerOptions.Topics)) result.Subscribe(consumerOptions.GetTopics());
@@ -230,10 +222,10 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
         {
             if (string.IsNullOrEmpty(adminId))
             {
-                throw new AdminNotFoundException($"The adminId param can not be null or empty");
+                throw new AdminNotFoundException("The adminId param can not be null or empty");
             }
 
-            var adminOptions = KafkaOptions.Administration.FirstOrDefault(p => p.AdminId == adminId);
+            var adminOptions = KafkaOptions.Administration.Find(p => p.AdminId == adminId);
 
             if (adminOptions == null)
             {

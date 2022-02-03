@@ -1,4 +1,4 @@
-﻿using Devon4Net.Infrastructure.Log;
+﻿using Devon4Net.Infrastructure.Logger.Logging;
 using Devon4Net.Infrastructure.MediatR.Handler;
 using Devon4Net.Application.WebAPI.Implementation.Business.MediatRManagement.Commands;
 using Devon4Net.Application.WebAPI.Implementation.Business.MediatRManagement.Dto;
@@ -18,7 +18,7 @@ namespace Devon4Net.Application.WebAPI.Implementation.Business.MediatRManagement
     [EnableCors("CorsPolicy")]
     public class MediatRController : ControllerBase
     {
-        private IMediatRHandler MediatRHandler { get; set; }
+        private IMediatRHandler MediatRHandler { get; }
 
         /// <summary>
         /// Mediator sample controller

@@ -5,7 +5,7 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Devon4Net.Infrastructure.Common.Common.IO;
 using Devon4Net.Infrastructure.Common.Common.Http;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace Devon4Net.Application.WebAPI.Configuration.Application
@@ -18,7 +18,6 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             var sslProtocol = configuration["devonfw:Kestrel:SslProtocol"];
             _ = int.TryParse(configuration["devonfw:Kestrel:ApplicationPort"], out int applicationPort);
             _ = bool.TryParse(configuration["devonfw:Kestrel:UseHttps"], out bool useHttps);
-
 
             webBuilder.UseKestrel(options =>
             {

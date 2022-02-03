@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka;
 using Devon4Net.Application.Kafka.Business.KafkaManagement.Handlers;
 using Devon4Net.Infrastructure.Kafka.Handlers;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,8 +14,8 @@ namespace Devon4Net.Application.Kafka.Business.Controllers
     [Route("[controller]")]
     public class KafkaController : ControllerBase
     {
-        private MessageProducerHandler MessageProducer { get; set; }
-        private IKakfkaHandler KafkaHandler { get; set; }
+        private MessageProducerHandler MessageProducer { get; }
+        private IKakfkaHandler KafkaHandler { get; }
 
         /// <summary>
         /// KafkaController constructor
@@ -64,7 +64,6 @@ namespace Devon4Net.Application.Kafka.Business.Controllers
         {
             Devon4NetLogger.Debug("Executing CreateTopic from controller KafkaController");
             return Ok(await KafkaHandler.CreateTopic("Admin1", topicName).ConfigureAwait(false));
-
         }
 
         /// <summary>
@@ -83,7 +82,6 @@ namespace Devon4Net.Application.Kafka.Business.Controllers
         {
             Devon4NetLogger.Debug("Executing DeleteTopicMessage from controller KafkaController");
             return Ok(await KafkaHandler.DeleteTopic("Admin1", new List<string>{ topicName }).ConfigureAwait(false));
-
         }
     }
 }

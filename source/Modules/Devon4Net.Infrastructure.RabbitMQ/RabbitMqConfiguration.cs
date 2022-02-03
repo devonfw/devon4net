@@ -5,7 +5,7 @@ using Devon4Net.Infrastructure.Common.Options.RabbitMq;
 using Devon4Net.Infrastructure.Extensions.Helpers;
 using Devon4Net.Infrastructure.LiteDb.LiteDb;
 using Devon4Net.Infrastructure.LiteDb.Repository;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Devon4Net.Infrastructure.RabbitMQ.Data.Service;
 using Devon4Net.Infrastructure.RabbitMQ.Domain.Database;
 using Devon4Net.Infrastructure.RabbitMQ.Domain.Entities;
@@ -40,7 +40,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
 
                 var connection = new ConnectionConfiguration
                 {
-                    Hosts = rabbitMqOptions.Hosts.Select(GetHostConfiguration).ToList(),
+                    Hosts = rabbitMqOptions.Hosts.ConvertAll(GetHostConfiguration),
                     PersistentMessages = rabbitMqOptions.PersistentMessages,
                     PublisherConfirms = rabbitMqOptions.PublisherConfirms,
                     Product = rabbitMqOptions.Product,
@@ -53,7 +53,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
                     RequestedHeartbeat = requestedHeartbeat,
                 };
 
-                services.AddSingleton(RabbitHutch.CreateBus(connection, serviceRegister => serviceRegister.Register(serviceProvider => Log.Logger)));
+                services.AddSingleton(RabbitHutch.CreateBus(connection, serviceRegister => serviceRegister.Register(_ => Log.Logger)));
             }
             catch (ArgumentNullException ex) { Devon4NetLogger.Error(ex); }
             catch (EasyNetQException ex) { Devon4NetLogger.Error(ex); }
@@ -64,7 +64,8 @@ namespace Devon4Net.Application.WebAPI.Configuration
         public static void AddRabbitMqHandler<T>(this IServiceCollection services, bool subscribeToQueue) where T : class
         {
             var memberInfo = typeof(T).BaseType;
-            if (memberInfo != null && !memberInfo.Name.Contains("RabbitMqHandler"))
+
+            if (memberInfo?.Name.Contains("RabbitMqHandler") == false)
             {
                 throw new ArgumentException($"The provided type {typeof(T).FullName} does not inherit from RabbitMqHandler");
             }
@@ -89,9 +90,9 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static void SetupRabbitMqBackupLocalDatabase(IServiceCollection services, RabbitMqOptions rabbitMqOptions)
         {
             Devon4NetLogger.Information("Please setup your database in order to have the RabbitMq messaging backup feature");
-            if (rabbitMqOptions.Backup == null || !rabbitMqOptions.Backup.UseLocalBackup) return;
+            if (rabbitMqOptions.Backup?.UseLocalBackup != true) return;
             Devon4NetLogger.Information("RabbitMq messaging backup feature is going to be used via LiteDb");
-            
+
             services.AddSingleton<ILiteDbContext, RabbitMqBackupLiteDbContext>();
             services.AddTransient(typeof(IRabbitMqBackupLiteDbService), typeof(RabbitMqBackupLiteDbService));
         }
@@ -100,7 +101,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         {
             var hostConfiguration = new HostConfiguration { Host = host.Host };
             var port = (ushort) (host.Port != null ? (ushort) host.Port.Value : 0);
-            
+
             if (port > 0) hostConfiguration.Port = port;
             _ = Enum.TryParse(host.SslPolicyErrors, out SslPolicyErrors sslPolicyErrors);
 

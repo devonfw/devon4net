@@ -1,5 +1,5 @@
 ﻿using Devon4Net.Infrastructure.Kafka.Handlers;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 
 namespace Devon4Net.Application.Kafka.Business.KafkaManagement.Handlers
 {

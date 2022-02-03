@@ -1,6 +1,6 @@
 ﻿using Devon4Net.Infrastructure.Extensions;
 using Devon4Net.Infrastructure.Extensions.Helpers;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Devon4Net.Infrastructure.MediatR.Common;
 using Devon4Net.Infrastructure.MediatR.Domain.Database;
 using Devon4Net.Infrastructure.MediatR.Domain.Entities;
@@ -12,18 +12,16 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
     public class MediatRBackupService : IMediatRBackupService
     {
         public bool UseExternalDatabase { get; set; }
-        private IJsonHelper JsonHelper { get; set; }
+        private IJsonHelper JsonHelper { get; }
         private string ContextConnectionString { get; set; }
         private string ContextProvider { get; set; }
 
         private void GetContextConnectionAndProvider(MediatRBackupContext context)
         {
-
             try
             {
                 ContextProvider = context.Database.ProviderName;
                 ContextConnectionString = context.Database.GetDbConnection().ConnectionString;
-
             }
             catch (Exception ex)
             {
@@ -125,7 +123,7 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
         /// <returns>The database context to backup the messages</returns>
         private MediatRBackupContext CreateContext()
         {
-            var errorMessage = "The connection string from context cannot be null or the database provider is not supported";
+            const string errorMessage = "The connection string from context cannot be null or the database provider is not supported";
             if (string.IsNullOrEmpty(ContextConnectionString))
             {
                 Devon4NetLogger.Error(errorMessage);
@@ -181,7 +179,7 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
 
             if (command?.InternalMessageIdentifier == null || command.InternalMessageIdentifier.IsNullOrEmptyGuid())
             {
-                throw new ArgumentException($"The provided command  and the command identifier cannot be null ");
+                throw new ArgumentException("The provided command  and the command identifier cannot be null ");
             }
         }
     }

@@ -4,7 +4,7 @@ using Devon4Net.Infrastructure.Common.Options.MediatR;
 using Devon4Net.Infrastructure.Extensions.Helpers;
 using Devon4Net.Infrastructure.LiteDb.LiteDb;
 using Devon4Net.Infrastructure.LiteDb.Repository;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Devon4Net.Infrastructure.MediatR.Data.Service;
 using Devon4Net.Infrastructure.MediatR.Domain.Database;
 using Devon4Net.Infrastructure.MediatR.Domain.Entities;
@@ -22,7 +22,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         {
             var mediatROptions = services.GetTypedOptions<MediatROptions>(configuration, "MediatR");
 
-            if (mediatROptions == null || !mediatROptions.EnableMediatR) return;
+            if (mediatROptions?.EnableMediatR != true) return;
             ConfigureMediatRGenericDependencyInjection(ref services);
             SetupMediatRBackupLocalDatabase(ref services, ref mediatROptions);
         }
@@ -39,7 +39,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static void SetupMediatRBackupLocalDatabase(ref IServiceCollection services, ref MediatROptions mediatROptions)
         {
             Devon4NetLogger.Information("Please setup your database in order to have the RabbitMq messaging backup feature");
-            if (mediatROptions.Backup == null || !mediatROptions.Backup.UseLocalBackup) return;
+            if (mediatROptions.Backup?.UseLocalBackup != true) return;
             Devon4NetLogger.Information("RabbitMq messaging backup feature is going to be used via LiteDb");
 
             services.AddSingleton<ILiteDbContext, MediatRBackupLiteDbContext>();

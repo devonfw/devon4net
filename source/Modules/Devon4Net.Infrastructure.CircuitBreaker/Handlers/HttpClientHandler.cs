@@ -2,7 +2,7 @@
 using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
 using Devon4Net.Infrastructure.Common.Exceptions;
 using Devon4Net.Infrastructure.Extensions.Helpers;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.AspNetCore.Http;
 
 namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers

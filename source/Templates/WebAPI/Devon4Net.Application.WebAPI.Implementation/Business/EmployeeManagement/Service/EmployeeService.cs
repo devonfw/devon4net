@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Devon4Net.Domain.UnitOfWork.Service;
 using Devon4Net.Domain.UnitOfWork.UnitOfWork;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Devon4Net.Application.WebAPI.Implementation.Business.EmployeeManagement.Converters;
 using Devon4Net.Application.WebAPI.Implementation.Business.EmployeeManagement.Dto;
 using Devon4Net.Application.WebAPI.Implementation.Business.EmployeeManagement.Exceptions;
@@ -78,7 +78,7 @@ namespace Devon4Net.Application.WebAPI.Implementation.Business.EmployeeManagemen
 
             return _employeeRepository.Create(name, surName, mail);
         }
-        
+
         /// <summary>
         /// Deletes the Employee by id
         /// </summary>

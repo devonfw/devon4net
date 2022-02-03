@@ -1,4 +1,4 @@
-﻿using Devon4Net.Infrastructure.Log;
+﻿using Devon4Net.Infrastructure.Logger.Logging;
 using Devon4Net.Infrastructure.Middleware.Middleware.Headers;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Cors;

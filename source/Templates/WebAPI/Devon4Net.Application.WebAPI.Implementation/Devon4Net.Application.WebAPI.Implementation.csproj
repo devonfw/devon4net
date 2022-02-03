@@ -18,9 +18,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Business\AnsibleTowerManagement\Controllers\AnsibleTowerController.cs" />
-    <Compile Remove="Business\CyberArkManagement\CyberArkController.cs" />
-    <Compile Remove="Business\SmaxHcmrManagement\Controllers\SmaxHcmController.cs" />
+    <Compile Remove="Business\AnsibleTowerManagement\**" />
+    <Compile Remove="Business\CyberArkManagement\**" />
+    <Compile Remove="Business\SmaxHcmrManagement\**" />
+    <EmbeddedResource Remove="Business\AnsibleTowerManagement\**" />
+    <EmbeddedResource Remove="Business\CyberArkManagement\**" />
+    <EmbeddedResource Remove="Business\SmaxHcmrManagement\**" />
+    <None Remove="Business\AnsibleTowerManagement\**" />
+    <None Remove="Business\CyberArkManagement\**" />
+    <None Remove="Business\SmaxHcmrManagement\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,12 +41,6 @@
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Middleware\Devon4Net.Infrastructure.Middleware.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.RabbitMQ\Devon4Net.Infrastructure.RabbitMQ.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.UnitOfWork\Devon4Net.Infrastructure.UnitOfWork.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Business\AnsibleTowerManagement\Controllers\" />
-    <Folder Include="Business\CyberArkManagement\" />
-    <Folder Include="Business\SmaxHcmrManagement\Controllers\" />
   </ItemGroup>
 
 </Project>

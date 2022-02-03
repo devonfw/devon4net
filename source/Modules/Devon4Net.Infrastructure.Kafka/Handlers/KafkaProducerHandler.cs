@@ -1,5 +1,5 @@
 ﻿using Confluent.Kafka;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Devon4Net.Infrastructure.Kafka.Handlers
@@ -7,8 +7,8 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
     public class KafkaProducerHandler<T, TV> : IKafkaProducerHandler<T, TV> where T : class where TV : class
     {
         protected IServiceCollection Services { get; set; }
-        private IKakfkaHandler KafkaHandler { get; set; }
-        private string ProducerId { get; set; }
+        private IKakfkaHandler KafkaHandler { get; }
+        private string ProducerId { get; }
 
         public KafkaProducerHandler(IServiceCollection services, IKakfkaHandler kafkaHandler, string producerId)
         {
@@ -17,7 +17,7 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers
             ProducerId = producerId;
         }
 
-        public Task<DeliveryResult<T, TV>> SendMessage(T key, TV value) 
+        public Task<DeliveryResult<T, TV>> SendMessage(T key, TV value)
         {
             var result = KafkaHandler.DeliverMessage(key, value, ProducerId);
             var date = result.Result.Timestamp.UtcDateTime;

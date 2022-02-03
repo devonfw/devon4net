@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Devon4Net.Domain.UnitOfWork.Service;
 using Devon4Net.Domain.UnitOfWork.UnitOfWork;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Devon4Net.Application.WebAPI.Implementation.Business.TodoManagement.Converters;
 using Devon4Net.Application.WebAPI.Implementation.Business.TodoManagement.Dto;
 using Devon4Net.Application.WebAPI.Implementation.Domain.Database;
@@ -65,7 +65,7 @@ namespace Devon4Net.Application.WebAPI.Implementation.Business.TodoManagement.Se
 
             return _todoRepository.Create(description);
         }
-        
+
         /// <summary>
         /// Deletes the object by id
         /// </summary>

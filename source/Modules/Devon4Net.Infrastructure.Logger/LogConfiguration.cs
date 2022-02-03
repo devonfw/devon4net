@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Devon4Net.Infrastructure.Log.Attribute;
+using Devon4Net.Infrastructure.Logger.Attribute;
 using Serilog;
 using Serilog.Sinks.Graylog.Extended;
 using Devon4Net.Infrastructure.Common.Options.Log;
@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Devon4Net.Infrastructure.Common.Handlers;
 using Devon4Net.Infrastructure.Common.Common.IO;
 
-namespace Devon4Net.Application.WebAPI.Configuration
+namespace Devon4Net.Infrastructure.Logger
 {
     public static class LogConfiguration
     {
@@ -43,16 +43,8 @@ namespace Devon4Net.Application.WebAPI.Configuration
         {
             services.AddTransient<AopControllerAttribute>();
             services.AddTransient<AopExceptionFilterAttribute>();
-
-            services.AddMvc(options =>
-            {
-                options.Filters.Add(new AopControllerAttribute(logOptions.UseAOPTrace));
-            });
-
-            services.AddMvc(options =>
-            {
-                options.Filters.Add(new AopExceptionFilterAttribute());
-            });
+            services.AddMvc(options => options.Filters.Add(new AopControllerAttribute(logOptions.UseAOPTrace)));
+            services.AddMvc(options => options.Filters.Add(new AopExceptionFilterAttribute()));
         }
 
         public static void ConfigureLog(LogOptions logOptions)
@@ -74,7 +66,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             {
                 LoggerConfiguration = LoggerConfiguration.WriteTo.SQLite(GetValidPath(logOptions.SqliteDatabase, DefaultSqliteFile));
             }
-            
+
             SetLogLevel(logOptions.LogLevel.Default, LoggerConfiguration);
 
             Log.Logger = LoggerConfiguration.CreateLogger();

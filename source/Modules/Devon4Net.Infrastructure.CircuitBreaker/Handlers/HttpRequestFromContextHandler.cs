@@ -1,7 +1,7 @@
 ﻿using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
 using Devon4Net.Infrastructure.CircuitBreaker.Constants;
 using Devon4Net.Infrastructure.Extensions.Helpers;
-using Devon4Net.Infrastructure.Log;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
 using System.Net.Sockets;
