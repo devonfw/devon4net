@@ -1,0 +1,198 @@
+
+<!-- saved from url=(0040)file:///C:/Users/Jose/Desktop/azure.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"></head><body><h1 id="publish-an-aspnet-core-web-app-to-azure-app-service-using-visual-studio" class="x-hidden-focus">Publish an ASP.NET Core web app to Azure App Service using Visual Studio</h1>
+<div>
+<div class="content">
+<p>By&nbsp;<a href="https://twitter.com/RickAndMSFT" data-linktype="external">Rick Anderson</a>,&nbsp;<a href="https://github.com/cesarbs" data-linktype="external">Cesar Blum Silveira</a>, and&nbsp;<a href="https://twitter.com/rachelappel" data-linktype="external">Rachel Appel</a></p>
+<h2 id="set-up-the-development-environment">Set up the development environment</h2>
+<ul>
+<li>
+<p>Install the latest&nbsp;<a href="https://www.visualstudio.com/vs/azure-tools/" data-linktype="external">Azure SDK for Visual Studio</a>. The SDK installs Visual Studio if you don't already have it.</p>
+</li>
+<li>
+<p>Verify your&nbsp;<a href="https://portal.azure.com/" data-linktype="external">Azure account</a>. You can&nbsp;<a href="https://azure.microsoft.com/pricing/free-trial/" data-linktype="external">open a free Azure account</a>&nbsp;or&nbsp;<a href="https://azure.microsoft.com/pricing/member-offers/msdn-benefits-details/" data-linktype="external">Activate Visual Studio subscriber benefits</a>.</p>
+</li>
+</ul>
+<h2 id="create-a-web-app">Create a web app</h2>
+<p>In the Visual Studio Start Page, select&nbsp;<strong>File &gt; New &gt; Project...</strong></p>
+<p><img src="./azure_files/file_new_project.png" alt="File menu" data-linktype="relative-path"></p>
+<p>Complete the&nbsp;<strong>New Project</strong>&nbsp;dialog:</p>
+<ul>
+<li>
+<p>In the left pane, select&nbsp;<strong>.NET Core</strong>.</p>
+</li>
+<li>
+<p>In the center pane, select&nbsp;<strong>ASP.NET Core Web Application</strong>.</p>
+</li>
+<li>
+<p>Select&nbsp;<strong>OK</strong>.</p>
+</li>
+</ul>
+<p><img src="./azure_files/new_prj.png" alt="New Project dialog" data-linktype="relative-path"></p>
+<p>In the&nbsp;<strong>New ASP.NET Core Web Application</strong>&nbsp;dialog:</p>
+<ul>
+<li>
+<p>Select&nbsp;<strong>Web Application</strong>.</p>
+</li>
+<li>
+<p>Select&nbsp;<strong>Change Authentication</strong>.</p>
+</li>
+</ul>
+<p><img src="./azure_files/new_prj_2.png" alt="New Project dialog" data-linktype="relative-path"></p>
+<p>The&nbsp;<strong>Change Authentication</strong>&nbsp;dialog appears.</p>
+<ul>
+<li>
+<p>Select&nbsp;<strong>Individual User Accounts</strong>.</p>
+</li>
+<li>
+<p>Select&nbsp;<strong>OK</strong>&nbsp;to return to the&nbsp;<strong>New ASP.NET Core Web Application</strong>, then select&nbsp;<strong>OK</strong>&nbsp;again.</p>
+</li>
+</ul>
+<p><img src="./azure_files/new_prj_auth.png" alt="New ASP.NET Core Web authentication dialog" data-linktype="relative-path"></p>
+<p>Visual Studio creates the solution.</p>
+<h2 id="run-the-app-locally">Run the app locally</h2>
+<ul>
+<li>
+<p>Choose&nbsp;<strong>Debug</strong>&nbsp;then&nbsp;<strong>Start Without Debugging</strong>&nbsp;to run the app locally.</p>
+</li>
+<li>
+<p>Click the&nbsp;<strong>About</strong>&nbsp;and&nbsp;<strong>Contact</strong>&nbsp;links to verify the web application works.</p>
+</li>
+</ul>
+<p><img src="./azure_files/show.png" alt="Web application open in Microsoft Edge on localhost" data-linktype="relative-path"></p>
+<ul>
+<li>
+<p>Select&nbsp;<strong>Register</strong>&nbsp;and register a new user. You can use a fictitious email address. When you submit, the page displays the following error:</p>
+<p><em>"Internal Server Error: A database operation failed while processing the request. SQL exception: Cannot open the database. Applying existing migrations for Application DB context may resolve this issue."</em></p>
+</li>
+<li>
+<p>Select&nbsp;<strong>Apply Migrations</strong>&nbsp;and, once the page updates, refresh the page.</p>
+</li>
+</ul>
+<p><img src="./azure_files/mig.png" alt="Internal Server Error: A database operation failed while processing the request. SQL exception: Cannot open the database. Applying existing migrations for Application DB context may resolve this issue." data-linktype="relative-path"></p>
+<p>The app displays the email used to register the new user and a&nbsp;<strong>Log out</strong>&nbsp;link.</p>
+<p><img src="./azure_files/hello.png" alt="Web application open in Microsoft Edge. The Register link is replaced by the text Hello email@domain.com!" data-linktype="relative-path"></p>
+<h2 id="deploy-the-app-to-azure">Deploy the app to Azure</h2>
+<p>Close the web page, return to Visual Studio, and select&nbsp;<strong>Stop Debugging</strong>&nbsp;from the&nbsp;<strong>Debug</strong>&nbsp;menu.</p>
+<p>Right-click on the project in Solution Explorer and select&nbsp;<strong>Publish...</strong>.</p>
+<p><img src="./azure_files/pub.png" alt="Contextual menu open with Publish link highlighted" data-linktype="relative-path"></p>
+<p>In the&nbsp;<strong>Publish</strong>&nbsp;dialog, select&nbsp;<strong>Microsoft Azure App Service</strong>&nbsp;and click&nbsp;<strong>Publish</strong>.</p>
+<p><img src="./azure_files/maas1.png" alt="Publish dialog" data-linktype="relative-path"></p>
+<ul>
+<li>
+<p>Name the app a unique name.</p>
+</li>
+<li>
+<p>Select a subscription.</p>
+</li>
+<li>
+<p>Select&nbsp;<strong>New...</strong>&nbsp;for the resource group and enter a name for the new resource group.</p>
+</li>
+<li>
+<p>Select&nbsp;<strong>New...</strong>&nbsp;for the app service plan and select a location near you. You can keep the name that is generated by default.</p>
+</li>
+</ul>
+<p><img src="./azure_files/newrg1.png" alt="App Service dialog" data-linktype="relative-path"></p>
+<ul>
+<li>
+<p>Select the&nbsp;<strong>Services</strong>&nbsp;tab to create a new database.</p>
+</li>
+<li>
+<p>Select the green&nbsp;<strong>+</strong>&nbsp;icon to create a new SQL Database</p>
+</li>
+</ul>
+<p><img src="./azure_files/sql.png" alt="New SQL Database" data-linktype="relative-path"></p>
+<ul>
+<li>Select&nbsp;<strong>New...</strong>&nbsp;on the&nbsp;<strong>Configure SQL Database</strong>&nbsp;dialog to create a new database.</li>
+</ul>
+<p><img src="./azure_files/conf.png" alt="New SQL Database and server" data-linktype="relative-path"></p>
+<p>The&nbsp;<strong>Configure SQL Server</strong>&nbsp;dialog appears.</p>
+<ul>
+<li>
+<p>Enter an administrator user name and password, and then select&nbsp;<strong>OK</strong>. Don't forget the user name and password you create in this step. You can keep the default&nbsp;<strong>Server Name</strong>.</p>
+</li>
+<li>
+<p>Enter names for the database and connection string.</p>
+</li>
+</ul>
+<div class="NOTE alert">
+<h5>Note</h5>
+<p>"admin" is not allowed as the administrator user name.</p>
+</div>
+<p><img src="./azure_files/conf_servername.png" alt="Configure SQL Server dialog" data-linktype="relative-path"></p>
+<ul>
+<li>Select&nbsp;<strong>OK</strong>.</li>
+</ul>
+<p>Visual Studio returns to the&nbsp;<strong>Create App Service</strong>&nbsp;dialog.</p>
+<ul>
+<li>Select&nbsp;<strong>Create</strong>&nbsp;on the&nbsp;<strong>Create App Service</strong>&nbsp;dialog.</li>
+</ul>
+<p><img src="./azure_files/conf_final.png" alt="Configure SQL Database dialog" data-linktype="relative-path"></p>
+<ul>
+<li>Click the&nbsp;<strong>Settings</strong>&nbsp;link in the&nbsp;<strong>Publish</strong>&nbsp;dialog.</li>
+</ul>
+<p><img src="./azure_files/pubc.png" alt="Publish dialog: Connection panel" data-linktype="relative-path"></p>
+<p>On the&nbsp;<strong>Settings</strong>&nbsp;page of the&nbsp;<strong>Publish</strong>&nbsp;dialog:</p>
+<ul>
+<li>
+<p>Expand&nbsp;<strong>Databases</strong>&nbsp;and check&nbsp;<strong>Use this connection string at runtime</strong>.</p>
+</li>
+<li>
+<p>Expand&nbsp;<strong>Entity Framework Migrations</strong>&nbsp;and check&nbsp;<strong>Apply this migration on publish</strong>.</p>
+</li>
+</ul>
+<ul>
+<li>Select&nbsp;<strong>Save</strong>. Visual Studio returns to the&nbsp;<strong>Publish</strong>&nbsp;dialog.</li>
+</ul>
+<p><img src="./azure_files/pubs.png" alt="Publish dialog: Settings panel" data-linktype="relative-path"></p>
+<p>Click&nbsp;<strong>Publish</strong>. Visual Studio will publish your app to Azure and launch the cloud app in your browser.</p>
+<h3 id="test-your-app-in-azure">Test your app in Azure</h3>
+<ul>
+<li>
+<p>Test the&nbsp;<strong>About</strong>&nbsp;and&nbsp;<strong>Contact</strong>&nbsp;links</p>
+</li>
+<li>
+<p>Register a new user</p>
+</li>
+</ul>
+<p><img src="./azure_files/register.png" alt="Web application opened in Microsoft Edge on Azure App Service" data-linktype="relative-path"></p>
+<h3 id="update-the-app">Update the app</h3>
+<ul>
+<li>
+<p>Edit the&nbsp;<em>Pages/About.cshtml</em>&nbsp;Razor page and change its contents. For example, you can modify the paragraph to say "Hello ASP.NET Core!":</p>
+<div class="codeHeader lang-html" data-bi-name="code-header"><span class="language">html</span><button class="action copy" data-bi-name="copy">Copy</button></div>
+<pre><code class="lang-html" data-src="https://github.com/aspnet/Docs/blob/live/aspnetcore/tutorials/publish-to-azure-webapp-using-vs/sample/about.cshtml" data-bi-name="code-block">@page
+@model AboutModel
+@{
+    ViewData["Title"] = "About";
+}
+<span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>@ViewData["Title"]<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>@Model.Message<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span>
+
+<span class="line-highlight"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Hello ASP.NET Core!<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span>
+</code></pre>
+</li>
+<li>
+<p>Right-click on the project and select&nbsp;<strong>Publish...</strong>&nbsp;again.</p>
+</li>
+</ul>
+<p><img src="./azure_files/pub.png" alt="Contextual menu open with Publish link highlighted" data-linktype="relative-path"></p>
+<ul>
+<li>After the app is published, verify the changes you made are available on Azure.</li>
+</ul>
+<p><img src="./azure_files/final.png" alt="Verify task is complete" data-linktype="relative-path"></p>
+<h3 id="clean-up">Clean up</h3>
+<p>When you have finished testing the app, go to the&nbsp;<a href="https://portal.azure.com/" data-linktype="external">Azure portal</a>&nbsp;and delete the app.</p>
+<ul>
+<li>Select&nbsp;<strong>Resource groups</strong>, then select the resource group you created.</li>
+</ul>
+<p><img src="./azure_files/portalrg.png" alt="Azure Portal: Resource Groups in sidebar menu" data-linktype="relative-path"></p>
+<ul>
+<li>In the&nbsp;<strong>Resource groups</strong>&nbsp;page, select&nbsp;<strong>Delete</strong>.</li>
+</ul>
+<p><img src="./azure_files/rgd.png" alt="Azure Portal: Resource Groups page" data-linktype="relative-path"></p>
+<ul>
+<li class="x-hidden-focus">Enter the name of the resource group and select&nbsp;<strong>Delete</strong>. Your app and all other resources created in this tutorial are now deleted from Azure.</li>
+</ul>
+</div>
+</div></body></html>

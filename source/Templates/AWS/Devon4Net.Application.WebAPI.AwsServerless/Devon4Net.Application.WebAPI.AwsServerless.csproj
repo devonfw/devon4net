@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AWSProjectType>Lambda</AWSProjectType>	  
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="7.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.Common\Devon4Net.Infrastructure.AWS.Common.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.Secrets\Devon4Net.Infrastructure.AWS.Secrets.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.Serverless\Devon4Net.Infrastructure.AWS.Serverless.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Cors\Devon4Net.Infrastructure.Cors.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Middleware\Devon4Net.Infrastructure.Middleware.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Swagger\Devon4Net.Infrastructure.Swagger.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.WebAPI\Devon4Net.Infrastructure.WebAPI.csproj" />
+  </ItemGroup>
+
+</Project>

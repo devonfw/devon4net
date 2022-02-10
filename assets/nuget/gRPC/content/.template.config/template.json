@@ -1,0 +1,15 @@
+﻿{
+  "author": "Capgemini Valencia ",
+  "classifications": ["devonfw", "Devon4Net","Devon4NetgRPC"],
+  "description": "Devon4Net gRPC solution template for .net core 3.1.10",
+  "name": "Devon4Net gRPC solution template",
+  "identity": "Devon4Net.gRPC",
+  "groupIdentity": "Devon4NetgRPC",
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "shortName": "Devon4NetgRPC",
+  "sourceName": "Devon4NetgRPC",
+  "guids": []
+}

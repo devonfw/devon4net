@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Certificates\localhost.pfx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Certificates\localhost.pfx" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Devon4Net.Infrastructure.Kafka" Version="6.0.2" />
+	<PackageReference Include="Devon4Net.Infrastructure.Logger" Version="6.0.2" />
+	<PackageReference Include="Devon4Net.Infrastructure.Middleware" Version="6.0.2" />
+    <PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="6.0.2" />
+    <PackageReference Include="Devon4Net.Infrastructure.WebAPI" Version="6.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.Development.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Certificates\RootCA.crt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

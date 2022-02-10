@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AWSProjectType>Lambda</AWSProjectType>	  
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="7.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Devon4Net.Infrastructure.AWS.Common" Version="6.0.3" />
+    <PackageReference Include="Devon4Net.Infrastructure.AWS.Secrets" Version="6.0.3" />
+    <PackageReference Include="Devon4Net.Infrastructure.AWS.Serverless" Version="6.0.3" />
+    <PackageReference Include="Devon4Net.Infrastructure.Cors" Version="6.0.2" />
+    <PackageReference Include="Devon4Net.Infrastructure.Logger" Version="6.0.2" />
+    <PackageReference Include="Devon4Net.Infrastructure.Middleware" Version="6.0.2" />
+    <PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="6.0.2" />
+    <PackageReference Include="Devon4Net.Infrastructure.WebAPI" Version="6.0.2" />
+  </ItemGroup>
+
+</Project>

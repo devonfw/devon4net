@@ -1,0 +1,30 @@
+:toc: macro
+
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+toc::[]
+:idprefix:
+:idseparator: -
+:reproducible:
+:source-highlighter: rouge
+:listing-caption: Listing
+
+= devon4net
+
+This guide describes an application architecture for API development with https://dotnet.microsoft.com/[.net core].
+
+== Motivation
+
+The main challenge we encounter in our projects is to bring junior and senior developers into .net core.
+There are a lot of different frameworks and architectures in the market.
+The idea is to define an architecture which is a compromise between, on the one hand, leveraging the best practices and latest trends.
+On the other hand, providing a short onboarding time while still using an architecture that helps us scale and be productive at the same time.
+Also, the architecture must be compatible with the market. 
+Guides, practices and naming found in the web should still be valid (e.g. a stackoverflow article for a given problem).
+
