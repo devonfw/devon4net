@@ -1,0 +1,421 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Xamarin.Forms.3.1.0.583944\build\netstandard1.0\Xamarin.Forms.props" Condition="Exists('..\packages\Xamarin.Forms.3.1.0.583944\build\netstandard1.0\Xamarin.Forms.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{56CD2748-857D-442A-9268-95D99F552840}</ProjectGuid>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <UseMSBuildEngine>true</UseMSBuildEngine>
+    <OutputType>Library</OutputType>
+    <RootNamespace>MyThaiStar.Core</RootNamespace>
+    <AssemblyName>MyThaiStar.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Animations\UserAnimation.cs" />
+    <Compile Include="App.cs" />
+    <Compile Include="AppStart.cs" />
+    <Compile Include="Business\Dto\BookingManagement\BookingDto.cs" />
+    <Compile Include="Business\Dto\BookingManagement\BookingDtoValues.cs" />
+    <Compile Include="Business\Dto\BookingManagement\BookingResponseDto.cs" />
+    <Compile Include="Business\Dto\BookingManagement\BookingSearchDto.cs" />
+    <Compile Include="Business\Dto\BookingManagement\BookingSearchResponseDto.cs" />
+    <Compile Include="Business\Dto\BookingManagement\Invitedguest.cs" />
+    <Compile Include="Business\Dto\DishManagement\CategoryDto.cs" />
+    <Compile Include="Business\Dto\DishManagement\CategorySearchDto.cs" />
+    <Compile Include="Business\Dto\DishManagement\DishDto.cs" />
+    <Compile Include="Business\Dto\DishManagement\DishResultDto.cs" />
+    <Compile Include="Business\Dto\DishManagement\ExtraDto.cs" />
+    <Compile Include="Business\Dto\DishManagement\FilterSearchObjectDto.cs" />
+    <Compile Include="Business\Dto\DishManagement\ImageDto.cs" />
+    <Compile Include="Business\Dto\General\PaginationDto.cs" />
+    <Compile Include="Business\Dto\General\ResultObjectDto.cs" />
+    <Compile Include="Business\Dto\General\SortByDto.cs" />
+    <Compile Include="Business\Dto\MailManagement\EmailDto.cs" />
+    <Compile Include="Business\Dto\MailManagement\EmailResponseDto.cs" />
+    <Compile Include="Business\Dto\MailManagement\EmailTypeEnum.cs" />
+    <Compile Include="Business\Dto\OrderManagement\BookingFullResponse.cs" />
+    <Compile Include="Business\Dto\OrderManagement\DishFullResponse.cs" />
+    <Compile Include="Business\Dto\OrderManagement\Extra.cs" />
+    <Compile Include="Business\Dto\OrderManagement\ExtraFullResponse.cs" />
+    <Compile Include="Business\Dto\OrderManagement\HostFullResponse.cs" />
+    <Compile Include="Business\Dto\OrderManagement\InvitedguestFullResponse.cs" />
+    <Compile Include="Business\Dto\OrderManagement\OrderDto.cs" />
+    <Compile Include="Business\Dto\OrderManagement\OrderDtoBooking.cs" />
+    <Compile Include="Business\Dto\OrderManagement\OrderDtoResponse.cs" />
+    <Compile Include="Business\Dto\OrderManagement\OrderFullResponse.cs" />
+    <Compile Include="Business\Dto\OrderManagement\OrderlineDetailFullResponse.cs" />
+    <Compile Include="Business\Dto\OrderManagement\OrderLineDto.cs" />
+    <Compile Include="Business\Dto\OrderManagement\OrderlineDtoDetail.cs" />
+    <Compile Include="Business\Dto\OrderManagement\OrderlineFullResponse.cs" />
+    <Compile Include="Business\Dto\OrderManagement\OrderSearchFullResponseDto.cs" />
+    <Compile Include="Business\Dto\UserManagement\CurrentUserDto.cs" />
+    <Compile Include="Business\Dto\UserManagement\LoginDto.cs" />
+    <Compile Include="Business\Interfaces\ILoggedInUser.cs" />
+    <Compile Include="Business\Interfaces\IStorableObject.cs" />
+    <Compile Include="Business\LoggedInUser.cs" />
+    <Compile Include="Business\ShoppingKartItem.cs" />
+    <Compile Include="Business\StorableObject.cs" />
+    <Compile Include="Configuration\ApplicationConfig.cs" />
+    <Compile Include="Configuration\Config.cs" />
+    <Compile Include="Domain\Dish.cs" />
+    <Compile Include="Domain\LoggedInUser.cs" />
+    <Compile Include="Domain\ShoppingCartItem.cs" />
+    <Compile Include="Domain\user.cs" />
+    <Compile Include="FormsApp.xaml.cs">
+      <DependentUpon>FormsApp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Observable\Dish.cs" />
+    <Compile Include="Observable\LoggedInUser.cs" />
+    <Compile Include="Observable\ShoppingCartItem.cs" />
+    <Compile Include="Observable\User.cs" />
+    <Compile Include="Pages\AboutPage.xaml.cs">
+      <DependentUpon>AboutPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\BookTablePage.xaml.cs">
+      <DependentUpon>BookTablePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\DishDetailPage.xaml.cs">
+      <DependentUpon>DishDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\DishFilterPage.xaml.cs">
+      <DependentUpon>DishFilterPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\InviteFriendsPage.xaml.cs">
+      <DependentUpon>InviteFriendsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\OrderMenuPage.xaml.cs">
+      <DependentUpon>OrderMenuPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\PopUpPage.xaml.cs">
+      <DependentUpon>PopUpPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ShoppingCartListItemView.xaml.cs">
+      <DependentUpon>ShoppingCartListItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\DishListItemView.xaml.cs">
+      <DependentUpon>DishListItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ShoppingCartListPage.xaml.cs">
+      <DependentUpon>ShoppingCartListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\DishListPage.xaml.cs">
+      <DependentUpon>DishListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\LoginPage.xaml.cs">
+      <DependentUpon>LoginPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\MasterDetailPage.xaml.cs">
+      <DependentUpon>MasterDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Services\DishService.cs" />
+    <Compile Include="Services\Interfaces\ILoginService.cs" />
+    <Compile Include="Services\Interfaces\ISyncService.cs" />
+    <Compile Include="Services\LoggedInUserService.cs" />
+    <Compile Include="Services\LoginService.cs" />
+    <Compile Include="Services\SyncService.cs" />
+    <Compile Include="Services\UserService.cs" />
+    <Compile Include="State\ApplicationState.cs" />
+    <Compile Include="State\IApplicationState.cs" />
+    <Compile Include="ViewModels\AboutViewModel.cs" />
+    <Compile Include="ViewModels\BookTableViewModel.cs" />
+    <Compile Include="ViewModels\DishDetailViewModel.cs" />
+    <Compile Include="ViewModels\DishFilterViewModel.cs" />
+    <Compile Include="ViewModels\DishListItemViewModel.cs" />
+    <Compile Include="ViewModels\DishListViewModel.cs" />
+    <Compile Include="ViewModels\InviteFriendsViewModel.cs" />
+    <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\MasterDetailViewModel.cs" />
+    <Compile Include="ViewModels\MixedNavMasterRootContentViewModel.cs" />
+    <Compile Include="Models\Modes.cs" />
+    <Compile Include="Resources\BaseTheme.xaml.cs">
+      <DependentUpon>BaseTheme.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\MainStyles.xaml.cs">
+      <DependentUpon>MainStyles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\OrderMenuViewModel.cs" />
+    <Compile Include="ViewModels\ShoppingCartListItemViewModel.cs" />
+    <Compile Include="ViewModels\ShoppingCartListViewModel.cs" />
+    <EmbeddedResource Include="FormsApp.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\BaseTheme.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\MainStyles.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Text.json" />
+    <Compile Include="Services\TextProviderBuilder.cs" />
+    <EmbeddedResource Include="Pages\AboutPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\DishListItemView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\DishDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Excalibur\Excalibur.Cross\Excalibur.Cross.csproj">
+      <Project>{8cd6a3a6-b0f4-442d-b8b3-6a29edc5bc8e}</Project>
+      <Name>Excalibur.Cross</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Excalibur\Excalibur.Shared\Excalibur.Shared.csproj">
+      <Project>{f955794c-3a41-4a7f-aac1-c8d6c26a8468}</Project>
+      <Name>Excalibur.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Excalibur\Providers\Excalibur.Providers.File\Excalibur.Providers.File.csproj">
+      <Project>{55928a6c-f0ea-4d62-b5ae-72455312b264}</Project>
+      <Name>Excalibur.Providers.File</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=6.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.1.1\lib\netstandard1.1\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DLToolkit.Forms.Controls.FlowListView, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DLToolkit.Forms.Controls.FlowListView.2.0.11\lib\portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10+netstandard1.0\DLToolkit.Forms.Controls.FlowListView.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DLToolkit.Forms.Controls.TagEntryView, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DLToolkit.Forms.Controls.TagEntryView.1.0.5\lib\portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10+netstandard1.0\DLToolkit.Forms.Controls.TagEntryView.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FFImageLoading, Version=2.4.3.840, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xamarin.FFImageLoading.2.4.3.840\lib\portable-win+net45+wp80+win81+wpa81\FFImageLoading.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FFImageLoading.Forms, Version=2.4.3.840, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xamarin.FFImageLoading.Forms.2.4.3.840\lib\portable-win+net45+wp80+win81+wpa81\FFImageLoading.Forms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FFImageLoading.Platform, Version=2.4.3.840, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xamarin.FFImageLoading.2.4.3.840\lib\portable-win+net45+wp80+win81+wpa81\FFImageLoading.Platform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ImageCircle.Forms.Plugin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xam.Plugins.Forms.ImageCircle.3.0.0.5\lib\netstandard1.0\ImageCircle.Forms.Plugin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MvvmCross.Binding, Version=5.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmCross.Binding.5.6.3\lib\portable-net45+win+wpa81+wp80\MvvmCross.Binding.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MvvmCross.Core, Version=5.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmCross.Core.5.6.3\lib\portable-net45+win+wpa81+wp80\MvvmCross.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MvvmCross.Forms, Version=5.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmCross.Forms.5.6.3\lib\portable-net45+netcore45+wpa81+MonoAndroid10+Xamarin.iOS10\MvvmCross.Forms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MvvmCross.Localization, Version=5.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmCross.Binding.5.6.3\lib\portable-net45+win+wpa81+wp80\MvvmCross.Localization.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MvvmCross.Platform, Version=5.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmCross.Platform.5.6.3\lib\portable-net45+win+wpa81+wp80\MvvmCross.Platform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MvvmCross.Plugins.File, Version=5.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmCross.Plugin.File.5.6.3\lib\portable-net45+win+wpa81+wp80\MvvmCross.Plugins.File.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MvvmCross.Plugins.Json, Version=5.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmCross.Plugin.Json.5.6.3\lib\portable-net45+win+wpa81+wp80\MvvmCross.Plugins.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MvvmCross.Plugins.JsonLocalization, Version=5.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmCross.Plugin.JsonLocalization.5.6.3\lib\portable-net45+win+wpa81+wp80\MvvmCross.Plugins.JsonLocalization.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MvvmCross.Plugins.ResourceLoader, Version=5.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmCross.Plugin.ResourceLoader.5.6.3\lib\portable-win+net45+wp8+win8+wpa81\MvvmCross.Plugins.ResourceLoader.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MvvmCross.Plugins.Visibility, Version=5.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmCross.Plugin.Visibility.5.6.3\lib\portable-net45+win+wpa81+wp80\MvvmCross.Plugins.Visibility.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\portable-net45+win8+wp8+wpa81\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Rg.Plugins.Popup, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rg.Plugins.Popup.1.0.4\lib\portable-win+net45+wp8+win8+wpa81\Rg.Plugins.Popup.dll</HintPath>
+    </Reference>
+    <Reference Include="Rg.Plugins.Popup.Platform, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rg.Plugins.Popup.1.0.4\lib\portable-win+net45+wp8+win8+wpa81\Rg.Plugins.Popup.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Primitives, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Primitives.4.3.0\lib\netstandard1.0\System.ComponentModel.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.TypeConverter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.TypeConverter.4.3.0\lib\netstandard1.0\System.ComponentModel.TypeConverter.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\portable-net45+win8\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\portable-net45+win8\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xamarin.Forms.3.1.0.583944\lib\netstandard1.0\Xamarin.Forms.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Platform, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xamarin.Forms.3.1.0.583944\lib\netstandard1.0\Xamarin.Forms.Platform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Xaml, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xamarin.Forms.3.1.0.583944\lib\netstandard1.0\Xamarin.Forms.Xaml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xciles.Uncommon, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xciles.Uncommon.1.5\lib\portable-win+net45+wp8+win8+wpa81\Xciles.Uncommon.dll</HintPath>
+    </Reference>
+    <Reference Include="XLabs.IOC, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\XLabs.IoC.2.3.0-pre05\lib\portable-net45+win8+wpa81+wp8+monoandroid+monotouch+xamarinios10+xamarinmac\XLabs.IOC.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="DesignTimeData.json" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\LoginPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\MasterDetailPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\DishListPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\wood.jpg" />
+    <EmbeddedResource Include="Resources\thairestaurant.jpg" />
+    <EmbeddedResource Include="Resources\thairestaurantlogin.jpg" />
+    <EmbeddedResource Include="Resources\bg.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\info.png" />
+    <Content Include="Resources\ok.png" />
+    <Content Include="Resources\star.png" />
+    <EmbeddedResource Include="Resources\starS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\cartbg.jpg" />
+    <AndroidResource Include="Resources\removeItem.png" />
+    <Content Include="Resources\close_circle_button.png" />
+    <Content Include="Resources\Date.png" />
+    <Content Include="Resources\Datetime.png" />
+    <Content Include="Resources\filter.png" />
+    <Content Include="Resources\slider.jpg" />
+    <Content Include="Resources\sliderB.jpg" />
+    <Content Include="Resources\Time.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\ShoppingCartListPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\ShoppingCartListItemView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\OrderMenuPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\BookTablePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\InviteFriendsPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\PopUpPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\DishFilterPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+    <Error Condition="!Exists('..\packages\Xamarin.Forms.2.5.0.122203\build\portable-win+net45+wp80+win81+wpa81\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Xamarin.Forms.2.5.0.122203\build\portable-win+net45+wp80+win81+wpa81\Xamarin.Forms.targets'))" />
+    <Error Condition="!Exists('..\packages\Xamarin.Forms.3.1.0.583944\build\netstandard1.0\Xamarin.Forms.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Xamarin.Forms.3.1.0.583944\build\netstandard1.0\Xamarin.Forms.props'))" />
+    <Error Condition="!Exists('..\packages\Xamarin.Forms.3.1.0.583944\build\netstandard1.0\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Xamarin.Forms.3.1.0.583944\build\netstandard1.0\Xamarin.Forms.targets'))" />
+  </Target>
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Import Project="..\packages\Xamarin.Forms.2.5.0.122203\build\portable-win+net45+wp80+win81+wpa81\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.5.0.122203\build\portable-win+net45+wp80+win81+wpa81\Xamarin.Forms.targets')" />
+  <Import Project="..\packages\Xamarin.Forms.3.1.0.583944\build\netstandard1.0\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.3.1.0.583944\build\netstandard1.0\Xamarin.Forms.targets')" />
+</Project>

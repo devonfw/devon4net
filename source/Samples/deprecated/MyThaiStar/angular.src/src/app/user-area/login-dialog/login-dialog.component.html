@@ -1,0 +1,48 @@
+<mat-tab-group mat-stretch-tabs class="pull">
+
+  <mat-tab label="LOGIN">
+    <form (ngSubmit)="logInSubmit(loginForm.form.value)" class="pad" #loginForm="ngForm">
+      <div layout= "column" flex>
+        <mat-form-field color="accent" flex>
+          <input matInput placeholder="Username" ngModel name="username" required>
+        </mat-form-field>
+
+        <mat-form-field color="accent" flex>
+          <input matInput placeholder="Password" ngModel name="password" type="password" required>
+        </mat-form-field>
+      </div>
+      <div style="text-align: right">
+        <button mat-button mat-dialog-close class="text-upper">Cancel</button>
+        <button mat-button type="submit" [disabled]="!loginForm.form.valid" color="accent" class="text-upper">Login</button>
+      </div>
+    </form>
+  </mat-tab>
+
+  <mat-tab label="SIGN UP">
+    <form (ngSubmit)="signInSubmit(signForm.form.value)" class="pad" #signForm="ngForm">
+      <div layout= "column" class="push-bottom-sm" flex>
+
+        <mat-form-field color="accent" flex>
+          <input matInput placeholder="Email" ngModel name="email" required validateEmail>
+          <mat-error>Please, enter a valid email address</mat-error>
+        </mat-form-field>
+
+        <mat-form-field color="accent" flex>
+          <input matInput type="password" name="password" placeholder="Password" ngModel required validateEqual="confirmPassword" reverse="true" #password="ngModel">
+        </mat-form-field>
+
+        <mat-form-field color="accent" flex>
+          <input matInput type="password" name="confirmPassword" placeholder="Confirm Password" ngModel required validateEqual="password" reverse="false" #confirmPassword="ngModel">
+          <mat-error>Password mismatch</mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-checkbox #termsd>Accept terms</mat-checkbox>
+
+      <div class="align-right" flex>
+        <button mat-button mat-dialog-close class="text-upper">Cancel</button>
+        <button mat-button type="submit" [disabled]="!(signForm.form.valid && termsd.checked)" color="accent" class="text-upper">Register</button>
+      </div>
+    </form>
+  </mat-tab>
+</mat-tab-group>

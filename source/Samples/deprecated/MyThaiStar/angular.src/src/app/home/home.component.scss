@@ -1,0 +1,66 @@
+.title-color {
+  color: white;
+}
+
+@media (min-width: 1300px){
+  .star-image {
+    position: absolute;
+    left: 50%;
+    top: 1%;
+  }
+  
+  .title {
+    font-size: 3em;
+  }
+
+  .subtitle {
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 1300px){
+  .star-image {
+    position: absolute;
+    left: 53%;
+    top: -2%;
+  }
+
+  .title {
+    font-size: 1.5em;
+  }
+
+  .subtitle {
+    padding-top: 10px;
+    font-size: 0.7em;
+  }
+
+  .sizeImg {
+    max-width:75%;
+  }
+
+}
+
+.card-over {
+  margin-top: -75px;
+}
+
+.home-title {
+  padding-bottom: 25%;
+  padding-top: 5%;
+  background-image: url('../../assets/images/background-dish.png'), url('../../assets/images/star.png'), url('../../assets/images/Wood2.jpg');
+  background-position: bottom, top, center;
+  background-size: cover, 15%, cover;
+  background-repeat: no-repeat, no-repeat, repeat;
+}
+
+@media (max-width: 600px) {
+  .forDesktop {
+    display: none;
+  }
+}
+
+@media (min-width: 600px) {
+  .forMobile {
+    display: none;
+  }
+}

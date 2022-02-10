@@ -1,0 +1,10 @@
+{
+  "/v1": {
+    "target": "http://localhost:8000",
+    "secure": false
+  },
+  "/graphql": {
+    "target": "http://localhost:4000",
+    "secure": false
+  }
+}

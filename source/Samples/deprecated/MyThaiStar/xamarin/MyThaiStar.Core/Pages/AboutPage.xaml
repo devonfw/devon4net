@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:MvxContentPage x:TypeArguments="viewModels:AboutViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+             xmlns:viewModels="clr-namespace:MyThaiStar.Core.ViewModels;assembly=MyThaiStar.Core"
+             x:Class="MyThaiStar.Core.Pages.AboutPage" Title="About">
+    <ContentPage.Content>
+        <ScrollView BackgroundColor="Black">
+            <StackLayout CompressedLayout.IsHeadless="true">
+                <Image x:Name="ImgAbout"  Aspect="AspectFill" Source="thairestaurant.jpg"/>
+                <StackLayout Spacing="10">
+                    <Label TextColor="BurlyWood" FontSize="24" Text="My Thai Star Restaurant" HorizontalOptions="CenterAndExpand"></Label>
+                </StackLayout>
+                <StackLayout Spacing="10">
+                    <Label HorizontalOptions="Center" LineBreakMode="WordWrap" TextColor="White" FontSize="18" FormattedText="Thai cooking places emphasis on lightly prepared dishes with strong aromatic components and a spicy edge. Thai chef McDang characterises Thai food as demonstrating 'intricacy; attention to detail; texture; color; taste; and the use of ingredients with medicinal benefits, as well as good flavor', as well as care being given to the food's appearance, smell and context. Australian chef David Thompson, an expert on Thai food, observes that unlike many other cuisines, My Thai Star Restaurant cooking rejects simplicity and is about 'the juggling of disparate elements to create a harmonious finish'."></Label>
+                </StackLayout>
+
+                <StackLayout Spacing="10">
+                    <Label LineBreakMode="WordWrap" TextColor="White" FontSize="18" Text="Many dishes that are now popular in Thailand were originally Chinese dishes. They were introduced to Thailand by the Hokkien people starting in the 15th century, and by the Teochew people who started settling in larger numbers from the late 18th century CE onward, mainly in the towns and cities, and now form the majority of the Thai Chinese.[12][13][14] Such dishes include chok Thai: rice porridge, salapao (steamed buns), kuaitiao rat na (fried rice-noodles) and khao kha mu (stewed pork with rice). The Chinese also introduced the use of a wok for cooking, the technique of deep-frying and stir frying dishes, several types of noodles, taochiao (fermented bean paste), soy sauces, and tofu.The cuisines of India and Persia, brought first by traders, and later settlers from these regions, with their use of dried spices, gave rise to Thai adaptations and dishes such as kaeng kari (yellow curry)[16] and kaeng matsaman (massaman curry)." HorizontalOptions="Fill"></Label>
+                </StackLayout>
+                <Image Source="starS.png" x:Name="ImageBottom" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Start" BackgroundColor="Transparent" ></Image>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</views:MvxContentPage>

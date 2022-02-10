@@ -1,0 +1,262 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Devon4Net.Infrastructure.AnsibleTower</name>
+    </assembly>
+    <members>
+        <member name="T:Devon4Net.Infrastructure.AnsibleTower.Common.AnsibleTowerInstance">
+            <summary>
+            Ansible handler manager
+            </summary>
+        </member>
+        <member name="T:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler">
+            <summary>
+            Ansible Tower API manager
+            </summary>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.#ctor(Devon4Net.Infrastructure.AnsibleTower.Common.IAnsibleTowerInstance,Devon4Net.Infrastructure.CircuitBreaker.Handler.IHttpClientHandler)">
+            <summary>
+            Ansible Tower handler constructor
+            </summary>
+            <param name="ansibleTowerInstance"></param>
+            <param name="circuitBreakerHttpClient"></param>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.Login(System.String,System.String)">
+            <summary>
+            Performs the basic login on Ansible Tower
+            </summary>
+            <param name="userName">UserName</param>
+            <param name="password">Password</param>
+            <returns>Result object structure</returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.CreateApplication(Devon4Net.Infrastructure.AnsibleTower.Dto.Applications.ApplicationsRequestDto,System.String)">
+            <summary>
+            Creates an application object in Ansible Tower
+            </summary>
+            <param name="applicationstRequest"></param>
+            <param name="authenticationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.GetApplications(System.String)">
+            <summary>
+            Gets an application object from Ansible Tower
+            </summary>
+            <param name="authenticationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.GetOrganizationById(System.String,System.String)">
+            <summary>
+            Gets an organization object from Ansible Tower by its identification
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="organizationId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.CreateOrganization(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Organizations.CreateOrganizationRequestDto)">
+            <summary>
+            Creates an Organization object in Ansible Tower
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="organizationRequest"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.GetOrganizations(System.String,System.String)">
+            <summary>
+            Gets the organization objects from Ansible Tower
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.GetInventories(System.String)">
+            <summary>
+            Gets an Invetory object from Ansible Tower
+            </summary>
+            <param name="authenticationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.GetInventoryById(System.String,System.String)">
+            <summary>
+            Gets an Inventory object from Ansible Tower via its Id
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="inventoryId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.CreateInventory(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Inventories.CreateInventoryRequestDto)">
+            <summary>
+            Creates an Inventory in Ansible Tower
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="inventoryRequest"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.GetJobTemplates(System.String)">
+            <summary>
+            Get the Job Templates
+            </summary>
+            <param name="authenticationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.GetJobTemplate(System.String,System.String)">
+            <summary>
+            Gets a Job Template
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="jobTemplateId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.CreateJobTemplate(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.JobTemplates.CreateJobTemplateRequestDto)">
+            <summary>
+            Creates a Job template in Ansible Tower
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="createJobTemplateRequest"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.GetCredentials(System.String,System.String)">
+            <summary>
+            Creates a Credential object in Ansible Tower
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.CreateCredential(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Credentials.CreateCredentialRequestDto)">
+            <summary>
+            Creates a Credential object in Ansible Tower
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="credentialRequest"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.GetProjects(System.String,System.String)">
+            <summary>
+            Gets the Projects list from Ansible Tower
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.CreateProject(System.String,Devon4Net.Infrastructure.AnsibleTower.Dto.Projects.CreateProjectRequestDto)">
+            <summary>
+            Creates a Project in Ansible Tower
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="credentialRequest"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.DeleteProject(System.String,System.String)">
+            <summary>
+            Deletes a Project in Ansible Tower by Id
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="credentialRequest"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.GetJobs(System.String,System.String)">
+            <summary>
+            Gets the Job list from Ansible Tower
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.CancelJob(System.String,System.Int32)">
+            <summary>
+            Cancels a Job in Ansible Tower
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="idJob"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.CanCancelJob(System.String,System.Int32)">
+            <summary>
+            Gets if a Job from Ansible Tower can be cancelled
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="idJob"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.GetJobEvents(System.String,System.Int32)">
+            <summary>
+            Gets the events from a Job in Ansible Tower
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="idJob"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.GetCanJobSchedule(System.String,System.Int32)">
+            <summary>
+            Gets if a Job can be scheduled
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="jobId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.DeleteJobTemplate(System.String,System.String)">
+            <summary>
+            Deletes a Project in Ansible Tower by Id
+            </summary>
+            <param name="authenticationToken"></param>
+            <param name="credentialRequest"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.Ping">
+            <summary>
+            Performs the ping command in Ansible Tower
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.SetAutehnticationTokenAsync(System.String)">
+            <summary>
+            Sets the internal Auth token variable value
+            </summary>
+            <param name="authenticationToken"></param>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.GetLoginHeaders(System.String,System.String)">
+            <summary>
+            Creates the required headers to connect Ansible Tower
+            </summary>
+            <param name="userName"></param>
+            <param name="password"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.GetAuthorizationHeaders">
+            <summary>
+            Gets the requiered headers to perform the Ansible tower API calls
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.GetAnsible``1(System.String,System.String,System.String)">
+            <summary>
+            Performs the generic API Get call to Ansible Tower
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="authenticationToken"></param>
+            <param name="endpoint"></param>
+            <param name="searchCriteria"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.PostAnsible``1(System.String,System.String,System.Object)">
+            <summary>
+            Performs the generic API Post call to Ansible Tower
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="authenticationToken"></param>
+            <param name="endpoint"></param>
+            <param name="dataToSend"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Devon4Net.Infrastructure.AnsibleTower.Handler.AnsibleTowerHandler.DeleteAnsible``1(System.String,System.String,System.Boolean)">
+            <summary>
+            Performs the generic API Delete call to Ansible Tower
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="authenticationToken"></param>
+            <param name="endpoint"></param>
+            <param name="dataToSend"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

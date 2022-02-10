@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <Version>3.1.5</Version>
+        <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
+        <Company>Capgemini S.A.</Company>
+        <Description>Common extensions for devon4net</Description>
+        <Copyright>Copyright © Capgemini</Copyright>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageProjectUrl>https://www.devonfw.com</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
+        <RepositoryType />
+        <license>http://www.devonfw.com/terms-of-use/</license>
+        <PackageTags>devonfw devon4net Capgemini extension httpcontext</PackageTags>
+        <PackageReleaseNotes>Netstandard 2.1 for devonfw net core 3.1 compatibility version</PackageReleaseNotes>
+        <icon>https://avatars2.githubusercontent.com/u/7803029?s=200&amp;v=4</icon>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="3.1.10" />
+      <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
+      <PackageReference Include="System.Text.Json" Version="4.7.2" />
+    </ItemGroup>
+
+</Project>
