@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<!-- saved from url=(0075)https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/existing-db -->
+<html class="js hasSidebar hasPageActions hasBreadcrumb  noTouch" lang="en-us" dir="ltr"><script async="" src="./DBFirst_files/analytics.js.descarga"></script><script type="text/javascript">window["_gaUserPrefs"] = { ioo : function() { return true; } }</script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script src="./DBFirst_files/getid.js.descarga"></script>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta property="og:title" content="EF Core">
+	<meta property="og:image" content="https://docs.microsoft.com/_themes/docs.theme/master/en-us/_themes/images/microsoft-header.png">
+
+
+		<meta name="ms.devlang" content="dotnet">
+<meta name="ms.tgt_pltfrm" content="dotnet">
+<meta name="audience" content="developer">
+<meta name="manager" content="divega">
+<meta name="breadcrumb_path" content="/breadcrumb/toc.json">
+<meta name="ms.topic" content="article">
+<meta name="ms.prod" content="entity-framework">
+<meta name="ms.reviewer" content="divega">
+<meta name="ms.assetid" content="2bc68bea-ff77-4860-bf0b-cf00db6712a0">
+<meta name="author" content="rowanmiller">
+<meta name="ms.author" content="divega">
+<meta name="uid" content="core/get-started/aspnetcore/existing-db">
+<meta name="ms.date" content="10/27/2016">
+<meta name="ms.technology" content="entity-framework-core">
+<meta name="search.ms_sitename" content="Docs">
+<meta name="search.ms_docsetname" content="ef">
+<meta name="version" content="0">
+<meta name="locale" content="en-us">
+<meta name="site_name" content="Docs">
+<meta name="search.ms_product" content="MSDN">
+<meta name="depot_name" content="MSDN.ef">
+<meta name="updated_at" content="2017-08-13 01:41 PM">
+<meta name="gitcommit" content="https://github.com/aspnet/EntityFramework.Docs/blob/48cf029d64cabcf5bde8f17cd48034251f2f10a1/entity-framework/core/get-started/aspnetcore/existing-db.md">
+<meta name="original_content_git_url" content="https://github.com/aspnet/EntityFramework.Docs/blob/live/entity-framework/core/get-started/aspnetcore/existing-db.md">
+<meta name="document_id" content="998197fe-077b-acee-c91c-12f074359e9e">
+<meta name="pagetype" content="Conceptual">
+<meta name="toc_rel" content="../../../toc.json">
+<meta name="pdf_url_template" content="https://docs.microsoft.com/pdfstore/en-us/MSDN.ef/{branchName}{pdfName}">
+<meta name="word_count" content="1161">
+
+<link href="https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/existing-db" rel="canonical">
+	<title>EF Core | Microsoft Docs</title>
+
+	<link rel="stylesheet" href="./DBFirst_files/b11234fb1603062af431.site.css">
+	<link rel="stylesheet" href="./DBFirst_files/b11234fb1603062af431.conceptual.css">
+
+	<script>
+	var msDocs = {
+		data:{
+			contentLocale: 'en-us',
+			contentDir: 'ltr',
+			userLocale: 'en-us',
+			userDir: 'ltr',
+			pathToTheme: '/_themes/docs.theme/master/en-us/_themes/',
+			pageTemplate: 'Conceptual',
+			brand: ''
+		},
+		functions:{},
+		settings:{
+			extendBreadcrumb: false
+		}
+	};
+	if (!('Promise' in window && 'resolve' in window.Promise && 'reject' in window.Promise && 'all' in window.Promise && 'race' in window.Promise)) {
+		document.write('<script src="/_themes/docs.theme/master/en-us/_themes/global/js/bluebird.min.js"><\/script>');
+	}
+	</script>
+
+	<!--[if lt IE 9]>
+		<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
+		<script src="/_themes/docs.theme/master/en-us/_themes/global/js/polyfills/all.js"></script>
+	<![endif]-->
+	<!--[if gte IE 9]><!-->
+		<script src="./DBFirst_files/jquery-2.2.4.min.js.descarga"></script>
+	<!--<![endif]-->
+	<script>window.jQuery || document.write('<script src="/_themes/docs.theme/master/en-us/_themes/global/js/jquery/jquery-1.12.4.min.js"><\/script>')</script>
+	<script src="./DBFirst_files/global.min.js.descarga"></script><style></style><meta name="rating.locale" content="en-us"><script src="./DBFirst_files/open-rating.entry.min.js.descarga" async="" defer=""></script><script src="./DBFirst_files/jsll-4.2.1.js.descarga" async="" defer=""></script>
+<meta name="ms.documentid" content="998197fe-077b-acee-c91c-12f074359e9e"><meta name="ms.contentlang" content="en-us"><meta name="ms.publishtime" content="2017-08-13 01:41 PM"><meta name="ms.giturl" content="https://github.com/aspnet/EntityFramework.Docs/blob/live/entity-framework/core/get-started/aspnetcore/existing-db.md"><meta name="ms.sitename" content="Docs"><meta name="ms.gitcommit" content="https://github.com/aspnet/EntityFramework.Docs/blob/48cf029d64cabcf5bde8f17cd48034251f2f10a1/entity-framework/core/get-started/aspnetcore/existing-db.md"><meta name="ms.depotname" content="MSDN.ef"><meta name="ms.opspagetype" content="Conceptual"><meta name="ms.locale" content="en-us"><meta name="ms.lang" content="en"><meta name="ms.loc" content="us"><meta name="ms.theme" content="light"><meta name="ms.contentsource" content="OP"><meta name="ms.pvid" content="4C0A0B60-317E-4C77-B7FC-50C4EBE61333"><meta name="ms.perf.timing" content=",,0,0,0,5,304,306,312,602,602,,,,"><script type="text/javascript" charset="utf-8" async="" src="./DBFirst_files/2.b11234fb1603062af431.2.js.descarga"></script><link rel="stylesheet" href="./DBFirst_files/38-3b7d44"><script async="" src="./DBFirst_files/t.js.descarga"></script><script src="./DBFirst_files/49-945edd" defer=""></script><script src="./DBFirst_files/meversion" defer=""></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="/_chrome/commenting/master/open-commenting.ui.v1.0.2-7-g1b78816.master.min.js" src="./DBFirst_files/open-commenting.ui.v1.0.2-7-g1b78816.master.min.js.descarga"></script><style type="text/css">.or-o, .or-so {
+    margin: 0;
+    padding: 0;
+    height: auto;
+    width: auto;
+    position: relative;
+    float: none;
+    border: none;
+    border-radius: 0;
+    outline: none;
+    background: none;
+    box-sizing: border-box;
+    font: 13px 'Segoe UI', Frutiger, 'Frutiger Linotype', 'Dejavu Sans', 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: normal;
+    text-transform: none;
+    border-spacing: 0;
+    border-collapse: collapse;
+    transform: none;
+    transition: none;
+    animation: none;
+}
+.or-o:before, .or-o:after, .or-so:before, .or-so:after {
+    content: none;
+}
+.or-e-0 {
+    transition: none !important;
+}
+.or-f {
+    padding: 1px;
+}
+.or-f::-moz-focus-inner {
+    border: none;
+    padding: 0;
+}
+.or-lw {
+    clear: both;
+}
+h1, h2 {}
+h1.or-t, h2.or-t {
+    font-weight: lighter;
+}
+h1.or-t {
+    font-size: 40px;
+}
+h2.or-t {
+    font-size: 30px;
+}
+h3.or-t {
+    font-size: 20px;
+}
+h4.or-t {
+    font-size: 17px;
+}
+.or-b {
+    cursor: pointer;
+}
+.or-b>.or-c {
+    display: inline-block;
+    padding: 4px 25px;
+    width: 100%;
+    height: 100%;
+}
+.or-b:active {
+    transform: scale(0.98, 0.95);
+}
+.or-b[disabled] {
+    cursor: default;
+}
+.or-b[disabled]:active {
+    transform: none;
+}
+.or-g {
+    display: inline-block;
+    line-height: 0;
+}
+.or-l {
+    cursor: pointer;
+    padding: 5px 1px;
+    vertical-align: baseline;
+}
+.or-l>.or-c {
+    text-decoration: underline;
+}
+.or-a {
+    cursor: pointer;
+}
+.or-a>.or-c {
+    display: inline-block;
+    padding: 8px;
+    width: 100%;
+    height: 100%;
+}
+.or-v {
+    cursor: pointer;
+    padding-bottom: 2px;
+    /* For IE :active propagation BUG Fix */
+}
+.or-v>span {
+    display: inline-block;
+}
+.or-v>input[type=checkbox] {
+    -moz-appearance: checkbox-container;
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
+.or-v>input[type=checkbox]+span, .or-v>input[type=checkbox]+span+span {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    overflow: hidden;
+}
+.or-v>input[type=checkbox]+span+span {
+    opacity: 0;
+}
+.or-v>input[type=checkbox]:checked+span+span {
+    opacity: 1;
+}
+.or-v>span:last-child {
+    margin: 0 0 0 25px;
+    line-height: 19px;
+}
+.or-v:after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+}
+.or-pc[dir=rtl] .or-v>span:last-child {
+    margin: 0 25px 0 0;
+}
+.or-x {
+    resize: none;
+    padding: 5px;
+}
+.or-c-mf {
+    padding: 10px;
+}
+.or-c-mf.or-e-fi {
+    transition: opacity 0.1s linear;
+}
+.or-c-mf.or-e-fo {
+    transition: opacity 0.75s linear;
+}
+.or-c-pf {
+    padding: 7px;
+    max-height: 100%;
+    overflow: auto;
+}
+.or-c-pf>.or-a {
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    line-height: 0;
+    width: 20px;
+    height: 20px;
+}
+.or-c-pf>.or-a.or-f.or-k {
+    outline: none;
+}
+.or-c-pf>.or-a>.or-c.or-g {
+    padding: 0;
+}
+.or-c-pf>.or-a>.or-c.or-g>svg {
+    stroke-width: 1px;
+}
+.or-c-pf.or-e-fi, .or-c-pf.or-e-fo {
+    transition: opacity 0.1s linear;
+}
+.or-c-pf>.or-lw {
+    overflow: hidden;
+    padding: 3px;
+}
+.or-c-pf>.or-lw.or-e-h.or-e-w.or-e-fi {
+    transition: height 0.167s cubic-bezier(0.1, 0.9, 0.2, 1.0),
+                    width 0.167s cubic-bezier(0.1, 0.9, 0.2, 1.0),
+                    opacity 0.1s linear 0.167s;
+}
+.or-pc[dir=rtl] .or-c-pf>.or-a {
+    left: 0;
+    right: initial;
+}
+.or-c-md {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+        flex-direction: column;
+    -ms-flex-align: center;
+        align-items: center;
+    -ms-flex-pack: center;
+        justify-content: center;
+}
+.or-c-md>.or-c {
+    overflow: auto;
+}
+.or-c-md>.or-c.or-e-fi.or-e-t {
+    transition: opacity 0.167s linear, transform 0.367s cubic-bezier(0.1, 0.9, 0.2, 1.0);
+}
+.or-c-md>.or-c.or-e-fo.or-e-t {
+    transition: opacity 0.1s linear, transform 0.1s linear;
+}
+.or-c-v h3.or-t {
+    font-size: 13px;
+    margin: 0 18px 5px 1px;
+}
+.or-c-v>table.or-lw {
+    table-layout: fixed;
+}
+.or-c-v>table.or-lw td {
+    width: 50%;
+}
+.or-c-v>table.or-lw td>.or-b {
+    width: 100%;
+}
+.or-c-v>table.or-lw td:first-child {
+    padding-right: 1px;
+}
+.or-c-v>table.or-lw td:last-child {
+    padding-left: 1px;
+}
+.or-pc[dir=rtl] .or-c-v h3.or-t {
+    margin: 0 1px 5px 18px;
+}
+.or-pc[dir=rtl] .or-c-v>table.or-lw td:first-child {
+    border: none;
+    border-left: 2px transparent solid;
+}
+.or-c-f {
+    width: 235px;
+    max-width: 100%;
+}
+.or-c-f h3.or-t {
+    font-size: 13px;
+    font-weight: bold;
+}
+.or-c-f .or-v, .or-c-f .or-x, .or-c-f>.or-b {
+    display: block;
+}
+.or-c-f .or-v {
+    margin: 3px 0 0 0;
+}
+.or-c-f .or-x {
+    width: 100%;
+    height: 75px;
+}
+.or-c-f>.or-lw {
+    margin: 3px 0 0 0;
+}
+.or-c-f>.or-lw>.or-t {
+    margin: 0 18px 0 0;
+}
+.or-c-f>.or-lw.or-e-h.or-e-w.or-e-fi {
+    transition: height 0.167s cubic-bezier(0.1, 0.9, 0.2, 1.0),
+                    width 0.167s cubic-bezier(0.1, 0.9, 0.2, 1.0),
+                    opacity 0.167s linear;
+}
+.or-c-f>h3.or-t {
+    margin: 7px 0 5px 1px;
+}
+.or-c-f>.or-b {
+    float: right;
+    margin: 4px -1px 0 0;
+}
+.or-pc[dir=rtl] .or-c-f {}
+.or-pc[dir=rtl] .or-c-f>h3.or-t {
+    margin: 7px 1px 5px 0;
+}
+.or-pc[dir=rtl] .or-c-f>.or-lw>.or-t {
+    margin: 0 0 0 18px;
+}
+.or-pc[dir=rtl] .or-c-f>.or-b {
+    float: left;
+    margin: 4px 0 0 -1px;
+}
+.or-c-t h3.or-t {
+    font-size: 13px;
+}
+.or-c-pf .or-c-t h3.or-t {
+    margin: 3px 18px 0 0;
+}
+.or-pc[dir=rtl] .or-c-pf .or-c-t h3.or-t {
+    margin: 3px 0 0 18px;
+}
+.or-c-mv svg {
+    width: 12px;
+    height: 12px;
+    stroke-width: 1px;
+}
+.or-c-mv>.or-c {
+    padding: 3px 20px 5px 17px;
+}
+.or-c-mv>.or-c>span {
+    vertical-align: middle;
+}
+.or-c-mv>.or-c>.or-t {
+    color: inherit;
+    margin-left: 2px;
+}
+.or-c-mv.or-e-fi {
+    transition: opacity 0.1s linear;
+}
+.or-pc[dir=rtl] .or-c-mv>.or-c {
+    padding: 3px 17px 5px 20px;
+}
+.or-pc[dir=rtl] .or-c-mv>.or-c>.or-t {
+    margin: 0 2px 0 0;
+}
+.or-t-ml .or-f {}
+.or-t-ml .or-f.or-k {
+    outline: 2px black solid;
+}
+.or-t-ml .or-t {
+    color: black;
+}
+.or-t-ml .or-b {}
+.or-t-ml .or-b, .or-t-ml .or-b:hover, .or-t-ml .or-b:active {
+    background: none;
+}
+.or-t-ml .or-b>.or-c {
+    color: white;
+    stroke: white;
+    fill: white;
+    background: #0078d7;
+    border: 2px transparent solid;
+}
+.or-t-ml .or-b:hover>.or-c {
+    border-color: rgba(0, 0, 0, 0.4);
+}
+.or-t-ml .or-b:active>.or-c {
+    color: black;
+    stroke: black;
+    fill: black;
+    background: #999999;
+    border-color: transparent;
+}
+.or-t-ml .or-b[disabled]>.or-c, .or-t-ml .or-b[disabled]:hover>.or-c {
+    color: rgba(0, 0, 0, 0.4);
+    stroke: rgba(0, 0, 0, 0.4);
+    fill: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.2);
+    border-color: transparent;
+}
+.or-t-ml .or-l {}
+.or-t-ml .or-l, .or-t-ml .or-l:hover, .or-t-ml .or-l:active {
+    background: none;
+}
+.or-t-ml .or-l>.or-c {
+    color: #0078d7;
+}
+.or-t-ml .or-l:hover>.or-c {
+    color: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-l:active>.or-c {
+    color: rgba(0, 0, 0, 0.4);
+}
+.or-t-ml .or-a {}
+.or-t-ml .or-a, .or-t-ml .or-a:hover, .or-t-ml .or-a:active {
+    background: none;
+}
+.or-t-ml .or-a>.or-c {
+    color: black;
+    background: transparent;
+}
+.or-t-ml .or-a:hover>.or-c {
+    background: rgba(0, 0, 0, 0.1);
+}
+.or-t-ml .or-a:active>.or-c {
+    background: rgba(0, 0, 0, 0.2);
+}
+.or-t-ml .or-v {}
+.or-t-ml .or-v>input[type=checkbox] {}
+.or-t-ml .or-v>input[type=checkbox]+span {
+    border: 2px solid rgba(0, 0, 0, 0.4);
+    background: none;
+}
+.or-t-ml .or-v>input[type=checkbox]+span+span>svg {
+    stroke: white;
+    stroke-width: 1.5px;
+    fill: transparent;
+}
+.or-t-ml .or-v:hover>input[type=checkbox]+span, .or-t-ml .or-v:hover>input[type=checkbox]:checked+span {
+    border-color: black;
+}
+.or-t-ml .or-v:active>input[type=checkbox]+span, .or-t-ml .or-v>input[type=checkbox]:checked+span, .or-t-ml .or-v:active>input[type=checkbox]:checked+span {
+    border-color: transparent;
+}
+.or-t-ml .or-v:active>input[type=checkbox]+span, .or-t-ml .or-v:active>input[type=checkbox]:checked+span {
+    background: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-v>input[type=checkbox]:checked+span {
+    background: #0078d7;
+}
+.or-t-ml .or-x {
+    color: black;
+    background: rgba(255, 255, 255, 0.4);
+    border: 2px rgba(0, 0, 0, 0.4) solid;
+}
+.or-t-ml .or-x:hover {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: #171717;
+}
+.or-t-ml .or-x:active, .or-t-ml .or-x:focus {
+    color: black;
+    background: white;
+    border-color: #0078d7;
+}
+.or-t-ml .or-x:active::-webkit-input-placeholder, .or-t-ml .or-x:focus::-webkit-input-placeholder {
+    color: rgba(0, 0, 0, 0.4);
+}
+.or-t-ml .or-x:active:-ms-input-placeholder, .or-t-ml .or-x:focus:-ms-input-placeholder {
+    color: rgba(0, 0, 0, 0.4);
+}
+.or-t-ml .or-x:active::placeholder, .or-t-ml .or-x:focus::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+}
+.or-t-ml .or-x::-webkit-input-placeholder {
+    color: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-x:-ms-input-placeholder {
+    color: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-x::placeholder {
+    color: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-c-pf, .or-t-ml .or-c-mf {
+    border: 1px rgba(133, 133, 133, 0.4) solid;
+    background: white;
+}
+.or-t-ml .or-c-pf {}
+.or-t-ml .or-c-pf>.or-a {}
+.or-t-ml .or-c-pf>.or-a.or-f.or-k:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px black solid;
+}
+.or-t-ml .or-c-pf>.or-a>.or-c.or-g>svg {
+    stroke: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-c-pf>.or-a:hover>.or-c.or-g>svg {
+    stroke: #c80000;
+}
+.or-t-ml .or-c-pf>.or-a:active>.or-c.or-g>svg {
+    stroke: #8c0000;
+}
+.or-t-ml .or-c-md {
+    background: rgba(255, 255, 255, 0.6);
+}
+.or-t-ml .or-c-md>.or-c {
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+}
+
+@media screen and (-ms-high-contrast: active) {
+    .or-t-ml .or-b, .or-t-md .or-b {}
+    .or-t-ml .or-b>.or-c, .or-t-ml .or-b:active>.or-c, .or-t-md .or-b>.or-c, .or-t-md .or-b:active>.or-c {
+        stroke: white;
+        fill: white;
+    }
+    .or-t-ml .or-c-pf>.or-a>.or-c.or-g>svg, .or-t-md .or-c-pf>.or-a>.or-c.or-g>svg {
+        stroke: white;
+    }
+}
+
+@media screen and (-ms-high-contrast: black-on-white) {
+    .or-t-ml .or-b, .or-t-md .or-b {}
+    .or-t-ml .or-b>.or-c, .or-t-ml .or-b:active>.or-c, .or-t-md .or-b>.or-c, .or-t-md .or-b:active>.or-c {
+        stroke: black;
+        fill: black;
+    }
+    .or-t-ml .or-v>input[type=checkbox]+span+span>svg, .or-t-md .or-v>input[type=checkbox]+span+span>svg {
+        stroke: black;
+    }
+    .or-t-ml .or-c-pf>.or-a>.or-c.or-g>svg, .or-t-md .or-c-pf>.or-a>.or-c.or-g>svg {
+        stroke: black;
+    }
+}
+</style><style type="text/css">[id='openFeedbackContainer']{ position: fixed; right: 10px; bottom: 10px; }
+[id='openFeedbackContainer'][dir='rtl']{ left: 10px; right: initial; }</style><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="//cdn.livefyre.com/libs/fyre.conv/v3.0.0/livefyre.min.js" src="./DBFirst_files/livefyre.min.js.descarga"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="//cdn.livefyre.com/libs/sidenotes/v1.6.0/sidenotes.min.js" src="./DBFirst_files/sidenotes.min.js.descarga"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="//cdn.livefyre.com/libs/identity/v1.1.12/simple/javascripts/customprofiles.min.js" src="./DBFirst_files/customprofiles.min.js.descarga"></script><link rel="stylesheet" type="text/css" href="./DBFirst_files/livefyre_main.css" media="all"><script type="text/javascript" src="./DBFirst_files/livefyre_base.js.descarga" async="" defer=""></script><link rel="stylesheet" type="text/css" href="./DBFirst_files/sp.css" media="all"><style type="text/css" id="fyre-brand-styles-v2">.fyre-lfep2,
+.fyre-lfep2 input,
+.fyre-lfep2 textarea {
+    font-family: ;
+}
+
+.fyre-cp-form-btns .fyre-cp-form-back-btn,
+.fyre-cp-form-btns .fyre-cp-form-submit-btn {
+    background-color: #e86600;
+}
+
+.fyre-cp-link-create {
+    color: #e86600;
+}
+
+p.fyre-profile-user-comments span,
+p.fyre-profile-user-likes span {
+    color: #e86600;
+}
+
+.fyre-profile-comment-footer a {
+    color: #e86600;
+}
+
+a.fyre-profile-more-link {
+    color: #e86600;
+}
+
+.fyre-cp-form .fyre-cp-edit-save-msg {
+    color: #e86600
+}</style><script type="text/javascript" src="./DBFirst_files/livefyre_mod_main.js.descarga" async="" defer=""></script><link rel="stylesheet" type="text/css" href="./DBFirst_files/block.css" media="all"><script type="text/javascript" src="./DBFirst_files/livefyre_mod_editor_main.js.descarga" async="" defer=""></script></head>
+
+<body lang="en-us" dir="ltr" style="overflow-y: auto;">
+	
+
+	<div class="container mainContainer" lang="en-us" dir="ltr" ms.pgarea="body" data-bi-name="body">
+		<main role="main" ms.cmpgrp="content" data-bi-name="content">
+				<div id="main">
+
+						<h1 id="getting-started-with-ef-core-on-aspnet-core-with-an-existing-database" sourcefile="core/get-started/aspnetcore/existing-db.md" sourcestartlinenumber="11" sourceendlinenumber="11">Getting Started with EF Core on ASP.NET Core with an Existing Database</h1>
+						<div class="metadata" ms.cmpgrp="page info" data-bi-name="page info">
+							<div>
+								<time class="date" datetime="10/27/2016 12:00:00 AM">10/27/2016</time>
+									<span class="reading-time">5 minutes to read</span>
+									<span class="contributors-text">Contributors</span>
+									<ul class="contributors" ms.cmpgrp="contributors" data-bi-name="contributors">
+												<li><a href="https://github.com/rowanmiller" title="Rowan Miller" ms.cmpnm="contributorprofile" data-bi-name="contributorprofile"><img src="./DBFirst_files/rowanmiller.png" alt="Rowan Miller"></a></li>
+												<li><a href="https://github.com/divega" title="Diego Vega" ms.cmpnm="contributorprofile" data-bi-name="contributorprofile"><img src="./DBFirst_files/divega.png" alt="Diego Vega"></a></li>
+												<li><a href="https://github.com/bricelam" title="Brice Lambson" ms.cmpnm="contributorprofile" data-bi-name="contributorprofile"><img src="./DBFirst_files/bricelam.png" alt="Brice Lambson"></a></li>
+									</ul>
+							</div>
+
+
+							<nav id="center-doc-outline" class="doc-outline" ms.cmpgrp="intopic toc" data-bi-name="intopic toc" role="navigation" aria-label="On page navigation">
+								<h3>In this article</h3>
+							<ol class="lf-text-block lf-block" data-lf-anchor-id="24c42b5928d956b020f9414a20016729:0"><li><a href="https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/existing-db#prerequisites">Prerequisites</a></li><li><a href="https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/existing-db#create-a-new-project">Create a new project</a></li><li><a href="https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/existing-db#install-entity-framework">Install Entity Framework</a></li><li><a href="https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/existing-db#reverse-engineer-your-model">Reverse engineer your model</a></li><li><a href="https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/existing-db#register-your-context-with-dependency-injection">Register your context with dependency injection</a></li><li><a href="https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/existing-db#create-a-controller">Create a controller</a></li><li><a href="https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/existing-db#run-the-application">Run the application</a></li><span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="24c42b5928d956b020f9414a20016729:0">+
+</a>
+</span></ol></nav>
+
+						</div>
+
+						<div><div class="content">
+<div class="IMPORTANT alert"><h5>Important</h5><p class="lf-text-block lf-block" data-lf-anchor-id="47ca6bcd4494b0cfa7d10dd0db104dc5:0">The <a href="https://www.microsoft.com/net/download/core" data-linktype="external">.NET Core SDK</a> no longer supports <code>project.json</code> or Visual Studio 2015. Everyone doing .NET Core development is encouraged to <a href="https://docs.microsoft.com/dotnet/articles/core/migration/" data-linktype="external">migrate from project.json to csproj</a> and <a href="https://www.visualstudio.com/downloads/" data-linktype="external">Visual Studio 2017</a>.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="47ca6bcd4494b0cfa7d10dd0db104dc5:0">+
+</a>
+</span></p>
+</div>
+<p class="lf-text-block lf-block" data-lf-anchor-id="15f069c8cc9530012e41b7987f114d60:0">In this walkthrough, you will build an ASP.NET Core MVC application that performs basic data access using Entity Framework.  You will use reverse engineering to create an Entity Framework model based on an existing database.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="15f069c8cc9530012e41b7987f114d60:0">+
+</a>
+</span></p>
+<div class="TIP alert"><h5>Tip</h5><p class="lf-text-block lf-block" data-lf-anchor-id="1f83d89bd5bd040850fb24af2b327840:0">You can view this article's <a href="https://github.com/aspnet/EntityFramework.Docs/tree/master/samples/core/GetStarted/AspNetCore/EFGetStarted.AspNetCore.ExistingDb" data-linktype="external">sample</a> on GitHub.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="1f83d89bd5bd040850fb24af2b327840:0">+
+</a>
+</span></p>
+</div>
+<h2 id="prerequisites">Prerequisites</h2>
+<p class="lf-text-block lf-block" data-lf-anchor-id="81906c6ec0bed0177bbdc8d61fb8cd93:0">The following prerequisites are needed to complete this walkthrough:<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="81906c6ec0bed0177bbdc8d61fb8cd93:0">+
+</a>
+</span></p>
+<ul class="lf-text-block lf-block" data-lf-anchor-id="21cb62cc9044776fee914dd5f4051ab9:0">
+<li><a href="https://www.visualstudio.com/downloads/" data-linktype="external">Visual Studio 2017 15.3</a> with these workloads:<ul>
+<li><strong>ASP.NET and web development</strong> (under <strong>Web &amp; Cloud</strong>)</li>
+<li><strong>.NET Core cross-platform development</strong> (under <strong>Other Toolsets</strong>)</li>
+</ul>
+</li>
+<li><a href="https://www.microsoft.com/net/download/core" data-linktype="external">.NET Core 2.0 SDK</a>.</li>
+<li><a href="https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/existing-db#blogging-database" data-linktype="self-bookmark">Blogging database</a></li>
+<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="21cb62cc9044776fee914dd5f4051ab9:0">+
+</a>
+</span></ul>
+<h3 id="blogging-database">Blogging database</h3>
+<p class="lf-text-block lf-block" data-lf-anchor-id="51e0ecd9d348e88a032d884265252a12:0">This tutorial uses a <strong>Blogging</strong> database on your LocalDb instance as the existing database.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="51e0ecd9d348e88a032d884265252a12:0">+
+</a>
+</span></p>
+<div class="TIP alert"><h5>Tip</h5><p class="lf-text-block lf-block" data-lf-anchor-id="a9e8ae5dc7a3a30806afa907476e68c9:0">If you have already created the <strong>Blogging</strong> database as part of another tutorial, you can skip these steps.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="a9e8ae5dc7a3a30806afa907476e68c9:0">+
+</a>
+</span></p>
+</div>
+<ul class="lf-text-block lf-block" data-lf-anchor-id="9bcc8c1cd41960fd230da84351030352:0">
+<li>Open Visual Studio</li>
+<li><strong>Tools -&gt; Connect to Database...</strong></li>
+<li>Select <strong>Microsoft SQL Server</strong> and click <strong>Continue</strong></li>
+<li>Enter <strong>(localdb)\mssqllocaldb</strong> as the <strong>Server Name</strong></li>
+<li>Enter <strong>master</strong> as the <strong>Database Name</strong> and click <strong>OK</strong></li>
+<li>The master database is now displayed under <strong>Data Connections</strong> in <strong>Server Explorer</strong></li>
+<li>Right-click on the database in <strong>Server Explorer</strong> and select <strong>New Query</strong></li>
+<li>Copy the script, listed below, into the query editor</li>
+<li>Right-click on the query editor and select <strong>Execute</strong></li>
+<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="9bcc8c1cd41960fd230da84351030352:0">+
+</a>
+</span></ul>
+<div class="codeHeader lang-sql" data-bi-name="code-header"><span class="language">SQL</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-sql" data-src="https://github.com/aspnet/EntityFramework.Docs/blob/live/entity-framework/core/get-started/_shared/create-blogging-database-script.sql" name="Main" data-bi-name="code-block"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">DATABASE</span> [Blogging];
+GO
+
+<span class="hljs-keyword">USE</span> [Blogging];
+GO
+
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> [Blog] (
+    [BlogId] <span class="hljs-built_in">int</span> <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">IDENTITY</span>,
+    [<span class="hljs-keyword">Url</span>] <span class="hljs-keyword">nvarchar</span>(<span class="hljs-keyword">max</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,
+    <span class="hljs-keyword">CONSTRAINT</span> [PK_Blog] PRIMARY <span class="hljs-keyword">KEY</span> ([BlogId])
+);
+GO
+
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> [Post] (
+    [PostId] <span class="hljs-built_in">int</span> <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">IDENTITY</span>,
+    [BlogId] <span class="hljs-built_in">int</span> <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,
+    [<span class="hljs-keyword">Content</span>] <span class="hljs-keyword">nvarchar</span>(<span class="hljs-keyword">max</span>),
+    [Title] <span class="hljs-keyword">nvarchar</span>(<span class="hljs-keyword">max</span>),
+    <span class="hljs-keyword">CONSTRAINT</span> [PK_Post] PRIMARY <span class="hljs-keyword">KEY</span> ([PostId]),
+    <span class="hljs-keyword">CONSTRAINT</span> [FK_Post_Blog_BlogId] FOREIGN <span class="hljs-keyword">KEY</span> ([BlogId]) <span class="hljs-keyword">REFERENCES</span> [Blog] ([BlogId]) <span class="hljs-keyword">ON</span> <span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">CASCADE</span>
+);
+GO
+
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> [Blog] (<span class="hljs-keyword">Url</span>) <span class="hljs-keyword">VALUES</span>
+(<span class="hljs-string">'http://blogs.msdn.com/dotnet'</span>),
+(<span class="hljs-string">'http://blogs.msdn.com/webdev'</span>),
+(<span class="hljs-string">'http://blogs.msdn.com/visualstudio'</span>)
+<span class="hljs-keyword">GO</span>
+</code></pre><h2 id="create-a-new-project">Create a new project</h2>
+<ul class="lf-text-block lf-block" data-lf-anchor-id="05e6e0ca9c49ea4fe34d254257074674:0">
+<li>Open Visual Studio 2017</li>
+<li><strong>File -&gt; New -&gt; Project...</strong></li>
+<li>From the left menu select <strong>Installed -&gt; Templates -&gt; Visual C# -&gt; Web</strong></li>
+<li>Select the <strong>ASP.NET Core Web Application (.NET Core)</strong> project template</li>
+<li>Enter <strong>EFGetStarted.AspNetCore.ExistingDb</strong> as the name and click <strong>OK</strong></li>
+<li>Wait for the <strong>New ASP.NET Core Web Application</strong> dialog to appear</li>
+<li>Under <strong>ASP.NET Core Templates 2.0</strong> select the <strong>Web Application (Model-View-Controller)</strong></li>
+<li>Ensure that <strong>Authentication</strong> is set to <strong>No Authentication</strong></li>
+<li>Click <strong>OK</strong></li>
+<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="05e6e0ca9c49ea4fe34d254257074674:0">+
+</a>
+</span></ul>
+<h2 id="install-entity-framework">Install Entity Framework</h2>
+<p class="lf-text-block lf-block" data-lf-anchor-id="0fc66c8ac79080832acd895a67353263:0">To use EF Core, install the package for the database provider(s) you want to target. This walkthrough uses SQL Server. For a list of available providers see <a href="https://docs.microsoft.com/en-us/ef/core/providers/index" data-linktype="relative-path">Database Providers</a>.<span class="lf-has-num lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="0fc66c8ac79080832acd895a67353263:0">3</a>
+</span></p>
+<ul class="lf-text-block lf-block" data-lf-anchor-id="0f890882446a7d8cef90193a75b6b5d8:0">
+<li><p><strong>Tools &gt; NuGet Package Manager &gt; Package Manager Console</strong></p>
+</li>
+<li><p>Run <code>Install-Package Microsoft.EntityFrameworkCore.SqlServer</code></p>
+</li>
+<span class="lf-has-num lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="0f890882446a7d8cef90193a75b6b5d8:0">2</a>
+</span></ul>
+<p class="lf-text-block lf-block" data-lf-anchor-id="19800f79cde53cc9b3c8899f750583c5:0">We will be using some Entity Framework Tools to create a model from the database. So we will install the tools package as well:<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="19800f79cde53cc9b3c8899f750583c5:0">+
+</a>
+</span></p>
+<ul class="lf-text-block lf-block" data-lf-anchor-id="0f8108b644317cc4aa00010071a68582:0">
+<li>Run <code>Install-Package Microsoft.EntityFrameworkCore.Tools</code></li>
+<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="0f8108b644317cc4aa00010071a68582:0">+
+</a>
+</span></ul>
+<p class="lf-text-block lf-block" data-lf-anchor-id="b901cb13e4c4b921cea0c59ff184dff3:0">We will be using some ASP.NET Core Scaffolding tools to create controllers and views later on. So we will install this design package as well:<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="b901cb13e4c4b921cea0c59ff184dff3:0">+
+</a>
+</span></p>
+<ul class="lf-text-block lf-block" data-lf-anchor-id="3d610baf0413fc6e8a89850237f4999c:0">
+<li>Run <code>Install-Package Microsoft.VisualStudio.Web.CodeGeneration.Design</code></li>
+<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="3d610baf0413fc6e8a89850237f4999c:0">+
+</a>
+</span></ul>
+<h2 id="reverse-engineer-your-model">Reverse engineer your model</h2>
+<p class="lf-text-block lf-block" data-lf-anchor-id="07e40849db8f4022716d1e094520e930:0">Now it's time to create the EF model based on your existing database.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="07e40849db8f4022716d1e094520e930:0">+
+</a>
+</span></p>
+<ul class="lf-text-block lf-block" data-lf-anchor-id="0dc0484a448924892b8988657d366331:0">
+<li><strong>Tools –&gt; NuGet Package Manager –&gt; Package Manager Console</strong></li>
+<li>Run the following command to create a model from the existing database. If you receive an error stating <code>The term 'Scaffold-DbContext' is not recognized as the name of a cmdlet</code>, then close and reopen Visual Studio.</li>
+<span class="lf-has-num lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="0dc0484a448924892b8988657d366331:0">19</a>
+</span></ul>
+<div class="codeHeader lang-console" data-bi-name="code-header"><span class="language">console</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre class=""><code class="lang-console" data-bi-name="code-block">Scaffold-DbContext "Server=(localdb)\mssqllocaldb;Database=Blogging;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+</code></pre><p class="lf-text-block lf-block" data-lf-anchor-id="85cc2c5dfdc1e0db338d4a6f41a3637b:0">The reverse engineer process created entity classes (<code>Blog.cs</code> &amp; <code>Post.cs</code>) and a derived context (<code>BloggingContext.cs</code>) based on the schema of the existing database.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="85cc2c5dfdc1e0db338d4a6f41a3637b:0">+
+</a>
+</span></p>
+<p class="lf-text-block lf-block" data-lf-anchor-id="899d6c29debd77db2acd29d361257a7b:0"> The entity classes are simple C# objects that represent the data you will be querying and saving.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="899d6c29debd77db2acd29d361257a7b:0">+
+</a>
+</span></p>
+<div class="codeHeader lang-csharp" data-bi-name="code-header"><span class="language">C#</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-csharp" data-src="https://github.com/aspnet/EntityFramework.Docs/blob/live/samples/core/GetStarted/AspNetCore/EFGetStarted.AspNetCore.ExistingDb/Models/Blog.cs" name="Main" data-bi-name="code-block"><span class="hljs-keyword">using</span> System;
+<span class="hljs-keyword">using</span> System.Collections.Generic;
+
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">EFGetStarted.AspNetCore.ExistingDb.Models</span>
+{
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">partial</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Blog</span>
+    {
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Blog</span>(<span class="hljs-params"></span>)
+        </span>{
+            Post = <span class="hljs-keyword">new</span> HashSet&lt;Post&gt;();
+        }
+
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> BlogId { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">string</span> Url { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> ICollection&lt;Post&gt; Post { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+    }
+}
+</code></pre><p class="lf-text-block lf-block" data-lf-anchor-id="0bc42c39d6b160993309080741034373:0"> The context represents a session with the database and allows you to query and save instances of the entity classes.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="0bc42c39d6b160993309080741034373:0">+
+</a>
+</span></p>
+<!-- Static code listing, rather than a linked file, because the walkthrough modifies the context file heavily -->
+<div class="codeHeader lang-csharp" data-bi-name="code-header"><span class="language">C#</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-csharp" data-bi-name="code-block"><span class="hljs-keyword">public</span> <span class="hljs-keyword">partial</span> <span class="hljs-keyword">class</span> <span class="hljs-title">BloggingContext</span> : <span class="hljs-title">DbContext</span>
+{
+   <span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> DbSet&lt;Blog&gt; Blog { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+   <span class="hljs-keyword">public</span> <span class="hljs-keyword">virtual</span> DbSet&lt;Post&gt; Post { <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; }
+
+   <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">override</span> <span class="hljs-keyword">void</span> <span class="hljs-title">OnConfiguring</span>(<span class="hljs-params">DbContextOptionsBuilder optionsBuilder</span>)
+   </span>{
+       <span class="hljs-keyword">if</span> (!optionsBuilder.IsConfigured)
+       {
+           <span class="hljs-meta">#<span class="hljs-meta-keyword">warning</span> To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.</span>
+           optionsBuilder.UseSqlServer(<span class="hljs-string">@"Server=(localdb)\mssqllocaldb;Database=Blogging;Trusted_Connection=True;"</span>);
+       }
+   }
+
+   <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">override</span> <span class="hljs-keyword">void</span> <span class="hljs-title">OnModelCreating</span>(<span class="hljs-params">ModelBuilder modelBuilder</span>)
+   </span>{
+       modelBuilder.Entity&lt;Blog&gt;(entity =&gt;
+       {
+           entity.Property(e =&gt; e.Url).IsRequired();
+       });
+
+       modelBuilder.Entity&lt;Post&gt;(entity =&gt;
+       {
+           entity.HasOne(d =&gt; d.Blog)
+               .WithMany(p =&gt; p.Post)
+               .HasForeignKey(d =&gt; d.BlogId);
+       });
+   }
+}
+</code></pre><h2 id="register-your-context-with-dependency-injection">Register your context with dependency injection</h2>
+<p class="lf-text-block lf-block" data-lf-anchor-id="a45cc94cd5885a272820ac8685154fd0:0">The concept of dependency injection is central to ASP.NET Core. Services (such as <code>BloggingContext</code>) are registered with dependency injection during application startup. Components that require these services (such as your MVC controllers) are then provided these services via constructor parameters or properties. For more information on dependency injection see the <a href="http://docs.asp.net/en/latest/fundamentals/dependency-injection.html" data-linktype="external">Dependency Injection</a> article on the ASP.NET site.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="a45cc94cd5885a272820ac8685154fd0:0">+
+</a>
+</span></p>
+<h3 id="remove-inline-context-configuration">Remove inline context configuration</h3>
+<p class="lf-text-block lf-block" data-lf-anchor-id="9594e64b6ca408f7e3ef5dcef140db3d:0">In ASP.NET Core, configuration is generally performed in <strong>Startup.cs</strong>. To conform to this pattern, we will move configuration of the database provider to <strong>Startup.cs</strong>.<span class="lf-has-num lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="9594e64b6ca408f7e3ef5dcef140db3d:0">1</a>
+</span></p>
+<ul class="lf-text-block lf-block" data-lf-anchor-id="08cc407d201538dd1b084ccb0124e37d:0">
+<li>Open <code>Models\BloggingContext.cs</code></li>
+<li>Delete the <code>OnConfiguring(...)</code> method</li>
+<span class="lf-has-num lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="08cc407d201538dd1b084ccb0124e37d:0">2</a>
+</span></ul>
+<div class="codeHeader lang-csharp" data-bi-name="code-header"><span class="language">C#</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-csharp" data-bi-name="code-block"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">override</span> <span class="hljs-keyword">void</span> <span class="hljs-title">OnConfiguring</span>(<span class="hljs-params">DbContextOptionsBuilder optionsBuilder</span>)
+</span>{
+    <span class="hljs-meta">#<span class="hljs-meta-keyword">warning</span> To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.</span>
+    optionsBuilder.UseSqlServer(<span class="hljs-string">@"Server=(localdb)\mssqllocaldb;Database=Blogging;Trusted_Connection=True;"</span>);
+}
+</code></pre><ul class="lf-text-block lf-block" data-lf-anchor-id="8d51ac68c6956497544c45cd2513c737:0">
+<li>Add the following constructor, which will allow configuration to be passed into the context by dependency injection</li>
+<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8d51ac68c6956497544c45cd2513c737:0">+
+</a>
+</span></ul>
+<div class="codeHeader lang-csharp" data-bi-name="code-header"><span class="language">C#</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-csharp" data-src="https://github.com/aspnet/EntityFramework.Docs/blob/live/samples/core/GetStarted/AspNetCore/EFGetStarted.AspNetCore.ExistingDb/Models/BloggingContext.cs" name="Main" data-bi-name="code-block"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">BloggingContext</span>(<span class="hljs-params">DbContextOptions&lt;BloggingContext&gt; options</span>)
+    : <span class="hljs-title">base</span>(<span class="hljs-params">options</span>)
+</span>{ }
+</code></pre><h3 id="register-and-configure-your-context-in-startupcs">Register and configure your context in Startup.cs</h3>
+<p class="lf-text-block lf-block" data-lf-anchor-id="01b4e90265bc8a3424edb05e496c5ec2:0">In order for our MVC controllers to make use of <code>BloggingContext</code> we are going to register it as a service.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="01b4e90265bc8a3424edb05e496c5ec2:0">+
+</a>
+</span></p>
+<ul class="lf-text-block lf-block" data-lf-anchor-id="8dccac6ce999661b3109084663424b01:0">
+<li>Open <strong>Startup.cs</strong></li>
+<li>Add the following <code>using</code> statements at the start of the file</li>
+<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8dccac6ce999661b3109084663424b01:0">+
+</a>
+</span></ul>
+<div class="codeHeader lang-csharp" data-bi-name="code-header"><span class="language">C#</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-csharp" data-src="https://github.com/aspnet/EntityFramework.Docs/blob/live/samples/core/GetStarted/AspNetCore/EFGetStarted.AspNetCore.ExistingDb/Startup.cs" name="Main" data-bi-name="code-block"><span class="hljs-keyword">using</span> EFGetStarted.AspNetCore.ExistingDb.Models;
+<span class="hljs-keyword">using</span> Microsoft.EntityFrameworkCore;
+</code></pre><p class="lf-text-block lf-block" data-lf-anchor-id="8ff4eb7365b9a2d593ecb953cd6639e1:0">Now we can use the <code>AddDbContext(...)</code> method to register it as a service.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8ff4eb7365b9a2d593ecb953cd6639e1:0">+
+</a>
+</span></p>
+<ul class="lf-text-block lf-block" data-lf-anchor-id="8df46c7cdd99e4d31529a94145268343:0">
+<li>Locate the <code>ConfigureServices(...)</code> method</li>
+<li>Add the following code to register the context as a service</li>
+<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8df46c7cdd99e4d31529a94145268343:0">+
+</a>
+</span></ul>
+<div class="codeHeader lang-csharp" data-bi-name="code-header"><span class="language">C#</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-csharp" data-src="https://github.com/aspnet/EntityFramework.Docs/blob/live/samples/core/GetStarted/AspNetCore/EFGetStarted.AspNetCore.ExistingDb/Startup.cs" name="Main" highlight-lines="7-8" data-bi-name="code-block"><span class="hljs-comment">// This method gets called by the runtime. Use this method to add services to the container.</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">ConfigureServices</span>(<span class="hljs-params">IServiceCollection services</span>)
+</span>{
+    services.AddMvc();
+
+    <span class="hljs-keyword">var</span> connection = <span class="hljs-string">@"Server=(localdb)\mssqllocaldb;Database=Blogging;Trusted_Connection=True;"</span>;
+<span class="line-highlight">    services.AddDbContext&lt;BloggingContext&gt;(options =&gt; options.UseSqlServer(connection));
+}</span>
+</code></pre><div class="TIP alert"><h5>Tip</h5><p class="lf-text-block lf-block" data-lf-anchor-id="8f95ed29ef5d2ae431c9b8ce4a4316fb:0">In a real application you would typically put the connection string in a configuration file. For the sake of simplicity, we are defining it in code. For more information, see <a href="https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-strings" data-linktype="relative-path">Connection Strings</a>.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8f95ed29ef5d2ae431c9b8ce4a4316fb:0">+
+</a>
+</span></p>
+</div>
+<h2 id="create-a-controller">Create a controller</h2>
+<p class="lf-text-block lf-block" data-lf-anchor-id="120c89a949a088ec038fd0ad68740ec4:0">Next, we'll enable scaffolding in our project.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="120c89a949a088ec038fd0ad68740ec4:0">+
+</a>
+</span></p>
+<ul class="lf-text-block lf-block" data-lf-anchor-id="0dcd3c6cfc1f73fd3949b18f43174252:0">
+<li>Right-click on the <strong>Controllers</strong> folder in <strong>Solution Explorer</strong> and select <strong>Add -&gt; Controller...</strong></li>
+<li>Select <strong>Full Dependencies</strong> and click <strong>Add</strong></li>
+<li>You can ignore the instructions in the <code>ScaffoldingReadMe.txt</code> file that opens</li>
+<span class="lf-has-num lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="0dcd3c6cfc1f73fd3949b18f43174252:0">2</a>
+</span></ul>
+<p class="lf-text-block lf-block" data-lf-anchor-id="9144496e509984f330c3c98a4c226a6b:0">Now that scaffolding is enabled, we can scaffold a controller for the <code>Blog</code> entity.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="9144496e509984f330c3c98a4c226a6b:0">+
+</a>
+</span></p>
+<ul class="lf-text-block lf-block" data-lf-anchor-id="39ed7c005cbc24bb184da9cd4112671a:0">
+<li>Right-click on the <strong>Controllers</strong> folder in <strong>Solution Explorer</strong> and select <strong>Add -&gt; Controller...</strong></li>
+<li>Select <strong>MVC Controller with views, using Entity Framework</strong> and click <strong>Ok</strong></li>
+<li>Set <strong>Model class</strong> to <strong>Blog</strong> and <strong>Data context class</strong> to <strong>BloggingContext</strong></li>
+<li>Click <strong>Add</strong></li>
+<span class="lf-has-num lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="39ed7c005cbc24bb184da9cd4112671a:0">3</a>
+</span></ul>
+<h2 id="run-the-application">Run the application</h2>
+<p class="lf-text-block lf-block" data-lf-anchor-id="07b4cbbb463b65b599ecf5430f406bf5:0">You can now run the application to see it in action.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="07b4cbbb463b65b599ecf5430f406bf5:0">+
+</a>
+</span></p>
+<ul class="lf-text-block lf-block" data-lf-anchor-id="36e76c6984d12cbb22c99d484b032371:0">
+<li><strong>Debug -&gt; Start Without Debugging</strong></li>
+<li>The application will build and open in a web browser</li>
+<li>Navigate to <code>/Blogs</code></li>
+<li>Click <strong>Create New</strong></li>
+<li>Enter a <strong>Url</strong> for the new blog and click <strong>Create</strong></li>
+<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="36e76c6984d12cbb22c99d484b032371:0">+
+</a>
+</span></ul>
+<p class="lf-text-block lf-block" data-lf-anchor-id="d41d8cd98f00b204e9800998ecf8427e:0"><img src="./DBFirst_files/create.png" alt="image" data-linktype="relative-path"><span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="d41d8cd98f00b204e9800998ecf8427e:0">+
+</a>
+</span></p>
+<p class="lf-text-block lf-block" data-lf-anchor-id="d41d8cd98f00b204e9800998ecf8427e:1"><img src="./DBFirst_files/index-existing-db.png" alt="image" data-linktype="relative-path"><span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="d41d8cd98f00b204e9800998ecf8427e:1">+
+</a>
+</span></p>
+</div></div>
+ 
+
+						
+				</div>
+		</main>
+
+		
+
+		
+
+		
+
+		<div id="menu-nav" class="dropdown-container" lang="en-us" dir="ltr">
+			<div class="dropdown dropdown-full mobilenavi">
+					<select><option value="/en-us/ef/">Entity Framework</option><option value="/en-us/ef/efcore-and-ef6/">&nbsp;&nbsp;&nbsp;Compare EF Core &amp; EF6</option><option value="/en-us/ef/efcore-and-ef6/choosing">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Which One Is Right for You</option><option value="/en-us/ef/efcore-and-ef6/features">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Feature Comparison</option><option value="/en-us/ef/efcore-and-ef6/side-by-side">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EF6 and EF Core in the Same Application</option><option value="/en-us/ef/efcore-and-ef6/porting/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Porting from EF6 to EF Core</option><option value="/en-us/ef/efcore-and-ef6/porting/ensure-requirements">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Validate Requirements</option><option value="/en-us/ef/efcore-and-ef6/porting/port-edmx">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Porting an EDMX-Based Model</option><option value="/en-us/ef/efcore-and-ef6/porting/port-code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Porting a Code-Based Model</option><option value="/en-us/ef/core/">&nbsp;&nbsp;&nbsp;Entity Framework Core</option><option value="/en-us/ef/core/what-is-new/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;New in EF Core 2.0</option><option value="/en-us/ef/core/what-is-new/ef-core-1.0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EF Core 1.0 (previous version)</option><option value="/en-us/ef/core/what-is-new/ef-core-1.1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EF Core 1.1 (previous version)</option><option value="/en-us/ef/core/get-started/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Getting Started</option><option value="/en-us/ef/core/get-started/install/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Installing EF Core</option><option value="/en-us/ef/core/get-started/full-dotnet/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.NET Framework (Console, WinForms, WPF, etc.)</option><option value="/en-us/ef/core/get-started/full-dotnet/new-db">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.NET Framework - New Database</option><option value="/en-us/ef/core/get-started/full-dotnet/existing-db">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.NET Framework - Existing Database</option><option value="/en-us/ef/core/get-started/netcore/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.NET Core (Windows, OSX, Linux, etc.)</option><option value="/en-us/ef/core/get-started/netcore/new-db-sqlite">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.NET Core - New Database</option><option value="/en-us/ef/core/get-started/aspnetcore/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ASP.NET Core</option><option value="/en-us/ef/core/get-started/aspnetcore/new-db">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ASP.NET Core - New Database</option><option value="/en-us/ef/core/get-started/aspnetcore/existing-db" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ASP.NET Core - Existing Database</option><option value="https://docs.asp.net/en/latest/data/ef-mvc/intro.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EF Core Tutorial on ASP.NET Core site</option><option value="/en-us/ef/core/get-started/uwp/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Universal Windows Platform (UWP)</option><option value="/en-us/ef/core/get-started/uwp/getting-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UWP - New Database</option><option value="/en-us/ef/core/modeling/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creating a Model</option><option value="/en-us/ef/core/modeling/included-types">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Including &amp; Excluding Types</option><option value="/en-us/ef/core/modeling/included-properties">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Including &amp; Excluding Properties</option><option value="/en-us/ef/core/modeling/keys">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Keys (primary)</option><option value="/en-us/ef/core/modeling/generated-properties">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Generated Values</option><option value="/en-us/ef/core/modeling/required-optional">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Required/optional properties</option><option value="/en-us/ef/core/modeling/max-length">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maximum Length</option><option value="/en-us/ef/core/modeling/concurrency">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concurrency Tokens</option><option value="/en-us/ef/core/modeling/shadow-properties">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Shadow Properties</option><option value="/en-us/ef/core/modeling/relationships">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Relationships</option><option value="/en-us/ef/core/modeling/indexes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indexes</option><option value="/en-us/ef/core/modeling/alternate-keys">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Alternate Keys</option><option value="/en-us/ef/core/modeling/inheritance">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Inheritance</option><option value="/en-us/ef/core/modeling/backing-field">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Backing Fields</option><option value="/en-us/ef/core/modeling/relational/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Relational Database Modeling</option><option value="/en-us/ef/core/modeling/relational/tables">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Table Mapping</option><option value="/en-us/ef/core/modeling/relational/columns">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Column Mapping</option><option value="/en-us/ef/core/modeling/relational/data-types">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Data Types</option><option value="/en-us/ef/core/modeling/relational/primary-keys">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Primary Keys</option><option value="/en-us/ef/core/modeling/relational/default-schema">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Default Schema</option><option value="/en-us/ef/core/modeling/relational/computed-columns">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Computed Columns</option><option value="/en-us/ef/core/modeling/relational/sequences">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sequences</option><option value="/en-us/ef/core/modeling/relational/default-values">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Default Values</option><option value="/en-us/ef/core/modeling/relational/indexes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indexes</option><option value="/en-us/ef/core/modeling/relational/fk-constraints">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Foreign Key Constraints</option><option value="/en-us/ef/core/modeling/relational/unique-constraints">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Alternate Keys (Unique Constraints)</option><option value="/en-us/ef/core/modeling/relational/inheritance">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Inheritance (Relational Database)</option><option value="/en-us/ef/core/querying/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Querying Data</option><option value="/en-us/ef/core/querying/basic">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Basic Query</option><option value="/en-us/ef/core/querying/related-data">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loading Related Data</option><option value="/en-us/ef/core/querying/client-eval">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Client vs. Server Evaluation</option><option value="/en-us/ef/core/querying/tracking">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tracking vs. No-Tracking</option><option value="/en-us/ef/core/querying/raw-sql">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Raw SQL Queries</option><option value="/en-us/ef/core/querying/async">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Asynchronous Queries</option><option value="/en-us/ef/core/querying/overview">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How Query Works</option><option value="/en-us/ef/core/saving/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving Data</option><option value="/en-us/ef/core/saving/basic">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Basic Save</option><option value="/en-us/ef/core/saving/related-data">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Related Data</option><option value="/en-us/ef/core/saving/cascade-delete">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cascade Delete</option><option value="/en-us/ef/core/saving/concurrency">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Concurrency Conflicts</option><option value="/en-us/ef/core/saving/transactions">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Transactions</option><option value="/en-us/ef/core/saving/async">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Asynchronous Saving</option><option value="/en-us/ef/core/saving/disconnected-entities">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🔧 Disconnected Entities</option><option value="/en-us/ef/core/saving/explicit-values-generated-properties">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Explicit values for generated properties</option><option value="/en-us/ef/core/platforms/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Platform Support</option><option value="/en-us/ef/core/providers/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Database Providers</option><option value="/en-us/ef/core/providers/sql-server/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft SQL Server</option><option value="/en-us/ef/core/providers/sql-server/memory-optimized-tables">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Memory-Optimized Tables</option><option value="/en-us/ef/core/providers/sqlite/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SQLite</option><option value="/en-us/ef/core/providers/sqlite/limitations">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SQLite Limitations</option><option value="/en-us/ef/core/providers/npgsql/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PostgreSQL (Npgsql)</option><option value="/en-us/ef/core/providers/ibm/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IBM Data Server (DB2)</option><option value="/en-us/ef/core/providers/mysql/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MySQL (Official)</option><option value="/en-us/ef/core/providers/pomelo/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MySQL (Pomelo)</option><option value="/en-us/ef/core/providers/sql-compact/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft SQL Server Compact Edition</option><option value="/en-us/ef/core/providers/in-memory/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;InMemory (for Testing)</option><option value="/en-us/ef/core/providers/devart/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Devart (MySQL, Oracle, PostgreSQL, SQLite, DB2, and more)</option><option value="/en-us/ef/core/providers/oracle/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Oracle (not yet available)</option><option value="/en-us/ef/core/providers/my-cat/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MyCat</option><option value="/en-us/ef/core/providers/writing-a-provider">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Writing a Database Provider</option><option value="https://docs.microsoft.com/ef/core/api">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;API Reference</option><option value="/en-us/ef/core/miscellaneous/cli/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Command Line Reference</option><option value="/en-us/ef/core/miscellaneous/cli/powershell">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Package Manager Console (Visual Studio)</option><option value="/en-us/ef/core/miscellaneous/cli/dotnet">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.NET Core CLI</option><option value="/en-us/ef/core/extensions/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tools &amp; Extensions</option><option value="/en-us/ef/core/extensions/llbl-gen-pro">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LLBLGen Pro</option><option value="/en-us/ef/core/extensions/devart-entity-developer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Devart Entity Developer</option><option value="/en-us/ef/core/extensions/efsecondlevelcache-core">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EFSecondLevelCache.Core</option><option value="/en-us/ef/core/extensions/entityframeworkcore-detached">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EntityFrameworkCore.Detached</option><option value="/en-us/ef/core/extensions/entityframeworkcore-triggers">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EntityFrameworkCore.Triggers</option><option value="/en-us/ef/core/extensions/entityframeworkcore-rx">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EntityFrameworkCore.Rx</option><option value="/en-us/ef/core/extensions/entityframeworkcore-primarykey">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EntityFrameworkCore.PrimaryKey</option><option value="/en-us/ef/core/extensions/entityframeworkcore-typedoriginalvalues">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EntityFrameworkCore.TypedOriginalValues</option><option value="/en-us/ef/core/extensions/efcore-practices">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EFCore.Practices</option><option value="/en-us/ef/core/extensions/linqkit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LinqKit.Microsoft.EntityFrameworkCore</option><option value="/en-us/ef/core/extensions/autohistory">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft.EntityFrameworkCore.AutoHistory</option><option value="/en-us/ef/core/extensions/dynamiclinq">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft.EntityFrameworkCore.DynamicLinq</option><option value="/en-us/ef/core/extensions/unitofwork">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft.EntityFrameworkCore.UnitOfWork</option><option class="noLink">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Miscellaneous</option><option value="/en-us/ef/core/miscellaneous/connection-strings">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Connection Strings</option><option value="/en-us/ef/core/miscellaneous/logging">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logging</option><option value="/en-us/ef/core/miscellaneous/connection-resiliency">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Connection Resiliency</option><option value="/en-us/ef/core/miscellaneous/testing/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Testing</option><option value="/en-us/ef/core/miscellaneous/testing/sqlite">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Testing with SQLite</option><option value="/en-us/ef/core/miscellaneous/testing/in-memory">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Testing with InMemory</option><option value="/en-us/ef/core/miscellaneous/configuring-dbcontext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Configuring a DbContext</option><option value="/en-us/ef/core/miscellaneous/rc1-rc2-upgrade">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Upgrading from 1.0 RC1 to RC2</option><option value="/en-us/ef/core/miscellaneous/rc2-rtm-upgrade">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Upgrading from 1.0 RC2 to RTM</option><option value="/en-us/ef/core/miscellaneous/1x-2x-upgrade">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Upgrading to EF Core 2.0</option><option value="/en-us/ef/ef6/">&nbsp;&nbsp;&nbsp;Entity Framework 6</option><option value="http://msdn.com/data/ef">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Documentation</option><option value="https://msdn.microsoft.com/library/dn223258(v=vs.113).aspx">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;API Reference</option></select>
+			</div>
+		</div>
+
+	</div>
+
+	
+
+	
+
+	<script src="./DBFirst_files/b11234fb1603062af431.conceptual.js.descarga"></script>
+
+<script src="./DBFirst_files/ms.js.descarga" async="" defer=""></script><script src="./DBFirst_files/Livefyre.js.descarga" async="" defer=""></script><script src="./DBFirst_files/open-commenting.entry.min.js.descarga" async="" defer=""></script><link rel="stylesheet" type="text/css" href="./DBFirst_files/open-commenting.ui.v1.0.2-7-g1b78816.master.min.css"><link rel="stylesheet" type="text/css" href="./DBFirst_files/open-commenting.ui.docs.v1.0.2-7-g1b78816.master.min.css"><script type="text/javascript" src="./DBFirst_files/open-rating.ui-v0.6.1-97-g14612aa.master.min.js.descarga"></script><div id="fyre-messenger-1"></div><div class="lf"><div class="lf-popover lf-thread-popover"><div class="lf-thread-content lf-popover-content" role="dialog" aria-label="Sidenote Dialog"></div>
+<div class="lf-popover-arrow"></div>
+</div></div><div style="position: absolute; display: none;"><div class="tooltip">JhonatasKleinkauff</div><div class="arrow-down"></div></div><div style="position: absolute; display: none;"><div class="tooltip">Syed_Kumail_Haider_Naqvi</div><div class="arrow-down"></div></div><div style="position: absolute; display: none;"><div class="tooltip">Xiaosong_Li</div><div class="arrow-down"></div></div><div style="position: absolute; display: none;"><div class="tooltip">Bhéla</div><div class="arrow-down"></div></div><div style="position: absolute; display: none;"><div class="tooltip">CliffAdamsBitrus</div><div class="arrow-down"></div></div><div style="position: absolute; display: none;"><div class="tooltip">Holger.Romey</div><div class="arrow-down"></div></div><div style="position: absolute; display: none;"><div class="tooltip">Maris_Kurens</div><div class="arrow-down"></div></div><div style="position: absolute; display: none;"><div class="tooltip">alkoval</div><div class="arrow-down"></div></div><div style="position: absolute; display: none;"><div class="tooltip">Thomas</div><div class="arrow-down"></div></div><div style="position: absolute; display: none;"><div class="tooltip">Dante_Jak</div><div class="arrow-down"></div></div><div class="fyre-hovercard" style="display: none;"><div class="fyre-hovercard-body"></div><div class="fyre-hovercard-arrow"></div></div></body></html>

@@ -1,0 +1,72 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <Version>3.1.5</Version>
+        <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
+        <Company>Capgemini S.A.</Company>
+        <Description>Configuration library for devon4net webapi template</Description>
+        <Copyright>Copyright © Capgemini</Copyright>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageProjectUrl>https://www.devonfw.com</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
+        <RepositoryType />
+        <license>http://www.devonfw.com/terms-of-use/</license>
+        <PackageTags>devonfw devon4net Capgemini webapi API middleware framework</PackageTags>
+        <PackageReleaseNotes>devonfw net core 3.0 compatibility version</PackageReleaseNotes>
+        <icon>https://avatars2.githubusercontent.com/u/7803029?s=200&amp;v=4</icon>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <NoWarn>1701;1702;8034;1705;NU1605;NU1608;NU1701;NU5104;CS1705</NoWarn>
+      <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+      <WarningsAsErrors />
+    </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;8034;1705;NU1605;NU1608;NU1701;NU5104;CS1705</NoWarn>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EasyNetQ" Version="6.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="6.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="5.6.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\Devon4Net.Infrastructure.AnsibleTower\Devon4Net.Infrastructure.AnsibleTower.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.CircuitBreaker\Devon4Net.Infrastructure.CircuitBreaker.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Cors\Devon4Net.Infrastructure.Cors.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.CyberArk\Devon4Net.Infrastructure.CyberArk.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Extensions\Devon4Net.Infrastructure.Extensions.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Grpc\Devon4Net.Infrastructure.Grpc.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.JWT\Devon4Net.Infrastructure.JWT.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Kafka\Devon4Net.Infrastructure.Kafka.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.LiteDb\Devon4Net.Infrastructure.LiteDb.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Log\Devon4Net.Infrastructure.Log.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.MediatR\Devon4Net.Infrastructure.MediatR.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Middleware\Devon4Net.Infrastructure.Middleware.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.RabbitMQ\Devon4Net.Infrastructure.RabbitMQ.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.SmaxHcm\Devon4Net.Infrastructure.SmaxHcm.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Swagger\Devon4Net.Infrastructure.Swagger.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Common\Devon4Net.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.UnitOfWork\Devon4Net.Infrastructure.UnitOfWork.csproj" />
+  </ItemGroup>
+
+</Project>

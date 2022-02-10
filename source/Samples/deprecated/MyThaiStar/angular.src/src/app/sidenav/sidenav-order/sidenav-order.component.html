@@ -1,0 +1,26 @@
+<div layout="row" class="pad-top-sm pad-right-sm" style="border-bottom: 1px solid lightgrey" flex>
+  
+  <button mat-icon-button (click)="removeOrder()" class="push-bottom-xs"><mat-icon style="color: lightgray">clear</mat-icon></button>
+  
+  <div layout="column" class="pull-top-xs" flex>
+    <span class="orderName">{{order.dish.name}}</span>
+    <div layout="row">
+      <span class="orderIngredients" *ngIf="extras.length === 0"> - </span>
+      <span class="orderIngredients">{{extras}}</span>
+    </div>
+    <label (click)="removeComment()" class="removeOrderComment" *ngIf="order.orderLine.comment">Remove comment</label>
+    <label (click)="addComment()" class="addOrderComment" *ngIf="!order.orderLine.comment">Add comment</label>
+  </div>
+
+  <button mat-icon-button matTooltip="Comment" (click)="openCommentDialog()" [class.hideButton]="!order.orderLine.comment" class="push-bottom-xs" matTooltipPosition="above">
+    <mat-icon color="accent">speaker_notes</mat-icon>
+  </button>
+
+  <div layout="row" class="push-bottom-xs" flex>
+    <button mat-icon-button [disabled]="order.orderLine.amount == 1" color="accent" (click)="decreaseOrder()"><mat-icon>remove</mat-icon></button>  
+    <span class="push-top-sm">{{order.orderLine.amount}}</span>               
+    <button mat-icon-button (click)="increaseOrder()" color="accent"><mat-icon>add</mat-icon></button>                  
+  </div>
+
+  <span class="push-top-sm">{{calculateOrderPrice() | number : '2.2-2'}} €</span>
+</div>

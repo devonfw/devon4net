@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:MvxContentPage x:TypeArguments="viewModels:BookTableViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"             
+             xmlns:viewModels="clr-namespace:MyThaiStar.Core.ViewModels;assembly=MyThaiStar.Core"
+             xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+             xmlns:pages="clr-namespace:MyThaiStar.Core.Pages;assembly=MyThaiStar.Core"                      
+             x:Class="MyThaiStar.Core.Pages.BookTablePage" Title="Book table">
+    <views:MvxContentPage.Content>
+        <StackLayout>
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image x:Name="Img" Source="slider.jpg" Scale="1.4" Aspect="AspectFill"/>
+                <StackLayout Padding="30,20,30,0" BackgroundColor="Transparent">
+                    <Label Text="Book your table" VerticalOptions="Start" HorizontalOptions="CenterAndExpand" FontAttributes="Bold" FontSize="36" TextColor="#F9FBE7"/>
+                    <Label Text="You can book a table and an order menu" VerticalOptions="Start" HorizontalOptions="CenterAndExpand" FontAttributes="Bold" FontSize="16" TextColor="#F9FBE7"/>
+                    
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Grid.Row="0" HeightRequest="40" x:Name="DateImage" WidthRequest="40" Source="Date.png" BackgroundColor="Transparent"></Image>
+                        <DatePicker x:Name="DatePickerObj" Grid.Column="1" Grid.Row="0" Date="{Binding StartDate}" TextColor="White"  BackgroundColor="Transparent" MinimumDate="{Binding MinStartDate}"/>
+                        <Image  x:Name="TimeImage" Grid.Column="0" Grid.Row="1" HeightRequest="40" WidthRequest="40" Source="Time.png" BackgroundColor="Transparent"/>
+                        <TimePicker x:Name="TimePickerObj" Grid.Column="1" Grid.Row="1" BackgroundColor="Transparent" TextColor="White" Time="{Binding BookingTime}"/>
+                    </Grid>
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="2" Text="Assistans" VerticalOptions="Start" HorizontalOptions="StartAndExpand" FontAttributes="Bold" FontSize="18" TextColor="#F9FBE7"/>
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Stepper Grid.Column="0" Grid.Row="0"  Minimum="1" Maximum="99" x:Name="StepperDishNumber" Value="{Binding Assistants}" BackgroundColor="Transparent"></Stepper>
+                        <Label Grid.Column="1" Grid.Row="0" VerticalOptions="Center" HorizontalOptions="EndAndExpand" x:Name="NumberDishes" TextColor="#F9FBE7" Text="Total assistants 1" FontSize="24"></Label>
+                    </Grid>                    
+                </StackLayout>
+            </Grid>
+            <StackLayout HorizontalOptions="FillAndExpand" BackgroundColor="Transparent" VerticalOptions="End" Padding="10,10,10,0" >
+                <Button HorizontalOptions="FillAndExpand" Text="Book table" TextColor="White" BackgroundColor="Chocolate" Command="{Binding GoShopCommand}"></Button>
+            </StackLayout>
+        </StackLayout>
+    </views:MvxContentPage.Content>
+</views:MvxContentPage>

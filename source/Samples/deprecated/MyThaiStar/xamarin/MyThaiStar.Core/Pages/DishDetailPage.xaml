@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<views:MvxContentPage x:TypeArguments="viewModels:DishDetailViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"             
+             xmlns:viewModels="clr-namespace:MyThaiStar.Core.ViewModels;assembly=MyThaiStar.Core"
+             xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+             xmlns:pages="clr-namespace:MyThaiStar.Core.Pages;assembly=MyThaiStar.Core"
+             x:Class="MyThaiStar.Core.Pages.DishDetailPage" Title="You can add...">
+    <views:MvxContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="CardBackgroundColor">#77000000</Color>
+            <Color x:Key="NameColor">Gold</Color>
+            <Color x:Key="DepartmentColor">#b0bec5</Color>
+            <Color x:Key="LocationColor">#40c4ff</Color>
+            <Color x:Key="PriceColor">#40c4ff</Color>
+            <Color x:Key="MoreIconColor">#1de9b6</Color>
+            <Color x:Key="SocialColor">#40c4ff</Color>
+            <Color x:Key="MessageColor">White</Color>
+
+
+            <Style x:Key="CardStyle" TargetType="Grid">
+                <Setter Property="HeightRequest" Value="200"/>
+                <Setter Property="Padding" Value="0,0,0,0"/>
+                <Setter Property="BackgroundColor" Value="{DynamicResource CardBackgroundColor}"/>
+            </Style>
+
+
+            <Style x:Key="ShadowStyle" TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1"/>
+                <Setter Property="BackgroundColor" Value="Black"/>
+            </Style>
+
+
+            <Style x:Key="NameStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="TextColor" Value="{DynamicResource NameColor}"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+            </Style>
+
+            <Style x:Key="DepartmentStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="TextColor" Value="{DynamicResource DepartmentColor}"/>
+            </Style>
+
+            <Style x:Key="LocationStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="TextColor" Value="{DynamicResource LocationColor}"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+            </Style>
+
+            <Style x:Key="MoreStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="24"/>
+                <Setter Property="TextColor" Value="{DynamicResource MoreIconColor}"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="HorizontalTextAlignment" Value="End"/>
+            </Style>
+
+            <Style x:Key="SocialStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="TextColor" Value="{DynamicResource SocialColor}"/>
+            </Style>
+
+            <Style x:Key="MessageLabelStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="{DynamicResource MessageColor}"/>
+                <Setter Property="FontSize" Value="8"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+            </Style>
+
+        </ResourceDictionary>
+    </views:MvxContentPage.Resources>
+    <views:MvxContentPage.Content>
+        <ScrollView BackgroundColor="Black">
+            <StackLayout>
+                <Grid Style="{DynamicResource CardStyle}" Padding="0" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label IsVisible="False" x:Name="ImageBase" Text="{Binding DishDetail.Image}" />
+                    <Image Grid.Column="0"  x:Name="ImgDish" Aspect="AspectFill"  HeightRequest="60" BackgroundColor="Transparent">
+                        <Image.Source>
+
+                            <Binding Source="{Binding Dish.Image}">
+                                <Binding.Converter>
+                                    <pages:ConverterBase64ImageSource />
+                                </Binding.Converter>
+                                <Binding.ConverterParameter>
+                                    <Binding Source="{x:Reference Name=ImageBase}"></Binding>
+                                </Binding.ConverterParameter>
+                            </Binding>
+                        </Image.Source>
+                    </Image>
+                  
+                    <StackLayout Spacing="10" Grid.Column="0" HorizontalOptions="Fill">
+                        <Label FontSize="24" Opacity="0.5" BackgroundColor="Gray" Text="{Binding DishDetail.Name}"  Style="{DynamicResource NameStyle}" HorizontalOptions="FillAndExpand"></Label>
+                    </StackLayout>
+                    <StackLayout Grid.Column="0" Orientation="Horizontal" Spacing="4" HorizontalOptions="End" Padding="0" VerticalOptions="End">
+                        <Label Text="{Binding DishDetail.PriceCurrency}" FontAttributes="Bold" Style="{DynamicResource MoreStyle}"/>
+                    </StackLayout>
+                </Grid>
+
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackLayout  Padding="10" BackgroundColor="Transparent">
+                        <Label HorizontalOptions="Center" LineBreakMode="WordWrap" TextColor="White" FontSize="18" FormattedText="{Binding DishDetail.Description}"></Label>
+
+                    </StackLayout>
+                </Grid>
+
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <Stepper Grid.Column="0"  Minimum="1" Maximum="99" x:Name="StepperDishNumber" Value="{Binding Quantity}"  HeightRequest="40" WidthRequest="2"  MinimumHeightRequest="40"></Stepper>
+                    <Label Grid.Column="1" HorizontalOptions="EndAndExpand" x:Name="NumberDishes" TextColor="White" Text="Total 1" FontSize="24"></Label>
+
+                </Grid>
+                <StackLayout Spacing="10" HorizontalOptions="Fill">
+                    <Label FontSize="16" TextColor="{DynamicResource NameColor}" FontAttributes="Bold" BackgroundColor="Transparent" Text="Extra ingredients"  HorizontalOptions="FillAndExpand"></Label>
+                </StackLayout>
+                <ListView ItemsSource="{Binding DishDetail.Extras}" 
+                          SeparatorVisibility="None"
+                          BackgroundColor="Transparent"
+                          ItemSelected="OnSelectedExtraItem"
+                          SeparatorColor="Transparent"
+                          HasUnevenRows="false"
+                          RowHeight="40"
+                          x:Name="ListViewExtras"
+                          IsPullToRefreshEnabled="False">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell Height="50">
+                                <ViewCell.View>
+                                    <ContentView Padding="10" BackgroundColor="Transparent">
+                                        <Grid BackgroundColor="Transparent" HeightRequest="40" x:Name="GridExtras">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="130"/>
+                                                <ColumnDefinition Width="50"/>
+                                                <ColumnDefinition Width="55"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Column="0" Text="{Binding name}" TextColor="White" FontSize="18" HorizontalOptions="StartAndExpand"/>
+                                            <Label Grid.Column="1" Text="{Binding PriceCurrency}" TextColor="White" FontSize="18" HorizontalOptions="Center"/>
+                                            <Switch Grid.Column="2" BackgroundColor="Transparent" IsToggled="{Binding selected}" VerticalOptions="End" HorizontalOptions="EndAndExpand" />
+                                        </Grid>
+                                    </ContentView>
+                                </ViewCell.View>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <StackLayout HorizontalOptions="CenterAndExpand" BackgroundColor="Transparent" VerticalOptions="End" >
+                    <Button HorizontalOptions="CenterAndExpand" Text="Add to order" TextColor="White" BackgroundColor="Chocolate" Command="{Binding AddItemCommand}"></Button>
+                </StackLayout>
+
+            </StackLayout>
+        </ScrollView>
+
+    </views:MvxContentPage.Content>
+</views:MvxContentPage>

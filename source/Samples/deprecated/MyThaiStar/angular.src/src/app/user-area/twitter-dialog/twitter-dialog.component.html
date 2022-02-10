@@ -1,0 +1,20 @@
+<h4 mat-dialog-title>ASSOCIATE TWITTER ACCOUNT</h4>
+<form  (ngSubmit)="twitterSubmit(twitterForm.form.value)" #twitterForm="ngForm">
+  <div layout= "column" class="push-bottom-sm" flex>
+    <mat-form-field color="accent" flex>
+      <input matInput placeholder="Twitter username" ngModel name="username" required>
+    </mat-form-field>
+
+    <mat-form-field color="accent" flex>
+      <input matInput placeholder="Twitter password" ngModel name="password" type="password" required>
+    </mat-form-field>
+  </div>
+
+  <div class="align-right" flex>  
+    <button mat-button mat-dialog-close class="text-upper">Cancel</button>
+    <button mat-raised-button type="submit" [disabled]="!twitterForm.form.valid" color="accent" class="text-upper">
+      <mat-icon svgIcon="twitter"></mat-icon>
+      <span>Log in twitter</span>
+    </button>
+  </div>
+</form>

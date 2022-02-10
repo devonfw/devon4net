@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <Version>3.1.5</Version>
+        <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
+        <Company>Capgemini S.A.</Company>
+        <Description>Entity framework unit of work implementation</Description>
+        <Copyright>Copyright © Capgemini</Copyright>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageProjectUrl>https://www.devonfw.com</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
+        <RepositoryType />
+        <license>http://www.devonfw.com/terms-of-use/</license>
+        <PackageTags>devonfw devon4net UOW Capgemini</PackageTags>
+        <PackageReleaseNotes>Netstandard 2.1 for devonfw net core 3.1 compatibility version</PackageReleaseNotes>
+        <icon>https://avatars2.githubusercontent.com/u/7803029?s=200&amp;v=4</icon>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <WarningsAsErrors></WarningsAsErrors>
+      <NoWarn>1701;1702;8034;1705;NU1605;NU1608;NU1701;CS1705</NoWarn>
+      <WarningLevel>0</WarningLevel>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <WarningsAsErrors></WarningsAsErrors>
+      <NoWarn>1701;1702;8034;1705;NU1605;NU1608;NU1701;CS1705</NoWarn>
+      <WarningLevel>0</WarningLevel>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="5.0.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="5.0.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.1" />      
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.1" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.0" />
+      <PackageReference Include="Oracle.EntityFrameworkCore" Version="3.19.80" />
+      <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.2.4" />
+      <PackageReference Include="EntityFrameworkCore.FirebirdSQL" Version="2.1.2.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Devon4Net.Infrastructure.Log\Devon4Net.Infrastructure.Log.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<!-- saved from url=(0106)http://localhost:49729/afx/resource/Users/Jose/Desktop/traiectum.documentation/asciidoc/offline/nginx.html -->
+<html class="js hasSidebar hasPageActions hasBreadcrumb  noTouch noTouch" lang="en-us" dir="ltr"><script async="" src="./nginx_files/analytics.js.descarga"></script><script type="text/javascript">window["_gaUserPrefs"] = { ioo : function() { return true; } }</script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script src="./nginx_files/getid.js.descarga"></script><script async="" src="./nginx_files/analytics.js(1).descarga"></script><script type="text/javascript">window["_gaUserPrefs"] = { ioo : function() { return true; } }</script><script src="./nginx_files/getid.js(1).descarga"></script>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta property="og:title" content="Host ASP.NET Core on Linux with Nginx">
+	<meta property="og:image" content="https://docs.microsoft.com/_themes/docs.theme/master/en-us/_themes/images/microsoft-header.png">
+
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:site" content="@docsmsft">
+	<meta name="twitter:title" content="Host ASP.NET Core on Linux with Nginx">
+	<meta name="twitter:description" content="Describes how to setup Nginx as a reverse proxy on Ubuntu 16.04 to forward HTTP traffic to an ASP.NET Core web application running on Kestrel.">
+	<meta name="twitter:image" content="https://docs.microsoft.com/_themes/docs.theme/master/en-us/_themes/images/microsoft-header.png">
+	<meta name="twitter:image:alt" content="Microsoft Logo">
+
+		<meta name="breadcrumb_path" content="/aspnet/breadcrumb/toc.json">
+<meta name="ms.assetid" content="1c33e576-33de-481a-8ad3-896b94fde0e3">
+<meta name="author" content="Rick-Anderson">
+<meta name="description" content="Describes how to setup Nginx as a reverse proxy on Ubuntu 16.04 to forward HTTP traffic to an ASP.NET Core web application running on Kestrel.">
+<meta name="ms.author" content="riande">
+<meta name="manager" content="wpickett">
+<meta name="uid" content="publishing/linuxproduction">
+<meta name="keywords" content="ASP.NET Core,Linux,nginx,Ubuntu,Reverse Proxy">
+<meta name="ms.topic" content="article">
+<meta name="ms.date" content="08/21/2017">
+<meta name="ms.technology" content="aspnet">
+<meta name="ms.prod" content="asp.net-core">
+<meta name="search.ms_sitename" content="Docs">
+<meta name="search.ms_docsetname" content="aspnet-core-conceptual">
+<meta name="version" content="0">
+<meta name="locale" content="en-us">
+<meta name="site_name" content="Docs">
+<meta name="search.ms_product" content="MSDN">
+<meta name="depot_name" content="MSDN.aspnet-core-conceptual">
+<meta name="updated_at" content="2017-08-24 04:04 PM">
+<meta name="gitcommit" content="https://github.com/aspnet/Docs/blob/4ab11ed8f67996a72fc222c3a5d05168c248f9fa/aspnetcore/publishing/linuxproduction.md">
+<meta name="original_content_git_url" content="https://github.com/aspnet/Docs/blob/live/aspnetcore/publishing/linuxproduction.md">
+<meta name="document_id" content="85679a86-8148-3fc8-5b93-17124e8629fb">
+<meta name="pagetype" content="Conceptual">
+<meta name="toc_rel" content="../toc.json">
+<meta name="pdf_url_template" content="https://docs.microsoft.com/pdfstore/en-us/MSDN.aspnet-core-conceptual/{branchName}{pdfName}">
+<meta name="word_count" content="1650">
+
+	<meta name="scope" content="ASP.NET Core">
+<link href="https://docs.microsoft.com/en-us/aspnet/core/publishing/linuxproduction" rel="canonical">
+	<title>Host ASP.NET Core on Linux with Nginx | Microsoft Docs</title>
+
+	<link rel="stylesheet" href="./nginx_files/b11234fb1603062af431.site.css">
+	<link rel="stylesheet" href="./nginx_files/b11234fb1603062af431.conceptual.css">
+
+	<script>
+	var msDocs = {
+		data:{
+			contentLocale: 'en-us',
+			contentDir: 'ltr',
+			userLocale: 'en-us',
+			userDir: 'ltr',
+			pathToTheme: '/_themes/docs.theme/master/en-us/_themes/',
+			pageTemplate: 'Conceptual',
+			brand: ''
+		},
+		functions:{},
+		settings:{
+			extendBreadcrumb: false
+		}
+	};
+	if (!('Promise' in window && 'resolve' in window.Promise && 'reject' in window.Promise && 'all' in window.Promise && 'race' in window.Promise)) {
+		document.write('<script src="/_themes/docs.theme/master/en-us/_themes/global/js/bluebird.min.js"><\/script>');
+	}
+	</script>
+
+	<!--[if lt IE 9]>
+		<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
+		<script src="/_themes/docs.theme/master/en-us/_themes/global/js/polyfills/all.js"></script>
+	<![endif]-->
+	<!--[if gte IE 9]><!-->
+		<script src="./nginx_files/jquery-2.2.4.min.js.descarga"></script>
+	<!--<![endif]-->
+	<script>window.jQuery || document.write('<script src="/_themes/docs.theme/master/en-us/_themes/global/js/jquery/jquery-1.12.4.min.js"><\/script>')</script>
+	<script src="./nginx_files/global.min.js.descarga"></script><style></style><meta name="rating.locale" content="en-us"><script src="./nginx_files/open-rating.entry.min.js.descarga" async="" defer=""></script><script src="./nginx_files/jsll-4.2.1.js.descarga" async="" defer=""></script><style></style><meta name="rating.locale" content="en-us"><script src="./nginx_files/open-rating.entry.min.js(1).descarga" async="" defer=""></script><script src="./nginx_files/jsll-4.2.1.js(1).descarga" async="" defer=""></script>
+<meta name="ms.documentid" content="85679a86-8148-3fc8-5b93-17124e8629fb"><meta name="ms.contentlang" content="en-us"><meta name="ms.publishtime" content="2017-08-24 04:04 PM"><meta name="ms.giturl" content="https://github.com/aspnet/Docs/blob/live/aspnetcore/publishing/linuxproduction.md"><meta name="ms.sitename" content="Docs"><meta name="ms.gitcommit" content="https://github.com/aspnet/Docs/blob/4ab11ed8f67996a72fc222c3a5d05168c248f9fa/aspnetcore/publishing/linuxproduction.md"><meta name="ms.depotname" content="MSDN.aspnet-core-conceptual"><meta name="ms.opspagetype" content="Conceptual"><meta name="ms.locale" content="en-us"><meta name="ms.lang" content="en"><meta name="ms.loc" content="us"><meta name="ms.theme" content="light"><meta name="ms.contentsource" content="OP"><meta name="ms.pvid" content="255E4A30-15F8-4A2B-A4FF-B7112FDA3F88"><meta name="ms.perf.timing" content=",,0,0,0,5,248,253,257,907,907,,,,"><script type="text/javascript" charset="utf-8" async="" src="./nginx_files/2.b11234fb1603062af431.2.js.descarga"></script><link rel="stylesheet" href="./nginx_files/38-3b7d44"><script async="" src="./nginx_files/t.js.descarga"></script><script src="./nginx_files/49-945edd" defer=""></script><script src="./nginx_files/meversion" defer=""></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="/_chrome/commenting/master/open-commenting.ui.v1.0.2-7-g1b78816.master.min.js" src="./nginx_files/open-commenting.ui.v1.0.2-7-g1b78816.master.min.js.descarga"></script><style type="text/css">.or-o, .or-so {
+    margin: 0;
+    padding: 0;
+    height: auto;
+    width: auto;
+    position: relative;
+    float: none;
+    border: none;
+    border-radius: 0;
+    outline: none;
+    background: none;
+    box-sizing: border-box;
+    font: 13px 'Segoe UI', Frutiger, 'Frutiger Linotype', 'Dejavu Sans', 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: normal;
+    text-transform: none;
+    border-spacing: 0;
+    border-collapse: collapse;
+    transform: none;
+    transition: none;
+    animation: none;
+}
+.or-o:before, .or-o:after, .or-so:before, .or-so:after {
+    content: none;
+}
+.or-e-0 {
+    transition: none !important;
+}
+.or-f {
+    padding: 1px;
+}
+.or-f::-moz-focus-inner {
+    border: none;
+    padding: 0;
+}
+.or-lw {
+    clear: both;
+}
+h1, h2 {}
+h1.or-t, h2.or-t {
+    font-weight: lighter;
+}
+h1.or-t {
+    font-size: 40px;
+}
+h2.or-t {
+    font-size: 30px;
+}
+h3.or-t {
+    font-size: 20px;
+}
+h4.or-t {
+    font-size: 17px;
+}
+.or-b {
+    cursor: pointer;
+}
+.or-b>.or-c {
+    display: inline-block;
+    padding: 4px 25px;
+    width: 100%;
+    height: 100%;
+}
+.or-b:active {
+    transform: scale(0.98, 0.95);
+}
+.or-b[disabled] {
+    cursor: default;
+}
+.or-b[disabled]:active {
+    transform: none;
+}
+.or-g {
+    display: inline-block;
+    line-height: 0;
+}
+.or-l {
+    cursor: pointer;
+    padding: 5px 1px;
+    vertical-align: baseline;
+}
+.or-l>.or-c {
+    text-decoration: underline;
+}
+.or-a {
+    cursor: pointer;
+}
+.or-a>.or-c {
+    display: inline-block;
+    padding: 8px;
+    width: 100%;
+    height: 100%;
+}
+.or-v {
+    cursor: pointer;
+    padding-bottom: 2px;
+    /* For IE :active propagation BUG Fix */
+}
+.or-v>span {
+    display: inline-block;
+}
+.or-v>input[type=checkbox] {
+    -moz-appearance: checkbox-container;
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
+.or-v>input[type=checkbox]+span, .or-v>input[type=checkbox]+span+span {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    overflow: hidden;
+}
+.or-v>input[type=checkbox]+span+span {
+    opacity: 0;
+}
+.or-v>input[type=checkbox]:checked+span+span {
+    opacity: 1;
+}
+.or-v>span:last-child {
+    margin: 0 0 0 25px;
+    line-height: 19px;
+}
+.or-v:after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+}
+.or-pc[dir=rtl] .or-v>span:last-child {
+    margin: 0 25px 0 0;
+}
+.or-x {
+    resize: none;
+    padding: 5px;
+}
+.or-c-mf {
+    padding: 10px;
+}
+.or-c-mf.or-e-fi {
+    transition: opacity 0.1s linear;
+}
+.or-c-mf.or-e-fo {
+    transition: opacity 0.75s linear;
+}
+.or-c-pf {
+    padding: 7px;
+    max-height: 100%;
+    overflow: auto;
+}
+.or-c-pf>.or-a {
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    line-height: 0;
+    width: 20px;
+    height: 20px;
+}
+.or-c-pf>.or-a.or-f.or-k {
+    outline: none;
+}
+.or-c-pf>.or-a>.or-c.or-g {
+    padding: 0;
+}
+.or-c-pf>.or-a>.or-c.or-g>svg {
+    stroke-width: 1px;
+}
+.or-c-pf.or-e-fi, .or-c-pf.or-e-fo {
+    transition: opacity 0.1s linear;
+}
+.or-c-pf>.or-lw {
+    overflow: hidden;
+    padding: 3px;
+}
+.or-c-pf>.or-lw.or-e-h.or-e-w.or-e-fi {
+    transition: height 0.167s cubic-bezier(0.1, 0.9, 0.2, 1.0),
+                    width 0.167s cubic-bezier(0.1, 0.9, 0.2, 1.0),
+                    opacity 0.1s linear 0.167s;
+}
+.or-pc[dir=rtl] .or-c-pf>.or-a {
+    left: 0;
+    right: initial;
+}
+.or-c-md {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+        flex-direction: column;
+    -ms-flex-align: center;
+        align-items: center;
+    -ms-flex-pack: center;
+        justify-content: center;
+}
+.or-c-md>.or-c {
+    overflow: auto;
+}
+.or-c-md>.or-c.or-e-fi.or-e-t {
+    transition: opacity 0.167s linear, transform 0.367s cubic-bezier(0.1, 0.9, 0.2, 1.0);
+}
+.or-c-md>.or-c.or-e-fo.or-e-t {
+    transition: opacity 0.1s linear, transform 0.1s linear;
+}
+.or-c-v h3.or-t {
+    font-size: 13px;
+    margin: 0 18px 5px 1px;
+}
+.or-c-v>table.or-lw {
+    table-layout: fixed;
+}
+.or-c-v>table.or-lw td {
+    width: 50%;
+}
+.or-c-v>table.or-lw td>.or-b {
+    width: 100%;
+}
+.or-c-v>table.or-lw td:first-child {
+    padding-right: 1px;
+}
+.or-c-v>table.or-lw td:last-child {
+    padding-left: 1px;
+}
+.or-pc[dir=rtl] .or-c-v h3.or-t {
+    margin: 0 1px 5px 18px;
+}
+.or-pc[dir=rtl] .or-c-v>table.or-lw td:first-child {
+    border: none;
+    border-left: 2px transparent solid;
+}
+.or-c-f {
+    width: 235px;
+    max-width: 100%;
+}
+.or-c-f h3.or-t {
+    font-size: 13px;
+    font-weight: bold;
+}
+.or-c-f .or-v, .or-c-f .or-x, .or-c-f>.or-b {
+    display: block;
+}
+.or-c-f .or-v {
+    margin: 3px 0 0 0;
+}
+.or-c-f .or-x {
+    width: 100%;
+    height: 75px;
+}
+.or-c-f>.or-lw {
+    margin: 3px 0 0 0;
+}
+.or-c-f>.or-lw>.or-t {
+    margin: 0 18px 0 0;
+}
+.or-c-f>.or-lw.or-e-h.or-e-w.or-e-fi {
+    transition: height 0.167s cubic-bezier(0.1, 0.9, 0.2, 1.0),
+                    width 0.167s cubic-bezier(0.1, 0.9, 0.2, 1.0),
+                    opacity 0.167s linear;
+}
+.or-c-f>h3.or-t {
+    margin: 7px 0 5px 1px;
+}
+.or-c-f>.or-b {
+    float: right;
+    margin: 4px -1px 0 0;
+}
+.or-pc[dir=rtl] .or-c-f {}
+.or-pc[dir=rtl] .or-c-f>h3.or-t {
+    margin: 7px 1px 5px 0;
+}
+.or-pc[dir=rtl] .or-c-f>.or-lw>.or-t {
+    margin: 0 0 0 18px;
+}
+.or-pc[dir=rtl] .or-c-f>.or-b {
+    float: left;
+    margin: 4px 0 0 -1px;
+}
+.or-c-t h3.or-t {
+    font-size: 13px;
+}
+.or-c-pf .or-c-t h3.or-t {
+    margin: 3px 18px 0 0;
+}
+.or-pc[dir=rtl] .or-c-pf .or-c-t h3.or-t {
+    margin: 3px 0 0 18px;
+}
+.or-c-mv svg {
+    width: 12px;
+    height: 12px;
+    stroke-width: 1px;
+}
+.or-c-mv>.or-c {
+    padding: 3px 20px 5px 17px;
+}
+.or-c-mv>.or-c>span {
+    vertical-align: middle;
+}
+.or-c-mv>.or-c>.or-t {
+    color: inherit;
+    margin-left: 2px;
+}
+.or-c-mv.or-e-fi {
+    transition: opacity 0.1s linear;
+}
+.or-pc[dir=rtl] .or-c-mv>.or-c {
+    padding: 3px 17px 5px 20px;
+}
+.or-pc[dir=rtl] .or-c-mv>.or-c>.or-t {
+    margin: 0 2px 0 0;
+}
+.or-t-ml .or-f {}
+.or-t-ml .or-f.or-k {
+    outline: 2px black solid;
+}
+.or-t-ml .or-t {
+    color: black;
+}
+.or-t-ml .or-b {}
+.or-t-ml .or-b, .or-t-ml .or-b:hover, .or-t-ml .or-b:active {
+    background: none;
+}
+.or-t-ml .or-b>.or-c {
+    color: white;
+    stroke: white;
+    fill: white;
+    background: #0078d7;
+    border: 2px transparent solid;
+}
+.or-t-ml .or-b:hover>.or-c {
+    border-color: rgba(0, 0, 0, 0.4);
+}
+.or-t-ml .or-b:active>.or-c {
+    color: black;
+    stroke: black;
+    fill: black;
+    background: #999999;
+    border-color: transparent;
+}
+.or-t-ml .or-b[disabled]>.or-c, .or-t-ml .or-b[disabled]:hover>.or-c {
+    color: rgba(0, 0, 0, 0.4);
+    stroke: rgba(0, 0, 0, 0.4);
+    fill: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.2);
+    border-color: transparent;
+}
+.or-t-ml .or-l {}
+.or-t-ml .or-l, .or-t-ml .or-l:hover, .or-t-ml .or-l:active {
+    background: none;
+}
+.or-t-ml .or-l>.or-c {
+    color: #0078d7;
+}
+.or-t-ml .or-l:hover>.or-c {
+    color: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-l:active>.or-c {
+    color: rgba(0, 0, 0, 0.4);
+}
+.or-t-ml .or-a {}
+.or-t-ml .or-a, .or-t-ml .or-a:hover, .or-t-ml .or-a:active {
+    background: none;
+}
+.or-t-ml .or-a>.or-c {
+    color: black;
+    background: transparent;
+}
+.or-t-ml .or-a:hover>.or-c {
+    background: rgba(0, 0, 0, 0.1);
+}
+.or-t-ml .or-a:active>.or-c {
+    background: rgba(0, 0, 0, 0.2);
+}
+.or-t-ml .or-v {}
+.or-t-ml .or-v>input[type=checkbox] {}
+.or-t-ml .or-v>input[type=checkbox]+span {
+    border: 2px solid rgba(0, 0, 0, 0.4);
+    background: none;
+}
+.or-t-ml .or-v>input[type=checkbox]+span+span>svg {
+    stroke: white;
+    stroke-width: 1.5px;
+    fill: transparent;
+}
+.or-t-ml .or-v:hover>input[type=checkbox]+span, .or-t-ml .or-v:hover>input[type=checkbox]:checked+span {
+    border-color: black;
+}
+.or-t-ml .or-v:active>input[type=checkbox]+span, .or-t-ml .or-v>input[type=checkbox]:checked+span, .or-t-ml .or-v:active>input[type=checkbox]:checked+span {
+    border-color: transparent;
+}
+.or-t-ml .or-v:active>input[type=checkbox]+span, .or-t-ml .or-v:active>input[type=checkbox]:checked+span {
+    background: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-v>input[type=checkbox]:checked+span {
+    background: #0078d7;
+}
+.or-t-ml .or-x {
+    color: black;
+    background: rgba(255, 255, 255, 0.4);
+    border: 2px rgba(0, 0, 0, 0.4) solid;
+}
+.or-t-ml .or-x:hover {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: #171717;
+}
+.or-t-ml .or-x:active, .or-t-ml .or-x:focus {
+    color: black;
+    background: white;
+    border-color: #0078d7;
+}
+.or-t-ml .or-x:active::-webkit-input-placeholder, .or-t-ml .or-x:focus::-webkit-input-placeholder {
+    color: rgba(0, 0, 0, 0.4);
+}
+.or-t-ml .or-x:active:-ms-input-placeholder, .or-t-ml .or-x:focus:-ms-input-placeholder {
+    color: rgba(0, 0, 0, 0.4);
+}
+.or-t-ml .or-x:active::placeholder, .or-t-ml .or-x:focus::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+}
+.or-t-ml .or-x::-webkit-input-placeholder {
+    color: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-x:-ms-input-placeholder {
+    color: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-x::placeholder {
+    color: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-c-pf, .or-t-ml .or-c-mf {
+    border: 1px rgba(133, 133, 133, 0.4) solid;
+    background: white;
+}
+.or-t-ml .or-c-pf {}
+.or-t-ml .or-c-pf>.or-a {}
+.or-t-ml .or-c-pf>.or-a.or-f.or-k:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px black solid;
+}
+.or-t-ml .or-c-pf>.or-a>.or-c.or-g>svg {
+    stroke: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-c-pf>.or-a:hover>.or-c.or-g>svg {
+    stroke: #c80000;
+}
+.or-t-ml .or-c-pf>.or-a:active>.or-c.or-g>svg {
+    stroke: #8c0000;
+}
+.or-t-ml .or-c-md {
+    background: rgba(255, 255, 255, 0.6);
+}
+.or-t-ml .or-c-md>.or-c {
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+}
+
+@media screen and (-ms-high-contrast: active) {
+    .or-t-ml .or-b, .or-t-md .or-b {}
+    .or-t-ml .or-b>.or-c, .or-t-ml .or-b:active>.or-c, .or-t-md .or-b>.or-c, .or-t-md .or-b:active>.or-c {
+        stroke: white;
+        fill: white;
+    }
+    .or-t-ml .or-c-pf>.or-a>.or-c.or-g>svg, .or-t-md .or-c-pf>.or-a>.or-c.or-g>svg {
+        stroke: white;
+    }
+}
+
+@media screen and (-ms-high-contrast: black-on-white) {
+    .or-t-ml .or-b, .or-t-md .or-b {}
+    .or-t-ml .or-b>.or-c, .or-t-ml .or-b:active>.or-c, .or-t-md .or-b>.or-c, .or-t-md .or-b:active>.or-c {
+        stroke: black;
+        fill: black;
+    }
+    .or-t-ml .or-v>input[type=checkbox]+span+span>svg, .or-t-md .or-v>input[type=checkbox]+span+span>svg {
+        stroke: black;
+    }
+    .or-t-ml .or-c-pf>.or-a>.or-c.or-g>svg, .or-t-md .or-c-pf>.or-a>.or-c.or-g>svg {
+        stroke: black;
+    }
+}
+</style><style type="text/css">[id='openFeedbackContainer']{ position: fixed; right: 10px; bottom: 10px; }
+[id='openFeedbackContainer'][dir='rtl']{ left: 10px; right: initial; }</style><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="//cdn.livefyre.com/libs/fyre.conv/v3.0.0/livefyre.min.js" src="./nginx_files/livefyre.min.js.descarga"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="//cdn.livefyre.com/libs/sidenotes/v1.6.0/sidenotes.min.js" src="./nginx_files/sidenotes.min.js.descarga"></script><script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="//cdn.livefyre.com/libs/identity/v1.1.12/simple/javascripts/customprofiles.min.js" src="./nginx_files/customprofiles.min.js.descarga"></script><link rel="stylesheet" type="text/css" href="./nginx_files/livefyre_main.css" media="all"><script type="text/javascript" src="./nginx_files/livefyre_base.js.descarga" async="" defer=""></script><script type="text/javascript" src="./nginx_files/livefyre_mod_main.js.descarga" async="" defer=""></script><link rel="stylesheet" type="text/css" href="./nginx_files/sp.css" media="all"><style type="text/css" id="fyre-brand-styles-v2">.fyre-lfep2,
+.fyre-lfep2 input,
+.fyre-lfep2 textarea {
+    font-family: ;
+}
+
+.fyre-cp-form-btns .fyre-cp-form-back-btn,
+.fyre-cp-form-btns .fyre-cp-form-submit-btn {
+    background-color: #e86600;
+}
+
+.fyre-cp-link-create {
+    color: #e86600;
+}
+
+p.fyre-profile-user-comments span,
+p.fyre-profile-user-likes span {
+    color: #e86600;
+}
+
+.fyre-profile-comment-footer a {
+    color: #e86600;
+}
+
+a.fyre-profile-more-link {
+    color: #e86600;
+}
+
+.fyre-cp-form .fyre-cp-edit-save-msg {
+    color: #e86600
+}</style><script type="text/javascript" src="./nginx_files/livefyre_mod_editor_main.js.descarga" async="" defer=""></script><link rel="stylesheet" type="text/css" href="./nginx_files/block.css" media="all"><link rel="stylesheet" href="./nginx_files/38-3b7d44(1)"><script async="" src="./nginx_files/t.js(1).descarga"></script><style type="text/css">.or-o, .or-so {
+    margin: 0;
+    padding: 0;
+    height: auto;
+    width: auto;
+    position: relative;
+    float: none;
+    border: none;
+    border-radius: 0;
+    outline: none;
+    background: none;
+    box-sizing: border-box;
+    font: 13px 'Segoe UI', Frutiger, 'Frutiger Linotype', 'Dejavu Sans', 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: normal;
+    text-transform: none;
+    border-spacing: 0;
+    border-collapse: collapse;
+    transform: none;
+    transition: none;
+    animation: none;
+}
+.or-o:before, .or-o:after, .or-so:before, .or-so:after {
+    content: none;
+}
+.or-e-0 {
+    transition: none !important;
+}
+.or-f {
+    padding: 1px;
+}
+.or-f::-moz-focus-inner {
+    border: none;
+    padding: 0;
+}
+.or-lw {
+    clear: both;
+}
+h1, h2 {}
+h1.or-t, h2.or-t {
+    font-weight: lighter;
+}
+h1.or-t {
+    font-size: 40px;
+}
+h2.or-t {
+    font-size: 30px;
+}
+h3.or-t {
+    font-size: 20px;
+}
+h4.or-t {
+    font-size: 17px;
+}
+.or-b {
+    cursor: pointer;
+}
+.or-b>.or-c {
+    display: inline-block;
+    padding: 4px 25px;
+    width: 100%;
+    height: 100%;
+}
+.or-b:active {
+    transform: scale(0.98, 0.95);
+}
+.or-b[disabled] {
+    cursor: default;
+}
+.or-b[disabled]:active {
+    transform: none;
+}
+.or-g {
+    display: inline-block;
+    line-height: 0;
+}
+.or-l {
+    cursor: pointer;
+    padding: 5px 1px;
+    vertical-align: baseline;
+}
+.or-l>.or-c {
+    text-decoration: underline;
+}
+.or-a {
+    cursor: pointer;
+}
+.or-a>.or-c {
+    display: inline-block;
+    padding: 8px;
+    width: 100%;
+    height: 100%;
+}
+.or-v {
+    cursor: pointer;
+    padding-bottom: 2px;
+    /* For IE :active propagation BUG Fix */
+}
+.or-v>span {
+    display: inline-block;
+}
+.or-v>input[type=checkbox] {
+    -moz-appearance: checkbox-container;
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
+.or-v>input[type=checkbox]+span, .or-v>input[type=checkbox]+span+span {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    overflow: hidden;
+}
+.or-v>input[type=checkbox]+span+span {
+    opacity: 0;
+}
+.or-v>input[type=checkbox]:checked+span+span {
+    opacity: 1;
+}
+.or-v>span:last-child {
+    margin: 0 0 0 25px;
+    line-height: 19px;
+}
+.or-v:after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+}
+.or-pc[dir=rtl] .or-v>span:last-child {
+    margin: 0 25px 0 0;
+}
+.or-x {
+    resize: none;
+    padding: 5px;
+}
+.or-c-mf {
+    padding: 10px;
+}
+.or-c-mf.or-e-fi {
+    transition: opacity 0.1s linear;
+}
+.or-c-mf.or-e-fo {
+    transition: opacity 0.75s linear;
+}
+.or-c-pf {
+    padding: 7px;
+    max-height: 100%;
+    overflow: auto;
+}
+.or-c-pf>.or-a {
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    line-height: 0;
+    width: 20px;
+    height: 20px;
+}
+.or-c-pf>.or-a.or-f.or-k {
+    outline: none;
+}
+.or-c-pf>.or-a>.or-c.or-g {
+    padding: 0;
+}
+.or-c-pf>.or-a>.or-c.or-g>svg {
+    stroke-width: 1px;
+}
+.or-c-pf.or-e-fi, .or-c-pf.or-e-fo {
+    transition: opacity 0.1s linear;
+}
+.or-c-pf>.or-lw {
+    overflow: hidden;
+    padding: 3px;
+}
+.or-c-pf>.or-lw.or-e-h.or-e-w.or-e-fi {
+    transition: height 0.167s cubic-bezier(0.1, 0.9, 0.2, 1.0),
+                    width 0.167s cubic-bezier(0.1, 0.9, 0.2, 1.0),
+                    opacity 0.1s linear 0.167s;
+}
+.or-pc[dir=rtl] .or-c-pf>.or-a {
+    left: 0;
+    right: initial;
+}
+.or-c-md {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+        flex-direction: column;
+    -ms-flex-align: center;
+        align-items: center;
+    -ms-flex-pack: center;
+        justify-content: center;
+}
+.or-c-md>.or-c {
+    overflow: auto;
+}
+.or-c-md>.or-c.or-e-fi.or-e-t {
+    transition: opacity 0.167s linear, transform 0.367s cubic-bezier(0.1, 0.9, 0.2, 1.0);
+}
+.or-c-md>.or-c.or-e-fo.or-e-t {
+    transition: opacity 0.1s linear, transform 0.1s linear;
+}
+.or-c-v h3.or-t {
+    font-size: 13px;
+    margin: 0 18px 5px 1px;
+}
+.or-c-v>table.or-lw {
+    table-layout: fixed;
+}
+.or-c-v>table.or-lw td {
+    width: 50%;
+}
+.or-c-v>table.or-lw td>.or-b {
+    width: 100%;
+}
+.or-c-v>table.or-lw td:first-child {
+    padding-right: 1px;
+}
+.or-c-v>table.or-lw td:last-child {
+    padding-left: 1px;
+}
+.or-pc[dir=rtl] .or-c-v h3.or-t {
+    margin: 0 1px 5px 18px;
+}
+.or-pc[dir=rtl] .or-c-v>table.or-lw td:first-child {
+    border: none;
+    border-left: 2px transparent solid;
+}
+.or-c-f {
+    width: 235px;
+    max-width: 100%;
+}
+.or-c-f h3.or-t {
+    font-size: 13px;
+    font-weight: bold;
+}
+.or-c-f .or-v, .or-c-f .or-x, .or-c-f>.or-b {
+    display: block;
+}
+.or-c-f .or-v {
+    margin: 3px 0 0 0;
+}
+.or-c-f .or-x {
+    width: 100%;
+    height: 75px;
+}
+.or-c-f>.or-lw {
+    margin: 3px 0 0 0;
+}
+.or-c-f>.or-lw>.or-t {
+    margin: 0 18px 0 0;
+}
+.or-c-f>.or-lw.or-e-h.or-e-w.or-e-fi {
+    transition: height 0.167s cubic-bezier(0.1, 0.9, 0.2, 1.0),
+                    width 0.167s cubic-bezier(0.1, 0.9, 0.2, 1.0),
+                    opacity 0.167s linear;
+}
+.or-c-f>h3.or-t {
+    margin: 7px 0 5px 1px;
+}
+.or-c-f>.or-b {
+    float: right;
+    margin: 4px -1px 0 0;
+}
+.or-pc[dir=rtl] .or-c-f {}
+.or-pc[dir=rtl] .or-c-f>h3.or-t {
+    margin: 7px 1px 5px 0;
+}
+.or-pc[dir=rtl] .or-c-f>.or-lw>.or-t {
+    margin: 0 0 0 18px;
+}
+.or-pc[dir=rtl] .or-c-f>.or-b {
+    float: left;
+    margin: 4px 0 0 -1px;
+}
+.or-c-t h3.or-t {
+    font-size: 13px;
+}
+.or-c-pf .or-c-t h3.or-t {
+    margin: 3px 18px 0 0;
+}
+.or-pc[dir=rtl] .or-c-pf .or-c-t h3.or-t {
+    margin: 3px 0 0 18px;
+}
+.or-c-mv svg {
+    width: 12px;
+    height: 12px;
+    stroke-width: 1px;
+}
+.or-c-mv>.or-c {
+    padding: 3px 20px 5px 17px;
+}
+.or-c-mv>.or-c>span {
+    vertical-align: middle;
+}
+.or-c-mv>.or-c>.or-t {
+    color: inherit;
+    margin-left: 2px;
+}
+.or-c-mv.or-e-fi {
+    transition: opacity 0.1s linear;
+}
+.or-pc[dir=rtl] .or-c-mv>.or-c {
+    padding: 3px 17px 5px 20px;
+}
+.or-pc[dir=rtl] .or-c-mv>.or-c>.or-t {
+    margin: 0 2px 0 0;
+}
+.or-t-ml .or-f {}
+.or-t-ml .or-f.or-k {
+    outline: 2px black solid;
+}
+.or-t-ml .or-t {
+    color: black;
+}
+.or-t-ml .or-b {}
+.or-t-ml .or-b, .or-t-ml .or-b:hover, .or-t-ml .or-b:active {
+    background: none;
+}
+.or-t-ml .or-b>.or-c {
+    color: white;
+    stroke: white;
+    fill: white;
+    background: #0078d7;
+    border: 2px transparent solid;
+}
+.or-t-ml .or-b:hover>.or-c {
+    border-color: rgba(0, 0, 0, 0.4);
+}
+.or-t-ml .or-b:active>.or-c {
+    color: black;
+    stroke: black;
+    fill: black;
+    background: #999999;
+    border-color: transparent;
+}
+.or-t-ml .or-b[disabled]>.or-c, .or-t-ml .or-b[disabled]:hover>.or-c {
+    color: rgba(0, 0, 0, 0.4);
+    stroke: rgba(0, 0, 0, 0.4);
+    fill: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.2);
+    border-color: transparent;
+}
+.or-t-ml .or-l {}
+.or-t-ml .or-l, .or-t-ml .or-l:hover, .or-t-ml .or-l:active {
+    background: none;
+}
+.or-t-ml .or-l>.or-c {
+    color: #0078d7;
+}
+.or-t-ml .or-l:hover>.or-c {
+    color: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-l:active>.or-c {
+    color: rgba(0, 0, 0, 0.4);
+}
+.or-t-ml .or-a {}
+.or-t-ml .or-a, .or-t-ml .or-a:hover, .or-t-ml .or-a:active {
+    background: none;
+}
+.or-t-ml .or-a>.or-c {
+    color: black;
+    background: transparent;
+}
+.or-t-ml .or-a:hover>.or-c {
+    background: rgba(0, 0, 0, 0.1);
+}
+.or-t-ml .or-a:active>.or-c {
+    background: rgba(0, 0, 0, 0.2);
+}
+.or-t-ml .or-v {}
+.or-t-ml .or-v>input[type=checkbox] {}
+.or-t-ml .or-v>input[type=checkbox]+span {
+    border: 2px solid rgba(0, 0, 0, 0.4);
+    background: none;
+}
+.or-t-ml .or-v>input[type=checkbox]+span+span>svg {
+    stroke: white;
+    stroke-width: 1.5px;
+    fill: transparent;
+}
+.or-t-ml .or-v:hover>input[type=checkbox]+span, .or-t-ml .or-v:hover>input[type=checkbox]:checked+span {
+    border-color: black;
+}
+.or-t-ml .or-v:active>input[type=checkbox]+span, .or-t-ml .or-v>input[type=checkbox]:checked+span, .or-t-ml .or-v:active>input[type=checkbox]:checked+span {
+    border-color: transparent;
+}
+.or-t-ml .or-v:active>input[type=checkbox]+span, .or-t-ml .or-v:active>input[type=checkbox]:checked+span {
+    background: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-v>input[type=checkbox]:checked+span {
+    background: #0078d7;
+}
+.or-t-ml .or-x {
+    color: black;
+    background: rgba(255, 255, 255, 0.4);
+    border: 2px rgba(0, 0, 0, 0.4) solid;
+}
+.or-t-ml .or-x:hover {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: #171717;
+}
+.or-t-ml .or-x:active, .or-t-ml .or-x:focus {
+    color: black;
+    background: white;
+    border-color: #0078d7;
+}
+.or-t-ml .or-x:active::-webkit-input-placeholder, .or-t-ml .or-x:focus::-webkit-input-placeholder {
+    color: rgba(0, 0, 0, 0.4);
+}
+.or-t-ml .or-x:active:-ms-input-placeholder, .or-t-ml .or-x:focus:-ms-input-placeholder {
+    color: rgba(0, 0, 0, 0.4);
+}
+.or-t-ml .or-x:active::placeholder, .or-t-ml .or-x:focus::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+}
+.or-t-ml .or-x::-webkit-input-placeholder {
+    color: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-x:-ms-input-placeholder {
+    color: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-x::placeholder {
+    color: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-c-pf, .or-t-ml .or-c-mf {
+    border: 1px rgba(133, 133, 133, 0.4) solid;
+    background: white;
+}
+.or-t-ml .or-c-pf {}
+.or-t-ml .or-c-pf>.or-a {}
+.or-t-ml .or-c-pf>.or-a.or-f.or-k:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px black solid;
+}
+.or-t-ml .or-c-pf>.or-a>.or-c.or-g>svg {
+    stroke: rgba(0, 0, 0, 0.6);
+}
+.or-t-ml .or-c-pf>.or-a:hover>.or-c.or-g>svg {
+    stroke: #c80000;
+}
+.or-t-ml .or-c-pf>.or-a:active>.or-c.or-g>svg {
+    stroke: #8c0000;
+}
+.or-t-ml .or-c-md {
+    background: rgba(255, 255, 255, 0.6);
+}
+.or-t-ml .or-c-md>.or-c {
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+}
+
+@media screen and (-ms-high-contrast: active) {
+    .or-t-ml .or-b, .or-t-md .or-b {}
+    .or-t-ml .or-b>.or-c, .or-t-ml .or-b:active>.or-c, .or-t-md .or-b>.or-c, .or-t-md .or-b:active>.or-c {
+        stroke: white;
+        fill: white;
+    }
+    .or-t-ml .or-c-pf>.or-a>.or-c.or-g>svg, .or-t-md .or-c-pf>.or-a>.or-c.or-g>svg {
+        stroke: white;
+    }
+}
+
+@media screen and (-ms-high-contrast: black-on-white) {
+    .or-t-ml .or-b, .or-t-md .or-b {}
+    .or-t-ml .or-b>.or-c, .or-t-ml .or-b:active>.or-c, .or-t-md .or-b>.or-c, .or-t-md .or-b:active>.or-c {
+        stroke: black;
+        fill: black;
+    }
+    .or-t-ml .or-v>input[type=checkbox]+span+span>svg, .or-t-md .or-v>input[type=checkbox]+span+span>svg {
+        stroke: black;
+    }
+    .or-t-ml .or-c-pf>.or-a>.or-c.or-g>svg, .or-t-md .or-c-pf>.or-a>.or-c.or-g>svg {
+        stroke: black;
+    }
+}
+</style><style type="text/css">[id='openFeedbackContainer']{ position: fixed; right: 10px; bottom: 10px; }
+[id='openFeedbackContainer'][dir='rtl']{ left: 10px; right: initial; }</style><meta name="ms.perf.timing" content=",,1,1,1,5,74,77,83,1324,1339,,,,"><script src="./nginx_files/49-945edd(1)" defer=""></script><script src="./nginx_files/meversion(1)" defer=""></script></head>
+
+<body lang="en-us" dir="ltr" style="overflow-y: auto;">
+	<div id="headerAreaHolder" ms.pgarea="header" data-bi-name="header">    
+</div>
+
+	<div class="container mainContainer" lang="en-us" dir="ltr" ms.pgarea="body" data-bi-name="body">
+		<main role="main" ms.cmpgrp="content" data-bi-name="content">
+				<div id="main">
+
+						<h1 id="set-up-a-hosting-environment-for-aspnet-core-on-linux-with-nginx-and-deploy-to-it" sourcefile="publishing/linuxproduction.md" sourcestartlinenumber="15" sourceendlinenumber="15" class="">Set up a hosting environment for ASP.NET Core on Linux with Nginx, and deploy to it</h1>
+						<div class="metadata" ms.cmpgrp="page info" data-bi-name="page info">
+							<div>
+								<time class="date" datetime="8/21/2017 12:00:00 AM">08/21/2017</time>
+									<span class="reading-time">8 minutes to read</span>
+									<span class="contributors-text">Contributors</span>
+									<ul class="contributors" ms.cmpgrp="contributors" data-bi-name="contributors">
+												<li><a href="https://github.com/Rick-Anderson" title="Rick Anderson" ms.cmpnm="contributorprofile" data-bi-name="contributorprofile"><img src="./nginx_files/Rick-Anderson.png" alt="Rick Anderson"></a></li>
+												<li><a href="https://github.com/scottaddie" title="Scott Addie" ms.cmpnm="contributorprofile" data-bi-name="contributorprofile"><img src="./nginx_files/scottaddie.png" alt="Scott Addie"></a></li>
+												<li><a href="https://github.com/tdykstra" title="Tom Dykstra" ms.cmpnm="contributorprofile" data-bi-name="contributorprofile"><img src="./nginx_files/tdykstra.png" alt="Tom Dykstra"></a></li>
+												<li><a href="https://github.com/MartinsRui" title="MartinsRui" ms.cmpnm="contributorprofile" data-bi-name="contributorprofile"><img src="./nginx_files/MartinsRui.png" alt="MartinsRui"></a></li>
+												<li><a href="https://github.com/svick" title="Petr Onderka" ms.cmpnm="contributorprofile" data-bi-name="contributorprofile"><img src="./nginx_files/svick.png" alt="Petr Onderka"></a></li>
+											<li><a href="https://github.com/aspnet/Docs/blob/master/aspnetcore/publishing/linuxproduction.md" ms.cmpnm="contributorshowall" data-bi-name="contributorshowall">all</a></li>
+									</ul>
+							</div>
+
+
+							<nav id="center-doc-outline" class="doc-outline" ms.cmpgrp="intopic toc" data-bi-name="intopic toc" role="navigation" aria-label="On page navigation">
+								<h3>In this article</h3>
+							<ol><li><a href="http://localhost:49729/afx/resource/Users/Jose/Desktop/traiectum.documentation/asciidoc/offline/nginx.html#prerequisites">Prerequisites</a></li><li><a href="http://localhost:49729/afx/resource/Users/Jose/Desktop/traiectum.documentation/asciidoc/offline/nginx.html#copy-over-your-app">Copy over your app</a></li><li><a href="http://localhost:49729/afx/resource/Users/Jose/Desktop/traiectum.documentation/asciidoc/offline/nginx.html#configure-a-reverse-proxy-server">Configure a reverse proxy server</a></li><li><a href="http://localhost:49729/afx/resource/Users/Jose/Desktop/traiectum.documentation/asciidoc/offline/nginx.html#monitoring-our-application">Monitoring our application</a></li><li><a href="http://localhost:49729/afx/resource/Users/Jose/Desktop/traiectum.documentation/asciidoc/offline/nginx.html#securing-our-application">Securing our application</a></li></ol></nav>
+
+						</div>
+
+						<div><div class="content">
+<p class="lf-text-block lf-block" data-lf-anchor-id="c93f07c5878414d6f2763f48fa90bccb:0">By <a href="https://twitter.com/sshirhatti" data-linktype="external">Sourabh Shirhatti</a><span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="c93f07c5878414d6f2763f48fa90bccb:0">+
+</a>
+</span></p>
+<p class="lf-text-block lf-block" data-lf-anchor-id="8d404908088430ac7b1095ea030d1ee2:0">This guide explains setting up a production-ready ASP.NET Core environment on an Ubuntu 16.04 Server.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8d404908088430ac7b1095ea030d1ee2:0">+
+</a>
+</span></p>
+<p class="lf-text-block lf-block" data-lf-anchor-id="8d8765832f9888f62b418877e70f34c1:0"><strong>Note:</strong> For Ubuntu 14.04, supervisord is recommended as a solution for monitoring the Kestrel process. systemd is not available on Ubuntu 14.04. <a href="https://github.com/aspnet/Docs/blob/e9c1419175c4dd7e152df3746ba1df5935aaafd5/aspnetcore/publishing/linuxproduction.md" data-linktype="external">See previous version of this document</a><span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8d8765832f9888f62b418877e70f34c1:0">+
+</a>
+</span></p>
+<p class="lf-text-block lf-block" data-lf-anchor-id="80821090418400bc91200482130c1ce2:0">This guide:<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="80821090418400bc91200482130c1ce2:0">+
+</a>
+</span></p>
+<ul class="lf-text-block lf-block" data-lf-anchor-id="07d4a44dcc81ecbfeb49444b7d030a71:0">
+<li>Places an existing ASP.NET Core application behind a reverse proxy server</li>
+<li>Sets up the reverse proxy server to forward requests to the Kestrel web server</li>
+<li>Ensures the web application runs on startup as a daemon</li>
+<li>Configures a process management tool to help restart the web application</li>
+<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="07d4a44dcc81ecbfeb49444b7d030a71:0">+
+</a>
+</span></ul>
+<h2 id="prerequisites">Prerequisites</h2>
+<ol class="lf-text-block lf-block" data-lf-anchor-id="80b0c95984c1bdb9fb69c507ae154e68:0">
+<li>Access to an Ubuntu 16.04 Server with a standard user account with sudo privilege</li>
+<li>An existing ASP.NET Core application</li>
+<span class="lf-has-num lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="80b0c95984c1bdb9fb69c507ae154e68:0">1</a>
+</span></ol>
+<h2 id="copy-over-your-app">Copy over your app</h2>
+<p class="lf-text-block lf-block" data-lf-anchor-id="8d0108a9483936bc3b0988e345c45e52:0">Run <code>dotnet publish</code> from the dev environment to package an app into a self-contained directory that can run on the server.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8d0108a9483936bc3b0988e345c45e52:0">+
+</a>
+</span></p>
+<p class="lf-text-block lf-block" data-lf-anchor-id="8ac42945cc8174330b11094325074467:0">Copy the ASP.NET Core app to the server using whatever tool (SCP, FTP, etc.) integrates into your workflow. Test the app, for example:<span class="lf-has-num lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8ac42945cc8174330b11094325074467:0">1</a>
+</span></p>
+<ul class="lf-text-block lf-block" data-lf-anchor-id="81052f2b55bae4e903dda8ef4d709c77:0">
+<li>From the command line, run <code>dotnet yourapp.dll</code></li>
+<li>In a browser, navigate to <code>http://&lt;serveraddress&gt;:&lt;port&gt;</code> to verify the app works on Linux. </li>
+<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="81052f2b55bae4e903dda8ef4d709c77:0">+
+</a>
+</span></ul>
+<p class="lf-text-block lf-block" data-lf-anchor-id="06e265c9d8d3b821a6d11d5a4f3706e1:0"><strong>Note:</strong> Use <a class="xref" href="https://docs.microsoft.com/en-us/aspnet/core/client-side/yeoman" data-linktype="relative-path">Yeoman</a> to create a new ASP.NET Core app for a new project.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="06e265c9d8d3b821a6d11d5a4f3706e1:0">+
+</a>
+</span></p>
+<h2 id="configure-a-reverse-proxy-server">Configure a reverse proxy server</h2>
+<p class="lf-text-block lf-block" data-lf-anchor-id="04d431fb84a1e6ab30d1984a4a232461:0">A reverse proxy is a common setup for serving dynamic web applications. A reverse proxy terminates the HTTP request and forwards it to the ASP.NET Core application.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="04d431fb84a1e6ab30d1984a4a232461:0">+
+</a>
+</span></p>
+<h3 id="why-use-a-reverse-proxy-server">Why use a reverse proxy server?</h3>
+<p class="lf-text-block lf-block" data-lf-anchor-id="c85a25bbedc1b4fea2038853295f0ce1:0">Kestrel is great for serving dynamic content from ASP.NET Core; however, the web serving parts aren’t as feature rich as servers like IIS, Apache, or Nginx. A reverse proxy server can offload work like serving static content, caching requests, compressing requests, and SSL termination from the HTTP server. A reverse proxy server may reside on a dedicated machine or may be deployed alongside an HTTP server.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="c85a25bbedc1b4fea2038853295f0ce1:0">+
+</a>
+</span></p>
+<p class="lf-text-block lf-block" data-lf-anchor-id="8fc90c09efc944fe3b0388c3412728f3:0">For the purposes of this guide, a single instance of Nginx is used. It runs on the same server, alongside the HTTP server. Based on your requirements, you may choose a different setup.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8fc90c09efc944fe3b0388c3412728f3:0">+
+</a>
+</span></p>
+<p class="lf-text-block lf-block" data-lf-anchor-id="19142c0f31a9b0dab301c24f19a2d672:0">Because requests are forwarded by reverse proxy, use the <code>ForwardedHeaders</code> middleware from the <code>Microsoft.AspNetCore.HttpOverrides</code> package. This middleware updates <code>Request.Scheme</code>, using the <code>X-Forwarded-Proto</code> header, so that redirect URIs and other security policies work correctly.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="19142c0f31a9b0dab301c24f19a2d672:0">+
+</a>
+</span></p>
+<p class="lf-text-block lf-block" data-lf-anchor-id="8fc48c6d623920dabb0148c249674470:0">When setting up a reverse proxy server, the authentication middleware needs <code>UseForwardedHeaders</code> to run first. This ordering ensures that the authentication middleware can consume the affected values and generate correct redirect URIs.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8fc48c6d623920dabb0148c249674470:0">+
+</a>
+</span></p>
+<div class="tabGroup" id="tabgroup_VM3Bxws-oL" data-bi-name="tab-group" ms.cmpgrp="tab-group">
+<ul role="tablist" class="lf-text-block lf-block" data-lf-anchor-id="845ac04984883005e710774814144424:0">
+<li role="presentation">
+<a href="https://docs.microsoft.com/en-us/aspnet/core/publishing/linuxproduction?tabs=aspnetcore2x#tabpanel_VM3Bxws-oL_aspnetcore2x" role="tab" aria-controls="tabpanel_VM3Bxws-oL_aspnetcore2x" data-tab="aspnetcore2x" tabindex="-1" aria-selected="false" data-linktype="self-bookmark" data-bi-name="tab" ms.cmpnm="tab">ASP.NET Core 2.x</a>
+</li>
+<li role="presentation">
+<a href="https://docs.microsoft.com/en-us/aspnet/core/publishing/linuxproduction?tabs=aspnetcore2x#tabpanel_VM3Bxws-oL_aspnetcore1x" role="tab" aria-controls="tabpanel_VM3Bxws-oL_aspnetcore1x" data-tab="aspnetcore1x" tabindex="-1" data-linktype="self-bookmark" data-bi-name="tab" ms.cmpnm="tab" aria-selected="false">ASP.NET Core 1.x</a>
+</li>
+<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="-1" aria-label="Write a Sidenote" data-lf-anchor-id="845ac04984883005e710774814144424:0" data-bi-name="tab" ms.cmpnm="tab" aria-selected="false">+
+</a>
+</span></ul>
+<section id="tabpanel_VM3Bxws-oL_aspnetcore2x" role="tabpanel" data-tab="aspnetcore2x" hidden="hidden" aria-hidden="true">
+<p class="lf-text-block lf-block" data-lf-anchor-id="cb94204b2fb928f1974978474062aa17:0">Invoke the <code>UseForwardedHeaders</code> method (in the <code>Configure</code> method of <em>Startup.cs</em>) before calling <code>UseAuthentication</code> or similar authentication scheme middleware:<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="cb94204b2fb928f1974978474062aa17:0">+
+</a>
+</span></p>
+<div class="codeHeader lang-csharp" data-bi-name="code-header"><span class="language">C#</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-csharp" data-bi-name="code-block">app.UseForwardedHeaders(<span class="hljs-keyword">new</span> ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+
+app.UseAuthentication();
+</code></pre></section>
+<section id="tabpanel_VM3Bxws-oL_aspnetcore1x" role="tabpanel" data-tab="aspnetcore1x" aria-hidden="true" hidden="hidden">
+<p class="lf-text-block lf-block" data-lf-anchor-id="8bdc2c4b6fb968d99fc968464060e257:0">Invoke the <code>UseForwardedHeaders</code> method (in the <code>Configure</code> method of <em>Startup.cs</em>) before calling <code>UseIdentity</code> and <code>UseFacebookAuthentication</code> or similar authentication scheme middleware:<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8bdc2c4b6fb968d99fc968464060e257:0">+
+</a>
+</span></p>
+<div class="codeHeader lang-csharp" data-bi-name="code-header"><span class="language">C#</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-csharp" data-bi-name="code-block">app.UseForwardedHeaders(<span class="hljs-keyword">new</span> ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+
+app.UseIdentity();
+app.UseFacebookAuthentication(<span class="hljs-keyword">new</span> FacebookOptions()
+{
+    AppId = Configuration[<span class="hljs-string">"Authentication:Facebook:AppId"</span>],
+    AppSecret = Configuration[<span class="hljs-string">"Authentication:Facebook:AppSecret"</span>]
+});
+</code></pre></section>
+</div>
+<h3 id="install-nginx">Install Nginx</h3>
+<div class="codeHeader lang-bash" data-bi-name="code-header"><span class="language">bash</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-bash" data-bi-name="code-block">sudo apt-get install nginx
+</code></pre><div class="NOTE alert"><h5>Note</h5><p class="lf-text-block lf-block" data-lf-anchor-id="19cb24a34eb391aae60f0dd64f2dbd39:0">If you plan to install optional Nginx modules, you may be required to build Nginx from source.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="19cb24a34eb391aae60f0dd64f2dbd39:0">+
+</a>
+</span></p>
+</div>
+<p class="lf-text-block lf-block" data-lf-anchor-id="9f376021d71ed697f20ff95e792b1573:0">Use <code>apt-get</code> to install Nginx. The installer creates a System V init script that runs Nginx as daemon on system startup. Since Nginx was installed for the first time, explicitly start it by running:<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="9f376021d71ed697f20ff95e792b1573:0">+
+</a>
+</span></p>
+<div class="codeHeader lang-bash" data-bi-name="code-header"><span class="language">bash</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-bash" data-bi-name="code-block">sudo service nginx start
+</code></pre><p class="lf-text-block lf-block" data-lf-anchor-id="c04408b94f10d75d02d0c10213272642:0">Verify a browser displays the default landing page for Nginx.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="c04408b94f10d75d02d0c10213272642:0">+
+</a>
+</span></p>
+<h3 id="configure-nginx">Configure Nginx</h3>
+<p class="lf-text-block lf-block" data-lf-anchor-id="06d7f0294599ecbdb3d9794653675771:0">To configure Nginx as a reverse proxy to forward requests to our ASP.NET Core application, modify <code>/etc/nginx/sites-available/default</code>. Open it in a text editor, and replace the contents with the following:<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="06d7f0294599ecbdb3d9794653675771:0">+
+</a>
+</span></p>
+<div class="codeHeader lang-nginx" data-bi-name="code-header"><span class="language">nginx</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-nginx" data-bi-name="code-block"><span class="hljs-section">server</span> {
+    <span class="hljs-attribute">listen</span> <span class="hljs-number">80</span>;
+    <span class="hljs-attribute">location</span> / {
+        <span class="hljs-attribute">proxy_pass</span> http://localhost:5000;
+        <span class="hljs-attribute">proxy_http_version</span> <span class="hljs-number">1</span>.<span class="hljs-number">1</span>;
+        <span class="hljs-attribute">proxy_set_header</span> Upgrade <span class="hljs-variable">$http_upgrade</span>;
+        <span class="hljs-attribute">proxy_set_header</span> Connection keep-alive;
+        <span class="hljs-attribute">proxy_set_header</span> Host <span class="hljs-variable">$host</span>;
+        <span class="hljs-attribute">proxy_cache_bypass</span> <span class="hljs-variable">$http_upgrade</span>;
+    }
+}
+</code></pre><p class="lf-text-block lf-block" data-lf-anchor-id="8c134573458300df961c48d808041ca4:0">This Nginx configuration file forwards incoming public traffic from port <code>80</code> to port <code>5000</code>.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8c134573458300df961c48d808041ca4:0">+
+</a>
+</span></p>
+<p class="lf-text-block lf-block" data-lf-anchor-id="46c10a6347b9401f514b65d65f247dbc:0">Once you have completed making changes to your Nginx configuration, you can run <code>sudo nginx -t</code> to verify the syntax of your configuration files. If the configuration file test is successful, you can ask Nginx to pick up the changes by running <code>sudo nginx -s reload</code>.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="46c10a6347b9401f514b65d65f247dbc:0">+
+</a>
+</span></p>
+<h2 id="monitoring-our-application">Monitoring our application</h2>
+<p class="lf-text-block lf-block" data-lf-anchor-id="86756982c49a6db120cf795ad70745f1:0">Nginx is now setup to forward requests made to <code>http://yourhost:80</code> on to the ASP.NET Core application running on Kestrel at <code>http://127.0.0.1:5000</code>. However, Nginx is not set up to manage the Kestrel process. You can use <em>systemd</em> and create a service file to start and monitor the underlying web app. <em>systemd</em> is an init system that provides many powerful features for starting, stopping, and managing processes. <span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="86756982c49a6db120cf795ad70745f1:0">+
+</a>
+</span></p>
+<h3 id="create-the-service-file">Create the service file</h3>
+<p class="lf-text-block lf-block" data-lf-anchor-id="aee9896b9dd36162d3e8fc9817d122c5:0">Create the service definition file:<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="aee9896b9dd36162d3e8fc9817d122c5:0">+
+</a>
+</span></p>
+<div class="codeHeader lang-bash" data-bi-name="code-header"><span class="language">bash</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-bash" data-bi-name="code-block">sudo nano /etc/systemd/system/kestrel-hellomvc.service
+</code></pre><p class="lf-text-block lf-block" data-lf-anchor-id="063471c68d8964ea0048b046131a46e0:0">The following is an example service file for our application:<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="063471c68d8964ea0048b046131a46e0:0">+
+</a>
+</span></p>
+<div class="codeHeader lang-ini" data-bi-name="code-header"><span class="language">ini</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-ini" data-bi-name="code-block"><span class="hljs-section">[Unit]</span>
+<span class="hljs-attr">Description</span>=Example .NET Web API Application running <span class="hljs-literal">on</span> Ubuntu
+<span class="hljs-section">
+[Service]</span>
+<span class="hljs-attr">WorkingDirectory</span>=/var/aspnetcore/hellomvc
+<span class="hljs-attr">ExecStart</span>=/usr/bin/dotnet /var/aspnetcore/hellomvc/hellomvc.dll
+<span class="hljs-attr">Restart</span>=always
+<span class="hljs-attr">RestartSec</span>=<span class="hljs-number">10</span>  # Restart service after <span class="hljs-number">10</span> seconds if dotnet service crashes
+<span class="hljs-attr">SyslogIdentifier</span>=dotnet-example
+<span class="hljs-attr">User</span>=www-data
+<span class="hljs-attr">Environment</span>=ASPNETCORE_ENVIRONMENT=Production 
+<span class="hljs-section">
+[Install]</span>
+<span class="hljs-attr">WantedBy</span>=multi-user.target
+</code></pre><p class="lf-text-block lf-block" data-lf-anchor-id="ced44969771a65aa224989c6462006e1:0"><strong>Note:</strong> If the user <em>www-data</em> is not used by your configuration, the user defined here must be created first and given proper ownership for files.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="ced44969771a65aa224989c6462006e1:0">+
+</a>
+</span></p>
+<p class="lf-text-block lf-block" data-lf-anchor-id="8ecd1d65dd0964fbfb09a84159474656:0">Save the file, and enable the service.<span class="lf-has-num lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8ecd1d65dd0964fbfb09a84159474656:0">1</a>
+</span></p>
+<div class="codeHeader lang-bash" data-bi-name="code-header"><span class="language">bash</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-bash" data-bi-name="code-block">systemctl <span class="hljs-built_in">enable</span> kestrel-hellomvc.service
+</code></pre><p class="lf-text-block lf-block" data-lf-anchor-id="aa011d75d48847f32a2c995359f567d8:0">Start the service and verify that it is running.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="aa011d75d48847f32a2c995359f567d8:0">+
+</a>
+</span></p>
+<div class="codeHeader" data-bi-name="code-header"><span class="language"></span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code data-bi-name="code-block">systemctl start kestrel-hellomvc.service
+systemctl status kestrel-hellomvc.service
+
+● kestrel-hellomvc.service - Example .NET Web API Application running on Ubuntu
+    Loaded: loaded (/etc/systemd/system/kestrel-hellomvc.service; enabled)
+    Active: active (running) since Thu 2016-10-18 04:09:35 NZDT; 35s ago
+Main PID: 9021 (dotnet)
+    CGroup: /system.slice/kestrel-hellomvc.service
+            └─9021 /usr/local/bin/dotnet /var/aspnetcore/hellomvc/hellomvc.dll
+</code></pre><p class="lf-text-block lf-block" data-lf-anchor-id="0c450dbdc59934fb3349cc4763114ae8:0">With the reverse proxy configured and Kestrel managed through systemd, the web application is fully configured and can be accessed from a browser on the local machine at <code>http://localhost</code>. It is also accessible from a remote machine, barring any firewall that might be blocking. Inspecting the response headers, the <code>Server</code> header shows the ASP.NET Core application being served by Kestrel.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="0c450dbdc59934fb3349cc4763114ae8:0">+
+</a>
+</span></p>
+<div class="codeHeader lang-text" data-bi-name="code-header"><span class="language">text</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-text" data-bi-name="code-block"><span class="hljs-title">HTTP</span>/1.1 200 OK
+<span class="hljs-title">Date</span>: Tue, 11 Oct 2016 16:22:23 GMT
+<span class="hljs-title">Server</span>: Kestrel
+<span class="hljs-title">Keep</span>-Alive: timeout=5, max=98
+<span class="hljs-title">Connection</span>: Keep-Alive
+<span class="hljs-title">Transfer</span>-Encoding: chunked
+</code></pre><h3 id="viewing-logs">Viewing logs</h3>
+<p class="lf-text-block lf-block" data-lf-anchor-id="12c56986579c3abaa59320437b0f2651:0">Since the web application using Kestrel is managed using <code>systemd</code>, all events and processes are logged to a centralized journal. However, this journal includes all entries for all services and processes managed by <code>systemd</code>. To view the <code>kestrel-hellomvc.service</code>-specific items, use the following command:<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="12c56986579c3abaa59320437b0f2651:0">+
+</a>
+</span></p>
+<div class="codeHeader lang-bash" data-bi-name="code-header"><span class="language">bash</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-bash" data-bi-name="code-block">sudo journalctl -fu kestrel-hellomvc.service
+</code></pre><p class="lf-text-block lf-block" data-lf-anchor-id="8dc8474bfa7182b60fcdb90f6376a2c1:0">For further filtering, time options such as <code>--since today</code>, <code>--until 1 hour ago</code> or a combination of these can reduce the amount of entries returned.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8dc8474bfa7182b60fcdb90f6376a2c1:0">+
+</a>
+</span></p>
+<div class="codeHeader lang-bash" data-bi-name="code-header"><span class="language">bash</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-bash" data-bi-name="code-block">sudo journalctl -fu kestrel-hellomvc.service --since <span class="hljs-string">"2016-10-18"</span> --until <span class="hljs-string">"2016-10-18 04:00"</span>
+</code></pre><h2 id="securing-our-application">Securing our application</h2>
+<h3 id="enable-apparmor">Enable AppArmor</h3>
+<p class="lf-text-block lf-block" data-lf-anchor-id="80c0712dd5680cc0340e98064537ae69:0">Linux Security Modules (LSM) is a framework that is part of the Linux kernel since Linux 2.6. LSM supports different implementations of security modules. <a href="https://wiki.ubuntu.com/AppArmor" data-linktype="external">AppArmor</a> is a LSM that implements a Mandatory Access Control system which allows confining the program to a limited set of resources. Ensure AppArmor is enabled and properly configured.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="80c0712dd5680cc0340e98064537ae69:0">+
+</a>
+</span></p>
+<h3 id="configuring-our-firewall">Configuring our firewall</h3>
+<p class="lf-text-block lf-block" data-lf-anchor-id="43616d885192871928c19f0ecf395871:0">Close off all external ports that are not in use. Uncomplicated firewall (ufw) provides a front end for <code>iptables</code> by providing a command line interface for configuring the firewall. Verify that <code>ufw</code> is configured to allow traffic on any ports you need.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="43616d885192871928c19f0ecf395871:0">+
+</a>
+</span></p>
+<div class="codeHeader lang-bash" data-bi-name="code-header"><span class="language">bash</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-bash" data-bi-name="code-block">sudo apt-get install ufw
+sudo ufw <span class="hljs-built_in">enable</span>
+
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+</code></pre><h3 id="securing-nginx">Securing Nginx</h3>
+<p class="lf-text-block lf-block" data-lf-anchor-id="a1cf076b4b81205f810d5c595f6f75b4:0">The default distribution of Nginx doesn't enable SSL. To enable additional security features, build from source.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="a1cf076b4b81205f810d5c595f6f75b4:0">+
+</a>
+</span></p>
+<h4 id="download-the-source-and-install-the-build-dependencies">Download the source and install the build dependencies</h4>
+<div class="codeHeader lang-bash" data-bi-name="code-header"><span class="language">bash</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-bash" data-bi-name="code-block"><span class="hljs-comment"># Install the build dependencies</span>
+sudo apt-get update
+sudo apt-get install build-essential zlib1g-dev libpcre3-dev libssl-dev libxslt1-dev libxml2-dev libgd2-xpm-dev libgeoip-dev libgoogle-perftools-dev libperl-dev
+
+<span class="hljs-comment"># Download nginx 1.10.0 or latest</span>
+wget http://www.nginx.org/download/nginx-1.10.0.tar.gz
+tar zxf nginx-1.10.0.tar.gz
+</code></pre><h4 id="change-the-nginx-response-name">Change the Nginx response name</h4>
+<p class="lf-text-block lf-block" data-lf-anchor-id="80d919b2e6232f998864e06e90eb8cf1:0">Edit <em>src/http/ngx_http_header_filter_module.c</em>:<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="80d919b2e6232f998864e06e90eb8cf1:0">+
+</a>
+</span></p>
+<div class="codeHeader lang-c" data-bi-name="code-header"><span class="language">c</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-c" data-bi-name="code-block"><span class="hljs-keyword">static</span> <span class="hljs-keyword">char</span> ngx_http_server_string[] = <span class="hljs-string">"Server: Your Web Server"</span> CRLF;
+<span class="hljs-keyword">static</span> <span class="hljs-keyword">char</span> ngx_http_server_full_string[] = <span class="hljs-string">"Server: Your Web Server"</span> CRLF;
+</code></pre><h4 id="configure-the-options-and-build">Configure the options and build</h4>
+<p class="lf-text-block lf-block" data-lf-anchor-id="85445da967182ff12811f847610bc0f5:0">The PCRE library is required for regular expressions. Regular expressions are used in the location directive for the ngx_http_rewrite_module. The http_ssl_module adds HTTPS protocol support.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="85445da967182ff12811f847610bc0f5:0">+
+</a>
+</span></p>
+<p class="lf-text-block lf-block" data-lf-anchor-id="36e5f14e10019ebc85e817c41f0444b9:0">Consider using a web application firewall like <em>ModSecurity</em> to harden your application.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="36e5f14e10019ebc85e817c41f0444b9:0">+
+</a>
+</span></p>
+<div class="codeHeader lang-bash" data-bi-name="code-header"><span class="language">bash</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-bash" data-bi-name="code-block">./configure
+--with-pcre=../pcre-8.38
+--with-zlib=../zlib-1.2.8
+--with-http_ssl_module
+--with-stream
+--with-mail=dynamic
+</code></pre><h4 id="configure-ssl">Configure SSL</h4>
+<ul class="lf-text-block lf-block" data-lf-anchor-id="8b156f0f4d1c25963989ad474163ac71:0">
+<li><p>Configure your server to listen to HTTPS traffic on port <code>443</code> by specifying a valid certificate issued by a trusted Certificate Authority (CA).</p>
+</li>
+<li><p>Harden your security by employing some of the practices depicted in the following <em>/etc/nginx/nginx.conf</em> file. Examples include choosing a stronger cipher and redirecting all traffic over HTTP to HTTPS.</p>
+</li>
+<li><p>Adding an <code>HTTP Strict-Transport-Security</code> (HSTS) header ensures all subsequent requests made by the client are over HTTPS only.</p>
+</li>
+<li><p>Do not add the Strict-Transport-Security header or chose an appropriate <code>max-age</code> if you plan to disable SSL in the future.</p>
+</li>
+<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8b156f0f4d1c25963989ad474163ac71:0">+
+</a>
+</span></ul>
+<p class="lf-text-block lf-block" data-lf-anchor-id="8c450423c109415f721920c600060634:0">Add the <em>/etc/nginx/proxy.conf</em> configuration file:<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8c450423c109415f721920c600060634:0">+
+</a>
+</span></p>
+<div class="codeHeader lang-nginx" data-bi-name="code-header"><span class="language">nginx</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-nginx" data-src="https://github.com/aspnet/Docs/blob/live/aspnetcore/publishing/linuxproduction/proxy.conf" name="Main" data-bi-name="code-block"><span class="hljs-attribute">proxy_redirect</span> 			<span class="hljs-literal">off</span>;
+<span class="hljs-attribute">proxy_set_header</span> 		Host 			<span class="hljs-variable">$host</span>;
+<span class="hljs-attribute">proxy_set_header</span>		X-Real-IP 		<span class="hljs-variable">$remote_addr</span>;
+<span class="hljs-attribute">proxy_set_header</span>		X-Forwarded-For	<span class="hljs-variable">$proxy_add_x_forwarded_for</span>;
+<span class="hljs-attribute">proxy_set_header</span>    X-Forwarded-Proto <span class="hljs-variable">$scheme</span>;
+<span class="hljs-attribute">client_max_body_size</span> 	<span class="hljs-number">10m</span>;
+<span class="hljs-attribute">client_body_buffer_size</span> <span class="hljs-number">128k</span>;
+<span class="hljs-attribute">proxy_connect_timeout</span> 	<span class="hljs-number">90</span>;
+<span class="hljs-attribute">proxy_send_timeout</span> 		<span class="hljs-number">90</span>;
+<span class="hljs-attribute">proxy_read_timeout</span> 		<span class="hljs-number">90</span>;
+<span class="hljs-attribute">proxy_buffers</span>			<span class="hljs-number">32</span> <span class="hljs-number">4k</span>;
+</code></pre><p class="lf-text-block lf-block" data-lf-anchor-id="8e5d0c23c58949df220d68c75d468ef7:0">Edit the <em>/etc/nginx/nginx.conf</em> configuration file. The example contains both <code>http</code> and <code>server</code> sections in one configuration file.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8e5d0c23c58949df220d68c75d468ef7:0">+
+</a>
+</span></p>
+<div class="codeHeader lang-nginx" data-bi-name="code-header"><span class="language">nginx</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-nginx" data-src="https://github.com/aspnet/Docs/blob/live/aspnetcore/publishing/linuxproduction/nginx.conf" name="Main" highlight-lines="2" data-bi-name="code-block"><span class="hljs-section">http</span> {
+<span class="line-highlight">    <span class="hljs-attribute">include</span>    /etc/nginx/proxy.conf;</span>
+    <span class="hljs-attribute">limit_req_zone</span> <span class="hljs-variable">$binary_remote_addr</span> zone=one:<span class="hljs-number">10m</span> rate=5r/s;
+    <span class="hljs-attribute">server_tokens</span> <span class="hljs-literal">off</span>;
+
+    <span class="hljs-attribute">sendfile</span> <span class="hljs-literal">on</span>;
+    <span class="hljs-attribute">keepalive_timeout</span> <span class="hljs-number">29</span>; <span class="hljs-comment"># Adjust to the lowest possible value that makes sense for your use case.</span>
+    <span class="hljs-attribute">client_body_timeout</span> <span class="hljs-number">10</span>; <span class="hljs-attribute">client_header_timeout</span> <span class="hljs-number">10</span>; <span class="hljs-attribute">send_timeout</span> <span class="hljs-number">10</span>;
+
+    <span class="hljs-attribute">upstream</span> hellomvc{
+        <span class="hljs-attribute">server</span> localhost:<span class="hljs-number">5000</span>;
+    }
+
+    <span class="hljs-section">server</span> {
+        <span class="hljs-attribute">listen</span> *:<span class="hljs-number">80</span>;
+        <span class="hljs-attribute">add_header</span> Strict-Transport-Security max-age=<span class="hljs-number">15768000</span>;
+        <span class="hljs-attribute">return</span> <span class="hljs-number">301</span> https://<span class="hljs-variable">$host</span><span class="hljs-variable">$request_uri</span>;
+    }
+
+    <span class="hljs-section">server</span> {
+        <span class="hljs-attribute">listen</span> *:<span class="hljs-number">443</span>    ssl;
+        <span class="hljs-attribute">server_name</span>     example.com;
+        <span class="hljs-attribute">ssl_certificate</span> /etc/ssl/certs/testCert.crt;
+        <span class="hljs-attribute">ssl_certificate_key</span> /etc/ssl/certs/testCert.key;
+        <span class="hljs-attribute">ssl_protocols</span> TLSv1.<span class="hljs-number">1</span> TLSv1.<span class="hljs-number">2</span>;
+        <span class="hljs-attribute">ssl_prefer_server_ciphers</span> <span class="hljs-literal">on</span>;
+        <span class="hljs-attribute">ssl_ciphers</span> <span class="hljs-string">"EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH"</span>;
+        <span class="hljs-attribute">ssl_ecdh_curve</span> secp384r1;
+        <span class="hljs-attribute">ssl_session_cache</span> shared:SSL:<span class="hljs-number">10m</span>;
+        <span class="hljs-attribute">ssl_session_tickets</span> <span class="hljs-literal">off</span>;
+        <span class="hljs-attribute">ssl_stapling</span> <span class="hljs-literal">on</span>; <span class="hljs-comment">#ensure your cert is capable</span>
+        <span class="hljs-attribute">ssl_stapling_verify</span> <span class="hljs-literal">on</span>; <span class="hljs-comment">#ensure your cert is capable</span>
+
+        <span class="hljs-attribute">add_header</span> Strict-Transport-Security <span class="hljs-string">"max-age=63072000; includeSubdomains; preload"</span>;
+        <span class="hljs-attribute">add_header</span> X-Frame-Options DENY;
+        <span class="hljs-attribute">add_header</span> X-Content-Type-Options nosniff;
+
+        <span class="hljs-comment">#Redirects all traffic</span>
+        <span class="hljs-attribute">location</span> / {
+            <span class="hljs-attribute">proxy_pass</span>  http://hellomvc;
+            <span class="hljs-attribute">limit_req</span>   zone=one burst=<span class="hljs-number">10</span>;
+        }
+    }
+}
+</code></pre><h4 id="secure-nginx-from-clickjacking">Secure Nginx from clickjacking</h4>
+<p class="lf-text-block lf-block" data-lf-anchor-id="01d06728cd85f6b125615ccb67104f60:0">Clickjacking is a malicious technique to collect an infected user's clicks. Clickjacking tricks the victim (visitor) into clicking on an infected site. Use X-FRAME-OPTIONS to secure your site.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="01d06728cd85f6b125615ccb67104f60:0">+
+</a>
+</span></p>
+<p class="lf-text-block lf-block" data-lf-anchor-id="8ec54c23cfc94bdfaa2d6acf5f470af5:0">Edit the <em>nginx.conf</em> file:<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8ec54c23cfc94bdfaa2d6acf5f470af5:0">+
+</a>
+</span></p>
+<div class="codeHeader lang-bash" data-bi-name="code-header"><span class="language">bash</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-bash" data-bi-name="code-block">sudo nano /etc/nginx/nginx.conf
+</code></pre><p class="lf-text-block lf-block" data-lf-anchor-id="8edc6c69cd0964da7b0988c420424336:0">Add the line <code>add_header X-Frame-Options "SAMEORIGIN";</code> and save the file, then restart Nginx.<span class="lf-has-num lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8edc6c69cd0964da7b0988c420424336:0">2</a>
+</span></p>
+<h4 id="mime-type-sniffing">MIME-type sniffing</h4>
+<p class="lf-text-block lf-block" data-lf-anchor-id="9d942ced559be6cb332da843600f4357:0">This header prevents most browsers from MIME-sniffing a response away from the declared content type, as the header instructs the browser not to override the response content type. With the <code>nosniff</code> option, if the server says the content is "text/html", the browser renders it as "text/html".<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="9d942ced559be6cb332da843600f4357:0">+
+</a>
+</span></p>
+<p class="lf-text-block lf-block" data-lf-anchor-id="8ec54c23cfc94bdfaa2d6acf5f470af5:1">Edit the <em>nginx.conf</em> file:<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8ec54c23cfc94bdfaa2d6acf5f470af5:1">+
+</a>
+</span></p>
+<div class="codeHeader lang-bash" data-bi-name="code-header"><span class="language">bash</span><button class="action copy" data-bi-name="copy"><span>Copy</span></button></div><pre><code class="lang-bash" data-bi-name="code-block">sudo nano /etc/nginx/nginx.conf
+</code></pre><p class="lf-text-block lf-block" data-lf-anchor-id="8edc6ce9cd0f74de7be988c420424736:1">Add the line <code>add_header X-Content-Type-Options "nosniff";</code> and save the file, then restart Nginx.<span class="lf-thread-btn"><a class="fycon-action-view" tabindex="0" aria-label="Write a Sidenote" data-lf-anchor-id="8edc6ce9cd0f74de7be988c420424736:1">+
+</a>
+</span></p>
+</div></div>
+ 
+
+						
+				</div>
+		</main>
+
+		
+
+		
+
+		
+
+		
+
+	</div>
+
+	<div id="openFeedbackContainer" class="openfeedback-container footer-layout or-t-ml or-pc" style="z-index: 1000;"><button type="button" role="button" class="or-b or-c-mv or-o or-f" style="opacity: 1;"></button></div>
+
+	
+
+	<script src="./nginx_files/b11234fb1603062af431.conceptual.js.descarga"></script>
+
+<script src="./nginx_files/ms.js.descarga" async="" defer=""></script><script src="./nginx_files/Livefyre.js.descarga" async="" defer=""></script><script src="./nginx_files/open-commenting.entry.min.js.descarga" async="" defer=""></script><link rel="stylesheet" type="text/css" href="./nginx_files/open-commenting.ui.v1.0.2-7-g1b78816.master.min.css"><link rel="stylesheet" type="text/css" href="./nginx_files/open-commenting.ui.docs.v1.0.2-7-g1b78816.master.min.css"><script type="text/javascript" src="./nginx_files/open-rating.ui-v0.6.1-97-g14612aa.master.min.js.descarga"></script><div id="fyre-messenger-1"></div><div class="lf"><div class="lf-popover lf-thread-popover"><div class="lf-thread-content lf-popover-content" role="dialog" aria-label="Sidenote Dialog"></div>
+<div class="lf-popover-arrow"></div>
+</div></div><div style="position: absolute; display: none;"><div class="tooltip">Toka</div><div class="arrow-down"></div></div><div style="position: absolute; display: none;"><div class="tooltip">Siva_pragasam</div><div class="arrow-down"></div></div><div style="position: absolute; display: none;"><div class="tooltip">Stephane_Duteriez</div><div class="arrow-down"></div></div><div style="position: absolute; display: none;"><div class="tooltip">Aleksandr_Budnik</div><div class="arrow-down"></div></div><div style="position: absolute; display: none;"><div class="tooltip">Сергей_Войтешонок</div><div class="arrow-down"></div></div><div style="position: absolute; display: none;"><div class="tooltip">hongbai</div><div class="arrow-down"></div></div><div class="fyre-hovercard" style="display: none;"><div class="fyre-hovercard-body"></div><div class="fyre-hovercard-arrow"></div></div><script src="./nginx_files/ms.js(1).descarga" async="" defer=""></script><script src="./nginx_files/Livefyre.js(1).descarga" async="" defer=""></script><script src="./nginx_files/open-commenting.entry.min.js(1).descarga" async="" defer=""></script></body></html>

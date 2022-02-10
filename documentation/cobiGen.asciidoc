@@ -1,0 +1,134 @@
+:toc: macro
+toc::[]
+:icons: font
+:iconfont-remote!:
+:iconfont-name: font-awesome
+:stylesdir: css
+
+== [navy]#devon4net Cobigen Guide#
+
+=== [navy]#Overview#
+
+In this guide we will explain how to generate a new WebApi project from an OpenAPI 3.0.0 specification. This  means that we are going to use a “contract first” strategy. This is going to be possible due to these type of files that contain all the information about entities, operations, etc…
+
+In order to make it work we are using https://github.com/devonfw/cobigen[CobiGen], a powerful tool for generating source code. CobiGen allows users to generate all the structure and code of the components, helping to save a lot of time otherwise waisted on repetitive tasks.
+
+=== [navy]#Getting things ready#
+
+==== [navy]#devonfw Distribution#
+
+The devonfw distributions can be obtained from the https://coconet.capgemini.com/sf/frs/do/listReleases/projects.apps2_devon/frs.devon_distribution[TeamForge releases library] and are packaged in zips files that include all the needed tools, software and configurations.
+
+It is not necessary to install nor configure anything. Just extracting the zip content is enough to have a fully functional devonfw. The only thing you have to do is run *create-or-update-workspace.bat* and then *update-all-workspaces.bat* to set up all the needed tools.
+
+==== [navy]#devon4net Templates#
+
+We are going to use the template of devon4net as a base to generate all the code, so what we have to do now is to download said template using the following steps.
+
+First of all you have to set up all the environment for .NET, you can do this using https://devon4net.github.io/environment.html[the following tutorial]. Next we are going to create a new folder where we want to have the WebAPI project, lastly we are going to open the terminal there.
+
+Type the following:
+
+    dotnet new -i Devon4Net.WebAPI.Template
+    
+and then:
+
+    dotnet new Devon4NetAPI
+    
+==== [navy]#OpenAPI File#
+
+In order to let CobiGen generate all the files, we first have to make some modifications to our OpenAPI file. 
+
+It is obligatory to put the _“x-rootpackage”_ tag to indicate where CobiGen will place the generated files as well as the _"x-component"_ tags for each component, keep in mind that due to CobiGen's limitations each component *_must_* have its own entity.
+
+You can read more information about how to configure your OpenAPI file and a working example https://github.com/devonfw/cobigen/wiki/cobigen-openapiplugin#full-example[here].
+
+=== [navy]#Generating files#
+
+Cobigen allow us to generate the files in two different ways. One of them is using Eclipse which it can be done by using the its grafical interface. The other way to generate the code is using the Cobigen CLI tool.
+
+==== [navy]#Generating files through Eclipse#
+In order to generate the files using Eclipse we need to follow some simple steps.
+
+First we are going to import our basic devon4net WebAPI Project into Eclipse. to do so open Eclipse with the “eclipse-main.bat” file that can be found in the devon distribution root folder. Once we are inside of Eclipse we go to *File > Open projects from file system...* and, under "Directory", search for your project.
+
+[[img-cobigen]]
+image::images/Project_selection.png["cobigen", width=="600", link=="images/Project_selection.png"]
+
+Next we copy our OpenAPI file into the root folder of the project.
+
+[[img-cobigen]]
+image::images/OpenAPI_file_root_folder.png["cobigen", width=="300", link=="images/OpenAPI_file_root_folder.png"]
+
+And then we right click on OpenAPI file and then select *CobiGen > Generate...* It will display a window like this:
+
+[[img-cobigen]]
+image::images/cobigen_generate0.png["cobigen", width=="800", link=="images/cobigen_generate0.png"]
+
+To select all .NET features choose *CRUD devon4net Server* otherwise you can select only those that interest you.
+
+[[img-cobigen]]
+image::images/cobigen_generate1.png["cobigen", width=="800", link=="images/cobigen_generate1.png]
+
+Ones you select all the files that you want to generate, click on the _“Finish”_ button to generate all the source code.
+
+==== [navy]#Generating files through Cobigen CLI#
+
+In ordet to generate the files using the Cobigen CLI it is needed to do the following steps:
+
+1. Go to devonfw distribution folder
+2. Run *console.bat*, this will open a console.
+3. Go to the folder you downloaded the *devon4net template* and your *yml* file.
+4. Run the command:
+
+    cobigen generate {yourOpenAPIFile}.yml
+
+5. A list of increments will be printed so that you can start the generation. It has to be selected *CRUD devon4net Server* increment.
+
+=== [navy]#Configuration#
+
+==== [navy]#Dependency Injection configuration#
+
+At this point it is needed to make some modifications in the code in order to configure correctly the server. To do so it is needed to locate the services and the repositories files that were created in *Devon4Net.WebAPI.Implementation*
+
+Services location:
+[[img-cobigen]]
+image::images/Services.png["cobigen", width=="300", link=="images/Services.png]
+
+Repositories location:
+[[img-cobigen]]
+image::images/Repositories.png["cobigen", width=="300", link=="images/Repositories.png]
+
+Now, we are going to open the following file *Devon4Net.WebAPI.Implementation\Configure\DevonConfiguration.cs*.
+In there we have to add the Dependency Inyection for the services and the repositories that Cobigen has generated. The following image is an example of what is needed to add.
+
+[[img-cobigen]]
+image::images/BussinessConfiguration.png["cobigen", width=="800", link=="images/BussinessConfiguration.png]
+
+Moreover it is needed to remove the last line in order to be able to run the application:
+
+    throw new NotImplementedException(...);
+
+==== [navy]#Configure data base#
+
+Cobigen is generating an empty context that has to be filled with manualy in order to be able to work with the database. The context can be found in *[Project_Name]/Devon4Net.WebAPI.Implementation/Domain/Database/CobigenContext.cs*.
+
+[[img-cobigen]]
+image::images/CobigenContextLocation.png["cobigen", width=="350", link=="images/CobigenContextLocation.png]
+
+==== [navy]#Configure services#
+
+In order to finish the configuration of the services it is needed to go to each service file of the managements generated. 
+
+In there we will see some "NotImplementedExceptions", so it is needed to read carefuly each coment inside of each exception in order to be able to use the service. It can be shown an example of the service with its NotImplementedExceptions comments:
+
+[[img-cobigen]]
+image::images/ServiceExample.png["cobigen", width=="800", link=="images/ServiceExample.png]
+
+==== [navy]#Run the application#
+
+After doing all the steps defined avobe, open a terminal in path: *[Project_Name]/Devon4Net.Application.WebAPI* and then type:
+
+    dotnet run
+    
+This will deploy our application in our localhost with the port 8081, so when you click https://localhost:8082/swagger/index.html[here] (https://localhost:8082/swagger) you can see, in swagger, all the services and the data model.

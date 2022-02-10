@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:MvxContentPage x:TypeArguments="viewModels:MasterDetailViewModel" xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+             xmlns:viewModels="clr-namespace:MyThaiStar.Core.ViewModels;assembly=MyThaiStar.Core"
+             x:Class="MyThaiStar.Core.Pages.MasterDetailPage" Title="Master" Icon="hamburger.png">
+
+    <ContentPage.Content>
+        <StackLayout WidthRequest="300" BackgroundColor="#212121">
+            <Label Text="Master" />
+            <Image Aspect="AspectFill" Source="thairestaurant.jpg" x:Name="ImageTop" />
+
+            <StackLayout>
+                <ListView BackgroundColor="Transparent" SeparatorVisibility="None" ItemsSource="{Binding Menu}" SelectedItem="{Binding SelectedMenu, Mode=TwoWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextCell Text="{Binding Title}" Detail="{Binding Description}" DetailColor="#F9FBE7" TextColor="#FFAB40"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+            <Image Source="starS.png" x:Name="ImageBottom" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Start" BackgroundColor="Transparent" ></Image>
+        </StackLayout>
+    </ContentPage.Content>
+</views:MvxContentPage>
