@@ -7,20 +7,16 @@ namespace Devon4Net.Infrastructure.MediatR.Samples.Handler
 {
     public class GetUserhandler: MediatrRequestHandler<GetUserQuery, UserDto>
     {
-
         public GetUserhandler(IMediatRBackupService mediatRBackupService, IMediatRBackupLiteDbService mediatRBackupLiteDbService) : base(mediatRBackupService, mediatRBackupLiteDbService)
         {
-            
         }
 
         public GetUserhandler(IMediatRBackupLiteDbService mediatRBackupLiteDbService) : base(mediatRBackupLiteDbService)
         {
-
         }
 
         public GetUserhandler(IMediatRBackupService mediatRBackupService) : base(mediatRBackupService)
         {
-
         }
 
         /// <summary>

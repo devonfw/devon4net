@@ -7,12 +7,12 @@ namespace Devon4Net.Domain.UnitOfWork.Common
         /// <summary>
         /// Creates a predicate that evaluates to true.
         /// </summary>
-        public static Expression<Func<T, bool>> True<T>() { return param => true; }
+        public static Expression<Func<T, bool>> True<T>() { return _ => true; }
 
         /// <summary>
         /// Creates a predicate that evaluates to false.
         /// </summary>
-        public static Expression<Func<T, bool>> False<T>() { return param => false; }
+        public static Expression<Func<T, bool>> False<T>() { return _ => false; }
 
         /// <summary>
         /// Creates a predicate expression from the specified lambda expression.
@@ -77,7 +77,6 @@ namespace Devon4Net.Domain.UnitOfWork.Common
 
             protected override Expression VisitParameter(ParameterExpression node)
             {
-
                 if (_map.TryGetValue(node, out ParameterExpression replacement))
                 {
                     node = replacement;

@@ -12,12 +12,12 @@
         {
             return Origins.Split(',').ToList();
         }
-        
+
         public List<string> GetMethodsList()
         {
             return Methods.Split(',').ToList();
         }
-        
+
         public List<string> GetHeadersList()
         {
             return Headers.Split(',').ToList();

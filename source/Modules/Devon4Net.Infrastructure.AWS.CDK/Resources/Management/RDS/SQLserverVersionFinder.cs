@@ -7,7 +7,14 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management.RDS
     {
         public static SqlServerEngineVersion GetSqlServerVersion(string sqlServerVersion)
         {
-            return GetStaticProperty<SqlServerEngineVersion>(typeof(SqlServerEngineVersion), sqlServerVersion.ToUpper());
+            try
+            {
+                return GetStaticProperty<SqlServerEngineVersion>(typeof(SqlServerEngineVersion), sqlServerVersion.ToUpper());
+            }
+            catch(Exception ex)
+            {
+                throw new ArgumentException($"The method for returning the Version Engine of SQL Failed:{ex.Message} | {ex.InnerException} | {ex.StackTrace}");
+            }
         }
     }
 }

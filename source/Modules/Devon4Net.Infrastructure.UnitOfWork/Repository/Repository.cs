@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using Devon4Net.Domain.UnitOfWork.Exceptions;
 using Devon4Net.Domain.UnitOfWork.Pagination;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.EntityFrameworkCore;
 
 namespace Devon4Net.Domain.UnitOfWork.Repository
@@ -9,7 +10,7 @@ namespace Devon4Net.Domain.UnitOfWork.Repository
     public class Repository<T> : IRepository<T> where T : class
     {
         private DbContext DbContext { get; set; }
-        private bool DbContextBehaviour  { get; set; }
+        private bool DbContextBehaviour  { get; }
 
         private IQueryable<T> Queryable => SetQuery<T>();
 
@@ -24,54 +25,82 @@ namespace Devon4Net.Domain.UnitOfWork.Repository
             DbContextBehaviour = dbContextBehaviour;
         }
 
-        public async Task<T> Create(T entity, bool detach = true)
+        public async Task<T> Create(T entity, bool autoSaveChanges= true, bool detach = true)
         {
-            var result = await DbContext.Set<T>().AddAsync(entity).ConfigureAwait(false);
-            result.State = EntityState.Added;
-            await DbContext.SaveChangesAsync().ConfigureAwait(false);
-            if (detach) result.State = EntityState.Detached;
-            return result.Entity;
-        }
-
-        public async Task<T> Update(T entity, bool detach = true)
-        {
-            var result = DbContext.Set<T>().Update(entity);
-            result.State = EntityState.Modified;
-            await DbContext.SaveChangesAsync().ConfigureAwait(false);
-            if (detach) result.State = EntityState.Detached;
-            return result.Entity;
-        }
-
-        public async Task<bool> Delete(T entity, bool detach = true)
-        {
-            var result = DbContext.Set<T>().Remove(entity);
-            result.State = EntityState.Deleted;
-            var deleted = await DbContext.SaveChangesAsync().ConfigureAwait(false);
-            if (detach) result.State = EntityState.Detached;
-            return deleted > 0;
-        }
-
-        public async Task<bool> Delete(Expression<Func<T, bool>> predicate = null)
-        {
-            var result = new List<bool>();
-            var entities = await Get(predicate).ConfigureAwait(false);
-            foreach (var item in entities)
+            try
             {
-                result.Add(await Delete(item).ConfigureAwait(false));
+                var result = await DbContext.Set<T>().AddAsync(entity).ConfigureAwait(false);
+                result.State = EntityState.Added;
+                if (autoSaveChanges) await DbContext.SaveChangesAsync().ConfigureAwait(false);
+                if (detach) result.State = EntityState.Detached;
+                return result.Entity;
             }
+            catch (Exception ex)
+            {
+                Devon4NetLogger.Error(ex);
+                throw;
+            }
+        }
 
-            return result.All(r=> r);
+        public async Task<T> Update(T entity, bool autoSaveChanges = true, bool detach = true)
+        {
+            try
+            {
+                var result = DbContext.Set<T>().Update(entity);
+                result.State = EntityState.Modified;
+                if (autoSaveChanges) await DbContext.SaveChangesAsync().ConfigureAwait(false);
+                if (detach) result.State = EntityState.Detached;
+                return result.Entity;
+            }
+            catch (Exception ex)
+            {
+                Devon4NetLogger.Error(ex);
+                throw;
+            }
+        }
+
+        public async Task<T> Delete(T entity, bool autoSaveChanges = true, bool detach = true)
+        {
+            try
+            {
+                var result = DbContext.Set<T>().Remove(entity);
+                result.State = EntityState.Deleted;
+                if (autoSaveChanges) await DbContext.SaveChangesAsync().ConfigureAwait(false);
+                if (detach) result.State = EntityState.Detached;
+                return result.Entity;
+            }
+            catch (Exception ex)
+            {
+                Devon4NetLogger.Error(ex);
+                throw;
+            }
+        }
+
+        public async Task<bool> Delete(Expression<Func<T, bool>> predicate = null, bool autoSaveChanges = true)
+        {
+            try
+            {
+                var entities = await Get(predicate).ConfigureAwait(false);
+                DbContext.Set<T>().RemoveRange(entities);
+                if (autoSaveChanges) await DbContext.SaveChangesAsync().ConfigureAwait(false);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Devon4NetLogger.Error(ex);
+                throw;
+            }
         }
 
         public Task<T> GetFirstOrDefault(Expression<Func<T, bool>> predicate = null)
         {
             return GetQueryFromPredicate(predicate).FirstOrDefaultAsync();
         }
-        
+
         public Task<T> GetLastOrDefault(Expression<Func<T, bool>> predicate = null)
         {
             return GetQueryFromPredicate(predicate).LastOrDefaultAsync();
-        }        
+        }
 
         public async Task<IList<T>> Get(Expression<Func<T, bool>> predicate = null)
         {
@@ -159,7 +188,6 @@ namespace Devon4Net.Domain.UnitOfWork.Repository
             DbContext.ChangeTracker.LazyLoadingEnabled = enabled;
 
             DbContext.ChangeTracker.QueryTrackingBehavior = enabled ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking;
-
         }
 
         internal void SetContext(DbContext context)

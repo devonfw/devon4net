@@ -1,7 +1,9 @@
 ﻿using Devon4Net.Domain.UnitOfWork.Exceptions;
 using Devon4Net.Domain.UnitOfWork.Repository;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Globalization;
 
 namespace Devon4Net.Domain.UnitOfWork.UnitOfWork
 {
@@ -16,14 +18,9 @@ namespace Devon4Net.Domain.UnitOfWork.UnitOfWork
             ServiceProvider = serviceProvider;
         }
 
-        public Task<IDbContextTransaction> BeginTransaction()
+        public Task<IDbContextTransaction> GetTransaction()
         {
             return Context.Database.BeginTransactionAsync();
-        }
-
-        public Task Rollback(IDbContextTransaction transaction)
-        {
-            return Task.Run(() => RollbackTransaction(transaction));
         }
 
         public IExecutionStrategy CreateExecutionStrategy()
@@ -33,29 +30,66 @@ namespace Devon4Net.Domain.UnitOfWork.UnitOfWork
 
         public Task Commit(IDbContextTransaction transaction)
         {
-            return Task.Run(() =>
-             {
-                 if (transaction == null)
-                 {
-                     throw new TransactionNullException($"Transaction cannot be null to perform transaction operations.");
-                 }
-                 try
-                 {
-                     transaction.Commit();
-                 }
-                 catch (DbUpdateConcurrencyException ex)
-                 {
-                     Console.WriteLine($"{ex.Message}:{ex.InnerException}");
-                     RollbackTransaction(transaction);
-                     throw;
-                 }
-                 catch (Exception ex)
-                 {
-                     Console.WriteLine($"{ex.Message}:{ex.InnerException}");
-                     RollbackTransaction(transaction);
-                     throw;
-                 }
-             });
+            if (transaction == null)
+            {
+                throw new TransactionNullException("Transaction cannot be null to perform transaction operations.");
+            }
+
+            var transactionSavePointName = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff", CultureInfo.InvariantCulture);
+
+            return Task.Run(async () =>
+              {
+                  try
+                  {
+                      transaction.CreateSavepoint(transactionSavePointName);
+                      _ = await SaveChanges().ConfigureAwait(false);
+                      await transaction.CommitAsync().ConfigureAwait(false);
+                  }
+                  catch (DbUpdateConcurrencyException ex)
+                  {
+                      Devon4NetLogger.Error(ex);
+                      RollbackTransaction(transaction, transactionSavePointName);
+                      throw;
+                  }
+                  catch (Exception ex)
+                  {
+                      Devon4NetLogger.Error(ex);
+                      RollbackTransaction(transaction, transactionSavePointName);
+                      throw;
+                  }
+              });
+        }
+
+        private async Task<bool> SaveChanges()
+        {
+            try
+            {
+                await Context.SaveChangesAsync().ConfigureAwait(false);
+                return true;
+            }
+            catch (OperationCanceledException ex)
+            {
+                Devon4NetLogger.Error(ex);
+                throw;
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                foreach (var entry in ex.Entries)
+                {
+                    var databaseValues = entry.GetDatabaseValues();
+
+                    // Refresh original values to bypass next concurrency check
+                    entry.OriginalValues.SetValues(databaseValues);
+                }
+
+                Devon4NetLogger.Error(ex);
+                throw;
+            }
+            catch (DbUpdateException ex)
+            {
+                Devon4NetLogger.Error(ex);
+                throw;
+            }
         }
 
         /// <summary>
@@ -83,14 +117,16 @@ namespace Devon4Net.Domain.UnitOfWork.UnitOfWork
             return repository;
         }
 
-        private static void RollbackTransaction(IDbContextTransaction transaction)
+        private static void RollbackTransaction(IDbContextTransaction transaction, string savePoint)
         {
             if (transaction == null)
             {
-                throw new TransactionNullException($"Transaction cannot be null to perform transaction operations.");
+                const string message = "Transaction cannot be null to perform transaction operations";
+                Devon4NetLogger.Error(message);
+                throw new TransactionNullException(message);
             }
 
-            transaction.Rollback();
+            transaction.RollbackToSavepoint(savePoint);
             transaction.Dispose();
         }
 
