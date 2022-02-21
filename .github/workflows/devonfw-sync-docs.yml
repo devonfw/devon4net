@@ -6,7 +6,7 @@ on:
       - '**.md'    
       - '**.adoc'
     branches:
-      - master
+      - develop
   workflow_dispatch:
 jobs:
   docsync:
