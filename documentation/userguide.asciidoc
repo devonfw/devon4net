@@ -9,15 +9,15 @@ toc::[]
 [[img-t-architecture]]
 image::images/devon.png["technical architecture", width="450", link="images/devon.png"]
 
-= [navy]#devon4net Guide#
+= devon4net Guide
 
-== [navy]#Introduction#
+== Introduction
 
 Welcome to devon4net framework user guide. In this document you will find the information regarding how to start and deploy your project using the guidelines proposed in our solution.
 
 All the  guidelines shown and used in this document are a set of rules and conventions proposed and supported by Microsoft and the industry.
 
-== [navy]#The package#
+== The package
 
 ``Devon4Net`` package solution contains:
 
@@ -35,23 +35,24 @@ All the  guidelines shown and used in this document are a set of rules and conve
 |Other files| Such the code of conduct and contributing guide
 |=======================
 
-=== [navy]#Application templates#
+=== Application templates
+
 
 The application templates given in the bundle are ready to use. 
 
 At the moment .net Core template is supported. The template is ready to be used as a simple console Kestrel application or being deployed in a web server like IIS.
 
 
-=== [navy]#Samples#
+=== Samples
 
-==== [navy]#My Thai Star#
+==== My Thai Star
 
 You can find My Thai Star .NET port application at https://github.com/devonfw/my-thai-star/tree/develop/net[Github].
 
 NOTE: As devon4net has been migrated to the latest version of .net core, the template is not finished yet.
 
-== [navy]#Cookbook#
-=== [navy]#Data management#
+== Cookbook
+=== Data management
 To use Entity Framework Core, install the package for the database provider(s) you want to target. This walk-through uses SQL Server.
 
 For a list of available providers see https://docs.microsoft.com/en-us/ef/core/providers/index[Database Providers]
@@ -70,13 +71,13 @@ We will be using some ASP.NET Core Scaffolding tools to create controllers and v
 
 
 
-==== [navy]#Entity Framework Code first#
+==== Entity Framework Code first
 
 In order to design your database model from scratch, we encourage to follow the Microsoft guidelines described  https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/complex-data-model[here].
  
  
  
-==== [navy]#Entity Framework Database first#
+==== Entity Framework Database first
 
 * Go to *Tools > NuGet Package Manager > Package Manager Console*
 
@@ -88,7 +89,7 @@ Scaffold-DbContext "Your connection string to existing database" Microsoft.Entit
 
 The command will create the database context and the mapped entities as well inside of Models folder.
 
-==== [navy]#Register your context with dependency injection#
+==== Register your context with dependency injection
 
 Services are registered with dependency injection during application startup.
 
@@ -125,7 +126,7 @@ The supported databases are:
         - Oracle
         - MSAccess
 
-=== [navy]#Repositories and Services#
+=== Repositories and Services
 
 _Services_ and _Repositories_ are an important part of devon4net proposal. To make them work properly, first of all must be declared and injected at Startup.cs at _DI_ Region.
 
@@ -188,7 +189,7 @@ Task<IList<T>> GetAllIncludeAsync(IList<string> include, Expression<Func<T, bool
 
 If you perform a Commit operation and an error happens, changes will be rolled back.
 
-=== [navy]#Swagger integration#
+=== Swagger integration
 
 The given templates allow you to specify the API contract through Swagger integration and the controller classes are the responsible of exposing methods making use of comments in the source code.
 
@@ -250,22 +251,22 @@ Swagger comment:
 
 Please check https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/xmldoc/recommended-tags-for-documentation-comments[Microsoft's site] regarding to summary notations.
 
-=== [navy]#Logging module#
+=== Logging module
 
 An important part of life software is the need of using log and traces. devon4net has a log module pre-configured to achieve this important point.
 
 By default Microsoft provides a logging module on .NET Core applications. This module is open and can it can be extended. devon4net uses the https://serilog.net/[Serilog] implementation. This implementation provides a huge quantity information about events and traces.
 
-==== [navy]#Log file#
+==== Log file
 devon4net can write the log information to a simple text file. You can configure the file name and folder at appsettings.json file (`LogFile` attribute) at devon4net.Application.WebApi project.
 
 
-==== [navy]#Database log#
+==== Database log
 devon4net can write the log information to a SQLite database. You can configure the file name and folder at appsettings.json file (`LogDatabase` attribute) at devon4net.Application.WebApi project.
 
 With this method you can launch queries in order to search the information you are looking for.
 
-==== [navy]#Seq log#
+==== Seq log
 devon4net can write the log information to a Serilog server. You can configure the Serilog URL at appsettings.json file `(SeqLogServerUrl attribute)` at devon4net.Application.WebApi project.
 
 With this method you can make queries via HTTP.
@@ -275,7 +276,7 @@ image::images/serilog_seq.png[, link="images/serilog_seq.png"]
 
 By default you can find the log information at _Logs_ folder.
 
-=== [navy]#JWT module#
+=== JWT module
 
 JSON Web Tokens are an open, industry standard RFC 7519 method for representing claims securely between two parties allowing you to decode, verify and generate JWT.
 
@@ -296,7 +297,7 @@ On My Thai Star sample there are two predefined users: user0 and Waiter. Once th
 You can find more information about JWT at  https://jwt.io[jwt.io]
 
 
-=== [navy]#AOP module#
+=== AOP module
 
 AOP (Aspect Oriented Programming) tracks all information when a method is call.`AOP` also tracks the input and output data when a method is call.
 
@@ -313,7 +314,7 @@ options.Filters.Add(new Infrastructure.AOP.AopExceptionFilter(Log.Logger));
 This configuration allows all Controller classes to be tracked. If you don't need to track the info comment the lines written before.
 
 
-=== [navy]#Docker support#
+=== Docker support
 
 devon4net Core projects are ready to be integrated with docker. 
 
@@ -333,7 +334,7 @@ https://github.com/devonfw/my-thai-star/tree/develop/net[My Thai Star applicatio
 Docker configuration and docker-compose files are provided.
 
 
-== [navy]#Testing with XUnit#
+== Testing with XUnit
 [quote, About xUnit.net, https://xunit.github.io/#documentation]
 ____
 xUnit.net is a free, open source, community-focused unit testing tool for the .NET Framework. Written by the original inventor of NUnit v2, xUnit.net is the latest technology for unit testing C#, F#, VB.NET and other .NET languages. xUnit.net works with `ReSharper`, `CodeRush`, `TestDriven.NET` and Xamarin. It is part of the .NET Foundation, and operates under their code of conduct. It is licensed under Apache 2 (an OSI approved license).
@@ -343,7 +344,7 @@ _Facts_ are tests which are always true. They test invariant conditions.
 
 _Theories_ are tests which are only true for a particular set of data.
 
-=== [navy]#The first test#
+=== The first test
 
 [Source,c#]
 ----
@@ -372,7 +373,7 @@ namespace MyFirstUnitTests
     }
 }
 ----
-=== [navy]#The first test with theory#
+=== The first test with theory
 _Theory_ attribute is used to create tests with input params:
 
 [Source,c#]
@@ -441,11 +442,11 @@ public void Dispose() {
 |=======================
 
 
-== [navy]#Publishing#
-==== [navy]#Nginx#
+== Publishing
+==== Nginx
 In order to deploy your application to a Nginx server on Linux platform you can follow the instructions from _Microsoft_ link:./offline/nginx.html[here].
 
-==== [navy]#IIS#
+==== IIS
 
 In this point is shown the configuration options that must implement the .Net Core application.
 
@@ -519,7 +520,7 @@ The web.config file configures the ASP.NET Core Module and provides other IIS co
 </PropertyGroup>
 ----
 
-==== [navy]#Azure#
+==== Azure
 In order to deploy your application to Azure platform you can follow the instructions from _Microsoft_:
 
 *Set up the development environment*
@@ -700,7 +701,7 @@ image::./offline/azure_files/rgd.png[Azure Portal: Resource Groups page]
 
 *   Enter the name of the resource group and select&nbsp;**Delete**. Your app and all other resources created in this tutorial are now deleted from Azure.
 
-== [navy]#External links#
+== External links
 https://docs.microsoft.com/en-us/aspnet/core/publishing/iis?tabs=aspnetcore2x[Publishing .Net Core on IIS]
 
 https://docs.microsoft.com/en-us/aspnet/core/hosting/aspnet-core-module#aspnet-core-module-with-an-iis-shared-configuration[IIS Shared configuration]

@@ -5,21 +5,21 @@ toc::[]
 :iconfont-name: font-awesome
 :stylesdir: css
 
-= [navy]#Samples#
+= Samples
 
-== [navy]#My Thai Star Restaurant#
+== My Thai Star Restaurant
 icon:= fa-floppy-o[]  link:resources/samples/mts/MyThaiStar.zip[My Thai Star (.Net Core Server + Angular client)]
 
 
 video::videos/mts_startup.mp4[width=640, start=0, options=autoplay]
 
-=== [navy]#Angular requirements#
+=== Angular requirements
 
 * https://nodejs.org/es/download/[Node]
 * https://cli.angular.io/[Angular CLI]
 * https://yarnpkg.com/lang/en/docs/install/[Yarn]
 
-=== [navy]#Angular client#
+=== Angular client
 
 . Install Node.js LTS version
 . Install Angular CLI from command line:
@@ -32,15 +32,15 @@ video::videos/mts_startup.mp4[width=640, start=0, options=autoplay]
 . You are ready
 
 
-=== [navy]#.Net Core server#
+=== .Net Core server
 
-==== [navy]#Basic architecture details#
+==== Basic architecture details
 
 Following the devonfw conventions the .Net Core 2.0 My Thai Star backend is going to be developed dividing the application in _Components_ and using a n-layer architecture.
 
 image::images/project_modules.png[, link="images/project_modules.png"]
 
-==== [navy]#Components#
+==== Components
 
 The application is going to be divided in different components to encapsulate the different domains of the application functionalities.
 
@@ -67,28 +67,28 @@ Other components:
 - Twitter integration: planned as a _Microservice_ will provide the twitter integration needed for some specific functionalities of the application. 
 
 
-=== [navy]#Layers#
-==== [navy]#Introduction#
+=== Layers
+==== Introduction
 The .Net Core backend for My Thai Star application is going to be based on:
 
 - *devon4NET* as the .Net Core framework
 - *VSCode* as the Development environment
 - *TOBAGO* as code generation tool
 
-==== [navy]#Application layer#
+==== Application layer
 This layer will expose the REST api to exchange information with the client applications.
 
 The application will expose the services on port 8081 and it can be launched as a self host console application (microservice approach) and as a Web Api application hosted on IIS/IIS Express.
 
-==== [navy]#Business layer#
+==== Business layer
 This layer will define the controllers which will be used on the application layer to expose the different services. Also, will define the swagger contract making use of summary comments and framework attributes. 
 
 This layer also includes the object response classes in order to interact with external clients. 
 
-==== [navy]#Service layer#
+==== Service layer
 The layer in charge of hosting the business logic of the application. Also orchestrates the object conversion between object response and entity objects defined in _Data layer_.
 
-==== [navy]#Data layer#
+==== Data layer
 The layer to communicate with the data base.
 
 Data layer makes use of _Entity Framework_.
@@ -99,10 +99,10 @@ This layer makes use of the _Repository pattern_ and _Unit of work_ in order to 
 
 As in the previous layers, the _data access_ layer will have both _interface_ and _implementation_ tiers. However, in this case, the implementation will be slightly different due to the use of _generics_.
 
-==== [navy]#Cross-Cutting concerns#
+==== Cross-Cutting concerns
 the layer to make use of transversal components such JWT and mailing.
 
-=== [navy]#Jwt basics#
+=== Jwt basics
 
 - A user will provide a username / password combination to our auth server.
 
@@ -112,12 +112,12 @@ the layer to make use of transversal components such JWT and mailing.
 
 image::images/jwt_schema.png[, link="images/jwt_schema.png"]
 
-=== [navy]#Jwt implementation details#
+=== Jwt implementation details
 
 The _Json Web Token_ pattern will be implemented based on the https://blogs.msdn.microsoft.com/webdev/2017/04/06/jwt-validation-and-authorization-in-asp-net-core/[_jwt on .net core_] framework that is provided by default in the _devon4Net_ projects.
 
 
-=== [navy]#Authentication#
+=== Authentication
 
 Based on _Microsoft_ approach, we will implement a class to define the security _entry point_ and filters. Also, as _My Thai Star_ is a mainly _public_ application, we will define here the resources that won't be secured.
 
@@ -130,7 +130,7 @@ https://docs.microsoft.com/en-us/aspnet/core/security/authorization/[Authorizati
 
 https://docs.microsoft.com/en-us/aspnet/core/security/authorization/claims[Claim based authorization]
 
-=== [navy]#Dependency injection#
+=== Dependency injection
 
 As it is explained in the https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection[Microsoft documentation] we are going to implement the _dependency injection_ pattern basing our solution on _.Net Core_.
 
@@ -139,7 +139,7 @@ image::images/dependency_injection.png[, link="images/dependency_injection.png"]
 - Separation of API and implementation: Inside each layer we will separate the elements in different tiers: _interface_ and _implementation_. The _interface_ tier will store the _interface_ with the methods definition and inside the _implementation_ we will store the class that implements the _interface_.
 
 
-=== [navy]#Layer communication method#
+=== Layer communication method
 
 The connection between layers, to access to the functionalities of each one, will be solved using the _dependency injection_.
 
@@ -209,7 +209,7 @@ Following the [naming conventions] proposed for _devon4Net_ applications we will
 
 You can find all the details for the services implementation in the https://github.com/devonfw/my-thai-star/blob/develop/swagger/mythaistar.yaml[Swagger definition] included in the My Thai Star project on Github.
 
-=== [navy]#Api Exposed#
+=== Api Exposed
 
 The _devon4Net.Business.Controller_ assembly in the _business_ layer of a _component_ will store the definition of the service by a  _interface_. In this definition of the service we will set-up the _endpoints_ of the service, the type of data expected and returned, the _HTTP_ method for each endpoint of the service and other configurations if needed.
 
@@ -239,7 +239,7 @@ Using the summary annotations and attributes will tell to swagger the contract v
 
 The Api methods will be exposed on the application layer.
 
-== [navy]#Google Mail API Consumer#
+== Google Mail API Consumer
 icon:= fa-floppy-o[]  link:resources/samples/components/GMailAPIConsumer.zip[Google Mail API Consumer]
 
 
@@ -252,7 +252,7 @@ icon:= fa-floppy-o[]  link:resources/samples/components/GMailAPIConsumer.zip[Goo
 |Default port|8080
 |=======================
 
-=== [navy]#Overview#
+=== Overview
 . Execute `MyThaiStarEmailService.exe`.
 . The first time google will ask you for credentials
 (just one time) in your default browser:
@@ -267,7 +267,7 @@ icon:= fa-floppy-o[]  link:resources/samples/components/GMailAPIConsumer.zip[Goo
 .GMail Server Swagger contract page
 image::images/email_swagger.png["GMail Service", width="820", link="images/email_swagger.png"]
 
-=== [navy]#JSON Example#
+=== JSON Example
 This is the JSON example to test with swagger client. Please read the swagger documentation.
 
 [source,json]
@@ -297,7 +297,7 @@ This is the JSON example to test with swagger client. Please read the swagger do
 }
 
 ----
-=== [navy]#Configure the service port#
+=== Configure the service port
 
 If you want to change the default port, please edit the config file and
 change the next entry in `appSettings` node:
@@ -309,7 +309,7 @@ change the next entry in `appSettings` node:
 </appSettings>
 ----
 
-==== [navy]#External links#
+==== External links
 
 https://console.developers.google.com/flows/enableapi?apiid=gmail[Google API Account Configuration]
 
@@ -317,6 +317,6 @@ https://developers.google.com/gmail/api/auth/scopes[About Scopes]
 
 
 
-== [navy]#Downloads#
+== Downloads
 
 icon:= fa-floppy-o[]  link:https://github.com/devonfw/my-thai-star/tree/develop/net[My Thai Star (.Net Core Server + Angular client)]
