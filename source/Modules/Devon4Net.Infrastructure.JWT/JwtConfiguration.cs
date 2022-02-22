@@ -15,7 +15,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             var jwtOptions = services.GetTypedOptions<JwtOptions>(configuration, "JWT");
 
             if (jwtOptions == null) return;
-            
+
             var jwtHandler = new JwtHandler(jwtOptions);
             services.AddSingleton<IJwtHandler>(jwtHandler);
             SetupJwtParameters(services, jwtOptions, jwtHandler);

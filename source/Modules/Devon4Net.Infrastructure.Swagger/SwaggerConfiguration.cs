@@ -75,7 +75,7 @@ namespace Devon4Net.Infrastructure.Swagger
             if (string.IsNullOrEmpty(SwaggerOptions?.Endpoint?.Url) || string.IsNullOrEmpty(SwaggerOptions?.Endpoint?.Name)) return;
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint(SwaggerOptions.Endpoint.Url, SwaggerOptions.Endpoint.Name); });
+            app.UseSwaggerUI(c => c.SwaggerEndpoint(SwaggerOptions.Endpoint.Url, SwaggerOptions.Endpoint.Name));
         }
 
         #endregion
