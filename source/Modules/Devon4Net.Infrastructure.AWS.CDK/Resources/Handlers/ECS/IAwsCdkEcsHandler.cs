@@ -2,6 +2,7 @@
 using Amazon.CDK.AWS.EC2;
 using Amazon.CDK.AWS.ECS;
 using Amazon.CDK.AWS.ElasticLoadBalancingV2;
+using Amazon.CDK.AWS.IAM;
 using Devon4Net.Infrastructure.AWS.CDK.Options.Resources;
 using System.Collections.Generic;
 
@@ -19,7 +20,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
         ContainerDefinition CreateContainerDefinition(string containerId, IContainerDefinitionProps containerDefinitionProps);
         ICluster CreateEC2Cluster(string id, string clusterName, IVpc vpc);
         IService CreateEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount);
-        TaskDefinition CreateEc2TaskDefinition(string taskDefinitionId, string taskDefinitionFamily, List<EcsDockerVolumeOptions> volumesOptions);
+        TaskDefinition CreateEc2TaskDefinition(string taskDefinitionId, string taskDefinitionFamily, List<EcsDockerVolumeOptions> volumesOptions, IRole taskRole = null);
         IEc2TaskDefinition LocateEc2TaskDefinitionByArn(string id, string arn);
         IService LocateEcsServiceByArn(string identification, string arn);
         IBaseService LocateEcsServiceByAttrs(string id, IEc2ServiceAttributes ec2ServiceAttributes);

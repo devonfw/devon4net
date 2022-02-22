@@ -2,6 +2,7 @@
 using Amazon.CDK.AWS.EC2;
 using Amazon.CDK.AWS.ECS;
 using Amazon.CDK.AWS.ElasticLoadBalancingV2;
+using Amazon.CDK.AWS.IAM;
 using Constructs;
 using Devon4Net.Infrastructure.AWS.CDK.Entities;
 using Devon4Net.Infrastructure.AWS.CDK.Options.Resources;
@@ -112,9 +113,10 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
             cluster.AddAsgCapacityProvider(asgCapacityProvider);
         }
 
-        public TaskDefinition CreateEc2TaskDefinition(string taskDefinitionId, string taskDefinitionFamily, List<EcsDockerVolumeOptions> volumesOptions)
+        public TaskDefinition CreateEc2TaskDefinition(string taskDefinitionId, string taskDefinitionFamily, List<EcsDockerVolumeOptions> volumesOptions, IRole taskRole = null)
         {
-            List<Amazon.CDK.AWS.ECS.Volume> volumes = new List<Amazon.CDK.AWS.ECS.Volume>();
+            var volumes = new List<Amazon.CDK.AWS.ECS.Volume>();
+
             if (volumesOptions?.Any() == true)
             {
                 foreach (var volOpts in volumesOptions)
@@ -140,6 +142,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
                 Family = taskDefinitionFamily,
                 Compatibility = Compatibility.EC2,
                 NetworkMode = NetworkMode.NAT,
+                TaskRole = taskRole,
                 Volumes = volumes.ToArray()
             });
             TagHandler.LogTag($"{ApplicationName}{EnvironmentName}{taskDefinitionId}Ec2Task", task);

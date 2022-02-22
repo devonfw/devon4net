@@ -2,13 +2,14 @@
 using Amazon.CDK.AWS.EC2;
 using Amazon.CDK.AWS.ECS;
 using Amazon.CDK.AWS.ElasticLoadBalancingV2;
+using Amazon.CDK.AWS.IAM;
 using Devon4Net.Infrastructure.AWS.CDK.Options.Resources;
 using System;
 using System.Collections.Generic;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
 {
-    public partial class AwsCdkHandlerManager 
+    public partial class AwsCdkHandlerManager
     {
         public void AddAutoScalingGroupToCluster(string asgId, AutoScalingGroup autoScalingGroup, Cluster cluster)
         {
@@ -35,13 +36,13 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
             return HandlerResources.AwsCdkEcsHandler.CreateEC2Cluster(id, clusterName, vpc);
         }
 
-        public TaskDefinition CreateEc2TaskDefinition(string taskDefinitionId, string taskDefinitionFamily, List<EcsDockerVolumeOptions> volumesOptions)
+        public TaskDefinition CreateEc2TaskDefinition(string taskDefinitionId, string taskDefinitionFamily, List<EcsDockerVolumeOptions> volumesOptions, IRole taskRole = null)
         {
             if (string.IsNullOrEmpty(taskDefinitionId) || string.IsNullOrEmpty(taskDefinitionFamily))
             {
                 throw new ArgumentException("Plase provide a valid taskDefinitionId");
             }
-            return HandlerResources.AwsCdkEcsHandler.CreateEc2TaskDefinition(taskDefinitionId, taskDefinitionFamily, volumesOptions);
+            return HandlerResources.AwsCdkEcsHandler.CreateEc2TaskDefinition(taskDefinitionId, taskDefinitionFamily, volumesOptions, taskRole);
         }
 
         public IService LocateEcsServiceByArn(string id, string arn)
@@ -77,6 +78,5 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
         {
             HandlerResources.AwsCdkEcsHandler.AddEc2ServiceECSDependencies(ecsService, capacityProviders);
         }
-
     }
 }

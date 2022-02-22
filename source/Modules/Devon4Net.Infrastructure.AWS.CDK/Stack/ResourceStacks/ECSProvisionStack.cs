@@ -35,9 +35,20 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
 
             StackResources.EcsTaskDefinitions = new Dictionary<string, TaskDefinition>();
 
-            foreach (var taskDefinition in CdkOptions.EcsTaskDefinitions)
-{
-                StackResources.EcsTaskDefinitions.Add(taskDefinition.Id, AwsCdkHandler.CreateEc2TaskDefinition(taskDefinition.Id, taskDefinition.Family, taskDefinition.Volumes));
+            foreach (var taskDefinitionOpt in CdkOptions.EcsTaskDefinitions)
+            {
+                TaskDefinition taskDefinition = null;
+                if (!string.IsNullOrWhiteSpace(taskDefinitionOpt.RoleId))
+                {
+                    var locatedRole = LocateRole(taskDefinitionOpt.RoleId, $"Could not find role with ID {taskDefinitionOpt.RoleId}");
+                    taskDefinition = AwsCdkHandler.CreateEc2TaskDefinition(taskDefinitionOpt.Id, taskDefinitionOpt.Family, taskDefinitionOpt.Volumes, locatedRole);
+                }
+                else
+                {
+                    AwsCdkHandler.CreateEc2TaskDefinition(taskDefinitionOpt.Id, taskDefinitionOpt.Family, taskDefinitionOpt.Volumes);
+                }
+
+                StackResources.EcsTaskDefinitions.Add(taskDefinitionOpt.Id, taskDefinition);
             }
         }
 
