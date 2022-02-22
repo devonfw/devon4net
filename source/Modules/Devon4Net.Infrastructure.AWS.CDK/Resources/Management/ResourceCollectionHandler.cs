@@ -18,6 +18,7 @@ using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.PolicyDocuments;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.S3;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Secrets;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.SecurityGroupHandler;
+using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.SNS;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.VPC;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.WAF;
 
@@ -53,6 +54,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
         public AwsCdkPipelineHandler AwsCdkPipelineHandler { get; set; }
         public AwsCdkDmsHandler AwsCdkDmsHandler { get; set; }
         public AwsCdkWafHandler AwsCdkWafHandler { get; set; }
+        public AwsCdkSnsHandler AwsCdkSnsHandler { get; set; }
         #endregion
 
         public ResourceCollectionHandler(Construct scope, string applicationName, string environmentName, IStackProps stackProps)
@@ -89,6 +91,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
             AwsCdkPipelineHandler = new AwsCdkPipelineHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
             AwsCdkDmsHandler = new AwsCdkDmsHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
             AwsCdkWafHandler = new AwsCdkWafHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkSnsHandler = new AwsCdkSnsHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
         }
     }
 }

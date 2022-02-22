@@ -22,10 +22,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.WAF
                 Description = description,
                 DefaultAction = new CfnWebACL.DefaultActionProperty
                 {
-                    Allow = new CfnWebACL.AllowActionProperty
-                    {
-                        
-                    }
+                    Allow = new CfnWebACL.AllowActionProperty()
                 },
                 Scope = scope,
                 VisibilityConfig = new CfnWebACL.VisibilityConfigProperty

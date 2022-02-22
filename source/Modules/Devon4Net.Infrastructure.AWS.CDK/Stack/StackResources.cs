@@ -15,6 +15,7 @@ using Amazon.CDK.AWS.Logs;
 using Amazon.CDK.AWS.RDS;
 using Amazon.CDK.AWS.S3;
 using Amazon.CDK.AWS.SecretsManager;
+using Amazon.CDK.AWS.SNS;
 using Amazon.CDK.AWS.SSM;
 using Amazon.CDK.AWS.WAFv2;
 using System;
@@ -58,6 +59,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
         public IDictionary<string, CfnReplicationTask> DmsMigrationTasks { get; set; }
         public IDictionary<string, AsgCapacityProvider> AsgCapacityProviders { get; set; }
         public IDictionary<string, CfnWebACL> WebAcls { get; set; }
+        public Dictionary<string, ITopic> SnsTopics { get; set; }
 
         public StackResources()
         {
@@ -95,6 +97,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             Subnets = new Dictionary<string, ISubnet>();
             Vpcs = new Dictionary<string, IVpc>();
             WebAcls = new Dictionary<string, CfnWebACL>();
+            SnsTopics = new Dictionary<string, ITopic>();
         }
 
         public T Locate<T>(string resourceId, string exceptionMessageIfResourceDoesNotExist, string exceptionMessageIfResourceIsEmpty = null)

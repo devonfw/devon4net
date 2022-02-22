@@ -8,7 +8,7 @@ using Devon4Net.Infrastructure.Common.Options.Devon;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.InitializeDevonFw();
+builder.WebHost.InitializeDevonFw(builder.Host);
 
 #region services
 builder.Services.AddControllers();

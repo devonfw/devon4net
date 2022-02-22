@@ -51,6 +51,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             CreateDms();
             CreateDynamoDB();
             CreateWaf();
+            CreateSns();
 
             App.Synth();
         }

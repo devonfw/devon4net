@@ -35,5 +35,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Options.Global
         public List<NetworkLoadBalancerOptions> NetworkLoadBalancers { get; set; }
         public List<AsgCapacityProviderOptions> CapacityProviders { get; set; }
         public List<WafOptions> Wafs { get; set; }
+        public List<SnsTopicOptions> SnsTopics { get; set; }
+        public List<SnsEmailSubscriptionOptions> SnsEmailSubscriptions { get; set; }
     }
 }

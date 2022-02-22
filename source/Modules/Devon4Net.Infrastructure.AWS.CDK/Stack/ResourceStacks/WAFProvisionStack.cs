@@ -42,6 +42,5 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             // Parse SampledRequestsEnabled
             sampledRequestsEnabled = wafOption.SampledRequestsEnabled ?? true;
         }
-
     }
 }

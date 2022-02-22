@@ -8,20 +8,24 @@ using Devon4Net.Infrastructure.WebAPI.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace Devon4Net.Application.WebAPI.Configuration.Application
 {
     public static class Devonfw
     {
+        private static IHostBuilder HostBuilder { get; set; }
         private static IWebHostBuilder WebHostBuilder { get; set; }
         private static IConfiguration Configuration { get; set; }
         private static ConfigurationBuilder ConfigurationBuilder { get; set; }
         private static DevonfwOptions DevonfwOptions { get; set; }
 
-        public static IWebHostBuilder InitializeDevonFw(this IWebHostBuilder builder)
+        public static IWebHostBuilder InitializeDevonFw(this IWebHostBuilder builder, IHostBuilder hostBuilder)
         {
             WebHostBuilder = builder;
+            HostBuilder = hostBuilder;
+
             LoadConfiguration();
 
             var useDetailedErrorsKey = Configuration[$"{DevonFwConst.OptionsNodeName}:UseDetailedErrorsKey"];
@@ -39,7 +43,7 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             }
 
             WebHostBuilder.UseConfiguration(Configuration);
-            WebHostBuilder.UseSerilog();
+            HostBuilder.UseSerilog();
 
             return builder;
         }
