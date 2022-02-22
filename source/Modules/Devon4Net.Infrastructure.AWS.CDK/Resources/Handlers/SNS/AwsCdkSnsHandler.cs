@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.SNS
 {
-    public class AwsCdkSnsHandler : AwsCdkBaseHandler
+    public class AwsCdkSnsHandler : AwsCdkBaseHandler, IAwsCdkSnsHandler
     {
         public AwsCdkSnsHandler(Construct scope, string applicationName, string environmentName, string region) : base(scope, applicationName, environmentName, region)
         {
@@ -45,7 +45,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.SNS
 
         public void SubscribeToTopic(ITopic topic, IEnumerable<ITopicSubscription> subscriptions)
         {
-            foreach(var subscription in subscriptions)
+            foreach (var subscription in subscriptions)
             {
                 topic.AddSubscription(subscription);
             }
