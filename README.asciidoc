@@ -3,8 +3,7 @@
 
 [.text-justify]
 
-
-= The DEV-ON time Platform for the .NET stack
+= image:documentation\images\logo-dark.png[devon-logo,50,50] The DEV-ON time Platform for the .NET stack
 
 toc::[]
 
