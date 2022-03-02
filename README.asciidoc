@@ -3,12 +3,11 @@
 
 [.text-justify]
 
-
 = The DEV-ON time Platform for the .NET stack
 
 toc::[]
 
-https://devonfw.com/website/pages/docs/devonfw-guide_devon4net.wiki_master-devon4net.asciidoc.html[Devon4net] is the https://devonfw.com/website/pages/welcome/welcome.html[devonfw] free and open source framework for the .NET stack. It provides a solid architectural model based on *Onion Layered Design* for building cloud native solutions, microservices, WebAPI applications and protocol buffers (protobuf) applications.
+https://devonfw.com/website/pages/docs/devonfw-guide_devon4net.wiki_master-devon4net.asciidoc.html[Devon4net] is part of the https://devonfw.com/website/pages/welcome/welcome.html[devonfw] free and open source framework for the .NET stack. It provides a solid architectural model based on *Onion Layered Design* for building cloud native solutions, microservices, WebAPI applications and protocol buffers (protobuf) applications.
 
 Devon4net is intended for building backend applications.
 However denvonfw also has tools to build frontend client applications such as devon4ng. 
@@ -19,13 +18,13 @@ image:https://img.shields.io/badge/SonarQube-passed-successs[]
 image:https://img.shields.io/badge/License-Apache 2.0-informational[]
 
 [.text-center]
-== image:documentation\icons\star-solid.png["star-icon"] Features
+== Features
 
 _"Painless, quick and clean"_
 
 [frame=none , grid=none]
 |===
-|image:documentation\icons\sitemap-solid.png["sitemap-icon"] Clean Layered Architecture |image:documentation\icons\cogs-solid.png["cogs-icon"] Modular & Easily Configurable
+|Clean Layered Architecture |Modular & Easily Configurable
 
 |The architecture is separated in different components, using the onion architecture pattern. Finding the balance between best practices and latest trends, and a short learning curve that helps us scale up and be productive.
 
@@ -35,7 +34,7 @@ _"Painless, quick and clean"_
 
 [frame=none , grid=none]
 |===
-|image:documentation\icons\clone-regular.png["clone-icon"] NuGet support | image:documentation\icons\amazon-brands.png["amazon-icon"] AWS templates integration
+|NuGet support |AWS templates integration
 
 |Every component can be used isolated as a package via Nuget in any .NET application, without the need of using any devon template.
 |The devon4net project has different ready to use templates. This samples include Cloud Native, Kafka and Web API solutions.
@@ -44,7 +43,7 @@ _"Painless, quick and clean"_
 
 [frame=none , grid=none]
 |===
-|image:documentation\icons\github-brands.png["github-icon"] Free & Open Source |image:documentation\icons\server-solid.png["server-icon"] gRPC and protocol buffers support
+|Free & Open Source |gRPC and protocol buffers support
 
 |Devon4net is actively being developed on GitHub (Apache-2.0 license) and accepting contributions. This gives developers complete access to the source code. 
 |The supplied templates will allow you to easily construct standardized gRPC clients and services, or simply add gRPC support to your existing services.
@@ -52,30 +51,30 @@ _"Painless, quick and clean"_
 |===
 
 [.text-center]
-== image:documentation\icons\lightbulb-regular.png["light-icon"] What sets devon4net apart?
+== What sets devon4net apart?
 _"For developers, by developers"_
 
 [.text-justify]
-image:documentation\icons\check-solid.png["check-icon"] *Productivity:* The first step when starting a new project is to arrange the structure and implement the common components to make it work properly. But, why code it when you can just reuse it? You can skip this part and go straight to coding specialized components, leaving the common stuff to devon4net collaborators.
+* *Productivity:* The first step when starting a new project is to arrange the structure and implement the common components to make it work properly. But, why code it when you can just reuse it? You can skip this part and go straight to coding specialized components, leaving the common stuff to devon4net collaborators.
 
 [.text-justify]
-image:documentation\icons\check-solid.png["check-icon"] *Steep learning curve:* When setting up this kind of technology, the key challenge is adjusting how team members perform to include its use. This can be counterproductive in some circumstances, since the time spent learning how to use them may be greater than the total time saved using them. As a result, one of our primary goals is to provide an easy-to-use and learn format so that implementation may be completed as quickly as possible.
+* *Steep learning curve:* When setting up this kind of technology, the key challenge is adjusting how team members perform to include its use. This can be counterproductive in some circumstances, since the time spent learning how to use them may be greater than the total time saved using them. As a result, one of our primary goals is to provide an easy-to-use and learn format so that implementation may be completed as quickly as possible.
 
 [.text-justify]
-image:documentation\icons\check-solid.png["check-icon"] *Code quality:* We have a "0 errors, 0 warnings, 0 messages" policy when developing new features and functionalities in the solution. The usage of design patterns, well-known architectures, and best practices across the code has resulted in a clean code masterpiece, using tools such as SonarQube to scan the lines looking for bugs and code smells.
+* *Code quality:* We have a "0 errors, 0 warnings, 0 messages" policy when developing new features and functionalities in the solution. The usage of design patterns, well-known architectures, and best practices across the code has resulted in a clean code masterpiece, using tools such as SonarQube to scan the lines looking for bugs and code smells.
 
 [.text-justify]
-image:documentation\icons\check-solid.png["check-icon"] *Support & Mantainance:* Behind the code, a large team of experts with years of experience in the field develop new features and provide support to the community helping to solve any type of issue.
+* *Support & Mantainance:* Behind the code, a large team of experts with years of experience in the field develop new features and provide support to the community helping to solve any type of issue.
 
 [.text-justify]
-image:documentation\icons\check-solid.png["check-icon"] *Integrated templates:* You may use the template to develop a microservice solution with minimum setup. Furthermore, the devon4Net framework may be integrated into third-party templates such as the Amazon API template to enable the use of lambdas in serverless environments
+* *Integrated templates:* You may use the template to develop a microservice solution with minimum setup. Furthermore, the devon4Net framework may be integrated into third-party templates such as the Amazon API template to enable the use of lambdas in serverless environments
 
 [.text-center]
-== image:documentation\icons\box-open-solid.png["archive-icon"] What does devon4net include?
+== What does devon4net include?
 _"Exactly what you need and more"_
 
 [.text-justify]
-=== image:documentation\icons\plus-square-regular.png["plus-icon"] Templates
+=== Templates
 As mentioned before, devon4net includes a number of ready to use templates, they can be used thanks to the package manager NuGet. These templates provide you with a base structure and some classes that simplify the creation process:
 
 * *Web APIs*
@@ -86,13 +85,13 @@ As mentioned before, devon4net includes a number of ready to use templates, they
 More info about these topics and how to use them will be displayed in the documentation.
 
 [.text-justify]
-=== image:documentation\icons\plus-square-regular.png["plus-icon"] NuGet packages
+=== NuGet packages
 You will discover a mix of useful NuGet packages that are up to date as well as ones that are deprecated but may still be used. They will assist you in recycling common features across projects. Each package can easily be configured to suit your preferences. 
 
 Explore the packages in the https://www.nuget.org/packages?q=devonfw[NuGet gallery].
 
 [.text-justify]
-=== image:documentation\icons\plus-square-regular.png["plus-icon"] Complete documentation
+=== Complete documentation
 The documentation contains all the information you need to use the different packages and templates together with videos and "how to" tutorials. Do not hesitate to review the documentation and consider asking the team any questions if necessary. 
 
 Explore the documentation in the https://github.com/devonfw/devon4net/wiki[Wiki] or https://devonfw.com/website/pages/docs/devonfw-guide_devon4net.wiki_master-devon4net.asciidoc.html[site documentation].
