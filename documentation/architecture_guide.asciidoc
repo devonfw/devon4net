@@ -33,9 +33,6 @@ Using a well-defined architecture is essential to ensure quality development of 
 * *Loose coupling:* Loose coupling is an approach to interconnecting the components in a system or network so that they are weakly associated and easily replaceable.
 * *Developer friendly:* A clean, structured and well-documented architecture makes reading and understanding the code much easier to developers.
 
-.(c) 2008 Focus Shift/OSNews/Thom Holwerda
-image::images/good-code_bad-code.png[]
-
 == Onion Architecture
 As the name suggests, the proposed architecture makes use of cooperating components called layers, just like an onion. 
 
