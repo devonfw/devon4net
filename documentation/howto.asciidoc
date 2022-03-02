@@ -1,111 +1,164 @@
-:toc: macro
+:toc:
+
+= How to use devon4net
+
 toc::[]
-:icons: font
-:iconfont-remote!:
-:iconfont-name: font-awesome
-:stylesdir: css
+== Introduction
 
+As you may know, https://devonfw.com/website/pages/docs/devonfw-guide_devon4net.wiki_master-devon4net.asciidoc.html[devon4net] is a framework that will assist you in getting started on your.NET applications and integrating high end configurable components. 
 
-= Introduction
+This article contains information in the form of a step-by-step guide on how to do a variety of operations.
 
-The aim of this document is to show  how to get devon4net things done in a easy way.
+== How to: Create a new devon4net project
+In this part, you will learn you how to easily create a new project using devon4net libraries and start working on it. You can create a variety of applications thanks to the different templates available. There are also multiple ways to create a new project, we will show you the most common ways.
 
-= How to
+NOTE: The configuration characteristics are not covered in this document. Please feel free to read the documentation for each component to discover how they work and the configuration options available.
 
-== Start a new devonfw project
+=== Command Line Interface (CLI)
+This is the fastest and most efficient way. You will be installing and starting a project thanks to the template available in the NuGet Gallery using CLI. For this part you will need to have .NET 6.0 SDK installed. You can run the following command to check your version:
 
-The _.Net Core 3.1_ template allows you to start developing an n-layer server application to provide the latest features. The template can be used in Visual Studio Code and Visual Studio 2019.
+[source, console]
+----
+> dotnet --version
+6.0.102
+----
 
-The application result can be deployed as a console application, microservice or web page.
+If you don't get any response please follow the https://docs.microsoft.com/en-us/dotnet/core/install/[installation guide] provided by Microsoft to install the latest version of .Net SDK for your OS.
 
-To start developing with devon4Net template, please follow this instructions:
+==== Step 1 - Install the Template
+Open your favourite terminal (Windows/Linux/macOS) and run the command showed below to install the latest version of the the https://www.nuget.org/packages/Devon4Net.WebAPI.Template/[devon4net web API template]:
 
-==== Using devon4Net template
-==== Option 1
+[source, console]
+----
+> dotnet new --install Devon4Net.WebAPI.Template
+The following template packages will be installed:
+   Devon4Net.WebApI.Template
 
-[listing]
-....
-Open your favourite terminal (Win/Linux/iOS)
-Go to future project's path
-Type dotnet new --install Devon4Net.WebAPI.Template
-Type dotnet new Devon4NetAPI
-Go to project's path
-You are ready to start developing with devon4Net
-....
+Success: Devon4Net.WebAPI.Template::6.0.3 installed the following templates:
+Template Name                    Short Name    Language  Tags
+-------------------------------  ------------  --------  ------------------------------
+Devon4Net API solution template  Devon4NetAPI  [C#]      devonfw/Devon4Net/Devon4NetAPI
+----
 
-==== Option 2
-[listing]
-....
-Create a new dotnet` API` project from scratch
-Add the NuGet package reference to your project:
-Install-Package Devon4Net.Application.WebAPI.Configuration
-....
+We recommend you updating the template to the latest version. However, using the following option, you can select the version of your interest:
+[source, console]
+----
+> dotnet new --install Devon4Net.WebAPI.Template::6.0.3
+----
 
-Set up your project as follows in program.cs file:
+Now you will have the template available in your Visual Studio 2022. Just type `devon4net` in the search bar when creating a new project!
+
+.Devon4Net API template in VS2022
+image::images/api_template_ide.png[]
+
+==== Step 2 - Create a new project
+To create a new project run the following command:
+[source, console]
+----
+> dotnet new Devon4NetAPI
+The template "Devon4Net API solution template" was created successfully.
+----
+This will create a project with the default name in the actual directory. If you want to specify the desired name and output directory you can specify the following options: 
+[source, console]
+----
+> dotnet new Devon4NetAPI --name MyProject --output C:\Projects\MyProject
+The template "Devon4Net API solution template" was created successfully.
+----
+
+You can do it also choosing the template when creating a new project in Visual Studio 2022 as shown in figure 1, and configuring the name and output directory as shown in figure 2.
+
+.Devon4Net API template in VS2022
+image::images/api_template_configure.png[]
+
+==== Step 3 - Run it
+After running it with Kestrel you will be able to access to the swagger `index.html` and try the API in the following link: https://localhost.8085/swagger/index.html[https://localhost.8085/swagger/index.html]
+
+=== Create it from scratch in Visual Studio 2022
+This method is a little more time consuming, but it allows for a more customized configuration and project structure. You will be using Visual Studio 2022 to create the project and add everything you need by hand. 
+
+==== Step 1 - Create a new project
+Create a new ASP.NET Core Web API project using the template provided by Visual Studio. You can type `api` in the search bar and select it as shown in figure 3.
+
+.ASP.NET Core Web API template in VS2022
+image::images/api_template_create_project.png[]
+
+Once you go through all the initial configuration process, choosing a name, location and so on; you will find your project as shown in the next image.
+
+.Default ASP.NET Core Web API template structure
+image::images\api_template_initial_structure.png[]
+
+You can delete both `WeatherForecastController.cs` and `WeatherForecast.cs` as they are an example in the template but we recommend you keeping them so you can try the API when done with all the steps.
+
+==== Step 2 - Add the NuGet reference
+To install the NuGet package for the API Configuration we will use the Visual Studio package manager console. To open it, go to `View > Other Windows > Package Manager Console` as shown in the figure below.
+
+.Package Manager Console location in menu
+image::images\api_template_package_manager.png[]
+
+Now you can run the following command. It will take a minute to download and install all the packages:
+[source, console]
+----
+PM> install-package Devon4Net.Application.WebAPI.Configuration
+----
+Once its done, you should be able to see the dependency in the Package Dependencies of the project.
+
+==== Step 3 - Set up your project
+
+Now you will need to add some configuration in the `Program.cs`. The following line will configure the components that were imported with the NuGet installation, making use of an extension method for the `ServiceCollection` class (the default implementation of `IServiceCollection` interface):
 
 [source, c#]
 ----
-
-        public static void Main(string[] args)
-        {
-            // Please use
-            // Devonfw.Configure<Startup>(args);
-            // Or : 
-
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .InitializeDevonFw()
-                .Build()
-                .Run();
-        }
+builder.Services.ConfigureDevonFw(builder.Configuration);
 ----
 
-Set up your project as follows in startup.cs file:
+Now you'll need to configure the middlewares included with the following line:
 
-```
+[source, c#]
+----
+app.ConfigureDevonFw();
+----
 
-    private IConfiguration Configuration { get; }
+NOTE: Don't forget to import the package to be able to use this methods!
 
+The `Program.cs` will end up looking like this:
 
-   public Startup(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
-    
-    public void ConfigureServices(IServiceCollection services)
-    {
+[source, c#]
+----
+// devon4net
+using Devon4Net.Application.WebAPI.Configuration;
 
-        services.ConfigureDevonFw(Configuration);
-        SetupDatabase(services);
-        
-        ...
-    }
-    
+var builder = WebApplication.CreateBuilder(args);
 
-    private void SetupDatabase(IServiceCollection services)
-    {
-        // Default is the database connection name in appsettings.json file
-        services.SetupDatabase<TodoContext>(Configuration, "Default", DatabaseType.InMemory);
-    }
-    
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-        app.ConfigureDevonFw();    
-        ...
-    }
-    
-```
+builder.Services.AddControllers();
 
-Add the devonfw configuration options in your appsettings.json file
+builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddSwaggerGen();
 
-=== devon4net configuration files
+// devon4net
+builder.Services.ConfigureDevonFw(builder.Configuration);
 
-To start using devon4net in your .net core application add this configuration in your appsettings.json file:
+var app = builder.Build();
+
+// devon4net
+app.ConfigureDevonFw();
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+----
+
+==== Step 4 - Configure components
+
+The lines added on the previous step will need some configuration in the `appsettings.json`:
 
 [source, json]
 ----
- "devonfw": {
+"devonfw": {
     "UseDetailedErrorsKey": true,
     "UseIIS": false,
     "UseSwagger": true,
@@ -114,18 +167,18 @@ To start using devon4net in your .net core application add this configuration in
       "killSwitchSettingsFile": "killswitch.appsettings.json"
     },
     "Kestrel": {
-      "UseHttps": true,
-      "HttpProtocol": "Http2", //Http1, Http2, Http1AndHttp2, none
+      "UseHttps": false,
+      "HttpProtocol": "Http1", 
       "ApplicationPort": 8082,
-      "KeepAliveTimeout": 120, //in seconds
+      "KeepAliveTimeout": 120, 
       "MaxConcurrentConnections": 100,
       "MaxConcurrentUpgradedConnections": 100,
-      "MaxRequestBodySize": 28.6, //In MB. The default maximum request body size is 30,000,000 bytes, which is approximately 28.6 MB
+      "MaxRequestBodySize": 28.6, 
       "Http2MaxStreamsPerConnection": 100,
-      "Http2InitialConnectionWindowSize": 131072, // From 65,535 and less than 2^31 (2,147,483,648)
-      "Http2InitialStreamWindowSize": 98304, // From 65,535 and less than 2^31 (2,147,483,648)
+      "Http2InitialConnectionWindowSize": 131072, 
+      "Http2InitialStreamWindowSize": 98304, 
       "AllowSynchronousIO": true,
-      "SslProtocol": "Tls12", //Tls, Tls11,Tls12, Tls13, Ssl2, Ssl3, none. For Https2 Tls12 is needed
+      "SslProtocol": "Tls12", 
       "ServerCertificate": {
         "Certificate": "localhost.pfx",
         "CertificatePassword": "localhost"
@@ -148,30 +201,77 @@ To start using devon4net in your .net core application add this configuration in
       "AuthenticationDisplayName" : ""
     }
   }
-
 ----
 
-Also, for start using the devon4net components, you should add the next json options in your appsettings.json or appsettings.Development.json file:
+And also in the `appsettings.Development.json`:
 
-
-```
+[source, json]
+----
 {
   "ExtraSettingsFiles": [
-    "Put a directory path (relative/absolute/linux-like) like /run/secrets/global where there are many settings/secret files to load",
-    "Put a specific file name (with/without path) like /app-configs/app/extra-settings.json"
+    "appsettingsExtra.json",
+    "Directory path",
+    "Specific file name"
   ],
+  "KillSwitch": {
+    "UseKillSwitch": false,
+    "EnableRequests": false,
+    "HttpStatusCode": 403
+  },
   "ConnectionStrings": {
     "Default": "Todos",
     "Employee": "Employee",
     "RabbitMqBackup": "Add your database connection string here for messaging backup",
-    "MediatRBackup": "Add your database connection string here for messaging backup"
+    "MediatRBackup": "Add your databascere connection string here for messaging backup"
+  },
+  "Certificates": {
+    "ServerCertificate": {
+      "Certificate": "localhost.pfx",
+      "CertificatePassword": "localhost"
+    },
+    "ClientCertificate": {
+      "DisableClientCertificateCheck": true,
+      "RequireClientCertificate": false,
+      "CheckCertificateRevocation": true,
+      "ClientCertificates": {
+        "Whitelist": [
+          "3A87A49460E8FE0E2A198E63D408DC58435BC501"
+        ]
+      }
+    }
   },
   "Logging": {
+    "UseLogFile": true,
+    "UseSQLiteDb": true,
+    "UseGraylog": true,
+    "UseAOPTrace": false,
     "LogLevel": {
-      "Default": "Debug",
-      "System": "Information",
-      "Microsoft": "Information"
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    },
+    "SqliteDatabase": "logs/log.db",
+    "LogFile": "logs/{0}_devonfw.log",
+    "SeqLogServerHost": "http://127.0.0.1:5341",
+    "GrayLog": {
+      "GrayLogHost": "127.0.0.1",
+      "GrayLogPort": "12201",
+      "GrayLogProtocol": "UDP",
+      "UseSecureConnection": true,
+      "UseAsyncLogging": true,
+      "RetryCount": 5,
+      "RetryIntervalMs": 15,
+      "MaxUdpMessageSize": 8192
     }
+  },
+  "Headers": {
+    "AccessControlExposeHeader": "Authorization",
+    "StrictTransportSecurityHeader": "",
+    "XFrameOptionsHeader": "DENY",
+    "XssProtectionHeader": "1;mode=block",
+    "XContentTypeOptionsHeader": "nosniff",
+    "ContentSecurityPolicyHeader": "",
+    "PermittedCrossDomainPoliciesHeader": "",
+    "ReferrerPolicyHeader": ""
   },
   "Swagger": {
     "Version": "v1",
@@ -210,24 +310,6 @@ Also, for start using the devon4net components, you should add the next json opt
       "CertificateEncryptionAlgorithm": ""
     }
   },
-  "Cors": []
-  //[
-  //  {
-  //    "CorsPolicy": "CorsPolicy1",
-  //    "Origins": "http://example.com,http://www.contoso.com",
-  //    "Headers": "accept,content-type,origin,x-custom-header",
-  //    "Methods": "GET,POST,HEAD",
-  //    "AllowCredentials": true
-  //  },
-  //  {
-  //    "CorsPolicy": "CorsPolicy2",
-  //    "Origins": "http://example.com,http://www.contoso.com",
-  //    "Headers": "accept,content-type,origin,x-custom-header",
-  //    "Methods": "GET,POST,HEAD",
-  //    "AllowCredentials": true
-  //  }
-  //]
-  ,
   "CircuitBreaker": {
     "CheckCertificate": false,
     "Endpoints": [
@@ -245,7 +327,7 @@ Also, for start using the devon4net components, you should add the next json opt
         "UseCertificate": false,
         "Certificate": "localhost.pfx",
         "CertificatePassword": "localhost",
-        "SslProtocol": "3072" //TLS12
+        "SslProtocol": "Tls12" 
       },
       {
         "Name": "CyberArk",
@@ -261,7 +343,7 @@ Also, for start using the devon4net components, you should add the next json opt
         "UseCertificate": false,
         "Certificate": "localhost.pfx",
         "CertificatePassword": "localhost",
-        "SslProtocol": "3072" //TLS12
+        "SslProtocol": "Tls12" 
       },
       {
         "Name": "SmaxHcm",
@@ -277,98 +359,20 @@ Also, for start using the devon4net components, you should add the next json opt
         "UseCertificate": false,
         "Certificate": "localhost.pfx",
         "CertificatePassword": "localhost",
-        "SslProtocol": "3072" //TLS12
+        "SslProtocol": "Tls12" 
       }
     ]
   },
-  "Headers": {
-    "AccessControlExposeHeader": "Authorization",
-    "StrictTransportSecurityHeader": "",
-    "XFrameOptionsHeader": "DENY",
-    "XssProtectionHeader": "1;mode=block",
-    "XContentTypeOptionsHeader": "nosniff",
-    "ContentSecurityPolicyHeader": "",
-    "PermittedCrossDomainPoliciesHeader": "",
-    "ReferrerPolicyHeader": ""
-  },
-  "Log": {
-    "UseAOPTrace": false,
-    "LogLevel": "Debug",
-    "SqliteDatabase": "logs/log.db",
-    "LogFile": "logs/{0}_devonfw.log",
-    "SeqLogServerHost": "http://127.0.0.1:5341",
-    "GrayLog": {
-      "GrayLogHost": "127.0.0.1",
-      "GrayLogPort": "12201",
-      "GrayLogProtocol": "UDP",
-      "UseSecureConnection": true,
-      "UseAsyncLogging": true,
-      "RetryCount": 5,
-      "RetryIntervalMs": 15,
-      "MaxUdpMessageSize": 8192
-    }
-  },
-  "RabbitMq": {
-    "EnableRabbitMq": false,
-    "Hosts": [
-      {
-        "Host": "127.0.0.1",
-        "Port": 5672,
-        "Ssl": false,
-        "SslServerName": "localhost",
-        "SslCertPath": "localhost.pfx",
-        "SslCertPassPhrase": "localhost",
-        "SslPolicyErrors": "RemoteCertificateNotAvailable" //None, RemoteCertificateNotAvailable, RemoteCertificateNameMismatch, RemoteCertificateChainErrors
-      }
-    ],
-
-    "VirtualHost": "/",
-    "UserName": "admin",
-    "Password": "password",
-    "Product": "devon4net",
-    "RequestedHeartbeat": 10, //Set to zero for no heartbeat
-    "PrefetchCount": 50,
-    "PublisherConfirms": false,
-    "PersistentMessages": true,
-    "Platform": "localhost",
-    "Timeout": 10,
-    "Backup": {
-      "UseLocalBackup": false,
-      "DatabaseName": "devon4netMessageBackup.db"
-    }
-  },
-  "MediatR": {
-    "EnableMediatR": false,
-    "Backup": {
-      "UseLocalBackup": false,
-      "DatabaseName": "devon4netMessageBackup.db"
-    }
-  },
+  "Cors": [],
   "LiteDb": {
+    "EnableLiteDb": true,
     "DatabaseLocation": "devon4net.db"
   },
-  "AnsibleTower": {
-    "EnableAnsible": false,
-    "Name": "AnsibleTower",
-    "CircuitBreakerName": "AnsibleTower",
-    "ApiUrlBase": "/api/v2/?format=json",
-    "Version": "1.0.5.29",
-    "Username": "",
-    "Password": ""
-  },
-  "CyberArk": {
-    "EnableCyberArk": false,
-    "Username": "",
-    "Password": "",
-    "CircuitBreakerName": "CyberArk"
-  },
-  "SmaxHcm": {
-    "EnableSmax": false,
-    "Username": "",
-    "Password": "",
-    "TenantId": "",
-    "CircuitBreakerName": "SmaxHcm",
-    "ProviderId": ""
+  "Grpc": {
+    "EnableGrpc": false,
+    "UseDevCertificate": false,
+    "GrpcServer": "https://localhost:5002",
+    "MaxReceiveMessageSize": 16
   },
   "Kafka": {
     "EnableKafka": true,
@@ -380,361 +384,109 @@ Also, for start using the devon4net components, you should add the next json opt
     ],
     "Producers": [
       {
-        "ProducerId": "Producer1", // devon identifier
-        "Servers": "127.0.0.1:9092", // Initial list of brokers as a CSV list of broker host or host:port. The application may also use `rd_kafka_brokers_add()` to add brokers during runtime
-        "ClientId": "client1", //Client identifier
-        "Topic": "devonfw", // topics to deliver the message
-        "MessageMaxBytes": 1000000, //Maximum Kafka protocol request message size. Due to differing framing overhead between protocol versions the producer is unable to reliably enforce a strict max message limit at produce time and may exceed the maximum size by one message in protocol ProduceRequests, the broker will enforce the the topic's `max.message.bytes` limit (see Apache Kafka documentation)
-        "CompressionLevel": -1, // [0-9] for gzip; [0-12] for lz4; only 0 for snappy; -1 = codec-dependent default compression level
-        "CompressionType": "None", // None, Gzip, Snappy, Lz4, Zstd
+        "ProducerId": "Producer1", 
+        "Servers": "127.0.0.1:9092", 
+        "CompressionLevel": -1, 
+        "CompressionType": "None", 
         "ReceiveMessageMaxBytes": 100000000,
         "EnableSslCertificateVerification": false,
-        "CancellationDelayMaxMs": 100, // The maximum length of time (in milliseconds) before a cancellation request is acted on. Low values may result in measurably higher CPU usage
-        "Ack": "None", //Zero=Broker does not send any response/ack to client, One=The leader will write the record to its local log but will respond without awaiting full acknowledgement from all followers. All=Broker will block until message is committed by all in sync replicas (ISRs). If there are less than min.insync.replicas (broker configuration) in the ISR set the produce request will fail
-        "Debug": "", //A comma-separated list of debug contexts to enable. Detailed Producer debugging: broker,topic,msg. Consumer: consumer,cgrp,topic,fetch
-        "BrokerAddressTtl": 1000, //How long to cache the broker address resolving results (milliseconds)
-        "BatchNumMessages": 1000000, // Maximum size (in bytes) of all messages batched in one MessageSet, including protocol framing overhead. This limit is applied after the first message has been added to the batch, regardless of the first message's size, this is to ensure that messages that exceed batch.size are produced. The total MessageSet size is also limited by batch.num.messages and message.max.bytes
-        "EnableIdempotence": false, //When set to `true`, the producer will ensure that messages are successfully produced exactly once and in the original produce order. The following configuration properties are adjusted automatically (if not modified by the user) when idempotence is enabled: `max.in.flight.requests.per.connection=5` (must be less than or equal to 5), `retries=INT32_MAX` (must be greater than 0), `acks=all`, `queuing.strategy=fifo`. Producer instantation will fail if user-supplied configuration is incompatible
+        "CancellationDelayMaxMs": 100, 
+        "Debug": "", 
+        "BrokerAddressTtl": 1000, 
+        "BatchNumMessages": 1000000, 
+        "EnableIdempotence": false, 
         "MaxInFlight": 5,
         "MessageSendMaxRetries": 5,
-        "BatchSize": 100000000 // Maximum size (in bytes) of all messages batched in one MessageSet, including protocol framing overhead. This limit is applied after the first message has been added to the batch, regardless of the first message's size, this is to ensure that messages that exceed batch.size are produced. The total MessageSet size is also limited by batch.num.messages and message.max.bytes
+        "BatchSize": 100000000 
       }
     ],
     "Consumers": [
       {
-        "ConsumerId": "Consumer1", // devon identifier
+        "ConsumerId": "Consumer1", 
         "Servers": "127.0.0.1:9092",
         "GroupId": "group1",
-        "Topics": "devonfw", // Comma separated topics to subscribe  
-        "AutoCommit": true, //Automatically and periodically commit offsets in the background. Note: setting this to false does not prevent the consumer from fetching previously committed start offsets. To circumvent this behaviour set specific start offsets per partition in the call to assign()
-        "StatisticsIntervalMs": 0, //librdkafka statistics emit interval. The application also needs to register a stats callback using `rd_kafka_conf_set_stats_cb()`. The granularity is 1000ms. A value of 0 disables statistics
-        "SessionTimeoutMs": 10000, //Client group session and failure detection timeout. The consumer sends periodic heartbeats (heartbeat.interval.ms) to indicate its liveness to the broker. If no hearts are received by the broker for a group member within the session timeout, the broker will remove the consumer from the group and trigger a rebalance. The allowed range is configured with the **broker** configuration properties `group.min.session.timeout.ms` and `group.max.session.timeout.ms`. Also see `max.poll.interval.ms`
-        "AutoOffsetReset": "Largest", //Action to take when there is no initial offset in offset store or the desired offset is out of range: 'smallest','earliest' - automatically reset the offset to the smallest offset, 'largest','latest' - automatically reset the offset to the largest offset, 'error' - trigger an error which is retrieved by consuming messages and checking 'message-&gt;err'
-        "EnablePartitionEof": true, //Verify CRC32 of consumed messages, ensuring no on-the-wire or on-disk corruption to the messages occurred. This check comes at slightly increased CPU usage
-        "IsolationLevel": "ReadCommitted", //Controls how to read messages written transactionally: `ReadCommitted` - only return transactional messages which have been committed. `ReadUncommitted` - return all messages, even transactional messages which have been aborted.
+        "Topics": "devonfw",  
+        "AutoCommit": true,
+        "StatisticsIntervalMs": 0,
+        "SessionTimeoutMs": 10000,
+        "AutoOffsetReset": "Largest", 
+        "EnablePartitionEof": true, 
+        "IsolationLevel": "ReadCommitted", 
         "EnableSslCertificateVerification": false,
-        "Debug": "" //A comma-separated list of debug contexts to enable. Detailed Producer debugging: broker,topic,msg. Consumer: consumer,cgrp,topic,fetch
+        "Debug": ""
       }
     ]
+  },
+  "MediatR": {
+    "EnableMediatR": true,
+    "Backup": {
+      "UseLocalBackup": true,
+      "DatabaseName": "devon4netMessageBackup.db"
+    }
+  },
+  "RabbitMq": {
+    "EnableRabbitMq": true,
+    "Hosts": [
+      {
+        "Host": "127.0.0.1",
+        "Port": 5672,
+        "Ssl": false,
+        "SslServerName": "localhost",
+        "SslCertPath": "localhost.pfx",
+        "SslCertPassPhrase": "localhost",
+        "SslPolicyErrors": "RemoteCertificateNotAvailable" 
+      }
+    ],
+
+    "VirtualHost": "/",
+    "UserName": "admin",
+    "Password": "password",
+    "Product": "devon4net",
+    "RequestedHeartbeat": 10, 
+    "PrefetchCount": 50,
+    "PublisherConfirms": false,
+    "PersistentMessages": true,
+    "Platform": "localhost",
+    "Timeout": 10,
+    "Backup": {
+      "UseLocalBackup": false,
+      "DatabaseName": "devon4netMessageBackup.db"
+    }
+  },
+  "SmaxHcm": {
+    "EnableSmax": false,
+    "Username": "",
+    "Password": "",
+    "TenantId": "",
+    "CircuitBreakerName": "SmaxHcm",
+    "ProviderId": ""
+  },
+  "CyberArk": {
+    "EnableCyberArk": false,
+    "Username": "",
+    "Password": "",
+    "CircuitBreakerName": "CyberArk"
+  },
+  "AnsibleTower": {
+    "EnableAnsible": false,
+    "Name": "AnsibleTower",
+    "CircuitBreakerName": "AnsibleTower",
+    "ApiUrlBase": "/api/v2/?format=json",
+    "Version": "1.0.5.29",
+    "Username": "",
+    "Password": ""
   }
 }
-
-
-```
-
-== devon4net Cobigen Guide
-
-=== Overview
-
-In this guide we will explain how to generate a new WebApi project from an OpenAPI 3.0.0 specification. This  means that we are going to use a “contract first” strategy. This is going to be possible due to these type of files that contain all the information about entities, operations, etc…
-
-In order to make it work we are using https://github.com/devonfw/cobigen[CobiGen], a powerful tool for generating source code. CobiGen allows users to generate all the structure and code of the components, helping to save a lot of time otherwise wasted on repetitive tasks.
-
-=== Getting things ready
-
-==== devonfw Distribution
-
-The devonfw distributions can be obtained from https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=com.devonfw.tools.ide&a=devonfw-ide-scripts&v=LATEST&p=tar.gz[here]. You can find all releases in https://repo.maven.apache.org/maven2/com/devonfw/tools/ide/devonfw-ide-scripts/[maven central].
-
-It is not necessary to install nor configure anything. Just extracting the zip content is enough to have a fully functional devonfw. The only thing you have to do is run *create-or-update-workspace.bat* and then *update-all-workspaces.bat* to set up all the needed tools.
-
-==== devon4net Templates
-
-We are going to use the template of devon4net as a base to generate all the code, so what we have to do now is to download said template using the following steps.
-
-First of all you have to set up all the environment for .NET, you can do this using https://devon4net.github.io/environment.html[the following tutorial]. Next we are going to create a new folder where we want to have the WebAPI project, lastly we are going to open the terminal there.
-
-Type the following:
-
-    dotnet new -i Devon4Net.WebAPI.Template
-    
-and then:
-
-    dotnet new Devon4NetAPI
-    
-==== OpenAPI File
-
-In order to let CobiGen generate all the files, we first have to make some modifications to our OpenAPI file. 
-
-It is obligatory to put the _“x-rootpackage”_ tag to indicate where CobiGen will place the generated files as well as the _"x-component"_ tags for each component, keep in mind that due to CobiGen's limitations each component *_must_* have its own entity.
-
-You can read more information about how to configure your OpenAPI file and a working example https://github.com/devonfw/cobigen/wiki/cobigen-openapipluginfull-example[here].
-
-=== Generating files
-
-Cobigen allow us to generate the files in two different ways. One of them is using Eclipse which it can be done by using the its graphical interface. The other way to generate the code is using the Cobigen` CLI` tool.
-
-==== Generating files through Eclipse
-In order to generate the files using Eclipse we need to follow some simple steps.
-
-First we are going to import our basic devon4net WebAPI Project into Eclipse. to do so open Eclipse with the “eclipse-main.bat” file that can be found in the devon distribution root folder. Once we are inside of Eclipse we go to *File > Open projects from file system...* and, under "Directory", search for your project.
-
-[[img-cobigen]]
-image::images/Project_selection.png["cobigen", width=="600", link=="images/Project_selection.png"]
-
-Next we copy our OpenAPI file into the root folder of the project.
-
-[[img-cobigen]]
-image::images/OpenAPI_file_root_folder.png["cobigen", width=="300", link=="images/OpenAPI_file_root_folder.png"]
-
-And then we right click on OpenAPI file and then select *CobiGen > Generate...* It will display a window like this:
-
-[[img-cobigen]]
-image::images/cobigen_generate0.png["cobigen", width=="800", link=="images/cobigen_generate0.png"]
-
-To select all .NET features choose *CRUD devon4net Server* otherwise you can select only those that interest you.
-
-[[img-cobigen]]
-image::images/cobigen_generate1.png["cobigen", width=="800", link=="images/cobigen_generate1.png]
-
-Ones you select all the files that you want to generate, click on the _“Finish”_ button to generate all the source code.
-
-==== Generating files through Cobigen` CLI`
-
-In order to generate the files using the Cobigen` CLI` it is needed to do the following steps:
-
-1. Go to devonfw distribution folder
-2. Run *console.bat*, this will open a console.
-3. Go to the folder you downloaded the *devon4net template* and your *yml* file.
-4. Run the command:
-
-    cobigen generate {yourOpenAPIFile}.yml
-
-5. A list of increments will be printed so that you can start the generation. It has to be selected *CRUD devon4net Server* increment.
-
-=== Configuration
-
-==== Dependency Injection configuration
-
-At this point it is needed to make some modifications in the code in order to configure correctly the server. To do so it is needed to locate the services and the repositories files that were created in *Devon4Net.WebAPI.Implementation*
-
-Services location:
-[[img-cobigen]]
-image::images/Services.png["cobigen", width=="300", link=="images/Services.png]
-
-Repositories location:
-[[img-cobigen]]
-image::images/Repositories.png["cobigen", width=="300", link=="images/Repositories.png]
-
-Now, we are going to open the following file *Devon4Net.WebAPI.Implementation\Configure\DevonConfiguration.cs*.
-In there we have to add the Dependency Injection for the services and the repositories that Cobigen has generated. The following image is an example of what is needed to add.
-
-[[img-cobigen]]
-image::images/BussinessConfiguration.png["cobigen", width=="800", link=="images/BussinessConfiguration.png]
-
-Moreover it is needed to remove the last line in order to be able to run the application:
-
-    `throw new NotImplementedException(...);`
-
-==== Configure data base
-
-Cobigen is generating an empty context that has to be filled with manually in order to be able to work with the database. The context can be found in *[Project_Name]/Devon4Net.WebAPI.Implementation/Domain/Database/CobigenContext.cs*.
-
-[[img-cobigen]]
-image::images/CobigenContextLocation.png["cobigen", width=="350", link=="images/CobigenContextLocation.png]
-
-==== Configure services
-
-In order to finish the configuration of the services it is needed to go to each service file of the managements generated. 
-
-In there we will see some `"NotImplementedExceptions"`, so it is needed to read carefully each comment inside of each exception in order to be able to use the service. It can be shown an example of the service with its `NotImplementedExceptions` comments:
-
-[[img-cobigen]]
-image::images/ServiceExample.png["cobigen", width=="800", link=="images/ServiceExample.png]
-
-==== Run the application
-
-After doing all the steps defined above, open a terminal in path: *[Project_Name]/Devon4Net.Application.WebAPI* and then type:
-
-    dotnet run
-    
-This will deploy our application in our localhost with the port 8081, so when you click https://localhost:8082/swagger/index.html[here] (https://localhost:8082/swagger) you can see, in swagger, all the services and the data model.
-
-
-== Use HTTP2 protocol
-
-You can specify the` HTTP` protocol to be used on your devon4net application modifying some node values at _devonfw_ node in your appsettings configuration file.
-
-=== HttpProtocol
-The supported protocols are:
-
-[options="header"]
-|=======================
-|*Protocol*|*Description*
-|Http1| Http1 protocol
-|Http2| Http2 Protocol
-|Http1AndHttp2| Both supported
-|=======================
-
-===` SSL`
-To activate the HTTP2, the _SslProtocol_ node must be set to _Tls12_ value.
-
-The` SSL` protocol supported version values are: 
-
-- Tls
-- Tls11
-- Tls12
-- Tls13
-- Ssl2
-- Ssl3
-
-
-== Create a certificate for development purposes
-
-In order to create a valid certificate for development purposes the Open` SSL` tools are needed. 
-
-
-
-=== Certificate authority (CA)
-
-Run the next commands in a shell:
-
-[source, numbered]
-----
-1. openssl req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout RootCA.key -out RootCA.pem -subj "/C=ES/ST=Valencia/L=Valencia/O=Certificates/CN=localhost.local"
- 
-2. openssl x509 -outform pem -in RootCA.pem -out RootCA.crt
 ----
 
-If you want to convert your certificate run the command:
+=== References
+Here are some interesting references to continue learning about this topic:
 
+* https://docs.microsoft.com/en-us/dotnet/core/install/[Install .NET on your OS - Microsoft Docs]
 
-[source, numbered]
-----
-openssl pkcs12 -export -out localhost.pfx -inkey RootCA.key -in RootCA.crt
-----
+* https://docs.microsoft.com/es-es/dotnet/core/tools/[.NET CLI overview - Microsoft Docs]
 
+* https://docs.microsoft.com/es-es/dotnet/core/tools/dotnet-new-install[dotnet new --install option - Microsoft Docs]
 
-
-=== Domain name certificate
-
-Run the next commands in a shell:
-
-[source, numbered]
-----
-1. openssl req -new -nodes -newkey rsa:2048 -keyout localhost.key -out localhost.csr -subj "/C=ES/ST=Valencia/L=Valencia/O=Certificates/CN=localhost.local"
-
-2. openssl x509 -req -sha256 -days 1024 -in localhost.csr -CA RootCA.pem -CAkey RootCA.key -CAcreateserial -extfile domains.ext -out localhost.crt
-----
-
-
-Where the _domains.ext_ file should contain:
-
-[source, numbered]
-----
-authorityKeyIdentifier=keyid,issuer
-basicConstraints=CA:FALSE
-keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
-subjectAltName = @alt_names
-[alt_names]
-DNS.1 = localhost
-DNS.2 = localhost.local
-DNS.3 = 127.0.0.1
-DNS.4 = fake1.local
-DNS.5 = fake2.local
-----
-
-If you want to convert your certificate run the command:
-
-
-[source, numbered]
-----
-openssl pkcs12 -export -out localhost.pfx -inkey localhost.key -in localhost.crt 
-----
-
-== Setup the database driver
-
-Add the database connection on the `SetupDatabase` method at Startup.cs
-    
-```
-       private void SetupDatabase(IServiceCollection services)
-        {
-            services.SetupDatabase<TodoContext>(Configuration, "Default", WebAPI.Configuration.Enums.DatabaseType.InMemory);
-        }
-```
-
-Where: 
-
-[options="header"]
-|=======================
-|*Param*|*Description*
-|`TodoContext`| Is the database context definition
-|Default| Is the connection string defined at `_ConnectionString_` node at the appsettings configuration file 
-|`WebAPI.Configuration.Enums.DatabaseType.InMemory`| Is the database driver selection. In this case InMemory data base is chosen
-|=======================
-
-The supported databases are:
-
-        - SqlServer
-        - Sqlite
-        - InMemory
-        - Cosmos
-        - PostgreSQL
-        - MySql
-        - MariaDb
-        - FireBird
-        - Oracle
-        - MSAccess
-
-
-== Change the JWT encryption algorithm
-
-In the appsettings.json configuration file, you can use the next values on the `_SecretKeyLengthAlgorithm_` and `_SecretKeyEncryptionAlgorithm_` nodes at JWT configuration:
-
-
-[options="header"]
-|=======================
-|*Algorithm*|*Description*
-|`Aes128Encryption`|"http://www.w3.org/2001/04/xmlenc#aes128-cbc"
-|`Aes192Encryption`|"http://www.w3.org/2001/04/xmlenc#aes192-cbc"
-|`Aes256Encryption`|"http://www.w3.org/2001/04/xmlenc#aes256-cbc"
-|`DesEncryption`|"http://www.w3.org/2001/04/xmlenc#des-cbc"
-|`Aes128KeyWrap`|"http://www.w3.org/2001/04/xmlenc#kw-aes128"
-|`Aes192KeyWrap`|"http://www.w3.org/2001/04/xmlenc#kw-aes192"
-|`Aes256KeyWrap`|"http://www.w3.org/2001/04/xmlenc#kw-aes256"
-|`RsaV15KeyWrap`|"http://www.w3.org/2001/04/xmlenc#rsa-1_5"
-|`Ripemd160Digest`|"http://www.w3.org/2001/04/xmlenc#ripemd160"
-|`RsaOaepKeyWrap`|"http://www.w3.org/2001/04/xmlenc#rsa-oaep"
-|`Aes128KW`|"A128KW"
-|`Aes256KW`|"A256KW"
-|`RsaPKCS1`|`"RSA1_5"`
-|`RsaOAEP`|`"RSA-OAEP"`
-|`ExclusiveC14n`|"http://www.w3.org/2001/10/xml-exc-c14n#"
-|`ExclusiveC14nWithComments`|"http://www.w3.org/2001/10/xml-exc-c14n#WithComments"
-|`EnvelopedSignature`|"http://www.w3.org/2000/09/xmldsig#enveloped-signature"
-|`Sha256Digest`|"http://www.w3.org/2001/04/xmlenc#sha256"
-|`Sha384Digest`|"http://www.w3.org/2001/04/xmldsig-more#sha384"
-|`Sha512Digest`|"http://www.w3.org/2001/04/xmlenc#sha512"
-|`Sha256`|"SHA256"
-|`Sha384`|"SHA384"
-|`Sha512`|"SHA512"
-|`EcdsaSha256Signature`|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"
-|`EcdsaSha384Signature`|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384"
-|`EcdsaSha512Signature`|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512"
-|`HmacSha256Signature`|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha256"
-|`HmacSha384Signature`|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha384"
-|`HmacSha512Signature`|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha512"
-|`RsaSha256Signature`|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
-|`RsaSha384Signature`|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha384"
-|`RsaSha512Signature`|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"
-|`RsaSsaPssSha256Signature`|"http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1"
-|`RsaSsaPssSha384Signature`|"http://www.w3.org/2007/05/xmldsig-more#sha384-rsa-MGF1"
-|`RsaSsaPssSha512Signature`|"http://www.w3.org/2007/05/xmldsig-more#sha512-rsa-MGF1"
-|`EcdsaSha256`|"ES256"
-|`EcdsaSha384`|"ES384"
-|`EcdsaSha512`|"ES512"
-|`HmacSha256`|"HS256"
-|`HmacSha384`|"HS384"
-|`HmacSha512`|"HS512"
-|None|"none"
-|`RsaSha256`|"RS256"
-|`RsaSha384`|"RS384"
-|`RsaSha512`|"RS512"
-|`RsaSsaPssSha256`|"PS256"
-|`RsaSsaPssSha384`|"PS384"
-|`RsaSsaPssSha512`|"PS512"
-|`Aes128CbcHmacSha256`|"A128CBC-HS256"
-|`Aes192CbcHmacSha384`|"A192CBC-HS384"
-|`Aes256CbcHmacSha512`|"A256CBC-HS512"
-|=======================
+* https://docs.microsoft.com/es-es/dotnet/core/tools/dotnet-new[dotnet new - Microsoft Docs]
 
