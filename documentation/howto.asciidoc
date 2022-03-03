@@ -98,16 +98,17 @@ image::images\api_template_package_manager.png[]
 Now you can run the following command. It will take a minute to download and install all the packages:
 [source, console]
 ----
-PM> install-package Devon4Net.Application.WebAPI.Configuration
+PM> install-package Devon4Net.Infrastructure.WebAPI
 ----
 Once its done, you should be able to see the dependency in the Package Dependencies of the project.
 
 ==== Step 3 - Set up your project
 
-Now you will need to add some configuration in the `Program.cs`. The following line will configure the components that were imported with the NuGet installation, making use of an extension method for the `ServiceCollection` class (the default implementation of `IServiceCollection` interface):
+Now you will need to add some configuration in the `Program.cs`. The following lines will initialize the configuration for the WebHostBuilder and configure the components that were imported with the NuGet installation respectively, making use of extensions methods for the `ServiceCollection` and `WebHostBuilder` classes:
 
 [source, c#]
 ----
+builder.WebHost.InitializeDevonFw();
 builder.Services.ConfigureDevonFw(builder.Configuration);
 ----
 
@@ -115,35 +116,40 @@ Now you'll need to configure the middlewares included with the following line:
 
 [source, c#]
 ----
-app.ConfigureDevonFw();
+app.SetupMiddleware(builder.Services);
 ----
 
 NOTE: Don't forget to import the package to be able to use this methods!
+
+It is not necessary, but we recommend to also setup the logger so you can keep track of the trace running:
+
+[source, c#]
+----
+builder.Services.SetupLog(builder.Configuration);
+----
 
 The `Program.cs` will end up looking like this:
 
 [source, c#]
 ----
-// devon4net
 using Devon4Net.Application.WebAPI.Configuration;
+using Devon4Net.Application.WebAPI.Configuration.Application;
+using Devon4Net.Infrastructure.Middleware.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddSwaggerGen();
-
 // devon4net
-builder.Services.ConfigureDevonFw(builder.Configuration);
+builder.WebHost.InitializeDevonFw();
+builder.Services.SetupLog(builder.Configuration);
+builder.Services.SetupDevonfw(builder.Configuration);
 
 var app = builder.Build();
+app.UseHttpsRedirection();
 
 // devon4net
-app.ConfigureDevonFw();
-
-app.UseHttpsRedirection();
+app.SetupMiddleware(builder.Services);
 
 app.UseAuthorization();
 
