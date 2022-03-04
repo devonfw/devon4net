@@ -4,6 +4,183 @@
 
 toc::[]
 
+== Devon4Net.Infrastructure.CircuitBreaker
+
+The Devon4Net.Infrastructure.CircuitBreaker component implements the retry pattern for HTTP/HTTPS calls. It may be used in both SOAP and REST services. 
+
+=== Configuration
+
+Component configuration is made on file `appsettings.{environment}.json` as follows:
+
+[source, json]
+----
+"CircuitBreaker": {
+    "CheckCertificate": false,
+    "Endpoints": [
+      {
+        "Name": "SampleService",
+        "BaseAddress": "http://localhost:5001",
+        "Headers": {
+        },
+        "WaitAndRetrySeconds": [
+          0.0001,
+          0.0005,
+          0.001
+        ],
+        "DurationOfBreak": 0.0005,
+        "UseCertificate": false,
+        "Certificate": "localhost.pfx",
+        "CertificatePassword": "localhost",
+        "SslProtocol": "Tls12", //Tls, Tls11,Tls12, Tls13, none
+        "CompressionSupport": true,
+        "AllowAutoRedirect": true
+      }
+    ]
+  }
+----
+[options="header"]
+|=======================
+|*Property*|*Description*
+|`CheckCertificate`| True if HTTPS is required. This is useful when developing an API Gateway needs a secured HTTP, disabling this on development we can use communications with a valid server certificate
+|Endpoints| Array with predefined sites to connect with
+|Name| The name key to identify the destination URL
+|Headers| Not ready yet
+|WaitAndRetrySeconds| Array which determines the number of retries and the lapse period between each retry. The value is in milliseconds.
+|Certificate| Ceritificate client to use to perform the HTTP call
+|CertificatePassword| The password that you assign when exporting the certificate
+|`SslProtocol`| The secure protocol to use on the call
+
+|=======================
+
+==== Protocols
+[options="header"]
+|=======================
+|*Protocol*|*Key*|*Description*
+|SSl3|48| Specifies the Secure Socket Layer (SSL) 3.0 security protocol. SSL 3.0 has been superseded by the Transport Layer Security (TLS) protocol and is provided for backward compatibility only.
+|TLS|192|Specifies the Transport Layer Security (TLS) 1.0 security protocol. The TLS 1.0 protocol is defined in IETF RFC 2246.
+|TLS11|768| Specifies the Transport Layer Security (TLS) 1.1 security protocol. The TLS 1.1 protocol is defined in IETF RFC 4346. On Windows systems, this value is supported starting with Windows 7.
+|TLS12|3072| Specifies the Transport Layer Security (TLS) 1.2 security protocol. The TLS 1.2 protocol is defined in IETF RFC 5246. On Windows systems, this value is supported starting with Windows 7.
+|TLS13|12288| Specifies the TLS 1.3 security protocol. The TLS protocol is defined in IETF RFC 8446.
+
+|=======================
+
+=== Setting up in Devon
+
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.Development.json` file.
+
+Add it using Dependency Injection on this case we instanciate Circuit Breaker in a Service Sample Class
+
+[source, C#]
+----
+public class SampleService: Service<SampleContext>, ISampleService
+    {
+        private readonly ISampleRepository _sampleRepository;
+        private IHttpClientHandler _httpClientHandler { get; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="uoW"></param>
+        public SampleService(IUnitOfWork<SampleContext> uoW, IHttpClientHandler httpClientHandler) : base(uoW)
+        {
+            _httpClientHandler = httpClientHandler;
+            _sampleRepository = uoW.Repository<ISampleRepository>();
+        }
+    }    
+----
+
+Add the necessary references. 
+
+[source, C#]
+----
+using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
+using Devon4Net.Infrastructure.CircuitBreaker.Handlers;
+----
+
+You must give the following arguments to make a POST call:
+
+[source, C#]
+----
+await _httpClientHandler.Send<YourOutPutClass>(HttpMethod.POST, NameOfTheService, EndPoint, InputData, MediaType.ApplicationJson);    
+----
+
+Where:
+
+[options="header"]
+|=======================
+|*Property*|*Description*
+|YourOutputClass| The type of the class that you are expecting to retrieve from the call 
+|NameOftheService| The key name of the endpoint provided in the appsettings.json file at Endpoints[] node
+|`EndPoint`|Part of the url to use with the base address. E.g: _/validate_
+|`InputData`| Your instance of the class with values that you want to use in the call
+|`MediaType.ApplicationJson`| The media type flag for the call
+|=======================
+
+
+=== Setting up in other projects
+
+Install the package on your solution using the Package Manager Console:
+
+[source]
+----
+Install-Package Devon4Net.Infrastructure.CircuitBreaker
+----
+
+next add via Dependency Injection the circuit breaker instance.On this case we use a Service
+
+[source, C#]
+----
+public class SampleService : ISampleService
+ {
+   private IHttpClientHandler _httpClientHandler { get; }
+
+    public SampleService(IHttpClientHandler httpClientHandler)
+      {
+        _httpClientHandler = httpClientHandler;
+      }
+ }
+----
+
+Don't forget to provide the necessary references. 
+
+[source, C#]
+----
+using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
+using Devon4Net.Infrastructure.CircuitBreaker.Handlers;
+----
+
+And configure CircuitBreaker in `Program.cs` adding the following lines:
+
+[source, C#]
+----
+using Devon4Net.Infrastructure.CircuitBreaker;
+.
+.
+.
+builder.Services.SetupCircuitBreaker(builder.Configuration);
+----
+
+You must add the default configuration shown in the configuration section and at this point you can use the circuit breaker functionality in your code.
+
+To perform a GET call you should use your circuit breaker instance as follows:
+
+[source, C#]
+----
+await _httpClientHandler.Send<YourOutPutClass>(HttpMethod.Get, NameOfTheService, EndPoint, InputData, MediaType.ApplicationJson);    
+----
+
+Where:
+
+[options="header"]
+|=======================
+|*Property*|*Description*
+|YourOutputClass| The type of the class that you are expecting to retrieve from the call 
+|NameOftheService| The key name of the endpoint provided in the appsettings.json file at Endpoints[] node
+|`EndPoint`|Part of the url to use with the base address. E.g: _/validate_
+|`InputData`| Your instance of the class with values that you want to use in the call
+|`MediaType.ApplicationJson`| The media type flag for the call
+|=======================
+
 == Devon4Net.Infrastructure.Swagger
 
 Swagger is a set of open source software tools for designing, building, documenting, and using RESTful web services. This component provides a full externalized configuration for the Swagger tool. 
