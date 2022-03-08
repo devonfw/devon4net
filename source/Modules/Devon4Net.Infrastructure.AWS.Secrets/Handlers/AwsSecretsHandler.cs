@@ -5,17 +5,18 @@ using Amazon.SecretsManager.Extensions.Caching;
 using Amazon.SecretsManager.Model;
 using Devon4Net.Infrastructure.AWS.Common.Helper;
 
-namespace Devon4Net.Infrastructure.AWS.Secrets
+namespace Devon4Net.Infrastructure.AWS.Secrets.Handlers
 {
     public class AwsSecretsHandler : IAwsSecretsHandler, IDisposable
     {
-        private readonly JsonHelper _jsonHelper = new JsonHelper();
+        private JsonHelper JsonHelper { get; }
         private IAmazonSecretsManager SecretsManager { get; }
         private SecretsManagerCache Cache { get; }
 
         public AwsSecretsHandler(AWSCredentials awsCredentials, RegionEndpoint regionEndpoint)
         {
             if (awsCredentials == null) return;
+            JsonHelper = new JsonHelper();
             SecretsManager = GetAmazonSecretsManagerClient(awsCredentials, regionEndpoint);
             Cache = new SecretsManagerCache(SecretsManager);
         }
@@ -30,10 +31,10 @@ namespace Devon4Net.Infrastructure.AWS.Secrets
             return awsCredentials != null ? new AmazonSecretsManagerClient(awsCredentials) : new AmazonSecretsManagerClient();
         }
 
-        public async Task<T> GetSecretString<T>(string secretId) 
+        public async Task<T> GetSecretString<T>(string secretId)
         {
             var sec = await Cache.GetSecretString(secretId).ConfigureAwait(false);
-            return _jsonHelper.Deserialize<T>(sec);
+            return JsonHelper.Deserialize<T>(sec);
         }
 
         public Task<byte[]> GetSecretBinary(string secretId)
@@ -41,7 +42,7 @@ namespace Devon4Net.Infrastructure.AWS.Secrets
             return Cache.GetSecretBinary(secretId);
         }
 
-        public Task<GetSecretValueResponse> GetSecretValue(GetSecretValueRequest request, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<GetSecretValueResponse> GetSecretValue(GetSecretValueRequest request, CancellationToken cancellationToken = default)
         {
             return SecretsManager.GetSecretValueAsync(request, cancellationToken);
         }
@@ -58,7 +59,6 @@ namespace Devon4Net.Infrastructure.AWS.Secrets
 
                 query = await SecretsManager.ListSecretsAsync(request, cancellationToken).ConfigureAwait(false);
                 result.AddRange(query.SecretList);
-
             } while (query.NextToken != null);
 
             return result;

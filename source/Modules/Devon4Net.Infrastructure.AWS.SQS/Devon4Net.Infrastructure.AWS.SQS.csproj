@@ -1,11 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+	  <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.SQS" Version="3.7.2.22" />
+    <PackageReference Include="AWSSDK.SQS" Version="3.7.2.29" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Devon4Net.Infrastructure.AWS.Common\Devon4Net.Infrastructure.AWS.Common.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Common\Devon4Net.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
   </ItemGroup>
 
 </Project>

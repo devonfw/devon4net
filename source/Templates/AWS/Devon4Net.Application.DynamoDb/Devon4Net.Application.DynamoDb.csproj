@@ -44,7 +44,7 @@
   </ItemGroup>  
   
   <ItemGroup>
-	<PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.3" />	  
+	<PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.3.7" />	  
     <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.4.0" />
     <PackageReference Include="Amazon.Lambda.RuntimeSupport" Version="1.7.0" />
     <PackageReference Include="Amazon.Lambda.Core" Version="2.1.0" />

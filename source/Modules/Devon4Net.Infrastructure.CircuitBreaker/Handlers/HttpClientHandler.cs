@@ -61,10 +61,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             {
                 using var httpResponseMessage = await SendCommand(httpMethod, endPointName, url, content, mediaType, headers, contentAsJson, useCamelCase).ConfigureAwait(false);
                 var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName).ConfigureAwait(false);
-                var result = JsonHelper.Deserialize<T>(httpResult, useCamelCase);
-                if (result != null) return result;
-
-                throw new BadHttpRequestException("The request could not be performed. A null object was obtained after the deserialization process. Please check the request and the type of result mapping object");
+                return JsonHelper.Deserialize<T>(httpResult, useCamelCase);
             }
             catch (Exception ex)
             {
@@ -234,7 +231,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
 
             HttpContent httpContent = new StringContent(requestBody);
 
-            if (mediaType != null)
+            if (mediaType != null && mediaType!=MediaType.MultipartFormData)
             {
                 httpContent.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
             }

@@ -23,7 +23,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-    <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.7.12.12" />
+    <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.7.12.19" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
   </ItemGroup>
 
