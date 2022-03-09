@@ -227,7 +227,7 @@ In the following list all the configuration fields are described:
 * `Endpoint`: Swagger endpoints information.
 
 === Setting up in Devon
-For setting it up using the Devon4NetApi template just configure it in the `appsettings.Development.json` file.
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.{environment}.json` file.
 
 
 === Setting up in other projects
@@ -253,12 +253,11 @@ builder.Services.SetupSwagger(builder.Configuration);
 app.ConfigureSwaggerEndPoint();
 ----
 
-Adds the default configuration shown in the configuration section.
+Add the default configuration shown in the configuration section.
 
 === Tips
 
 * In order to generate the documentation annotate your actions with summary, remarks and response tags:
-
 [source, c#]
 ----
 /// <summary>
@@ -285,6 +284,289 @@ public async Task<IActionResult> Booking([FromBody]BookingDto bookingDto)
 * You can access the swagger UI on `http://localhost:yourport/swagger/index.html`
 
 
+== Devon4Net.Infrastructure.JWT
+"JSON Web Token (JWT) is an open standard (https://datatracker.ietf.org/doc/html/rfc7519[RFC 7519]) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object. This information can be verified and trusted because it is digitally signed. JWTs can be signed using a secret (with the `HMAC` algorithm) or a public/private key pair using `RSA` or `ECDSA` ."
+-- https://jwt.io/introduction/[What is JSON Web Token?]
+
+In other words, a JSON Web Token is a JSON object encoded into an encrypted `string` that can be decoded and verified making use of cryptographic methods and algorithms. This tokens are mostly used to authenticate users in the context of websites, web applications and web services, but they can also be used to securely exchange information between parties.
+
+=== Configuration
+Component configuration is made on file `appsettings.{environment}.json` as follows:
+
+[source, json]
+----
+"JWT": {
+    "Audience": "devon4Net",
+    "Issuer": "devon4Net",
+    "TokenExpirationTime": 60,
+    "ValidateIssuerSigningKey": true,
+    "ValidateLifetime": true,
+    "ClockSkew": 5,
+    "Security": {
+      "SecretKeyLengthAlgorithm": "",
+      "SecretKeyEncryptionAlgorithm": "",
+      "SecretKey": "",
+      "Certificate": "",
+      "CertificatePassword": "",
+      "CertificateEncryptionAlgorithm": ""
+    }
+  },
+----
+
+In the following list all the configuration fields are described:
+
+* `Audience`: Represents a valid audience that will be used to check against the token's audience.
+* `Issuer`: Represents a valid issuer that will be used to check against the token's issuer.
+//* `TokenExpirationTime`: -------
+* `ValidateIssuerSigningKey`: boolean that controls if validation of the SecurityKey that signed the securityToken is called.
+* `ValidateLifetime`: Boolean to control if the lifetime will be validated during token validation. 
+* `ClockSkew`: Expiration time in minutes.
+* `Security`: Certificate properties will be found in this part.
+//** `SecretKeyLengthAlgorithm`: -----
+//** `SecretKeyEncryptionAlgorithm`:------
+** `SecretKey`: Private key used to sign with the certificates
+** `Certificate`: Name of certificate file or its path (if it is not in the same directory). If it doesn't exist an exception will be raised.
+** `CertificatePassword`: Password for the certificate selected.
+** `CertificateEncryptionAlgorithm`: Algorithm used to encrypt the certificate. If no argument is specified, `RsaSha512` is used.
+
+==== Encryption algorithms
+
+The supported algorithms are the following:
+
+*RSA*
+|=======================
+|*Algorithm*|*Value*
+|`RsaSha256` | RS256
+|`RsaSha384` | RS384
+|`RsaSha512` | RS512
+|`RsaSha256Signature` | http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+|`RsaSha384Signature` | http://www.w3.org/2001/04/xmldsig-more#rsa-sha384
+|`RsaSha512Signature` | http://www.w3.org/2001/04/xmldsig-more#rsa-sha512
+|`RsaOAEP` | RS-OAEP
+|`RsaPKCS1` | RSA1_5
+|`RsaOaepKeyWrap` | http://www.w3.org/2001/04/xmlenc#rsa-oaep
+|=======================
 
 
+*ECDsa*
+|=======================
+|*Algorithm*|*Value*
+|`EcdsaSha256` | ES256
+|`EcdsaSha384` | ES384
+|`EcdsaSha512` | ES512
+|`EcdsaSha256Signature` | http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256
+|`EcdsaSha384Signature` | http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384
+|`EcdsaSha512Signature` | http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512
+|=======================
 
+*Hash*
+|=======================
+|*Algorithm*|*Value*
+|`Sha256` | SHA256
+|`Sha384` | SHA384
+|`Sha512` | SHA512
+|`Sha256Digest` | http://www.w3.org/2001/04/xmlenc#sha256
+|`Sha384Digest` | http://www.w3.org/2001/04/xmldsig-more#sha384
+|`Sha512Digest` | http://www.w3.org/2001/04/xmlenc#sha512
+|=======================
+
+*Symmetric*
+|=======================
+|*Algorithm*|*Value*
+|`Aes128CbcHmacSha256` | A128CBC-HS256
+|`Aes192CbcHmacSha384` | A192CBC-HS384
+|`Aes256CbcHmacSha512` | A256CBC-HS512
+|`Aes128KW` | A128KW
+|`Aes256KW` | A256KW
+|`HmacSha256` | HS256
+|`HmacSha384` | HS384
+|`HmacSha512` | HS512
+|`HmacSha256Signature` | http://www.w3.org/2001/04/xmldsig-more#hmac-sha256
+|`HmacSha384Signature` | http://www.w3.org/2001/04/xmldsig-more#hmac-sha384
+|`HmacSha512Signature` | http://www.w3.org/2001/04/xmldsig-more#hmac-sha512
+|=======================
+
+
+NOTE: Please check https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/Supported-Algorithms[Windows Documentation] to get the latest updates on supported encryption algorithms.
+
+=== Setting up in devon
+For setting it up using the Devon4NetApi template configure it in the `appsettings.{environment}.json` file. 
+
+You will need to add a certificate that will be used for signing the token, please check the documentation about how to create a new certificate and add it to a project if you are not aware of how it's done.
+
+Remember to configure your certificates in the JWT configuration.
+
+Navigate to `Devon4Net.Application.WebAPI.Implementation.Business.AuthManagement.Controllers`. There you will find `AuthController` sample class which is responsible of generating the token thanks to login method.
+
+[source, c#]
+----
+public AuthController(IJwtHandler jwtHandler)
+{
+    JwtHandler = jwtHandler;
+}
+----
+
+You can see how the `IJwtHandler` is injected in the constructor via its interface, which allows you to use its methods.
+
+In the following piece of code, you will find how the client token is created using a variety of claims. In this case this end-point will be available to not identified clients thanks to the `AllowAnonymous` attribute. The client will also have a sample role asigned, depending on which it will be able to access some end-points and not others. 
+[source, c#]
+----
+[AllowAnonymous]
+.
+.
+.
+var token = JwtHandler.CreateClientToken(new List<Claim>
+{
+    new Claim(ClaimTypes.Role, AuthConst.DevonSampleUserRole),
+    new Claim(ClaimTypes.Name,user),
+    new Claim(ClaimTypes.NameIdentifier,Guid.NewGuid().ToString()),
+});
+
+return Ok(new LoginResponse { Token = token });
+----
+
+The following example will require clients to have the sample role to be able to use the end-point, thanks to the attribute `Authorize` with the `Roles` value specified. 
+
+It also shows how you can obtain information directly from the token using the `JwtHandler` injection.
+[source, c#]
+----
+[Authorize(AuthenticationSchemes = AuthConst.AuthenticationScheme, Roles = AuthConst.DevonSampleUserRole)]
+.
+.
+.
+//Get claims
+var token = Request.Headers["Authorization"].ToString().Replace($"{AuthConst.AuthenticationScheme} ", string.Empty);
+.
+.
+.
+// Return result with claims values
+var result = new CurrentUserResponse
+{
+    Id = JwtHandler.GetClaimValue(userClaims, ClaimTypes.NameIdentifier),
+    UserName = JwtHandler.GetClaimValue(userClaims, ClaimTypes.Name),
+    CorporateInfo = new List<CorporateBasicInfo> 
+    { 
+        new CorporateBasicInfo 
+        { 
+            Id = ClaimTypes.Role, 
+            Value = JwtHandler.GetClaimValue(userClaims, ClaimTypes.Role) 
+        } 
+    }
+};
+
+return Ok(result);
+----
+
+NOTE: Please check devon documentation of Security and Roles to learn more about method attributtes.
+
+=== Setting up in other projects
+Install the package on your solution using the Package Manager Console:
+
+[source, console]
+----
+> install-package Devon4Net.Infrastructure.JWT
+----
+
+Configure swagger in `Program.cs` adding the following lines:
+
+[source, c#]
+----
+using Devon4Net.Application.WebAPI.Configuration;
+.
+.
+.
+builder.Services.SetupJwt(builder.Configuration);
+----
+
+At this moment you'll need to have at least one certificate added to your project.
+
+
+NOTE: Please read the documentation of how to create and add certificates to a project.
+
+Now we will configure the JWT component in `appsettings.{environment}.json` as shown in the next piece of code:
+
+[source, json]
+----
+"JWT": {
+    "Audience": "devon4Net",
+    "Issuer": "devon4Net",
+    "TokenExpirationTime": 60,
+    "ValidateIssuerSigningKey": true,
+    "ValidateLifetime": true,
+    "ClockSkew": 5,
+    "Security": {
+      "SecretKeyLengthAlgorithm": "",
+      "SecretKeyEncryptionAlgorithm": "",
+      "SecretKey": "",
+      "Certificate": "localhost.pfx",
+      "CertificatePassword": "12345",
+      "CertificateEncryptionAlgorithm": "RS256"
+    }
+  },
+----
+
+For using it, you will need a method that provides you a token. So lets create an `AuthController` controller and add those methods:
+[source, c#]
+----
+[Route("api/[controller]")]
+[ApiController]
+public class AuthController : ControllerBase
+{
+    private readonly IJwtHandler _jwtHandler;
+
+    public AuthController(IJwtHandler jwtHandler)
+    {
+        _jwtHandler = jwtHandler;
+    }
+
+    [HttpGet]
+    [Route("/Auth")]
+    [AllowAnonymous]
+    public IActionResult GetToken()
+    {
+        var token = _jwtHandler.CreateClientToken(new List<Claim>
+        {
+            new Claim(ClaimTypes.Role, "MyRole"),
+            new Claim(ClaimTypes.Name, "MyName"),
+            new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
+        });
+        return Ok(token);
+    }
+
+    [HttpGet]
+    [Route("/Auth/CheckToken")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "MyRole")]
+    public IActionResult CheckToken()
+    {
+        var token = Request.Headers["Authorization"].ToString().Replace($"Bearer ", string.Empty);
+        var userClaims = _jwtHandler.GetUserClaims(token).ToList();
+        var result = new 
+        {
+            Id = _jwtHandler.GetClaimValue(userClaims, ClaimTypes.NameIdentifier),
+            UserName = _jwtHandler.GetClaimValue(token, ClaimTypes.Name),
+            Role = _jwtHandler.GetClaimValue(userClaims, ClaimTypes.Role)
+        };
+        return Ok(result);
+    }
+}
+----
+Reading the code of this controller you have to take in mind a few things:
+
+* `IJwtHandler` class is injected via dependency injection.
+
+** `string CreateClientToken(List<Claim> list)` will allow you to create the token through a list of claims. The claims shown are hard-coded examples.
+
+** `List<Claim> GetUserClaims(string token)` will allow you to get a list of claims given a token.
+
+** `string GetClaimValue(List<Claim> list, string claim)` will allow you to get the value given the ClaimType and either a list of claims or a token thanks to the `string GetClaimValue(string token, string claim)` overload.
+
+* `[AllowAnonymous]` attribute will allow access any client without authentication.
+
+* `[Authorize(AuthenticationSchemes = "Bearer", Roles = "MyRole")]` attribute will allow any client authenticated with a bearer token and the role `"MyRole"`.
+
+
+=== References
+
+* https://docs.microsoft.com/en-us/dotnet/api/microsoft.identitymodel.tokens.tokenvalidationparameters?view=azure-dotnet[TokenValidationParameterClass - Microsoft Docs]
+
+* https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/attributes/[Attributtes in C# - Microsoft Docs]
