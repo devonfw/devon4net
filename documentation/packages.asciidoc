@@ -284,7 +284,102 @@ public async Task<IActionResult> Booking([FromBody]BookingDto bookingDto)
 ----
 * You can access the swagger UI on `http://localhost:yourport/swagger/index.html`
 
+== Devon4Net.Infrastructure.Logger
+
+Previously known as Devon4Net.Infrastructure.Log(v5.0 or lower)
+
+Logging is an essential component of every application's life cycle.
+A strong logging system becomes a critical component that assists developers to understand and resolve emerging problems. 
+
+NOTE: Starting with .NET 6, logging services no longer register the ILogger type. When using a logger, specify the generic-type alternative ILogger<TCategoryName> or register the `ILogger` with dependency injection (DI).
+
+Default .Net log levels system: 
+
+|=======================
+|*Type*|*Description*
+|Critical| Used to notify failures that force the program to shut down  
+|Error| Used to track major faults that occur during program execution 
+|Warning| Used to report non-critical unexpected behavior
+|Information| Informative messages
+|Debug| Used for debugging messages containing additional information about application operations 
+|Trace| For tracing the code
+|None| If you choose this option the loggin category will not write any messages
+|=======================
+
+=== Configuration
+
+Component setup is done in the `appsettings.{environment}.json` file using the following structure:
+
+[source, json]
+----
+  "Logging": {
+    "UseLogFile": true,
+    "UseSQLiteDb": true,
+    "UseGraylog": true,
+    "UseAOPTrace": false,
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    },
+    "SqliteDatabase": "logs/log.db",
+    "LogFile": "logs/{0}_devonfw.log",
+    "SeqLogServerHost": "http://127.0.0.1:5341",
+    "GrayLog": {
+      "GrayLogHost": "127.0.0.1",
+      "GrayLogPort": "12201",
+      "GrayLogProtocol": "UDP",
+      "UseSecureConnection": true,
+      "UseAsyncLogging": true,
+      "RetryCount": 5,
+      "RetryIntervalMs": 15,
+      "MaxUdpMessageSize": 8192
+    }
+  }
+----
+
+Where:
+
+* `UseLogFile`: When you set this option to true, you can store the log output to a file.  
+* `UseSQLiteDb`: True when you wish to insert the log output into a SQLiteDb
+* `UseGrayLog`: This option enables the use of GrayLog for loggin
+* `UseAOPTrace`: True if you need to trace the attributes of the controllers
+
+WARNING: Don't set to true on production environments, doing so may expose critical information. 
+
+* `LogLevel`: Sets the minimum level of logs to be captured
+* `SqliteDatabase`: path to SQlite database 
+* `LogFile`: path to the log file
+* `SeqLogServerHost`: url for Seq server, you need to install Seq  in order to use it, you can install it clicking https://datalust.co/download[here]
+* `GrayLog`: Some configuration parameters for Graylog service you can install it using https://www.graylog.org/products/open-source#download-open[this link] 
 
 
+=== Setting up in Devon
 
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.Development.json` file.
+
+You can use the methods implemented in Devon4NetLogger class, each method corresponds with a log level in .Net log levels system for example:
+
+[source, c#]
+----
+Devon4NetLogger.Debug("Executing GetTodo from controller TodoController");
+----
+
+
+=== Setting up in other projects
+
+Add the following line of code to Progam.cs: 
+
+[source, c#]
+----
+builder.Services.SetupLog(builder.Configuration);
+----
+
+Add the default configuration shown in the configuration section.
+
+use the Devon4NetLogger class methods as explanied above:
+
+[source, c#]
+----
+Devon4NetLogger.Information("Executing GetSample from controller SampleController");
+----
 
