@@ -1,67 +1,408 @@
-:toc: macro
-toc::[]
-:icons: font
-:iconfont-remote!:
-:iconfont-name: font-awesome
-:stylesdir: css
+:toc:
 
 = Templates
 
-== Overview
+toc::[]
 
-The .Net Core and .Net Framework given templates allows to start coding an application with the following functionality ready to use:
+== WebAPI Template
+This section contains all of the information about the template that corresponds to the Devon4net WebAPI. This template will allow you to easily create a functional API with everything set up so you can start coding for your specific domain. 
 
+Firstly, all the details about the contents of the package will be explained. Going through all of the directory tree explaining the most imporant concepts. Then we will show an example of how to add the entity Student from the domain layer all the way to the controller, so you can understand how the architecture works on this template and how the layers interact with each other.
 
-Please refer to link:userguide.html[User guide] in order to start developing.
+=== Devon4Net.Application.WebAPI
+This is the startup project of the template. Its main purpose is to launch the api and configure it using the settings files. The following figure shows the directory tree you will find when you first use the template.
 
+.Devon4Net.Application.WebAPI Directory tree
+image::images/Application.WebAPI_tree.png[]
 
-== Net Core 3.0
+Everything will be set up in the `Program.cs` file as for any .Net 6 Core API project. Going through this file, you will find all the configuration included with the template, such as middlewares and Dependency Injection.
 
-The _.Net Core 3.0_ template allows you to start developing an n-layer server application to provide the latest features. The template can be used in Visual Studio Code and Visual Studio 2019.
+==== appsettings.json
+[source, json]
+----
+{
+  "devonfw": {
+    "UseDetailedErrorsKey": true,
+    "UseIIS": false,
+    "UseSwagger": true,
+    "UseXsrf": true,
+    "UseModelStateValidation": true,
+    "Environment": "Development",
+    "ForceUseHttpsRedirection": false,
+    "Kestrel": {
+      "UseHttps": false,
+      "HttpProtocol": "Http1AndHttp2", 
+      "ApplicationPort": 8085,
+      "SslProtocol": "Tls12", 
+      "ExtraSettings": {
+        "KeepAliveTimeout": 120,
+        "MaxConcurrentConnections": 100,
+        "MaxConcurrentUpgradedConnections": 100,
+        "MaxRequestBodySize": 28.6, 
+        "Http2MaxStreamsPerConnection": 100,
+        "Http2InitialConnectionWindowSize": 131072, 
+        "Http2InitialStreamWindowSize": 98304,
+        "AllowSynchronousIO": true
+      }
+    },
+    "IIS": {
+      "ForwardClientCertificate": true,
+      "AutomaticAuthentication": true,
+      "AuthenticationDisplayName": ""
+    }
+  }
+}
+----
 
-The application result can be deployed as a console application, microservice or web page.
+In the following list all the configuration fields are described:
 
-To start developing with devon4Net template, please follow this instructions:
+//* `UseDetailedErrorsKey`: 
+* `UseIIS`: Boolean that indicates if IIS is used.
+* `ValidateIssuerSigningKey`: Boolean that controls if validation of the security key that signed the securityToken is called.
+//* `UseSwagger`: 
+* `UseXsrf`: Boolean that adds Anti Forgery middleware to prevent XSRF attacks.
+* `UseModelStateValidation`: Boolean that indicates if model validation is called.
+* `Environment`: Running environment to load the corresponding configuration (Development, Production...)
+* `ForceUseHttpsRedirection`: Boolean to force adding a middleware that redirects HTTP requests to HTTPS.
+* `Kestrel`: Kestrel server configuration
+** `UseHttps`: Boolean to indicate if the connection needs to be secured via HTTPS.
+** `HttpProtocol`: Hypertext protocol used.
++
+|====
+|*Protocol* |*Description*
+|`Http1`| HTTP/1.x (default)
+|`Http2`| HTTP/2
+|`Http1andHttp2`| Both HTTP/1.x and HTTP/2
+|`none`|
+|====
+** `ApplicationPort`: Port number where the API will listen
+** `SslProtocol`: SSL encrytion protocol for Https
++
+|====
+|*Protocol* |*Description*
+|`Tls12`| TLS 1.2 (default, needed for Https2)
+|`Tls13`| TLS 1.3
+|`none`|
+|====
+** `ExtraSettings`: Some extra settings for Kestrel
+*** `KeepAliveTimeout`: Sets the keep-alive timeout in seconds.
+*** `MaxConcurrentConnections`: Maximum number of open connections. Null is unlimited. Default is 100.
+*** `MaxConcurrentUpgradedConnections`: Maximum number of open upgraded connectinos. Null is unlimited. An upgraded connection is one that has been switched from HTTP to another protocol. Default is 100.
+*** `MaxRequestBodySize`: Maximum allowed size of any request body in MB. Default is 28.6MB.
+*** `Http2MaxStreamsPerConnection`: Maximum number of concurrent request streams per HTTP/2 connection. Excess streams will be refused. Default is 100.
+*** `Http2InitialConnectionWindowSize`: Indicates how much request body data the server is willing to receive and buffer at a time aggregated across all requests (streams) per connection. Value must be greater or equal to 65,535 and less than 2^31. Defaults to 128 KB.
+*** `Http2InitialStreamWindowSize`: Indicates how much request body data the server is willing to receive and buffer at a time per stream.
+*** `AllowSynchronousIO`: Boolean that controls wether Synchronous IO operations are allowed in requests.
+* `IIS`: Internet Information Services configuration
+** `ForwardClientCertificate`:  Populates the ITLSConnectionFeature if the MS-ASPNETCORE-CLIENTCERT request header is present
+** `AutomaticAuthentication`: If true the middleware should set HttpContext.User. If false the middleware will only provide an identity when explicitly requested by the AuthenticationScheme. Note Windows Authentication must also be enabled in IIS for this to work.
+** `AuthenticationDisplayName`: Sets the display name shown to users on login pages. The default is null
 
-==== Using devon4Net template
-==== Option 1
-. Open your favourite terminal (Win/Linux/iOS)
-. Go to future project's path
-. Type _dotnet new --install Devon4Net.WebAPI.Template_
-. Type _dotnet new Devon4NetAPI_
-. Go to project's path
-. You are ready to start developing with _devon4Net_
+For each environment you can have a different configuration if you wish. You will find an `appsettings.Development.json` file where the configuration for the different components used in the template is placed. Please go through the documentation of each component to learn more about how are they configured. 
 
+=== Devon4Net.Application.Implementation
+This is where all the magic happens. This project holds all the classes needed to implement the API end-points. The following image shows the structure you will find in this project.
 
-==== Option 2
-. Create a new dotnet API project from scratch
-. Add the NuGet package reference to your project
-. Type _dotnet new --install Devon4Net.WebAPI.Template_
+.Devon4Net.Application.WebAPI.Implementation Directory tree
+image::images/Application.WebAPI.Implementation_tree.png[]
 
+NOTE: Please refer to documentation about Architecture to understand better the proposed architecture which is Onion Architecture.
 
-== Net Core 2.1.x
+==== Configuration
 
-The _.Net Core 2.1.x_ template allows you to start developing an n-layer server application to provide the latest features. The template can be used in Visual Studio Code and Visual Studio 2017.
+In this directory the Configuration is placed, you will find all the dependency injection code for this project in the static class `DevonConfiguration`. The code is divided into many private extensions based on their intended use, all of which are called by one main public extension for the `IServiceCollection` interface in the `Program.cs` file.
 
-The application result can be deployed as a console application, microservice or web page.
+TIP:  If you need to segregate chunks of code, don't be afraid to add extra static classes. This will improve reading and it will make it much easier to locate items later.
 
-To start developing with devon4Net template, please follow this instructions:
+==== Domain
 
-==== Using devon4Net template
-. Open your favourite terminal (Win/Linux/iOS)
-. Go to future project's path
-. Type _dotnet new --install Devon4Net.WebAPI.Template::1.0.8_
-. Type _dotnet new Devon4NetAPI_
-. Go to project's path
-. You are ready to start developing with _devon4Net_
+As you may have learned thanks to the architecture document, this is the core of the application. It holds the entities and the contracts for the operations you can execute on them, that last being the repository interfaces. 
 
+You will be able to find also the different database contexts for the application in the Database directory. These contexts will allow `EntityFramework` to work properly by extending `DbContext` class.
 
-NOTE: For the latest updates on references packages, please get the sources from https://github.com/devonfw/devon4net[Github]
+.Devon4Net.Application.WebAPI.Implementation Domain layer
+image::images/Application.WebAPI.Implementation.Domain.png[]
 
-== Links
+The repositories interfaces extend from a generic repository interface `IRepository<T>` available in Devon4Net. As you can see in figure 3, Devon4Net already comes with some examples of implementation for some entities. Please revise them so that you have a better understanding of how they work.
 
-icon:= fa-floppy-o[]  link:https://github.com/devonfw/devon4net/tree/develop/source/Templates[.Net templates]
+==== Data 
 
+The Data directory corresponds to the Data Layer and implements all the interfaces contracts. This Repositories extend from a generic repository implementation `Repository<T>` available in Devon4Net. As you can see in the next figure, the template also come with some examples of implementation.
 
+.Devon4Net.Application.WebAPI.Implementation Data layer
+image::images/Application.WebAPI.Implementation.Data.png[]
 
+==== Business
 
+The Business directory is where all the application logic is placed, it corresponds to the Business Layer. You will find a lot of implemented examples as shown in the next image.
+
+.Devon4Net.Application.WebAPI.Implementation Business layer
+image::images/Application.WebAPI.Implementation.Business.png[]
+
+These are:
+
+. *AntiForgeryTokenManagement:* This is an example of how to use the XSRF protection in API controllers. It contains a controller class with a working example.
++
+.AntiForgeryTokenManagement directory
+image::images/AntiForgeryTokenManagement.png[]
+
+. *AuthManagement:* This example shows how to use Authorization in API controllers thanks to Json Web Tokens. It contains a controller class and some response entities needed to return information.
++
+.AuthManagement directory
+image::images/AuthManagement.png[]
+
+. *EmployeeManagement:* This directory contains all the implementation classes for entity type Employee. 
++
+.EmployeeManagement directory
+image::images/EmployeeManagement.png[]
+
+. *MediatRManagement:* Example of how implement MediatR for using CQRS pattern. 
++
+.MediatRManagement directory
+image::images/MediatRManagement.png[]
+
+. *RabbitMqManagement:* Sample of implementation of RabbitMq queues.
++
+.RabbitMqManagement directory
+image::images/RabbitMqManagement.png[]
+
+. *TodoManagement:* Implementation sample of entity type Todo.
++
+.TodoManagement directory
+image::images/TodoManagement.png[]
+
+=== Sample of use
+
+NOTE: If you don't know how to install and use this template, please refer to documentation on how to do it.
+
+In this part we will be creating CRUD (Create, Read, Update and Delete) operations for the entity type `Student`. Before that, we will delete the samples that come with the template. 
+
+==== Step 1: Entity
+
+First we will need the object `Student`. For that we will need to create a new `Student.cs` class in `Domain\Entities`:
+
+[source, c#]
+----
+public class Student
+{
+    public long Id { get; set; }
+    public string Name { get; set; }
+    public string Surname { get; set; }
+}
+----
+
+Our student should have an Identifier, and we will also put some interesting properties, name and surname for example.
+
+TIP: Is good practice to override `object` methods: `Equals(object o)`, `GetHashCode()` and `ToString()`.
+
+==== Step 2: Context
+
+EntityFramework will need a context to be able to work with Students. Lets create a `StudentContext.cs` class in `Domain\Database`:
+
+[source, c#]
+----
+public class StudentContext : DbContext
+{
+    public virtual DbSet<Student> Students { get; set; }
+    public StudentContext(DbContextOptions<StudentContext> options) : base(options)
+    {
+    }
+}
+----
+
+==== Step 3: Repository contract
+
+The repository contract in `Data\RepositoryInterfaces` will allow us to inject the repository and will increase decoupling. It will be implemented in the next step. You can inherit methods from Devon4Net `IRepository` as shown, but we will be also implementing a couple of queries:
+
+[source, c#]
+----
+public interface IStudentRepository : IRepository<Student>
+{
+    Task<long> DeleteById(long id);
+}
+----
+
+Everything should be asynchronous making use of the `Task` class.
+
+==== Step 4: Repository implementation
+
+Now we will need a repository implementation for the previous interface. It will be placed in `Data\Repositories`, it will inherit also from Devon4Net generic repository and will implement interface methods:
+
+[source, c#]
+----
+public class StudentRepository : Repository<Student>, IStudentRepository
+{
+    public StudentRepository(StudentContext context) : base(context)
+    {
+    }
+
+    public async Task<long> DeleteById(long id)
+    {
+        var deleted = await Delete(t => t.Id == id).ConfigureAwait(false);
+        if (deleted) return id;
+        throw  new ArgumentException($"The Todo entity {id} has not been deleted.");
+    }
+}
+----
+
+==== Step 5: StudentDto 
+
+To increase decoupling, we will create a copy of the entity Student in `Business\Dto` for the Business layer. To make it a little different we will be including the surname in the property `FullName` and it will be separated before being stored in the database and viceversa:
+
+[source, c#]
+----
+public class StudentDto
+{
+    public long Id { get; set; }
+    public string FullName { get; set; }
+}
+----
+
+We will need also a converter placed in `Business\Converters` so we can transform it in both directions:
+
+[source, c#]
+----
+public static class StudentConverter
+{
+    public static StudentDto EntityToDto(Student item)
+    {
+        if (item == null) return new StudentDto();
+        return new StudentDto
+        {
+            Id = item.Id,
+            FullName = item.Name + " " + item.Surname 
+        };
+    }
+
+    public static Student DtoToEntity(StudentDto item)
+    {
+        if (item == null) return new Student();
+        return new Student
+        {
+            Id = item.Id,
+            Name = item.FullName.Split(" ")[0],
+            Surname = item.FullName.Split(" ")[1]
+        };
+    }
+}
+----
+
+==== Step 6: Service
+
+Now we will need a service in `Business\StudentManagement\Service`. The service will execute all the necessary operations.  In this case as it is a simple CRUD it will only call the repository. The Devon4Net Service class implements Unit of Work pattern.
+[source, c#]
+----
+public interface IStudentService
+{
+    Task<IEnumerable<StudentDto>> GetAllStudents();
+    Task<Student> CreateStudent(StudentDto student);
+    Task<long> DeleteStudentById(long id);
+}
+----
+
+[source, c#]
+----
+public class StudentService: Service<StudentContext>, IStudentService
+{
+    private readonly IStudentRepository _studentRepository;
+
+    public StudentService(IUnitOfWork<StudentContext> uoW) : base(uoW)
+    {
+        _studentRepository = uoW.Repository<IStudentRepository>();
+    }
+
+    public async Task<IEnumerable<StudentDto>> GetAllStudents()
+    {
+        Devon4NetLogger.Debug("GetTodo method from service TodoService");
+        var result = await _studentRepository.Get().ConfigureAwait(false);
+        return result.Select(StudentConverter.EntityToDto);
+    }
+
+    public async Task<StudentDto> CreateStudent(StudentDto student)
+    {
+        var result = await _studentRepository.Create(StudentConverter.DtoToEntity(student));
+        return StudentConverter.EntityToDto(result);
+    }
+
+    public async Task<long> DeleteStudentById(long id)
+    {
+        var todo = await _studentRepository.GetFirstOrDefault(t => t.Id == id).ConfigureAwait(false);
+        if (todo == null) throw new ArgumentException($"The provided Id {id} does not exist");
+        return await _studentRepository.DeleteById(id).ConfigureAwait(false);
+    }
+}
+----
+
+==== Step 7: Controller
+The controller will end up looking like this and needs to be placed in `Business\StudentManagement\Controllers`. It uses the `IStudentService` via dependency injection.
+[source, c#]
+----
+[EnableCors("CorsPolicy")]
+[ApiController]
+[Route("[controller]")]
+public class StudentController : ControllerBase
+{
+    private readonly IStudentService _studentService;
+
+    public StudentController(IStudentService studentService)
+    {
+        _studentService = studentService;
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(List<StudentDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> GetStudents()
+    {
+        return Ok(await _studentService.GetAllStudents().ConfigureAwait(false));
+    }
+
+    [HttpPost]
+    [ProducesResponseType(typeof(StudentDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> Create(StudentDto student)
+    {
+        var result = await _studentService.CreateStudent(student).ConfigureAwait(false);
+        return StatusCode(StatusCodes.Status201Created, result);
+    }
+
+    [HttpDelete]
+    [ProducesResponseType(typeof(long), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> Delete(long id)
+    {
+        return Ok(await _studentService.DeleteStudentById(id).ConfigureAwait(false));
+    }
+}
+----
+
+==== Step 8: Dependency Injection
+
+Now we are ready to inject the context in `Configuration\DevonConfiguration.cs`. In this example we are creating a database stored in memory:
+
+[source, c#]
+----
+services.SetupDatabase<StudentContext>(configuration, "Default", DatabaseType.InMemory).ConfigureAwait(false);
+----
+
+Also the repository and the service, so we can use them in the entire solution.
+[source, c#]
+----
+services.AddTransient<IStudentRepository, StudentRepository>();
+services.AddTransient<IStudentService, StudentService>();
+----
+
+==== Test
+
+Now you can run the application and go to the path `swagger/index.html`.
+
+NOTE: take a look at your application port and the protocol you configured (http or https).
+
+.Swagger test for Student 
+image::images/WebApi_template_swagger.png[]

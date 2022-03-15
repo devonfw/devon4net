@@ -318,7 +318,7 @@ In the following list all the configuration fields are described:
 * `Audience`: Represents a valid audience that will be used to check against the token's audience.
 * `Issuer`: Represents a valid issuer that will be used to check against the token's issuer.
 //* `TokenExpirationTime`: -------
-* `ValidateIssuerSigningKey`: boolean that controls if validation of the SecurityKey that signed the securityToken is called.
+* `ValidateIssuerSigningKey`: Boolean that controls if validation of the SecurityKey that signed the securityToken is called.
 * `ValidateLifetime`: Boolean to control if the lifetime will be validated during token validation. 
 * `ClockSkew`: Expiration time in minutes.
 * `Security`: Certificate properties will be found in this part.
