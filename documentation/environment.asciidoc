@@ -1,63 +1,159 @@
-:toc: macro
+:toc:
+
+= Environment Setup
+
 toc::[]
-:icons: font
-:iconfont-remote!:
-:iconfont-name: font-awesome
-:stylesdir: css
 
-= Environment
+== Overview
 
-== [navy]#Overview#
+This guide will explain how to configure the full system environment to make the Devon4Net.Template.WebAPI operate in Visual Studio Code. 
 
-
-== [navy]#Required software#
+== Required software
 https://code.visualstudio.com/[Visual Studio Code]
+
+https://dotnet.microsoft.com/en-us/download[.Net Core SDK]
 
 https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp[C# Extension for VS Code]
 
-https://www.microsoft.com/net/core[.Net Core SDK]
+== Setting up the environment
 
-== [navy]#Setting up the environment#
-. Download and install https://code.visualstudio.com/[Visual Studio Code]
+=== Visual Studio Code
+Download and install *Visual Studio Code*:
 
-. Download and install https://www.microsoft.com/net/core[.Net Core SDK]
+. Download the latest version https://code.visualstudio.com/[here]
++
+.Download Page
+image::images/environment-1.png[]
 
-. https://code.visualstudio.com/docs/editor/extension-gallery[Intall the extension] https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp[Omnisharp] in Visual Studio Code
 
-==== [navy]#Hello world#
+. Open the downloaded installer, accept the terms and conditions, and then click next:
++
+.License Agreement
+image::images/environment-2.png[]
+
+. Select the location where Visual Studio Code will be installed. :
++
+.Destination Folder
+image::images/environment-3.png[]
+
+. Check the option if you do not wish to create a Start Menu folder, then click next:
++
+.Start Menu Setup
+image::images/environment-4.png[]
+
+. Check the boxes next to the options you wish to install for your environment, and then click next:
++
+TIP: Select the "Open with Code" options; this is a really useful tool, and if you don't mark them, you won't be able to configure them again unless you reinstall the application. 
++
+.Setup Additional Tasks
+image::images/environment-5.png[]
+
+. Select next to begin the installation:
++
+.Final Setup
+image::images/environment-6.png[]
+
+. Select finish to end the installation and launch visual studio code:
++
+.Completed Instalation
+image::images/environment-7.png[]
+
+=== .Net Core SDK
+
+Download and install *.Net Core SDK*:
+
+. Download https://dotnet.microsoft.com/en-us/download[.Net SDK x64 for .Net 6.0]
++
+.Download Page .Net 6.0
+image::images/environment-8.png[]
+
+. Open the downloaded installer, and click on the install button:
++
+.Microsoft .NET SDK Installer
+image::images/environment-9.png[]
+
+. Click in the close button to finish the installation:
++
+.Microsoft .NET SDK Installer
+image::images/environment-10.png[]
+
+. To verify the installation, open a command prompt and enter the following command: 
++
+[source, console]
+----
+> dotnet --version
+----
++
+.CMD dotnet command
+image::images/environment-11.png[]
+
+=== OmniSharp extension
+Download and install *C# extension (by OmniSharp)*:
+
+. Open Visual Studio, go to the extensions section (1), search for C# extensions (2) and install the C# extension by OmniSharp:
++
+.Extensions Site in Visual Code Studio
+image::images/environment-12.png[]
+
+
+== Devon4net.Web.Api.Template
 . Open a project:
 *    Open Visual Studio Code.
 *   Click on the Explorer icon on the left menu and then click **Open Folder**.
 
-*   Select the folder you want your C# project to be in and click **Select Folder**. For our example, we'll create a folder for our project named `'HelloWorld'`.
-
+*   Select the folder you want your C# project to be in and click **Select Folder**. For our example, we'll create a folder for our project named `'ApiTest'`.
 
 . Initialize a C# project:
-*   Open the Integrated Terminal from Visual Studio Code by typing `CTRL+(backtick)`. Alternatively, you can select **View** > **Integrated Terminal** from the main menu.
+*   Open the Integrated Terminal from Visual Studio Code by typing `CTRL+(backtick)`. Alternatively, you can select **View** > **Terminal** from the main menu.
+* You must select Command Prompt instead of PowerShell:
++
+.CMD in Visual Code Studio
+image::images/environment-13.png[]
 
-*   In the terminal window, type `dotnet new console`.
+*   In the terminal window, type:
++
+[source, console]
+----
+dotnet new -i Devon4Net.WebAPI.Template
+----
 
-*   This creates a `Program.cs` file in your folder with a simple "Hello World" program already written, along with a C# project file named `HelloWorld.csproj`.
+*   This will install the Devon4Net.WebAPI.Template with the latest version, next to create your project you must run the following command.
++
+[source, console]
+----
+dotnet new Devon4NetAPI
+----
 
-. Resolve the build assets:
-*   For **.NET Core 2.0**, this step is optional. The `dotnet restore` command executes automatically when a new project is created.
+. Run the "ApiTest" program:
+* Go to the path where the Program.cs file is found typing the following command:
++
+[source, console]
+----
+cd Templates\WebAPI\Devon4Net.Application.WebAPI
+----
++
+And then type:
++
+[source, console]
+----
+dotnet run
+----
 
-. Run the "Hello World" program:
-*   Type `dotnet run`.
+* You can now test the template by going to the swagger page at: https://localhost:8085/swagger/index.html. 
 
+You may now start working with C# and the devon4net api template in the Visual Studio Code environment. 
 
-=== [navy]#Debug#
+== Debug
 
-. Open Program.cs by clicking on it. The first time you open a C# file in Visual Studio Code, OmniSharp will load in the editor.
-
-. Visual Studio Code will prompt you to add the missing assets to build and debug your app. Select Yes.
+. Open for example Program.cs by clicking on it. The first time you open a C# file in Visual Studio Code, OmniSharp will load in the editor.
 
 . To open the Debug view, click on the Debugging icon on the left side menu.
 
-. Locate the green arrow at the top of the pane. Make sure the drop-down next to it has `.NET Core Launch (console)` selected.
+. Visual Studio Code will prompt you to add the missing assets to build and debug your app. Select Yes.
+
+. Locate the green arrow at the top of the pane. Make sure the drop-down next to it has `.NET Core Launch (web)` selected.
 
 . Add a breakpoint to your project by clicking on the **editor margin** (the space on the left of the line numbers in the editor).
-
 
 . Select F5 or the green arrow to start debugging. The debugger stops execution of your program when it reaches the breakpoint you set in the previous step.
 
@@ -65,12 +161,25 @@ https://www.microsoft.com/net/core[.Net Core SDK]
 
 . Select the green arrow at the top to continue debugging, or select the red square at the top to stop.
 
+The following figure summarizes the most important points: 
+
+.Debug mode in Visual Code Studio
+image::images/environment-14.png[]
+
+Where:
+
+. Debug Section
+. Launch button
+. Break Point
+. Debug Console
+. Debug Navigation Buttons
+
 [NOTE]
 ====
 For more information and troubleshooting tips on .NET Core debugging with OmniSharp in Visual Studio Code, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger.md[Instructions for setting up the .NET Core debugger].
 ====
 
-== [navy]#External links#
+== External links
 
 https://www.microsoft.com/net/core[.Net Core]
 
