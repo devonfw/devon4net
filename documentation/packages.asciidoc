@@ -4,6 +4,154 @@
 
 toc::[]
 
+== Overview
+
+Devon4Net is made up of several components, all of which are described in this document. This components are available in the form of NuGet packages. In the https://github.com/devonfw/devon4net[Devon4Net repository] this packages are placed in the Infrastructure layer which is a cross-cutting layer that can be referenced from any level on the architecture.
+
+.Infrastructure directory
+image::images/Infrastructure_package.png[]
+
+Components are class librarys that collaborate with each other for a purpose. They group the necessary code so that they can work according to the specified configuration. For example, the package `Devon4Net.Infrastructure.Swagger` has isolated the swagger essential pieces of code and has been developed in such a manner that you just need to write a few lines and specify a couple options to get it working the way you need.
+
+=== Component structure
+
+All of the components follow a similar structure which includes the next directories:
+
+* *Configuration:* Static configuration class (or multiple classes) that contains extension methods used to configure the component.
+* *Handlers:* Classes that are required to manage complex operations or communications.
+* *Helpers:* Normally static classes that help in small conversions and operations.
+* *Constants:* Classes that contain static constants to get rid of hard-coded values.
+
+NOTE: Because each component is unique, you may find some more directories or less than tose listed above.
+
+== Configuration basics
+
+Any configuration for .Net Core 6.0 projects needs to be done in the `Program.cs` files which is placed on the startup application, but we can extract any configuration needed to an extension method and call that method from the component. As a result, the component will group everything required and the configuration will be much easier.
+
+=== Extension methods
+
+https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/extension-methods[Extension methods] allow you to "add" methods to existing types without having to create a new derived type, or modify it in any way. Although they are static methods, they are referred to as instance methods on the extended type. For C# code, there is no difference in calling a extension method and a method defined in a type.
+
+For example, the next extension method will extend the class `ExtendedClass` and it will need an `OptionalParameter` instance to do some configuration:
+
+[source, c#]
+----
+public static class ExtensionMethods
+{
+    public static void DoConfiguration(this ExtendedClass class,  OptionalParameter extra) 
+    {
+        // Do your configuration here
+        class.DoSomething();
+        class.AddSomething(extra)
+    }
+}
+----
+
+Thanks to the `this` modifier preceeding the first parameter, we are able to call the method directly on a instance of `ExtendedClass` as follows:
+
+[source, c#]
+----
+ExtendedClass class = new();
+OptionalParameter extra = new();
+
+class.DoConfiguration(extra);
+----
+
+As you can see, we don't need that a class derived from `ExtendedClass` to add some methods and we don't need those methods placed in the class itself either. This can be seen easily when extending a primitive type such as `string`:
+
+[source, c#]
+----
+public static class ExtensionMethods
+{
+    public static int CountWords(this string word,  char[] separationChar = null) 
+    {
+        if(separationChar == null) separationChar = new char[]{' '};
+        return word.Split(separationChar, StringSplitOptions.RemoveEmptyEntries).Length;
+    }
+}
+----
+
+In the previous example we created a method that can count words given a list of separation characters. And now we can use it over any string as follows:
+
+[source, c#]
+----
+string s = "Hello World";
+Console.WriteLine(s.CountWords());
+----
+[source, output]
+----
+2
+----
+
+NOTE: Remember to reference the class so you can use the extension methods (`using` directive).
+
+=== Options pattern
+
+The https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-6.0[options design pattern] allows you to have strong typed options and provides you the ability to inject them into your services. To follow this pattern, the configuration present on the `appsettings.json` needs to be mapped into an object.
+
+This means, the following configuration:
+[source, json]
+----
+"essentialoptions" : {
+  "value1": "Hello",
+  "value2": "World"
+}
+----
+
+Would need the following class:
+[source, c#]
+----
+public class EssentialOptions 
+{
+    public string Value1 { get; set; }
+    public string Value2 { get; set; }
+}
+----
+
+In .Net we can easily map the configuration thanks to the `Configure<T>()` method from `IServiceCollection` and `GetSection()` method from `IConfiguration`. We could be loading the configuration as follows:
+
+[source, c#]
+----
+services.Configure<EssentialOptions>(configuration.GetSection("essentialoptions"));
+----
+
+And then injecting it making use of `IOptions<T>` interface:
+[source, c#]
+----
+public class MyService : IMyService
+{
+    private readonly EssentialOptions _options;
+
+    public MyService(IOptions<EssentialOptions> options) 
+    {
+        _options = options.Value;
+    }
+}
+----
+
+In devon4net, there is an `IServiceCollection` extension available that uses the methods described above and also returns the options injected thanks to `IOptions<T>`.  So, to load the same options, we should use the following:
+
+[source, c#]
+----
+EssentialOptions options = services.GetTypedOptions<EssentialOptions>(configuration, "essentialoptions");
+----
+
+=== Dependency Injection
+
+https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection[Dependency Injection] is a technique for achieving Inversion of Control Principle. In .Net it is a built-in part that comes with the framework.
+
+Using a service provider `IServiceProvider` available in .Net, we are able to add any service or option to a service stack that will be available for injection in constructors of the classes where it's used.
+
+Services can be registered with one of the following lifetimes:
+|=====
+|*Lifetime* | *Description* |*Example*
+|Transient |Transient lifetime services are created each time they're requested from the service container. Disposed at the end of the request. |services.AddTransient<IDependency, Dependency>();
+|Scoped |A scoped lifetime indicates that services are created once per client request (connection).  Disposed at the end of the request. |services.AddScoped<IDependency, Dependency>();
+|Singleton |Singleton lifetime services are created either the first time they're requested or by the developer. Every subsequent request of the service implementation from the dependency injection container uses the same instance. |services.AddSingleton<IDependency, Dependency>();
+|=====
+
+This injections would be done in the startup project in `Program.cs` file, and then injected in constructors where needed.
+
 == Devon4Net.Infrastructure.CircuitBreaker
 
 The Devon4Net.Infrastructure.CircuitBreaker component implements the retry pattern for HTTP/HTTPS calls. It may be used in both SOAP and REST services. 
