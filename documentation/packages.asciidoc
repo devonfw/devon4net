@@ -457,15 +457,17 @@ In the following table all the configuration fields are described:
 
 For setting it up using the Devon4NetApi template just configure it in the `appsettings.Development.json` file.
 
-Add this annotation in the Controller Class you want to use CORS policy
+You can enable CORS per action, per controller, or globally for all Web API controllers in your application:
 
+* Add this annotation in the Controller Class you want to use CORS policy
++
 [source, c#]
 ----
 [EnableCors("CorsPolicy")]
 ----
-
++
 As an example, consider this implementation on the EmployeeController class
-
++
 [source, c#]
 ----
 namespace Devon4Net.Application.WebAPI.Implementation.Business.EmployeeManagement.Controllers
@@ -484,8 +486,23 @@ namespace Devon4Net.Application.WebAPI.Implementation.Business.EmployeeManagemen
     }
 }
 ----
++
+The example above enables CORS for all the controller methods.
 
-In the same way, you may enable CORS on any controller method. 
+* In the same way, you may enable CORS on any controller method:
++
+[source, c#]
+----
+[EnableCors("FirstPolicy")]
+public async Task<ActionResult> GetEmployee()
+        
+public async Task<ActionResult> ModifyEmployee(EmployeeDto employeeDto) 
+
+[EnableCors("SecondPolicy")]        
+public async Task<ActionResult> Delete([Required]long employeeId)
+----
++
+The example above enables CORS for the GetEmployee and Delete method. 
 
 === Setting up in other projects
 
@@ -509,16 +526,39 @@ app.SetupCors();
 
 Add the default configuration shown in the configuration section.
 
-Add this annotation to the controller class that will be using the CORS policy. 
+You can enable CORS per action, per controller, or globally for all Web API controllers in your application:
 
+* Add this annotation to the controller class that will be using the CORS policy. 
++
 [source, c#]
 ----
 [EnableCors("SamplePolicy")]
+    public class SampleController: ControllerBase
+    {
+      .
+      .
+      .
+    }
 ----
++
+Where "SamplePolicy" is the name you give the Policy in the `appsettings.{environment}.json`.
++
+The example above enables CORS for all the controller methods.
 
-Where "SamplePolicy" is the name you give the Policy in the `appsettings.{environment}.json`
+* In the same way, you may enable any CORS-policy on any controller method:
++
+[source, c#]
+----
+[EnableCors("FirstPolicy")]
+public async Task<ActionResult> GetSample()
+        
+public async Task<ActionResult> Modify(SampleDto sampleDto) 
 
-In the same way, you may enable any CORS-policy on any controller method. 
+[EnableCors("SecondPolicy")]        
+public async Task<ActionResult> Delete([Required]long sampleId)
+----
++
+The example above enables CORS for the GetSample and Delete method. 
 
 === Tips
 
@@ -550,3 +590,9 @@ public IActionResult Index() {
     return View();
 }
 ----
+
+* If you set the EnableCors attribute at more than one scope, the order of precedence is:
+
+1. Action
+2. Controller
+3. Global
