@@ -495,11 +495,20 @@ The example above enables CORS for all the controller methods.
 ----
 [EnableCors("FirstPolicy")]
 public async Task<ActionResult> GetEmployee()
+{
+
+}
         
 public async Task<ActionResult> ModifyEmployee(EmployeeDto employeeDto) 
+{
+
+}
 
 [EnableCors("SecondPolicy")]        
 public async Task<ActionResult> Delete([Required]long employeeId)
+{
+
+}
 ----
 +
 The example above enables CORS for the GetEmployee and Delete method. 
@@ -551,11 +560,20 @@ The example above enables CORS for all the controller methods.
 ----
 [EnableCors("FirstPolicy")]
 public async Task<ActionResult> GetSample()
+{
+
+}
         
-public async Task<ActionResult> Modify(SampleDto sampleDto) 
+public async Task<ActionResult> Modify(SampleDto sampleDto)
+{
+
+} 
 
 [EnableCors("SecondPolicy")]        
 public async Task<ActionResult> Delete([Required]long sampleId)
+{
+
+}
 ----
 +
 The example above enables CORS for the GetSample and Delete method. 
