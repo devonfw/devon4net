@@ -414,7 +414,7 @@ For example lets specify the next:
     "ValidateLifetime": true,
     "ClockSkew": 5,
     "Security": {
-      "SecretKey": "...",
+      "SecretKey": "",
       "Certificate": "localhost.pfx",
       "CertificatePassword": "s3cur3Pa$$w0rd",
       "CertificateEncryptionAlgorithm": "RsaSha512"
@@ -422,7 +422,7 @@ For example lets specify the next:
   },
 ----
 
-NOTE: Please replace `...` and include your key encrypted with the algorithm.
+NOTE: Please include your key encrypted with the algorithm in the property `SecretKey`.
 
 This would create the following configuration:
 
