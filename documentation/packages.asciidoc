@@ -284,7 +284,333 @@ public async Task<IActionResult> Booking([FromBody]BookingDto bookingDto)
 ----
 * You can access the swagger UI on `http://localhost:yourport/swagger/index.html`
 
+== Devon4Net.Infrastructure.Logger
+
+Previously known as Devon4Net.Infrastructure.Log(v5.0 or lower)
+
+Logging is an essential component of every application's life cycle.
+A strong logging system becomes a critical component that assists developers to understand and resolve emerging problems. 
+
+NOTE: Starting with .NET 6, logging services no longer register the ILogger type. When using a logger, specify the generic-type alternative ILogger<TCategoryName> or register the `ILogger` with dependency injection (DI).
+
+Default .Net log levels system: 
+
+|=======================
+|*Type*|*Description*
+|Critical| Used to notify failures that force the program to shut down  
+|Error| Used to track major faults that occur during program execution 
+|Warning| Used to report non-critical unexpected behavior
+|Information| Informative messages
+|Debug| Used for debugging messages containing additional information about application operations 
+|Trace| For tracing the code
+|None| If you choose this option the loggin category will not write any messages
+|=======================
+
+=== Configuration
+
+Component setup is done in the `appsettings.{environment}.json` file using the following structure:
+
+[source, json]
+----
+  "Logging": {
+    "UseLogFile": true,
+    "UseSQLiteDb": true,
+    "UseGraylog": true,
+    "UseAOPTrace": false,
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    },
+    "SqliteDatabase": "logs/log.db",
+    "LogFile": "logs/{0}_devonfw.log",
+    "SeqLogServerHost": "http://127.0.0.1:5341",
+    "GrayLog": {
+      "GrayLogHost": "127.0.0.1",
+      "GrayLogPort": "12201",
+      "GrayLogProtocol": "UDP",
+      "UseSecureConnection": true,
+      "UseAsyncLogging": true,
+      "RetryCount": 5,
+      "RetryIntervalMs": 15,
+      "MaxUdpMessageSize": 8192
+    }
+  }
+----
+
+Where:
+
+* `UseLogFile`: When you set this option to true, you can store the log output to a file.  
+* `UseSQLiteDb`: True when you wish to insert the log output into a SQLiteDb
+* `UseGrayLog`: This option enables the use of GrayLog for loggin
+* `UseAOPTrace`: True if you need to trace the attributes of the controllers
+
+WARNING: Don't set to true on production environments, doing so may expose critical information. 
+
+* `LogLevel`: Sets the minimum level of logs to be captured
+* `SqliteDatabase`: path to SQlite database 
+* `LogFile`: path to the log file
+* `SeqLogServerHost`: url for Seq server, you need to install Seq  in order to use it, you can install it clicking https://datalust.co/download[here]
+* `GrayLog`: Some configuration parameters for Graylog service you can install it using https://www.graylog.org/products/open-source#download-open[this link] 
 
 
+=== Setting up in Devon
+
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.Development.json` file.
+
+You can use the methods implemented in Devon4NetLogger class, each method corresponds with a log level in .Net log levels system, for example:
+
+[source, c#]
+----
+Devon4NetLogger.Debug("Executing GetTodo from controller TodoController");
+----
 
 
+=== Setting up in other projects
+
+Install the package on your solution using the Package Manager Console:
+
+[source, console]
+----
+> install-package Devon4Net.Infrastructure.Logger
+----
+
+Add the following line of code to Progam.cs: 
+
+[source, c#]
+----
+builder.Services.SetupLog(builder.Configuration);
+----
+
+Add the default configuration shown in the configuration section.
+
+use the Devon4NetLogger class methods as explanied above:
+
+[source, c#]
+----
+Devon4NetLogger.Information("Executing GetSample from controller SampleController");
+----
+
+
+== Devon4Net.Infrastructure.Cors
+
+Allows CORS settings for the devon4Net application.
+Configuration may be used to configure several domains.
+Web clients (for example, Angular) must follow this rule to avoid performing AJAX calls to another domain. 
+
+Cross-Origin Resource Sharing (CORS) is an HTTP-header-based mechanism that allows a server to specify any origin (domain, scheme, or port) outside of its own from which a browser should allow resources to be loaded. CORS also makes use of a process in which browsers send a "preflight" request to the server hosting the cross-origin resource to ensure that the server will allow the actual request. During that preflight, the browser sends headers indicating the HTTP method as well as headers that will be used in the actual request.
+
+You may find out more by going to https://docs.microsoft.com/es-es/aspnet/core/security/cors?view=aspnetcore-6.0[Microsoft CORS documentation]
+
+=== Configuration
+
+Component setup is done in the `appsettings.{environment}.json` file using the following structure:
+
+[source, json]
+----
+ "Cors": //[], //Empty array allows all origins with the policy "CorsPolicy"
+  [
+    {
+      "CorsPolicy": "CorsPolicy",
+      "Origins": "http://localhost:4200,https://localhost:4200,http://localhost,https://localhost;http://localhost:8085,https://localhost:8085",
+      "Headers": "accept,content-type,origin,x-custom-header,authorization",
+      "Methods": "GET,POST,HEAD,PUT,DELETE",
+      "AllowCredentials": true
+    }
+  ]
+----
+
+You may add as many policies as you like following the JSON format. for example:
+
+[source, json]
+----
+ "Cors": //[], //Empty array allows all origins with the policy "CorsPolicy"
+  [
+    {
+      "CorsPolicy": "FirstPolicy",
+      "Origins": "http://localhost:4200",
+      "Headers": "accept,content-type,origin,x-custom-header,authorization",
+      "Methods": "GET,POST,DELETE",
+      "AllowCredentials": true
+    },
+    {
+      "CorsPolicy": "SecondPolicy",
+      "Origins": "https://localhost:8085",
+      "Headers": "accept,content-type,origin",
+      "Methods": "GET,POST,HEAD,PUT,DELETE",
+      "AllowCredentials": false
+    }
+  ]
+----
+
+In the following table all the configuration fields are described:
+
+|=======================
+|*Property*|*Description*
+|CorsPolicy| Name of the policy
+|Origins| The origin's url that you wish to accept.
+|Headers| Permitted request headers
+|Methods| Allowed Http methods
+|AllowCredentials| Set true to allow the exchange of credentials across origins
+|=======================
+
+=== Setting up in Devon
+
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.Development.json` file.
+
+You can enable CORS per action, per controller, or globally for all Web API controllers in your application:
+
+* Add this annotation in the Controller Class you want to use CORS policy
++
+[source, c#]
+----
+[EnableCors("CorsPolicy")]
+----
++
+As an example, consider this implementation on the EmployeeController class
++
+[source, c#]
+----
+namespace Devon4Net.Application.WebAPI.Implementation.Business.EmployeeManagement.Controllers
+{
+    /// <summary>
+    /// Employees controller
+    /// </summary>
+    [ApiController]
+    [Route("[controller]")]
+    [EnableCors("CorsPolicy")]
+    public class EmployeeController: ControllerBase
+    {
+      .
+      .
+      .
+    }
+}
+----
++
+The example above enables CORS for all the controller methods.
+
+* In the same way, you may enable CORS on any controller method:
++
+[source, c#]
+----
+[EnableCors("FirstPolicy")]
+public async Task<ActionResult> GetEmployee()
+{
+
+}
+        
+public async Task<ActionResult> ModifyEmployee(EmployeeDto employeeDto) 
+{
+
+}
+
+[EnableCors("SecondPolicy")]        
+public async Task<ActionResult> Delete([Required]long employeeId)
+{
+
+}
+----
++
+The example above enables CORS for the GetEmployee and Delete method. 
+
+=== Setting up in other projects
+
+Using the Package Manager Console, install the the next package on your solution: 
+
+[source, console]
+----
+> install-package Devon4Net.Infrastructure.Cors
+----
+
+Add the following lines of code to Progam.cs: 
+
+[source, c#]
+----
+builder.Services.SetupCors(builder.Configuration);
+.
+.
+.
+app.SetupCors();
+----
+
+Add the default configuration shown in the configuration section.
+
+You can enable CORS per action, per controller, or globally for all Web API controllers in your application:
+
+* Add this annotation to the controller class that will be using the CORS policy. 
++
+[source, c#]
+----
+[EnableCors("SamplePolicy")]
+    public class SampleController: ControllerBase
+    {
+      .
+      .
+      .
+    }
+----
++
+Where "SamplePolicy" is the name you give the Policy in the `appsettings.{environment}.json`.
++
+The example above enables CORS for all the controller methods.
+
+* In the same way, you may enable any CORS-policy on any controller method:
++
+[source, c#]
+----
+[EnableCors("FirstPolicy")]
+public async Task<ActionResult> GetSample()
+{
+
+}
+        
+public async Task<ActionResult> Modify(SampleDto sampleDto)
+{
+
+} 
+
+[EnableCors("SecondPolicy")]        
+public async Task<ActionResult> Delete([Required]long sampleId)
+{
+
+}
+----
++
+The example above enables CORS for the GetSample and Delete method. 
+
+=== Tips
+
+* If you specify the CORS in the `appsettings.{environment}.json` configuration file as empty array, a default CORS-policy will be used with all origins enabled:
+
+[source, json]
+----
+ "Cors": [], //Empty array allows all origins with the policy "CorsPolicy" 
+----
+
+WARNING: Only use this policy in development environments
+
+This default CORS-policy is defined as "CorsPolicy," and it should be enabled on the Controller Class as a standard Policy:
+
+[source, c#]
+----
+[EnableCors("CorsPolicy")] 
+public IActionResult Index() {  
+    return View();  
+}  
+----
+
+* if you want to disable the CORS check use the following annotation on any controller method:
+
+[source, c#]
+----
+[DisableCors]
+public IActionResult Index() {
+    return View();
+}
+----
+
+* If you set the EnableCors attribute at more than one scope, the order of precedence is:
+
+1. Action
+2. Controller
+3. Global
