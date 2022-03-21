@@ -414,13 +414,15 @@ For example lets specify the next:
     "ValidateLifetime": true,
     "ClockSkew": 5,
     "Security": {
-      "SecretKey": "2fb0e8d2401e7c39b118800a2e09e985608147e3c02f73794f4c55ef8b462a31c4903545b67aee9b8ab4a7dc25c127971354898c3db6b650d9da29b0d45c902b",
+      "SecretKey": "...",
       "Certificate": "localhost.pfx",
       "CertificatePassword": "s3cur3Pa$$w0rd",
       "CertificateEncryptionAlgorithm": "RsaSha512"
     }
   },
 ----
+
+NOTE: Please replace `...` and include your key encrypted with the algorithm.
 
 This would create the following configuration:
 
