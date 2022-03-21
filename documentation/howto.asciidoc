@@ -405,22 +405,8 @@ If you specify both, the private key will take priority.
 
 For example lets specify the next:
 
-[source, json]
-----
-"JWT": {
-    "Audience": "devon4Net",
-    "Issuer": "devon4Net",
-    "ValidateIssuerSigningKey": true,
-    "ValidateLifetime": true,
-    "ClockSkew": 5,
-    "Security": {
-      "SecretKey": "",
-      "Certificate": "localhost.pfx",
-      "CertificatePassword": "s3cur3Pa$$w0rd",
-      "CertificateEncryptionAlgorithm": "RsaSha512"
-    }
-  },
-----
+.JWT configuration example
+image::images/json_jwt_example.png[]
 
 NOTE: Please include your key encrypted with the algorithm in the property `SecretKey`.
 
@@ -439,7 +425,7 @@ In .Net we can create Claims using the `Claim` class avaiable in `System.Securit
 
 [source, c#]
 ----
-var nameClaim = new Claim(ClaimType.Name, "Pavlo");
+var nameClaim = new Claim(ClaimType.Name, "DevonUser");
 var roleClaim = new Claim(ClaimType.Role, "Administrator");
 ----
 
