@@ -23,7 +23,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.14" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.15" />
       <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
       <PackageReference Include="System.Text.Json" Version="6.0.2" />
     </ItemGroup>

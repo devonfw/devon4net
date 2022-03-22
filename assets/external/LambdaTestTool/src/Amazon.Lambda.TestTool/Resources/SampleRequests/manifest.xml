@@ -1,20 +1,4 @@
 ﻿<requests>
-  <request category="_devon4net">
-    <name>devon4net SNS message count</name>
-    <filename>_devon4net_SNS_Message_Count.json</filename>
-  </request>		
-  <request category="_devon4net">
-    <name>devon4net SQS message count </name>
-    <filename>_devon4net_SQS_Message_Count.json</filename>
-  </request>		
-  <request category="_devon4net">
-    <name>devon4net string to lower</name>
-    <filename>_devon4net_ToLower.json</filename>
-  </request>		
-  <request category="_devon4net">
-    <name>devon4net string to upper</name>
-    <filename>_devon4net_ToUpper.json</filename>
-  </request>	
   <request category="Alexa">
     <name>Alexa End Session</name>
     <filename>alexa-end-session.json</filename>
@@ -58,6 +42,10 @@
   <request category="AWS">
     <name>API Gateway AWS Proxy</name>
     <filename>aws-proxy.json</filename>
+  </request>
+  <request category="AWS">
+    <name>API Gateway V2 HTTP API</name>
+    <filename>http-api-v2-request.json</filename>
   </request>
   <request category="AWS">
     <name>AWS Batch Get Job Request</name>
@@ -210,6 +198,10 @@
   <request category="AWS">
     <name>SQS</name>
     <filename>sqs.json</filename>
+  </request>
+  <request category="AWS">
+    <name>Kafka Event</name>
+    <filename>kafka-event.json</filename>
   </request>
   <request category="Common">
     <name>Hello World</name>

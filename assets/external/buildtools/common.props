@@ -1,0 +1,28 @@
+<Project>
+
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile Condition=" '$(AssemblyOriginatorKeyFile)' == '' ">$(MSBuildThisFileDirectory)local-development.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>false</SignAssembly>
+
+    <Authors>Amazon Web Services</Authors>
+	
+    <OutputType>Library</OutputType>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	
+    <PackageIconUrl>https://sdk-for-net.amazonwebservices.com/images/AWSLogo128x128.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/aws/aws-lambda-dotnet</PackageProjectUrl>
+    <PackageLicenseUrl>http://aws.amazon.com/apache2.0/</PackageLicenseUrl>
+
+
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+	
+  </PropertyGroup>
+</Project>

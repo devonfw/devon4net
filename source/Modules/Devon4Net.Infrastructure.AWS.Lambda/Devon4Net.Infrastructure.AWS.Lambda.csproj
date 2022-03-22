@@ -41,9 +41,9 @@
     <PackageReference Include="Amazon.Lambda.Logging.AspNetCore" Version="3.1.0" />
     <PackageReference Include="Amazon.Lambda.SNSEvents" Version="2.0.0" />
     <PackageReference Include="Amazon.Lambda.SQSEvents" Version="2.1.0" />
-    <PackageReference Include="AWSSDK.Core" Version="3.7.8.6" />
-    <PackageReference Include="AWSSDK.Lambda" Version="3.7.9.4" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
+    <PackageReference Include="AWSSDK.Core" Version="3.7.9" />
+    <PackageReference Include="AWSSDK.Lambda" Version="3.7.10.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />

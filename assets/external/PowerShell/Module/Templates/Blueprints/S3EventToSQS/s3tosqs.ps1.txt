@@ -1,0 +1,38 @@
+# PowerShell script file to be executed as a AWS Lambda function.
+#
+# When executing in Lambda the following variables will be predefined.
+#   $LambdaInput - A PSObject that contains the Lambda function input data.
+#   $LambdaContext - An Amazon.Lambda.Core.ILambdaContext object that contains information about the currently running Lambda environment.
+#
+# The last item in the PowerShell pipeline will be returned as the result of the Lambda function.
+#
+# To include PowerShell modules with your Lambda function, like the AWS.Tools.S3 module, add a "#Requires" statement
+# indicating the module and version. If using an AWS.Tools.* module the AWS.Tools.Common module is also required.
+#
+# The following link contains documentation describing the structure of the S3 event object.
+# https://docs.aws.amazon.com/AmazonS3/latest/dev/notification-content-structure.html
+#
+# This example demonstrates how to process an S3 Event that follows the process:
+# S3 Event -> SQS Queue -> Lambda Function
+
+#Requires -Modules @{ModuleName='AWS.Tools.Common';ModuleVersion='4.1.29.0'}
+#Requires -Modules @{ModuleName='AWS.Tools.S3';ModuleVersion='4.1.29.0'}
+
+# Uncomment to send the input event to CloudWatch Logs
+# Write-Host (ConvertTo-Json -InputObject $LambdaInput -Compress -Depth 5)
+
+foreach ($sqsRecord in $LambdaInput.Records)
+{
+    $sqsRecordBody = ConvertFrom-Json -InputObject $sqsRecord.body
+    foreach ($s3Event in $sqsRecordBody.Records)
+    {
+        $bucket = $s3Event.s3.bucket.name
+        $key = $s3Event.s3.object.key
+
+        Write-Host "Processing event for: bucket = $bucket, key = $key"
+
+        # TODO: Add logic to handle S3 event record, for example
+        $obj = Get-S3Object -Bucket $bucket -Key $key
+        Write-Host "Object $key is $($obj.Size) bytes"
+    }
+}
