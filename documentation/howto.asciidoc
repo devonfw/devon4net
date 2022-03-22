@@ -221,8 +221,8 @@ And also in the `appsettings.Development.json`:
   },
   "Certificates": {
     "ServerCertificate": {
-      "Certificate": "localhost.pfx",
-      "CertificatePassword": "localhost"
+      "Certificate": "",
+      "CertificatePassword": ""
     },
     "ClientCertificate": {
       "DisableClientCertificateCheck": true,
