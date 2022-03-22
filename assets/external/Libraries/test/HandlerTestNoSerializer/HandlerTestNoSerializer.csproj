@@ -1,9 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <OutputPath>../../build/private/test/HandlerTestNoSerializer/$(Configuration)</OutputPath>
-  </PropertyGroup>
-
-</Project>

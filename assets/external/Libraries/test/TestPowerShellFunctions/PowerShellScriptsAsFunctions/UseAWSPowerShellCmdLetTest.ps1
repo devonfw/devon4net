@@ -1,1 +1,0 @@
-Get-AWSCmdletName -Service Lambda
