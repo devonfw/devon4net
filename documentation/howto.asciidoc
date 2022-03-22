@@ -270,6 +270,10 @@ In order to create our own certificate for development purposes we will be using
 
 NOTE: Please refer to the https://www.openssl.org/docs/man3.0/man1/[OpenSSL command documentation] to learn more about the commands used in this guide and how to install the toolkit.
 
+To run commands for OpenSSL, you will need to add OpenSSL to your environment, variables, or open a OpenSSL command prompt.
+
+NOTE: The working directory (directory where all files are created and readed) is the console actual path. Use `cd` command to go to your desired directory.
+
 ==== Step 1 - Create a Certificate Authority (CA)
 First we will need to create a Certificate Authority to sign the certificate. For that, we will run the following command which will create the certificate `RootCA.pem` and the corresponding private key `RootCA.key`. 
 
@@ -380,4 +384,182 @@ Here are some interesting references to continue learning about this topic:
 * https://www.openssl.org/docs/man1.0.2/man1/x509.html[`x509` command documentation - OpenSSL Docs]
 
 * https://www.openssl.org/docs/man3.0/man1/pkcs12.html[`pkcs12` command documentation - OpenSSL Docs]
+
+== How to: Setup JWT
+
+As you may have learned at this point you can set up JWT component in a number of different ways according your needs. For that you'll need to configure your `appsettings.json`.
+
+NOTE: Please read documentation about JWT component first to learn what you need to do to use it in your project.
+
+Assuming that you already have the JWT component correctly installed and available in our project let's start thinking about how we can put it to good use.
+
+=== Configuration
+
+We can configure it to work either with a secret key or a certificate. 
+
+If you choose certificate, you will need to add a certificate to your project, and specify the password and the encryptionAlgorithm used. You can learn how to do it following the tutorial included in this document.
+
+If you select secret key, you must encrypt a password using the chosen algorithm. This can be done easily using web generators or libraries such as `OpenSSL`.
+
+If you specify both, the private key will take priority.
+
+For example lets specify the next:
+
+.JWT configuration example
+image::images/json_jwt_example.png[]
+
+NOTE: Please include your key encrypted with the algorithm in the property `SecretKey`.
+
+This would create the following configuration:
+
+* A token with audience and issuer equal to `devon4net`.
+* It will expire in 5 minutes 
+* It will validate the signature and if the token is valid in time
+* It will use the secret key encrypted with SHA 512
+
+=== Claims
+
+Json Web Tokens work with claims. A Claim is a piece of information about a subject. It is similar to a key-value pair, where the value will be the claim type, such as the name or the role of an authenticated user. This claims are stored inside a JSON and then encrypted forming the JWT. 
+
+In .Net we can create Claims using the `Claim` class avaiable in `System.Security.Claims`. It has many constructors but the most important is the following one, where you can create a Claim based on two strings.
+
+[source, c#]
+----
+var nameClaim = new Claim(ClaimType.Name, "DevonUser");
+var roleClaim = new Claim(ClaimType.Role, "Administrator");
+----
+
+You can choose between a variety of claim types thanks to the `ClaimType` class. As you can see in the previous piece of code, in this case we have asserted a name and a role in two claims. This could be for a user, for example.
+
+=== JwtHandler
+
+In JWT component we have a handler that is cofigured on the installation of the package and can be injected for use in any wanted service. This is the `JwtHandler`. This handler will allow us to manipulate, encrypt and extract information from Json Web Tokens.
+
+|====
+|*Return Type* |*Method Name* |*Parameters* |*Description*
+|string |CreateClientToken |List<Claim> clientClaims |Returns the encrypted jwt given a list of claims. 
+|List<Claim> |GetUserClaims |string jwtToken |Returns a list of claims given an encrypted token.
+|string |GetClaimValue |List<Claim> claimList, string claim |Returns the value of a claim given a list of claims and the type of the claim to recover formatted as a string.
+|string |GetClaimValue |string token, string claim |Returns the value of a claim given an encrypted token and the type of the claim to recover formatted as a string.
+|SecurityKey |GetIssuerSigningKey |- |Returns the issuer's signing key.
+|====
+
+=== Video
+
+.How to set up jwt 
+video::videos/howto_jwt_1.mp4[]
+
+=== References
+Here are some interesting references to continue learning about this topic:
+
+* https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-token-claims[JSON Web Token Claims - auth0]
+
+* https://docs.microsoft.com/es-es/dotnet/api/system.security.claims.claim?view=net-6.0
+
+* https://docs.microsoft.com/es-es/dotnet/api/system.security.claims.claimtypes?view=net-6.0 
+
+
+== How to: Setup security and roles in API controllers
+
+In this part of the document, you will learn to use the different attributes over the controller methods that manage end-points. This attributes are provided by .Net core libraries and can be used to specify the behavior of Web API controllers and action methods.
+
+=== Attributtes
+You can use a large number of attributes, some are optional, for example to define the route of end-points `[Route("/GetSomething")]` and other are required, like `[ApiController]` to indicate that the class is an API controller.
+
+NOTE: We will be explaining the security related attributes. Those that are specific to the controllers will not be mentioned.
+
+==== [HttpOptions]
+
+This attribute identifies an API controller end-point that support the HTTP OPTIONS request. The HTTP OPTIONS method is used to get information about the communication options available for a specific URL or server.
+
+NOTE: Please do your research on this method if you are not familiar with it.
+
+==== [AllowAnonymous]
+
+`AllowAnonymous` allows any type of user (authorized or unauthorized) to access the information provided by the end-point. This attribute can be specified for controller class or for individual end-points. Specifying it for individual end-points will override the controller attribute. An example could be:
+
+[source, c#]
+----
+[HttpGet]
+[AllowAnonymous]
+[Route("/v1/getsomething")]
+public async Task<IActionResult> GetSomething()
+{
+  ...
+}
+----
+ 
+==== [Authorize]
+
+`Authorize` only enables you to restrict access to requests with an authorization specified in the header. This attribute can be specified for controller class or for individual end-points. Specifying it for individual end-points will override the controller attribute. You can specify different properties to the attribute:
+
+|====
+|*Property* |*Type* |*Description* |*Example*
+|`AuthenticationSchemes` |List of strings separated by comma |List of schemes from which user info is constructed |`[Authorize(AuthenticationSchemes = "Bearer")]`
+|`Policy` |String |Policy name that determines access to the resource |`[Authorize(Policy = "MyPolicy")]`
+|`Roles` |List of strings separated by comma |List of roles allowed to access |`[Authorize(Roles = "User")]`
+|====
+
+For example, lets create a controller that is authorized only for users with role 'Admin' and 'Tester' provided in 'Bearer' type authentication:
+
+[source, c#]
+----
+[ApiController]
+[Route("[controller]")]
+[Authorize(AuthenticationSchemes = "Berarer", Roles = "Admin,Tester")]
+public class DebugController: ControllerBase
+{
+  ...
+}
+----
+
+==== [EnableCors] & [DisableCors]
+
+NOTE: Please refer to the CORS component documentation to learn everything about CORS.
+
+You can enable a Cors policy for controller or individual end-points. Specifying it for individual end-points will override the controller attribute. You will need to specify the policy you want to enable. This policy will need to be described in the `appsettings.{environment}.json`.
+
+For example, lets create a CORS policy named 'CorsPolicy' and enable it for a controller, and disable it for a method:
+
+[source, json]
+----
+"Cors": //[], //Empty array allows all origins with the policy "CorsPolicy"
+[
+  {
+    "CorsPolicy": "CorsPolicy",
+    "Origins": "http://localhost:4200,https://localhost:4200,http://localhost,https://localhost;http://localhost:8085,https://localhost:8085",
+    "Headers": "accept,content-type,origin,x-custom-header,authorization",
+    "Methods": "GET,POST,HEAD,PUT,DELETE",
+    "AllowCredentials": true
+  }
+],
+----
+
+[source, c#]
+----
+[ApiController]
+[Route("[controller]")]
+[EnableCors("CorsPolicy")]
+public class MyController: ControllerBase
+{
+  ...
+  [HttpGet]
+  [Route("/v1/getsomething")]
+  [DisableCors]
+  public async Task<IActionResult> GetSomething()
+  {
+    ...
+  }
+  ...
+}
+----
+
+=== References
+Here are some interesting references to continue learning about this topic:
+
+* https://docs.microsoft.com/en-us/aspnet/core/security/authorization/introduction?view=aspnetcore-6.0[Introduction to authorization in ASP.NET Core - Microsoft Docs]
+
+* https://docs.microsoft.com/es-ES/dotnet/api/microsoft.aspnetcore.authorization?view=aspnetcore-6.0[Authorization Namespace - Microsoft Docs]
+
+* https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS[HTTP OPTIONS - MDN Web Docs]
 
