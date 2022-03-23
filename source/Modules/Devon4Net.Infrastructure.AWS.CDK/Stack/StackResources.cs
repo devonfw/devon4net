@@ -148,7 +148,8 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 AutoScalingGroups,
                 AsgCapacityProviders,
                 PolicyDocuments,
-                NetworkTargetGroups
+                NetworkTargetGroups,
+                SnsTopics
             };
 
             return Array.Find(l, x => x is Dictionary<string, T>) as Dictionary<string, T>;
