@@ -26,7 +26,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
             }));
         }
 
-        public IService CreateEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount, bool useDistinctInstances, string placementStrategy)
+        public IService CreateEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount, bool useDistinctInstances, string placementStrategy) //NOSONAR number of params
         {
             var result = CreateEc2Service(new Ec2ServiceEntity
             {
@@ -73,7 +73,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
             if (entity.UseDistinctInstances)
             {
                 result.AddPlacementConstraints(new PlacementConstraint[] { PlacementConstraint.DistinctInstances() });
-            };
+            }
 
             SetPlacementStrategy(result, entity.PlacementStrategy);
 
