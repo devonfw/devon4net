@@ -64,7 +64,7 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
                 var rd = new Random();
                 var ticks = DateTime.UtcNow.Ticks + rd.NextInt64();
                 using var rng = RandomNumberGenerator.Create();
-                
+
                 return Convert.ToBase64String(GetHashCodeFromString(ticks.ToString(), JwtOptions.Security.RefreshTokenEncryptionAlgorithm ?? SecurityAlgorithms.RsaSha512));
             }
             catch (Exception ex)
