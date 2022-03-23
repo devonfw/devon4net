@@ -7,5 +7,6 @@
         public string EnvironmentName { get; set; }
         public string AwsAccount { get; set; }
         public string AwsRegion { get; set; }
+        public bool GenerateBootstrapVersionRule { get; set; }
     }
 }

@@ -21,9 +21,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
             return HandlerResources.AwsCdkEcsHandler.CreateCapacityProviderStrategy(capacityProvider, capWeigth, capBase);
         }
 
-        public IService AddElasticContainerEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount)
+        public IService AddElasticContainerEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount, bool useDistinctInstances, string placementStrategy)
         {
-            return HandlerResources.AwsCdkEcsHandler.CreateEc2Service(id, serviceName, cluster, taskDefinition, healthCheckGracePeriod, capacityProviderStrategies, desiredCount);
+            return HandlerResources.AwsCdkEcsHandler.CreateEc2Service(id, serviceName, cluster, taskDefinition, healthCheckGracePeriod, capacityProviderStrategies, desiredCount, useDistinctInstances, placementStrategy);
         }
 
         public ILoadBalancerTargetProps AddEc2ServiceToNetworkTargetGroup(IService service, INetworkTargetGroup targetGroup, string containerName, double containerPort)
@@ -40,7 +40,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
         {
             if (string.IsNullOrEmpty(taskDefinitionId) || string.IsNullOrEmpty(taskDefinitionFamily))
             {
-                throw new ArgumentException("Plase provide a valid taskDefinitionId");
+                throw new ArgumentException("Please provide a valid taskDefinitionId");
             }
             return HandlerResources.AwsCdkEcsHandler.CreateEc2TaskDefinition(taskDefinitionId, taskDefinitionFamily, volumesOptions, taskRole);
         }

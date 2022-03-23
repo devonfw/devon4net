@@ -1,4 +1,5 @@
-﻿using Amazon.CDK.AWS.RDS;
+﻿using Amazon.CDK.AWS.EC2;
+using Amazon.CDK.AWS.RDS;
 using System.Collections.Generic;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Options.Resources
@@ -34,5 +35,6 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Options.Resources
         public int BackupRetentionPeriod { get; set; }
         public StorageType StorageType { get; set; }
         public string DatabaseEngineVersion { get; set; }
+        public InstanceClass InstanceType { get; set; }
     }
 }
