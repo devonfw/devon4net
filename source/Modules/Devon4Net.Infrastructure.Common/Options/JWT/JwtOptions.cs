@@ -9,5 +9,8 @@
         public bool ValidateLifetime { get; set; }
         public int ClockSkew { get; set; }
         public Security Security { get; set; }
+        public bool RequireSignedTokens { get; set; }
+        public bool RequireExpirationTime { get; set; }
+        public bool RequireAudience { get; set; }
     }
 }
