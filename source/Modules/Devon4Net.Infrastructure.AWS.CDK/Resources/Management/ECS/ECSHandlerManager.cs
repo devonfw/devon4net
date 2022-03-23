@@ -21,7 +21,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
             return HandlerResources.AwsCdkEcsHandler.CreateCapacityProviderStrategy(capacityProvider, capWeigth, capBase);
         }
 
-        public IService AddElasticContainerEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount, bool useDistinctInstances, string placementStrategy)
+        public IService AddElasticContainerEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount, bool useDistinctInstances, string placementStrategy) //NOSONAR number of params
         {
             return HandlerResources.AwsCdkEcsHandler.CreateEc2Service(id, serviceName, cluster, taskDefinition, healthCheckGracePeriod, capacityProviderStrategies, desiredCount, useDistinctInstances, placementStrategy);
         }
