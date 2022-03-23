@@ -15,5 +15,8 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Options.Resources
         public int? HealthCheckGracePeriod { get; set; }
         public List<CapacityProviderStrategyItemOptions> CapacityProviderStrategy { get; set; }
         public int? DesiredCount { get; set; }
+        public bool UseDistinctInstances { get; set; }
+        public string PlacementStrategy { get; set; }
+
     }
 }

@@ -26,7 +26,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
             }));
         }
 
-        public IService CreateEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount)
+        public IService CreateEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount, bool useDistinctInstances, string placementStrategy)
         {
             var result = CreateEc2Service(new Ec2ServiceEntity
             {
@@ -36,7 +36,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
                 TaskDefinition = taskDefinition,
                 HealthCheckGracePeriod = healthCheckGracePeriod,
                 CapacityProviderStrategies = capacityProviderStrategies,
-                DesiredCount = desiredCount
+                DesiredCount = desiredCount,
+                UseDistinctInstances = useDistinctInstances,
+                PlacementStrategy = placementStrategy
             });
 
             TagHandler.AddCustomTag("AmazonECSManaged", "true", result);
@@ -67,6 +69,13 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
                 CapacityProviderStrategies = entity.CapacityProviderStrategies?.Any() == true ? entity.CapacityProviderStrategies.ToArray() : default,
                 DesiredCount = entity.DesiredCount
             });
+
+            if (entity.UseDistinctInstances)
+            {
+                result.AddPlacementConstraints(new PlacementConstraint[] { PlacementConstraint.DistinctInstances() });
+            };
+
+            SetPlacementStrategy(result, entity.PlacementStrategy);
 
             TagHandler.LogTag($"{ApplicationName}{EnvironmentName}{entity.ServiceName}Ec2Service", result);
             return result;
@@ -187,5 +196,28 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
                 }
             }
         }
+
+        #region Private methods
+        private void SetPlacementStrategy(Ec2Service entity, string strategy)
+        {
+            switch (strategy.ToLower())
+            {
+                case "binpackmemory":
+                    entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.PackedByMemory() });
+                    break;
+                case "binpackcpu":
+                    entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.PackedByCpu() });
+                    break;
+                case "random":
+                    entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.Randomly() });
+                    break;
+                case "spread":
+                    entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.SpreadAcrossInstances() });
+                    break;
+                default:
+                    throw new ArgumentException("Please provide one of the following valid Placement Strategies: binpackmemory, binpackcpu, random, spread");
+            }
+        }
+        #endregion
     }
 }
