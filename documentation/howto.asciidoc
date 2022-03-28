@@ -399,22 +399,21 @@ We can configure it to work either with a secret key or a certificate.
 
 If you choose certificate, you will need to add a certificate to your project, and specify the password and the encryptionAlgorithm used. You can learn how to do it following the tutorial included in this document.
 
-If you select secret key, you must encrypt a password using the chosen algorithm. This can be done easily using web generators or libraries such as `OpenSSL`.
-
-If you specify both, the private key will take priority.
+If you specify both, the secret key will take priority.
 
 For example lets specify the next:
 
 .JWT configuration example
 image::images/json_jwt_example.png[]
 
-NOTE: Please include your key encrypted with the algorithm in the property `SecretKey`.
+NOTE: The property `SecretKey` will be encrypted automatically using the algorithm specified.
 
 This would create the following configuration:
 
 * A token with audience and issuer equal to `devon4net`.
 * It will expire in 5 minutes 
 * It will validate the signature and if the token is valid in time
+* It will require tokens that are signed, and have both expiration time and audience specified.
 * It will use the secret key encrypted with SHA 512
 
 === Claims
@@ -446,17 +445,15 @@ In JWT component we have a handler that is cofigured on the installation of the 
 
 === Video
 
-.How to set up jwt 
-video::videos/howto_jwt_1.mp4[]
 
 === References
 Here are some interesting references to continue learning about this topic:
 
 * https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-token-claims[JSON Web Token Claims - auth0]
 
-* https://docs.microsoft.com/es-es/dotnet/api/system.security.claims.claim?view=net-6.0
+* https://docs.microsoft.com/es-es/dotnet/api/system.security.claims.claim?view=net-6.0[Claim Class - Microsoft Docs]
 
-* https://docs.microsoft.com/es-es/dotnet/api/system.security.claims.claimtypes?view=net-6.0 
+* https://docs.microsoft.com/es-es/dotnet/api/system.security.claims.claimtypes?view=net-6.0[ClaimTypes Class - Microsoft Docs]
 
 
 == How to: Setup security and roles in API controllers

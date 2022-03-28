@@ -776,17 +776,19 @@ Component configuration is made on file `appsettings.{environment}.json` as foll
 "JWT": {
     "Audience": "devon4Net",
     "Issuer": "devon4Net",
-    "TokenExpirationTime": 60,
     "ValidateIssuerSigningKey": true,
     "ValidateLifetime": true,
+    "RequireSignedTokens": true,
+    "RequireExpirationTime": true,
+    "RequireAudience": true,
     "ClockSkew": 5,
     "Security": {
-      "SecretKeyLengthAlgorithm": "",
       "SecretKeyEncryptionAlgorithm": "",
       "SecretKey": "",
       "Certificate": "",
       "CertificatePassword": "",
-      "CertificateEncryptionAlgorithm": ""
+      "CertificateEncryptionAlgorithm": "",
+      "RefreshTokenEncryptionAlgorithm": ""
     }
   },
 ----
@@ -797,20 +799,51 @@ In the following list all the configuration fields are described:
 * `Issuer`: Represents a valid issuer that will be used to check against the token's issuer.
 //* `TokenExpirationTime`: -------
 * `ValidateIssuerSigningKey`: Boolean that controls if validation of the SecurityKey that signed the securityToken is called.
-* `ValidateLifetime`: Boolean to control if the lifetime will be validated during token validation. 
+* `ValidateLifetime`: Boolean to control if the lifetime will be validated during token validation.
+* `RequireSignedTokens`: Boolean that indicates wether a security token has to be signed oe not.
+* `RequireExpirationTime`: Boolean that tells the handler if tokens need an expiration time specified or not.
+* `RequireAudience`: Boolean that indicates tokens need to have an audience specified to be valid or not.
 * `ClockSkew`: Expiration time in minutes.
 * `Security`: Certificate properties will be found in this part.
-//** `SecretKeyLengthAlgorithm`: -----
-//** `SecretKeyEncryptionAlgorithm`:------
-** `SecretKey`: Private key used to sign with the certificates
+** `SecretKeyEncryptionAlgorithm`: Algorithm used to encrypt the secret key. If no argument is specified, `HmacSha512` is used.
+** `SecretKey`: Private key used to sign with the certificates. This key will be encrypted and hashed using the specified algorithm.
 ** `Certificate`: Name of certificate file or its path (if it is not in the same directory). If it doesn't exist an exception will be raised.
 ** `CertificatePassword`: Password for the certificate selected.
-** `CertificateEncryptionAlgorithm`: Algorithm used to encrypt the certificate. If no argument is specified, `RsaSha512` is used.
+** `CertificateEncryptionAlgorithm`: Algorithm used to encrypt the certificate. If no argument is specified, `HmacSha512` is used.
+** `RefreshTokenEncryptionAlgorithm`: Algorithm used to encrypt the refresh token. If no argument is specified, `HmacSha512` is used.
+
+There are two ways of using and creating tokens:
+
+* Secret key: A key to encrypt and decrypt the tokens is specified. This key will be encrypted using the specified algorithm.
+* Certificates: A certificate is used to manage token encryption and decryption.
+
+NOTE: Because the secret key takes precedence over the other option, JWT with the secret key will be used if both configurations are supplied.
 
 ==== Encryption algorithms
 
-The supported algorithms are the following:
+The supported and tested algorithms are the following:
 
+|=======================
+|*Algorithm* |*Value*
+|`HmacSha256` | HS256
+|`HmacSha384` | HS384
+|`HmacSha512` | HS512
+|`HmacSha256Signature` | http://www.w3.org/2001/04/xmldsig-more#hmac-sha256
+|`HmacSha384Signature` | http://www.w3.org/2001/04/xmldsig-more#hmac-sha384
+|`HmacSha512Signature` | http://www.w3.org/2001/04/xmldsig-more#hmac-sha512
+|=======================
+
+For the refresh token encryption algorithm you will be able to use any algoritm from the previous table and the following table:
+
+|=======================
+|*Algorithm* |*Value*
+|`MD5` | MD5
+|`Sha` | SHA
+|=======================
+
+NOTE: You will need to specify the name of the algorithm (shown in 'algorithm' column) when configuring the component.
+
+////
 *RSA*
 |=======================
 |*Algorithm*|*Value*
@@ -824,7 +857,6 @@ The supported algorithms are the following:
 |`RsaPKCS1` | RSA1_5
 |`RsaOaepKeyWrap` | http://www.w3.org/2001/04/xmlenc#rsa-oaep
 |=======================
-
 
 *ECDsa*
 |=======================
@@ -863,7 +895,7 @@ The supported algorithms are the following:
 |`HmacSha384Signature` | http://www.w3.org/2001/04/xmldsig-more#hmac-sha384
 |`HmacSha512Signature` | http://www.w3.org/2001/04/xmldsig-more#hmac-sha512
 |=======================
-
+////
 
 NOTE: Please check https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/Supported-Algorithms[Windows Documentation] to get the latest updates on supported encryption algorithms.
 
@@ -968,9 +1000,11 @@ Now we will configure the JWT component in `appsettings.{environment}.json` as s
 "JWT": {
     "Audience": "devon4Net",
     "Issuer": "devon4Net",
-    "TokenExpirationTime": 60,
     "ValidateIssuerSigningKey": true,
     "ValidateLifetime": true,
+    "RequireSignedTokens": true,
+    "RequireExpirationTime": true,
+    "RequireAudience": true,
     "ClockSkew": 5,
     "Security": {
       "SecretKeyLengthAlgorithm": "",
@@ -978,7 +1012,8 @@ Now we will configure the JWT component in `appsettings.{environment}.json` as s
       "SecretKey": "",
       "Certificate": "localhost.pfx",
       "CertificatePassword": "12345",
-      "CertificateEncryptionAlgorithm": "RS256"
+      "CertificateEncryptionAlgorithm": "HmacSha512",
+      "RefreshTokenEncryptionAlgorithm": "Sha"
     }
   },
 ----
@@ -1048,3 +1083,6 @@ Reading the code of this controller you have to take in mind a few things:
 * https://docs.microsoft.com/en-us/dotnet/api/microsoft.identitymodel.tokens.tokenvalidationparameters?view=azure-dotnet[TokenValidationParameterClass - Microsoft Docs]
 
 * https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/attributes/[Attributtes in C# - Microsoft Docs]
+
+* https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/Supported-Algorithms[Algorithms supported]
+
