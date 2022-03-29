@@ -105,13 +105,17 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
             {
                 claimsPrincipal = handler.ValidateToken(jwtToken, new TokenValidationParameters
                 {
-                    ValidAudience = JwtOptions.Audience,
-                    ValidIssuer = JwtOptions.Issuer,
+                    ValidateIssuer = JwtOptions.ValidateIssuer,
+                    ValidateAudience = JwtOptions.RequireAudience,
+                    ValidateIssuerSigningKey = JwtOptions.ValidateIssuerSigningKey,
+                    ValidateLifetime = JwtOptions.ValidateLifetime,
                     RequireSignedTokens = JwtOptions.RequireSignedTokens,
                     RequireExpirationTime = JwtOptions.RequireExpirationTime,
                     RequireAudience = JwtOptions.RequireAudience,
                     TokenDecryptionKey = SecurityKey,
-                    IssuerSigningKey = SecurityKey
+                    IssuerSigningKey = SecurityKey,
+                    ValidAudience = JwtOptions.Audience,
+                    ValidIssuer = JwtOptions.Issuer
                 }, out securityToken);
 
                 return true;
@@ -193,7 +197,7 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
         {
             try
             {
-                var securityAlgorithm = StaticConstsHelper.GetValue(typeof(SecurityAlgorithms), encryptionAlgorithm);
+                var securityAlgorithm = StaticConstsHelper.GetValue(typeof(SecurityAlgorithms), string.IsNullOrWhiteSpace(encryptionAlgorithm) ? AuthConst.DefaultAlgorithm : encryptionAlgorithm);
                 return securityAlgorithm ?? SecurityAlgorithms.RsaSha512;
             }
             catch (Exception ex)

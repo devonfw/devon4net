@@ -30,11 +30,11 @@ namespace Devon4Net.Application.WebAPI.Configuration
                     options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
+                        ValidateIssuer = jwtOptions.ValidateIssuer,
+                        ValidateAudience = jwtOptions.RequireAudience,
                         ValidateIssuerSigningKey = jwtOptions.ValidateIssuerSigningKey,
                         ValidateLifetime = jwtOptions.ValidateLifetime,
-                        RequireSignedTokens = true,
+                        RequireSignedTokens = jwtOptions.RequireSignedTokens,
                         IssuerSigningKey = jwtHandler.GetIssuerSigningKey(),
                         TokenDecryptionKey = jwtHandler.GetIssuerSigningKey(),
                         ValidAudience = jwtOptions.Audience,
