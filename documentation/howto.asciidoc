@@ -560,3 +560,104 @@ Here are some interesting references to continue learning about this topic:
 
 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS[HTTP OPTIONS - MDN Web Docs]
 
+== How to: Avoid cross-site request forgery (XSRF or CSRF) attacks
+Every time you authenticate into a web app, your browser becomes trusted for an amount of time to that specific site. This way you can use the application without having to authenticate yourself each time you want to do an operation that requires authorization. This is achieved normally by providing authentication tokens that last a determinate amount of time. 
+
+Your browser includes in each request a token issued by the app at the moment of authentication, the app verifies it and then sends back the response. A cross-site request forgery is a type of attack where a malicious site can use your authentication token to issue requests through your browser. 
+
+This is done, without you even noticing and it works because browser requests automatically include all session cookies. So if the request is done from another site with all these cookies (including your authentication cookie) it wont be different from you actually doing the request.
+
+For example, you enter the site `vulnerable-bank.com` and forget to log out after doing all of your operations. Now you are surfing the net and enter the site `malicious-site.com` this site has a hidden script that performs the following request:
+
+[source]
+----
+POST /transaction HTTP/1.1
+Host: vulnerable-bank.com
+Content-Type: application/x-www-form-urlencoded
+Cookie: SessionID = 1n4j0sd7uohpf13j98nh570923c48u 
+
+account={MaliciousAccount}
+amount=1000
+----
+
+As all the session cookies are included in the request, the site will be allowed to process the transaction without you even noticing.
+
+The most common way to prevent this vulnerability is by making use of anti forgery tokens. This token is placed in the headers and is issued with the request. The malicious-site cannot 
+
+=== Configuration
+To configure Anti-Forgery protection in a devon4net project, you must set `UseXsrf` property in `devonfw` configuration section to true. You will find this section in `appsettings.json`:
+
+[source, json]
+----
+{
+  "devonfw": {
+    "UseXsrf": true
+  }
+}
+----
+
+Setting this property to true will allow you to use https://docs.microsoft.com/es-es/dotnet/api/microsoft.aspnetcore.antiforgery.iantiforgery?view=aspnetcore-6.0[`IAntiforgery`] interface through the service provider and dependency injection in your project.
+
+=== Use
+In the devon4net Web API Templaate you will be able to find an example of controller using this protection. You can inject the `IAntiforgery` interface in the controller constructor like so:
+
+[source, c#]
+----
+private readonly IAntiforgery _antiForgeryToken;
+
+public AntiForgeryTokenController(IAntiforgery antiForgeryToken)
+{
+    _antiForgeryToken = antiForgeryToken;
+}
+----
+
+Now you can access its methods to manage this special token. For creating one we can use `GetAndStoreTokens(HttpContext httpContext)` method available on `IAntiforgery`, and store it in the cookies as shown below:
+
+[source, c#]
+----
+var token = _antiForgeryToken.GetAndStoreTokens(HttpContext);
+HttpContext.Response.Cookies.Append(CustomMiddlewareHeaderTypeConst.XsrfToken, token.RequestToken);
+----
+
+NOTE: Visit the documentation about this interface to find more information about `IAntiforgery` methods.
+
+This will be done through a GET request. Now we can vaklidate this token in a controller thanks to the attribute `[ValidateAntiForgeryToken]`:
+
+[source, c#]
+----
+[HttpGet]
+[Route("/v1/antiforgeryToken/hellosecured")]
+[ValidateAntiForgeryToken]
+public ActionResult HelloSecured()
+{
+    return Ok("You have reached a secured AntiForgeryToken method!");
+}
+----
+
+=== Testing
+We will be using https://www.postman.com/[Postman] to test the use of the controller, as you can see in the next figure, if we try to access the end-point protected by the antiforgery token validation we get an error:
+
+.HelloSecured end-point error
+image::images/anti_forgery_hellosecure_error.png[]
+
+That is beacuse no valid token in `XSRF-TOKEN` header is specified. Lets access the end-point we created to provide an XSRF token:
+
+.Get XSRF token end-point
+image::images/anti_forgery_hellosecure_error.png[]
+
+Now that we have the token we can specify it in the request header as shown in the next figure:
+
+.HelloSecured end-point access
+image::images/anti_forgery_hellosecure_xsrf.png[]
+
+=== References
+Here are some interesting references to continue learning about this topic:
+
+* https://owasp.org/www-community/attacks/csrf[Cross Site Request Forgery (CSRF) - Owasp]
+
+* https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html[Cross Site Request Forgery Prevention Cheat Sheet - Owasp]
+
+* https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery?view=aspnetcore-6.0[Prevent Cross-Site Request Forgery (XSRF/CSRF) attacks in ASP.NET Core - Microsoft Docs]
+
+*  https://docs.microsoft.com/es-es/dotnet/api/microsoft.aspnetcore.antiforgery.iantiforgery?view=aspnetcore-6.0[IAntiforgery Interface - Microsoft Docs]
+
