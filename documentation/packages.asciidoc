@@ -1086,3 +1086,119 @@ Reading the code of this controller you have to take in mind a few things:
 
 * https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/Supported-Algorithms[Algorithms supported]
 
+== Devon4Net.Infrastructure.LiteDb
+https://www.litedb.org/[LiteDb] is an open-source NoSQL embedded database for .NET. Is a document store inspired by MongoDB database. It stores data in documents, which are JSON objects containing key-value pairs. It uses BSON which is a Binary representation of JSON with additional type information.
+
+=== Configuration
+The component configuration can be done in `appsettings.{environment}.json` with the following section:
+
+[source, json]
+----
+"LiteDb": {
+  "EnableLiteDb": true,
+  "DatabaseLocation": "devon4net.db"
+}
+----
+* `EnableLiteDb`: Boolean to activate the use of LiteDb.
+* `DatabaseLocation`: Relative path of the file containing all the documents.
+
+=== Setting up in devon
+For setting it up using the Devon4Net WebApi template just configure it in the `appsettings.Development.json`.
+
+Then you will need to inject the repositories. For that go to `Devon4Net.Application.WebAPI.Implementation.Configuration.DevonConfiguration` and add the folowing lines in `SetupDependencyInjection` method:
+
+[source, c#]
+----
+using Devon4Net.Infrastructure.LiteDb.Repository;
+.
+.
+.
+services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+---- 
+
+Now you can use the `IRepository<T>` by injecting it wherever you want to use it. `T` will be the entity you will be working with in the repository.
+
+[source, c#]
+----
+private readonly IRepository<Todo> _todoRepository;
+
+public TodoController(IRepository<Todo> todoRepository)
+{
+    _todoRepository = todoRepository;
+}
+----
+
+
+=== Setting up in other projects
+For setting it up in other projects install it running the followin command in the Package Manager Console, or using the Package Manager in Visual Studio:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.LiteDb
+----
+
+Now set the configuration in the `appsettings.{enviroment}.json`:
+[source, json]
+----
+"LiteDb": {
+  "EnableLiteDb": true,
+  "DatabaseLocation": "devon_database.db"
+}
+----
+
+NOTE: Remember to set `EnableLiteDb` to `true`.
+
+Navigate to your `Program.cs` file and add the following line to configure the component:
+
+[source, c#]
+----
+using Devon4Net.Application.WebAPI.Configuration;
+.
+.
+.
+builder.Services.SetupLiteDb(builder.Configuration);
+----
+
+You will need also to add the repositories you will be using to your services, either by injecting the generic:
+
+[source, c#]
+----
+builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+----
+
+Or by choosing to inject them one by one:
+
+[source, c#]
+----
+builder.Services.AddTransient<IRepository<WeatherForecast>, Repository<WeatherForecast>>();
+----
+
+Now you will be able to use the repositories in your class using dependency injection, for example:
+
+[source, c#]
+----
+[ApiController]
+[Route("[controller]")]
+public class WeatherForecastController : ControllerBase
+{
+    private readonly IRepository<WeatherForecast> _weatherForecastRepository;
+
+    public WeatherForecastController(IRepository<WeatherForecast> weatherForecastRepository)
+    {
+        _weatherForecastRepository = weatherForecastRepository;
+    }
+
+    [HttpGet]
+    public IEnumerable<WeatherForecast> Get()
+    {
+        return _weatherForecastRepository.Get();
+    }
+
+    [HttpPost]
+    public IEnumerable<WeatherForecast> PostAndGetAll(WeatherForecast weatherForecast)
+    {
+        _weatherForecastRepository.Create(weatherForecast);
+        return _weatherForecastRepository.Get();
+    }
+}
+----
