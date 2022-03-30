@@ -643,7 +643,7 @@ image::images/anti_forgery_hellosecure_error.png[]
 That is beacuse no valid token in `XSRF-TOKEN` header is specified. Lets access the end-point we created to provide an XSRF token:
 
 .Get XSRF token end-point
-image::images/anti_forgery_hellosecure_error.png[]
+image::images/anti_forgery_token.png[]
 
 Now that we have the token we can specify it in the request header as shown in the next figure:
 
@@ -661,3 +661,117 @@ Here are some interesting references to continue learning about this topic:
 
 *  https://docs.microsoft.com/es-es/dotnet/api/microsoft.aspnetcore.antiforgery.iantiforgery?view=aspnetcore-6.0[IAntiforgery Interface - Microsoft Docs]
 
+== How to: Import a database
+In this part of the document you will learn how to easily import a database to your devon4net project or any .Net project. This process is known by a variety of different names: scaffolding, database first, reverse engineering... But they all refer to the process of creating entity models and/or database context automatically based on a database schema.
+
+=== Prerequisites
+You can import a database in your favourite type of schema, but for this example we will be using SQL Server and Visual Studio 2022.
+
+NOTE: Ensure that you have a connection ready to your database and a correct installation of Visual Studio 2022.
+
+For this example we used https://docs.microsoft.com/es-es/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15[Microsoft SQL Server Management Studio] to create our database and provide us with a local database connection.
+
+=== NuGet packages installation
+Before starting with the scaffolding you will need to install the following NuGet packages in your destination project. 
+
+==== Open the Package Manager Console
+
+To open the Package Manager Console, follow the next menu steps: `View > Other Windows > Package Manager Console` and then ensure that the default project in the console is set to the destination project as shown in the next figure.
+
+NOTE: If the destination project is not the same as the startup project, you may need to install some of the packages in the startup project too. The package manager console will warn you of that if it is necessary.
+
+.Package Manager Console default project
+image::images/pacakge_manager_console.png[]
+
+==== Install the packages
+
+* Microsoft.EntityFrameworkCore.Tools
+
+[source, console]
+----
+install-package Microsoft.EntityFrameworkCore.Tools
+----
+
+* Microsoft.EntityFrameworkCore.Design
+
+[source, console]
+----
+install-package Microsoft.EntityFrameworkCore.Design
+----
+
+* MIcrosoft.EntityFrameworkCore.SqlServer
++
+NOTE: As we mentioned we will be using a SQL Server schema, we are installing the database provider for it. Please choose your own https://docs.microsoft.com/en-us/ef/core/providers/?tabs=dotnet-core-cli[Database Provider].
++
+[source, console]
+----
+install-package Microsoft.EntityFrameworkCore.SqlServer
+----
+
+=== Scaffolding command
+
+Run the following command to execute the scaffolding operation:
+
+[source, console]
+----
+scaffold-dbcontext 'Server=(localdb)\mssqllocaldb;Database=DevonDatabase;' Microsoft.EntityFrameworkCore.SqlServer -Tables School,Teacher -ContextDir Domain\Database -OutputDir Domain\Entities
+----
+
+NOTE: Your connection string and database provider may be different.
+
+* The first argument is the connection string.
+* The second argument is the Database Provider package for the used schema.
+* `-Tables {Table list separated by comma}` is the list of the tables you want to scaffold.
+* `-ContextDir` will specify the relative path for the context.
+* `-OutputDir` will specify the relative path for the models.
+
+In our case, before doing the scaffolding we had something like this:
+
+.Directory tree before scaffolding
+image::images/before_scaffolding.png[]
+
+And the scaffolding produced the following directory tree:
+
+.Directory tree after scaffolding
+image::images/after_scaffolding.png[]
+
+If you do not specify `-Tables`, `-ContextDir` and `-OutputDir` all of the tables will be scaffolded and the default directories will be the project directory.
+
+=== Add the context for Dependency Injection
+Now that we have our context we will need to add it either in `Program.cs` or `SetupDatabase` method in `DevonConfiguration` class.
+
+As we are using Devon, we will need to go to `Devon4Net.Application.WebAPI.Implementation.Configuration.DevonConfiguration` and add the folowing line in `SetupDatabase` method:
+
+[source, c#]
+----
+services.SetupDatabase<DevonDatabaseContext>(configuration,"DevonDatabase", DatabaseType.SqlServer).ConfigureAwait(false);
+---- 
+
+Where:
+
+|===
+|*Parameter* |*Description*
+|`<DevonDatabaseContext>` | Database context you want to add
+|`configuration` | Available `IConfiguration` instance 
+|`"DevonDatabase"` | Name of the connection string defined at `ConnectionString` section in the `appsettings.{environment}.json` configuration file
+|`DatabaseType` | Database schema available in devon (see the following list).
+|===
+
+List of supported databases:
+
+* SqlServer
+* Sqlite
+* InMemory
+* Cosmos
+* PostgreSQL
+* MySql
+* MariaDb
+* FireBird
+* Oracle
+* MSAccess
+
+=== References 
+
+* https://docs.microsoft.com/en-us/ef/core/managing-schemas/scaffolding?tabs=vs[Reverse Engineering - Microsoft Docs]
+
+* https://docs.microsoft.com/en-us/ef/core/providers/?tabs=dotnet-core-cli[Database Providers - Microsoft Docs]
