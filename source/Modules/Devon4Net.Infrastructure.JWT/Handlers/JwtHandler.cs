@@ -61,8 +61,13 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
         {
             try
             {
-                var rd = new Random();
-                var ticks = DateTime.UtcNow.Ticks + rd.NextInt64();
+                var dateTicks = DateTime.UtcNow.Ticks;
+                var rd = RandomNumberGenerator.Create();
+                var randomBytes = new byte[4];
+
+                rd.GetBytes(randomBytes);
+
+                var ticks = dateTicks + BitConverter.ToInt64(randomBytes, 0);
 
                 return Convert.ToBase64String(GetHashCodeFromString(ticks.ToString(), JwtOptions.Security.RefreshTokenEncryptionAlgorithm ?? SecurityAlgorithms.RsaSha512));
             }

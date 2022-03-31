@@ -13,16 +13,12 @@ namespace Devon4Net.Application.WebAPI.Implementation.Data.Repositories
     /// </summary>
     public class TodoRepository : Repository<Todos>, ITodoRepository
     {
-        private TodosFluentValidator TodosValidator { get; }
-
         /// <summary>
         /// TodosFluentValidator
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="todosValidator"></param>
-        public TodoRepository(TodoContext context, TodosFluentValidator todosValidator) : base(context)
+        public TodoRepository(TodoContext context) : base(context)
         {
-            TodosValidator = todosValidator;
         }
 
         /// <summary>
@@ -55,14 +51,7 @@ namespace Devon4Net.Application.WebAPI.Implementation.Data.Repositories
         public Task<Todos> Create(string description)
         {
             Devon4NetLogger.Debug($"SetTodo method from repository TodoService with value : {description}");
-
             var todo = new Todos {Description = description};
-            var result = TodosValidator.Validate(todo);
-
-            if (!result.IsValid)
-            {
-                throw new ArgumentException($"The 'Description' field can not be null.{result.Errors}");
-            }
 
             return Create(todo);
         }

@@ -9,7 +9,7 @@ namespace Devon4Net.Infrastructure.FluentValidation
         public abstract void CustomValidate();
         private bool LaunchExceptionWhenError { get; }
 
-        protected CustomFluentValidator(bool launchExceptionWhenError)
+        protected CustomFluentValidator(bool launchExceptionWhenError = false)
         {
             LaunchExceptionWhenError = launchExceptionWhenError;
             try
