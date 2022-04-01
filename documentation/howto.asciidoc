@@ -797,7 +797,7 @@ As Owasp explains in great detail, proper HTTP headers can help prevent security
 
 In devon we take security very seriously, that's why we developed a very easy form of customizing HTTP headers. You will be able to do it configuring the headers in the `appsettings.{environment}.json` file. A middleware will be configured with those options and will modify each HTTP response according to the specified options.
 
-== Configuration
+=== Configuration
 
 [source, json]
 ----
@@ -831,7 +831,7 @@ NOTE: Please refer to the links provided to learn more about each header and wha
 
 NOTE: If the response header does not have a value or does not appear in the optons, it will not be added to the response headers.
 
-== References
+=== References
 
 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers[HTTP headers - MDN Web Docs]
 * https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html[HTTP Security Response Headers Cheat Sheet - Owasp]
