@@ -1090,6 +1090,8 @@ Reading the code of this controller you have to take in mind a few things:
 == Devon4Net.Infrastructure.LiteDb
 https://www.litedb.org/[LiteDb] is an open-source NoSQL embedded database for .NET. Is a document store inspired by MongoDB database. It stores data in documents, which are JSON objects containing key-value pairs. It uses BSON which is a Binary representation of JSON with additional type information.
 
+One of the advantages of using this type of NoSQL database is that it allows the use of asynchronous programming techniques following ACID properties on its transactions. This properties are: Atomicity, Consistency, Isolation and Durability, and they ensure the highest possible data reliability and integrity. This means that you will be able to use `async/await` on your operations.
+
 === Configuration
 The component configuration can be done in `appsettings.{environment}.json` with the following section:
 
