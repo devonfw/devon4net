@@ -445,7 +445,6 @@ In JWT component we have a handler that is cofigured on the installation of the 
 
 === Video
 
-
 === References
 Here are some interesting references to continue learning about this topic:
 
@@ -775,3 +774,64 @@ List of supported databases:
 * https://docs.microsoft.com/en-us/ef/core/managing-schemas/scaffolding?tabs=vs[Reverse Engineering - Microsoft Docs]
 
 * https://docs.microsoft.com/en-us/ef/core/providers/?tabs=dotnet-core-cli[Database Providers - Microsoft Docs]
+
+
+== How to: Use LiteDb
+
+In this part you will learn how to easily start using a LiteDb database in your project. 
+
+NOTE: Please read the documentation of this component to learn more about how to set it up and use it.
+
+=== Video
+
+As you will find all the information in the component documentation, we prepared a video using LiteDb in a very short example:
+
+.How to setup and use LiteDb component
+video::videos/howto_litedb.mp4[]
+
+== How to: Customize Headers
+
+HTTP headers let the client and the server provide additional information with an HTTP request or a response. As this headers provide information about either the client or the server, it can be dangerous if this information lands in the wrong hands.
+
+As Owasp explains in great detail, proper HTTP headers can help prevent security vulnerabilities like Cross-Site Scripting, Clickjacking, Information disclosure and more. 
+
+In devon we take security very seriously, that's why we developed a very easy form of customizing HTTP headers. You will be able to do it configuring the headers in the `appsettings.{environment}.json` file. A middleware will be configured with those options and will modify each HTTP response according to the specified options.
+
+=== Configuration
+
+[source, json]
+----
+"Headers": {
+    "AccessControlExposeHeader": "Authorization",
+    "StrictTransportSecurityHeader": "",
+    "XFrameOptionsHeader": "DENY",
+    "XssProtectionHeader": "1;mode=block",
+    "XContentTypeOptionsHeader": "nosniff",
+    "ContentSecurityPolicyHeader": "",
+    "PermittedCrossDomainPoliciesHeader": "",
+    "ReferrerPolicyHeader": ""
+  },
+----
+
+The following table shows the options that can be configured. 
+
+NOTE: Please refer to the links provided to learn more about each header and what can be done with it.
+
+|====
+|*Option* |*Header* |*Description*
+|`AccessControlExposeHeader` |https://developer.mozilla.org/es/docs/Web/HTTP/Headers/Access-Control-Expose-Headers[`Access-Control-Expose-Headers`] |Indicates which headers may be exposed as part of the response by listing their names.
+|`StrictTransportSecurityHeader` |https://developer.mozilla.org/es/docs/Web/HTTP/Headers/Strict-Transport-Security[`Strict-Transport-Security`] |Allows a website to tell browsers that it should only communicate with HTTPS instead of using HTTP. 
+|`XFrameOptionsHeader` |https://developer.mozilla.org/es/docs/Web/HTTP/Headers/X-Frame-Options[`X-Frame-Options`] | Can be used to indicate whether a browser should be allowed to render a page in a `<frame>`, `<iframe>`, `<embed>` or `<object>`, to prevent attacks such as click-jacking.
+|`XssProtectionHeader` |https://developer.mozilla.org/es/docs/Web/HTTP/Headers/X-XSS-Protection[`X-XSS-Protection`] |Prevents the loading of a page when it detects cross-site attacks.
+|`XContentTypeOptionsHeader` |https://developer.mozilla.org/es/docs/Web/HTTP/Headers/X-Content-Type-Options[`X-Content-Type-Options`] |It is a flag used by the server to indicate that the MIME types advertised in the `Content-Type` headers should not be changed or followed. 
+|`ContentSecurityPolicyHeader` |https://developer.mozilla.org/es/docs/Web/HTTP/Headers/Content-Security-Policy[`Content-Security-Policy`] |Allows the administrators of a website to control the resources that the User-Agent can upload to a page. 
+|`PermittedCrossDomainPoliciesHeader` |https://owasp.org/www-project-secure-headers/#x-permitted-cross-domain-policies[`X-Permitted-Cross-Domain-Policies`] |Grants a web client ermission to handle data across domains.
+|`ReferrerPolicyHeader` |https://developer.mozilla.org/es/docs/Web/HTTP/Headers/Referrer-Policy[`Referrer-Policy`] |Determines which referrer data, among those sent with the `Referer` header, should be included with the requests made. 
+|====
+
+NOTE: If the response header does not have a value or does not appear in the optons, it will not be added to the response headers.
+
+=== References
+
+* https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers[HTTP headers - MDN Web Docs]
+* https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html[HTTP Security Response Headers Cheat Sheet - Owasp]
