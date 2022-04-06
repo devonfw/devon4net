@@ -1298,3 +1298,38 @@ Follow the instructions described in the previous section.
 === References
 
  * https://fluentvalidation.net/[FluentValidation Documentation]
+
+== Devon4Net.Infrastructure.Common
+
+Library that contains common classes to manage the web api template configuration.
+
+The main classes are described in the table below:
+
+|=======================
+|*Folder*|*Classes*|*Description*
+|Common| AutoRegisterData.cs | Contains the data supplied between the various stages of the AutoRegisterDi extension methods
+|Http |ProtocolOperation.cs |Contains methods to obtain the Http or Tls protocols
+|IO |FileOperations.cs |Contains methods for managing file operations.
+|Constants |AuthConst.cs |Default values for AuthenticationScheme property in the JwtBearerAuthenticationOptions
+|Enums |MediaType.cs |Static class providing constants for different media types for the CircuitBreaker Handlers.
+|Exceptions | HttpCustomRequestException.cs| Public class that enables to create Http Custom Request Exceptions
+|Exceptions | IWebApiException.cs| Interface for webapi exceptions
+|Handlers | OptionsHandler.cs| Class with a method for retrieving the configuration of the components implementing the https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-6.0[options pattern]
+|Helpers | AutoRegisterHelpers.cs| Contains the extension methods for registering classes automatically
+|Helpers | StaticConstsHelper.cs| Assists in the retrieval of an object's value through reflection
+|=======================
+
+=== Options pattern
+
+The options pattern uses classes to provide strongly typed access to groups of related settings.
+
+It is usually preferable to have a group of related settings packed together in a highly typed object rather than simply a plain key-value pair collection.
+
+For the other hand strong typing will always ensure that the configuration settings have the required data types.
+
+Keeping related settings together ensures that the code meets two crucial design criteria: https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/tutorials/oop[encapsulation] and https://docs.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles#:~:text=Separation%20of%20concerns&text=This%20principle%20asserts%20that%20software,to%20make%20them%20more%20noticeable[separation of concerns].
+
+NOTE: If you require more information of the options pattern, please see https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-6.0[the official Microsoft documentation.]
+
+On this component, we have an *Options folder* that has the classes with all the attributes that store all of the configuration parameters.
+
