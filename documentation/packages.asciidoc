@@ -519,7 +519,7 @@ Install the package on your solution using the Package Manager Console:
 
 [source, console]
 ----
-> install-package Devon4Net.Infrastructure.Logger
+install-package Devon4Net.Infrastructure.Logger
 ----
 
 Add the following line of code to Progam.cs: 
@@ -667,7 +667,7 @@ Using the Package Manager Console, install the the next package on your solution
 
 [source, console]
 ----
-> install-package Devon4Net.Infrastructure.Cors
+install-package Devon4Net.Infrastructure.Cors
 ----
 
 Add the following lines of code to Progam.cs: 
@@ -1117,7 +1117,7 @@ using Devon4Net.Infrastructure.LiteDb.Repository;
 .
 .
 services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
----- 
+----
 
 Now you can use the `IRepository<T>` by injecting it wherever you want to use it. `T` will be the entity you will be working with in the repository.
 
@@ -1205,3 +1205,96 @@ public class WeatherForecastController : ControllerBase
     }
 }
 ----
+
+== Devon4Net.Infrastructure.FluentValidation
+
+Validation is an automatic check to ensure that data entered is sensible and feasible.
+It is critical to add validation for data inputs when programming.
+This avoids unexpected or anomalous data from crashing your application and from obtaining unrealistic garbage outputs.
+
+In the following table some validation methods are described:
+
+|=======================
+|*Validation Method*|*Description*
+|Range check| Checks if the data is inside a given range. 
+|Type check| Checks that the data entered is of an expected type
+|Length check| 	Checks the number of characters meets expectations
+|Presence check| Checks that the user has at least inputted something
+|Check digit| An additional digit added to a number that is computed from the other digits; this verifies that the remainder of the number has been input correctly. 
+|=======================
+
+FluentValidation is a.NET library that allows users to create strongly-typed validation rules.
+
+=== Setting up in devon
+
+To establish a set of validation criteria for a specific object, build a class that inherits from `CustomFluentValidator<T>`, where `T` is the type of class to validate. For example:
+
+[source, c#]
+----
+public class EmployeeFluentValidator : CustomFluentValidator<Employee>
+    {
+    }
+----
+
+Where Employee is the class to validate.
+
+Create a constructor for this class that will handle validation exceptions, and override the CustomValidate() method from the `CustomFluentValidator<T>` class to include the validation rules. 
+
+[source, c#]
+----
+public class EmployeeFluentValidator : CustomFluentValidator<Employee>
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="launchExceptionWhenError"></param>
+        public EmployeeFluentValidator(bool launchExceptionWhenError) : base(launchExceptionWhenError)
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void CustomValidate()
+        {
+            RuleFor(Employee => Employee.Name).NotNull();
+            RuleFor(Employee => Employee.Name).NotEmpty();
+            RuleFor(Employee => Employee.SurName).NotNull();
+            RuleFor(Employee => Employee.Surname).NotEmpty();
+        }
+    }
+----
+
+In this example, we want Employee entity to not accept Null or empty data.
+We can notice this error if we do not enter the needed data:
+
+.Fluent Validation exceptions
+image::images/fluent-validation-error.png[]
+
+We can also develop Custom Validators by utilizing the Predicate Validator to define a custom validation function.
+In the example above we can add:
+
+[source, c#]
+----
+ RuleFor(x => x.Todos).Must(list => list.Count < 10)
+      .WithMessage("The list must contain fewer than 10 items");
+----
+
+This rule restricts the Todo List from having more than ten items.
+
+NOTE: For more information about Validators (Rules, Custom Validators, etc...) please refer to this https://docs.fluentvalidation.net/en/latest/built-in-validators.html[link]
+
+=== Setting up in other projects
+
+Install the package on your solution using the Package Manager Console:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.FluentValidation
+----
+
+Follow the instructions described in the previous section.
+
+=== References
+
+ * https://fluentvalidation.net/[FluentValidation Documentation]
