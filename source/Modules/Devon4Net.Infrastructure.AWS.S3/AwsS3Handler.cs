@@ -19,6 +19,7 @@ namespace Devon4Net.Infrastructure.AWS.S3
             AwsSecretAccessKeyId = awsSecretAccessKeyId;
         }
 
+        #region Async methods
         public async Task<Stream> GetObject(string bucketName, string objectKey)
         {
             var request = new GetObjectRequest { BucketName = bucketName, Key = objectKey };
@@ -59,6 +60,59 @@ namespace Devon4Net.Infrastructure.AWS.S3
             return true;
         }
 
+        public async Task<GetObjectMetadataResponse> GetObjectMetadata(string key, string bucketName)
+        {
+            try
+            {
+                using var s3Client = GetS3Client(AwsRegion, AwsSecretAccessKeyId, AwsSecretAccessKey);
+                return await s3Client.GetObjectMetadataAsync(new GetObjectMetadataRequest {Key = key, BucketName = bucketName}).ConfigureAwait(false);
+            }
+            catch (AmazonS3Exception ex)
+            {
+                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
+                throw;
+            }
+        }
+
+        public async Task<bool> CheckObjectExists(string key, string bucketName)
+        {
+            try
+            {
+                using var s3Client = GetS3Client(AwsRegion, AwsSecretAccessKeyId, AwsSecretAccessKey);
+                var response = await s3Client.GetObjectMetadataAsync(new GetObjectMetadataRequest { Key = key, BucketName = bucketName }).ConfigureAwait(false);
+                if (response.HttpStatusCode == System.Net.HttpStatusCode.NotFound) return false;
+                return response.HttpStatusCode == System.Net.HttpStatusCode.OK && response.LastModified != DateTime.MinValue && response.LastModified != DateTime.MaxValue && response.LastModified != default;
+            }
+            catch (AmazonS3Exception ex)
+            {
+                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound) return false;
+                throw;
+            }
+        }
+        #endregion
+        #region Sync methods
+        // https://docs.microsoft.com/en-us/archive/msdn-magazine/2015/july/async-programming-brownfield-async-development#the-blocking-hack
+        public Stream GetObjectSync(string bucketName, string objectKey)
+        {
+           return GetObject(bucketName, objectKey).GetAwaiter().GetResult();
+        }
+
+        public bool UploadObjectSync(Stream streamFile, string keyName, string bucketName, string contentType, bool autoCloseStream = false, List<Tag> tagList = null)
+        {
+            return UploadObject(streamFile, keyName, bucketName, contentType, autoCloseStream, tagList).GetAwaiter().GetResult();
+        }
+
+        public GetObjectMetadataResponse GetObjectMetadataSync(string key, string bucketName)
+        {
+            return GetObjectMetadata(key, bucketName).GetAwaiter().GetResult();
+        }
+
+        public bool CheckObjectExistsSync(string key, string bucketName)
+        {
+            return CheckObjectExists(key, bucketName).GetAwaiter().GetResult();
+        }
+        #endregion
+        #region Private methods
         private static void CheckUploadObjectParams(Stream streamFile, string keyName, string bucketName)
         {
             if (streamFile == null || streamFile.Length == 0 || !streamFile.CanRead)
@@ -104,35 +158,6 @@ namespace Devon4Net.Infrastructure.AWS.S3
 
             return new AmazonS3Client(awsSecretAccessKeyId, awsSecretAccessKey, region);
         }
-
-        public async Task<GetObjectMetadataResponse> GetObjectMetadata(string key, string bucketName)
-        {
-            try
-            {
-                using var s3Client = GetS3Client(AwsRegion, AwsSecretAccessKeyId, AwsSecretAccessKey);
-                return await s3Client.GetObjectMetadataAsync(new GetObjectMetadataRequest {Key = key, BucketName = bucketName}).ConfigureAwait(false);
-            }
-            catch (AmazonS3Exception ex)
-            {
-                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
-                throw;
-            }
-        }
-
-        public async Task<bool> CheckObjectExists(string key, string bucketName)
-        {
-            try
-            {
-                using var s3Client = GetS3Client(AwsRegion, AwsSecretAccessKeyId, AwsSecretAccessKey);
-                var response = await s3Client.GetObjectMetadataAsync(new GetObjectMetadataRequest { Key = key, BucketName = bucketName }).ConfigureAwait(false);
-                if (response.HttpStatusCode == System.Net.HttpStatusCode.NotFound) return false;
-                return response.HttpStatusCode == System.Net.HttpStatusCode.OK && response.LastModified != DateTime.MinValue && response.LastModified != DateTime.MaxValue && response.LastModified != default;
-            }
-            catch (AmazonS3Exception ex)
-            {
-                if (ex.StatusCode == System.Net.HttpStatusCode.NotFound) return false;
-                throw;
-            }
-        }
+        #endregion
     }
 }
