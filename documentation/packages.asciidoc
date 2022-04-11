@@ -1333,3 +1333,51 @@ NOTE: If you require more information of the options pattern, please see https:/
 
 On this component, we have an *Options folder* that has the classes with all the attributes that store all of the configuration parameters.
 
+== Devon4Net.Infrastructure.Extensions
+
+Miscellaneous extension library which contains :
+
+* ObjectTypeHelper
+* JsonHelper
+* GuidExtension 
+* HttpContextExtensions
+* HttpRequestExtensions
+
+=== ObjectTypeHelper
+
+Provides a method for converting an instance of an object in the type of an object of a specified class name. 
+
+=== JsonHelper (Json Serializer)
+
+Serialization is the process of transforming an object's state into a form that can be saved or transmitted.
+Deserialization is the opposite of serialization in that it transforms a stream into an object.
+These procedures, when combined, allow data to be stored and transferred. 
+
+NOTE: More information about serializacion may be found in the official https://docs.microsoft.com/en-us/dotnet/standard/serialization/[Microsoft documentation.] 
+
+This helper is used in the devon4net components `CircuitBreaker`, `MediatR`, and `RabbitMQ`.
+
+=== GuidExtension
+
+This class has basic methods for managing GUIDs. Some devon4net components, such as `MediatR` or `RabbitMQ`, implement it in their Backup Services. 
+
+=== HttpContextExtensions
+
+Provides methods for managing response headers for example:
+
+* `TryAddHeader` method is used on `devon4Net.Infrastructure.Middleware` component to add automatically response header options such authorization.
+
+* `TryRemoveHeader` method is used on `devon4Net.Infrastructure.Middleware` component to remove automatically response header such AspNetVersion header.
+
+=== HttpRequestExtensions
+
+Provides methods for obtaining Culture and Language information from a `HttpRequest` object.
+
+=== Configuration
+
+Install the package on your solution via Package Manager Console by running the following command: 
+
+[source, console]
+----
+Install-Package devon4Net.Infrastructure.Extensions
+----
