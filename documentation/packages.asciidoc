@@ -1381,3 +1381,259 @@ Install the package on your solution via Package Manager Console by running the 
 ----
 Install-Package devon4Net.Infrastructure.Extensions
 ----
+
+== Devon4Net.Infrastructure.MediatR
+
+This component employs the `MediatR` library, which is a tool for implementing CQRS and Mediator patterns in .Net.
+`MediatR` handles the decoupling of the in-process sending of messages from handling messages.
+
+=== Patterns
+
+* Mediator pattern:
++
+The https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/microservice-application-layer-implementation-web-api[mediator pattern] is a behavioral design pattern that aids in the reduction of object dependencies. The pattern prevents the items from communicating directly with one another, forcing them to collaborate only through a mediator object. Mediator is used to decrease the communication complexity between multiple objects or classes. This pattern offers a mediator class that manages all communications between distinct classes and allows for easy code maintenance through loose coupling.
+
+* CQRS pattern:
++
+The acronym https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/apply-simplified-microservice-cqrs-ddd-patterns[CQRS] stands for Command and Query Responsibility Segregation, and it refers to a design that separates read and update processes for data storage.
+By incorporating CQRS into your application, you may improve its performance, scalability, and security.
+The flexibility gained by moving to CQRS enables a system to grow more effectively over time and prevents update instructions from triggering merge conflicts at the domain level. 
++
+.CQRS Diagram
+image::images/CQRS.png[]
++
+In this figure, we can see how we may implement this design by utilizing a Relational Database for Write operations and a https://docs.microsoft.com/en-us/azure/architecture/patterns/materialized-view[Materialized view] of this Database that is synchronized and updated via events.
+
+=== Key Classes
+
+In `MediatR`, you build a basic class that is identified as an implementation of the IRequest or IAsyncRequest interface.
+All of the properties that are required to be in the message will be defined in your message class. 
+
+In the case of this component the messages are created in the `ActionBase<T>` class:
+
+[source, c#]
+----
+public class ActionBase<T> : IRequest<T> where T : class
+    {
+        public DateTime Timestamp { get; }
+        public string MessageType { get; }
+        public Guid InternalMessageIdentifier { get; }
+
+        protected ActionBase()
+        {
+            Timestamp = DateTime.Now;
+            InternalMessageIdentifier = Guid.NewGuid();
+            MessageType = GetType().Name;
+        }
+    }
+----
+
+This `ActionBase<T>` class is then inherited by the `CommandBase<T>` and `QueryBase<T>` classes.
+
+Now that we've built a request message, we can develop a handler to reply to any messages of that type. We must implement the `IRequestHandler` or `IAsyncRequestHandler` interfaces, describing the input and output types.
+
+In the case of this component `MediatrRequestHandler<TRequest, TResponse>` abstract class is used for making this process generecic
+
+[source, c#]
+----
+public abstract class MediatrRequestHandler<TRequest, TResponse> : IRequestHandler<TRequest, TResponse> where TRequest : IRequest<TResponse>
+----
+
+This interface defines a single method called Handle, which returns a Task of your output type.
+This expects your request message object as an argument. In the `MediatrRequestHandler<TRequest, TResponse>` class has been implemented in this way.
+
+[source, c#]
+----
+public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
+        {
+            MediatrActions status;
+            TResponse result = default;
+            try
+            {
+                result = await HandleAction(request, cancellationToken).ConfigureAwait(false);
+                status = MediatrActions.Handled;
+            }
+            catch (Exception ex)
+            {
+                Devon4NetLogger.Error(ex);
+                status = MediatrActions.Error;
+            }
+            await BackUpMessage(request, status).ConfigureAwait(false);
+            return result;
+        }
+----
+
+The `HandleAction` method is defined in the following lines:
+[source, c#]
+----
+public abstract Task<TResponse> HandleAction(TRequest request, CancellationToken cancellationToken);
+----
+
+This method should be overridden in the application's business layer Handlers.
+
+=== Configuration
+
+Component configuration is made on file `appsettings.{environment}.json` as follows:
+
+[source, json]
+----
+  "MediatR": {
+    "EnableMediatR": true,
+    "Backup": {
+      "UseLocalBackup": true,
+      "DatabaseName": "devon4netMessageBackup.db"
+    }
+  },
+----
+
+|=======================
+|*Property*|*Description*
+|EnableMediatR| True for enabling the use of MediatR component
+|UseLocalBackup| True for using a LiteDB database as a local backup for the `MediatR` messages 
+|DatabaseName| The name of the LiteDB database
+|=======================
+
+=== Setting up in Devon
+
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.Development.json` file.
+
+A template is available in the MediatRManagement folder of the `Devon4Net.Application.WebAPI.Implementation` Business Layer:
+
+.MediatR Management Folder Structure
+image::images/MediatR-management.png[]
+
+As we can see, this example adheres to the CQRS pattern structure, with Commands for writing methods and Queries for reading operations, as well as one handler for each method:
+
+* `CreateTodoCommand.cs`:
++
+[source, c#]
+----
+ public class CreateTodoCommand : CommandBase<TodoResultDto>
+    {
+        public string Description { get; set; }
+
+        public CreateTodoCommand(string description)
+        {
+            Description = description;
+        }
+    }
+----
++
+The CreateTodoCommand inherits from `CommandBase<T>`, in this situation, the request message's additional properties, such as `Description` of the `Todo` entity, will be included. 
+
+* `GetTodoQuery.cs`:
++
+[source, c#]
+----
+public class GetTodoQuery : QueryBase<TodoResultDto>
+    {
+        public long TodoId{ get; set; }
+
+        public GetTodoQuery(long todoId)
+        {
+            TodoId = todoId;
+        }
+    }
+----
++
+Because GetTodoQuery inherits from `QueryBase<T>`, an `TodoId` of the `Todo` object will be attached to the message's properties in this case.
+
+* `CreateTodoHandler.cs`:
++
+[source, c#]
+----
+public class CreateTodoHandler : MediatrRequestHandler<CreateTodoCommand, TodoResultDto>
+    {
+        private ITodoService TodoService { get; set; }
+
+        public CreateTodoHandler(ITodoService todoService, IMediatRBackupService mediatRBackupService, IMediatRBackupLiteDbService mediatRBackupLiteDbService) : base(mediatRBackupService, mediatRBackupLiteDbService)
+        {
+            Setup(todoService);
+        }
+
+        public CreateTodoHandler(ITodoService todoService, IMediatRBackupLiteDbService mediatRBackupLiteDbService) : base(mediatRBackupLiteDbService)
+        {
+            Setup(todoService);
+        }
+
+        public CreateTodoHandler(ITodoService todoService, IMediatRBackupService mediatRBackupService) : base(mediatRBackupService)
+        {
+            Setup(todoService);
+        }
+
+        private void Setup(ITodoService todoService)
+        {
+            TodoService = todoService;
+        }
+
+        public override async Task<TodoResultDto> HandleAction(CreateTodoCommand request, CancellationToken cancellationToken)
+        {
+
+            var result = await TodoService.CreateTodo(request.Description).ConfigureAwait(false);
+
+            return new TodoResultDto
+            {
+                Id = result.Id,
+                Done = result.Done,
+                Description = result.Description
+            };
+
+        }
+    }
+----
++
+This class must to inherit from `MediatrRequestHandler<TRequest, TResponse>` class that is explained above.
+On first place we inject the TodoService via dependency injection using the `Setup(ITodoService todoService)` method, and then we override the `HandleAction(TRequest request, CancellationToken cancellationToken)` method calling the service and returning the new DTO
+
+* `GetTodoHandler.cs`:
++
+All handlers may be configured using the same structure as `CreateTodoHandler.cs.` To do the required operation, just change the method called by the service. 
+
+
+=== Setting up in other projects
+
+Install the package on your solution using the Package Manager Console:
+
+[source, console]
+----
+Install-Package Devon4Net.Infrastructure.CircuitBreaker
+----
+
+
+
+Create a Configuration static class in order to add the `IRequestHandler` services, for example:
+
+[source, c#]
+----
+ public static class Configuration
+    {
+
+        public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
+        {
+
+            var mediatR = serviceProvider.GetService<IOptions<MediatROptions>>();
+
+            if (mediatR?.Value != null && mediatR.Value.EnableMediatR)
+            {
+                SetupMediatRHandlers(services);
+            }
+        }
+
+        private static void SetupMediatRHandlers(IServiceCollection services)
+        {
+            services.AddTransient(typeof(IRequestHandler<GetTodoQuery, TodoResultDto>), typeof(GetTodoHandler));
+            services.AddTransient(typeof(IRequestHandler<CreateTodoCommand, TodoResultDto>), typeof(CreateTodoHandler));
+        }
+    }
+----
+
+Add the following lines in the `Program.cs` class: 
+
+
+[source, c#]
+----
+builder.Services.SetupMediatR(builder.Configuration);
+builder.Services.SetupDependencyInjection(builder.Configuration);
+----
+
+After adding the default settings provided in the configuration section, you may use the MediatR component in your code. 
