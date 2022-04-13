@@ -1592,14 +1592,12 @@ All handlers may be configured using the same structure as `CreateTodoHandler.cs
 
 === Setting up in other projects
 
-Install the package on your solution using the Package Manager Console:
+Install the package in your solution using the Package Manager Console:
 
 [source, console]
 ----
-Install-Package Devon4Net.Infrastructure.CircuitBreaker
+Install-Package Devon4Net.Infrastructure.MediatR
 ----
-
-
 
 Create a Configuration static class in order to add the `IRequestHandler` services, for example:
 
