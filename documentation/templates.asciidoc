@@ -406,3 +406,196 @@ NOTE: take a look at your application port and the protocol you configured (http
 
 .Swagger test for Student 
 image::images/WebApi_template_swagger.png[]
+
+== gRPC Template
+In this part of the document you will learn what is gRPC and how the devon4net gRPC template works. 
+
+To help you understand how the template works, we will first go over some general concepts concerning gRPC technology in broad strokes. Then continue describing the contract shared between client and server and how it is formed using Google's Protocol Buffers. And last but not least, both the GrpcClient and the GrpcServer will be explained.
+
+=== gRPC 
+gRPC is a modern open source high performance Remote Procedure Call (RPC) framework. It is totally independent of the language used on the client side and the server side. 
+
+In gRPC a client app can directly call a method on a server application. Both parts need to share a file that acts as a contract. This way compatibility is ensured between client and server without taking languages into account.
+
+.gRPC diagram
+image::images/gRPC.png[]
+
+On the server side, we need to develop a service that implements the contract shared between both parts and also listens to client calls and process them using this implementation.
+
+On the client side, the client can use the methods provided by this contract thanks to the "stub" (gRPC client). 
+
+This file is the Protocol Buffer (".proto" file)and needs to be both in the client and the server for them to understand each other.
+
+=== Protocol Buffers
+
+Protocol buffers provide a cross-platform mechanism for serializing structured data. It is like a JSON file, but smaller and faster.
+
+This protocol buffers are written in an language called `proto3`. The following piece of code describes an example:
+
+[source, proto]
+----
+syntax = "proto3";
+
+option csharp_namespace = "Devon4Net.Application.GrpcClient.Protos";
+
+package greet;
+
+// The greeting service definition.
+service Greeter {
+  // Sends a greeting
+  rpc SayHello (HelloRequest) returns (HelloReply);
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings.
+message HelloReply {
+  string message = 1;
+}
+----
+
+The first line, specifies that you are using the `proto3` version. There are other versions such as `proto2`.
+
+The option `csharp_namespace` specifies the namespace of the proto file in C#.
+
+A message types are definitions of object structures. A message might have different fields, that have:
+
+* Type: Type of the field value. It can be any scalar type (int32, double, string...) or composite type (enumerations, other messages...).
+
+* Number: Each field has a unique number which is used to identify the field.
+
+* Rule: Singular (can have zero or one) or repeated (can be zero or multiple times rpeated)
+
+You can also see a service contract, which is called `Greeter` and has a method `SayHello` that accepts a `HelloRequest` and returns a `HelloReply`, both also defined on the file.
+
+=== Devon4Net.Application.GrpcServer
+
+This project will launch the server that will be called from the GrpcClient and will manage the rpc calls to the available methods.  
+
+The proto file, which is shown in the previous section, defines the contract for the service, that will need to be implemented in this same project. 
+
+As you can see in the following figure, the proto file is placed in the directory `Protos`.
+
+.GrpcServer directory tree
+image::images/grpc_server.png[]
+
+The service `GreeterService`, will need to extend `Greeter.GreeterBase` which is generated automatically thanks to the service named `Greeter` in the proto file. 
+
+This service will need to override the method `SayHello` defined in the proto file. This method can be overriden from the class `Greeter.GreeterBase` as it was already implemented:
+
+[source, c#]
+----
+[GrpcDevonService]
+public class GreeterService : Greeter.GreeterBase
+{
+    public GreeterService()
+    {
+    }
+
+    public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
+    {
+        return Task.FromResult(new HelloReply
+        {
+            Message = "Hello " + request.Name
+        });
+    }
+}
+----
+
+Notice the attribute `GrpcDevonService`. All services marked with this attribute will be auto registered in the `Program.cs` when adding the following line:
+
+[source, c#]
+----
+builder.Services.AddGrpc();
+.
+.
+.
+app.SetupGrpcServices(new List<string> { "Devon4Net.Application.GrpcServer" });
+----
+
+The list of strings provided as argument is the list of assemblies where devon will look for gRPC services tagged with that attribute.
+
+NOTE: Check the component documentation to learn more.
+
+=== Devon4Net.Application.GrpcClient
+
+The client project will access the GrpcServer project end-point thanks to the protocol buffer and the configuration in the `appsettings.{environment}.json`. For trying out the communication between the client and the server, you will find an end-point in the `GrpcGreeterController` class.
+
+.GrpcClient directory tree
+image::images/grpc_client.png[]
+
+The configuration is done adding the following options to the settings file:
+
+[source, json]
+----
+ "Grpc": {
+    "EnableGrpc": true,
+    "UseDevCertificate": true,
+    "GrpcServer": "https://localhost:5002",
+    "MaxReceiveMessageSize": 16, 
+    "RetryPatternOptions": {
+      "MaxAttempts": 5,
+      "InitialBackoffSeconds": 1,
+      "MaxBackoffSeconds": 5,
+      "BackoffMultiplier": 1.5,
+      "RetryableStatus": "Unavailable" 
+    }
+  },
+----
+
+NOTE: `GrpcServer` is the direction of the gRPC end-points. To learn more about the component configuration please visit the package documentation.
+
+The following line will configure the component to use this configuration in the `Program.cs`:
+
+[source, c#]
+----
+builder.Services.SetupGrpc(builder.Configuration);
+----
+
+The greeter controller will use a `GrpcChannel` injected in the constructor as follows:
+
+[source, c#]
+----
+[ApiController]
+[Route("[controller]")]
+public class GrpcGreeterClientController : ControllerBase
+{
+    private GrpcChannel GrpcChannel { get; }
+
+    public GrpcGreeterClientController(GrpcChannel grpcChannel)
+    {
+        GrpcChannel = grpcChannel;
+    }
+----
+
+You will find that the end-point that accesses the gRPC service looks like this:
+
+[source, c#]
+----
+[HttpGet]
+public async Task<HelloReply> Get(string name)
+{
+    try
+    {
+        var client = new Greeter.GreeterClient(GrpcChannel);
+        return await client.SayHelloAsync(new HelloRequest { Name = name }).ResponseAsync.ConfigureAwait(false);
+    }
+    catch (Exception ex)
+    {
+        Devon4NetLogger.Error(ex);
+        throw;
+    }
+}
+----
+
+The `Greeter.GreeterClient` is created automatically and can be used when adding the reference to the proto file namespace with the `using` directive.
+
+
+=== References
+
+* https://grpc.io/docs/what-is-grpc/introduction/[Introduction to gRPC - gRPC Docs]
+
+* https://developers.google.com/protocol-buffers/docs/overview[Protocol Buffers - Google Docs]
