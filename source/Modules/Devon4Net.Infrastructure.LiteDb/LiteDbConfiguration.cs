@@ -15,7 +15,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
             if (liteDbOptions == null || string.IsNullOrEmpty(liteDbOptions?.DatabaseLocation) || !liteDbOptions.EnableLiteDb) return;
 
             services.AddSingleton<ILiteDbContext, LiteDbContext>();
-            services.AddTransient(typeof(IRepository<>),typeof(Repository<>));
+            services.AddTransient(typeof(ILiteDbRepository<>),typeof(LiteDbRepository<>));
         }
     }
 }
