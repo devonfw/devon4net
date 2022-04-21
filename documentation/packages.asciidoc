@@ -1583,7 +1583,7 @@ public class CreateTodoHandler : MediatrRequestHandler<CreateTodoCommand, TodoRe
 ----
 +
 This class must to inherit from `MediatrRequestHandler<TRequest, TResponse>` class that is explained above.
-On first place we inject the TodoService via dependency injection using the `Setup(ITodoService todoService)` method, and then we override the `HandleAction(TRequest request, CancellationToken cancellationToken)` method calling the service and returning the new DTO
+On first place we inject the TodoService via dependency injection using the `Setup(ITodoService todoService)` method, and then we overload the `HandleAction(TRequest request, CancellationToken cancellationToken)` method calling the service and returning the new DTO
 
 * `GetTodoHandler.cs`:
 +
@@ -1634,4 +1634,209 @@ builder.Services.SetupMediatR(builder.Configuration);
 builder.Services.SetupDependencyInjection(builder.Configuration);
 ----
 
-After adding the default settings provided in the configuration section, you may use the MediatR component in your code. 
+After adding the default settings provided in the configuration section, you may use the MediatR component in your code.
+
+== Devon4Net.Infrastructure.RabbitMQ
+
+`RabbitMQ` is an open-source message-broker software (also known as message-oriented middleware) that was developed to support the Advanced Message Queuing Protocol (AMQP) and has since been expanded with a plug-in architecture to support the Streaming Text Oriented Messaging Protocol (STOMP), MQ Telemetry Transport (MQTT), and https://www.rabbitmq.com/protocols.html[other protocols].
+
+In `RabbitMQ`, queues are defined to store messages sent by producers until they are received and processed by consumer applications. 
+
+=== Patterns
+
+* Publisher-Subscriber pattern
++
+Publish-Subscribe is a design pattern that allows loose coupling between the application components.
++
+Message senders, known as publishers, do not configure the messages to be sent directly to specific receivers, known as subscribers.
+Messages are released with no information of what they are or if any subscribers to that information exist.
+Delegate is the core of this C# design pattern.
++
+.RabbitMQ Queue system
+image::images/publish-suscribe.png[]
++
+To summarize :
++
+** A producer is a user application that sends messages.
+** A queue is a buffer that stores messages.
+** A consumer is a user application that receives messages.
+
+=== Key Classes
+
+In the case of this component the messages are created in the `Message` abstract class:
+   
+[source, c#]
+----
+public abstract class Message
+    {
+        public string MessageType { get; }
+        public Guid InternalMessageIdentifier { get; set; }
+
+        protected Message()
+        {
+            MessageType = GetType().Name;
+        }
+    }
+----
+
+Then the `Command` serializable class inherits from `Message` class:
+
+[source, c#]
+----
+[Serializable]
+public class Command : Message
+    {
+        public DateTime Timestamp { get; protected set; }
+        protected Command()
+        {
+            Timestamp = DateTime.Now;
+            InternalMessageIdentifier = Guid.NewGuid();
+        }
+    }
+----
+
+The message will have from base a Timestamp, a Guid as message identifier and the message type.
+
+=== Configuration
+
+Component configuration is made on file `appsettings.{environment}.json` as follows:
+
+[source, json]
+----
+  "RabbitMq": {
+    "EnableRabbitMq": true,
+    "Hosts": [
+      {
+        "Host": "127.0.0.1",
+        "Port": 5672,
+        "Ssl": false,
+        "SslServerName": "localhost",
+        "SslCertPath": "localhost.pfx",
+        "SslCertPassPhrase": "localhost",
+        "SslPolicyErrors": "RemoteCertificateNotAvailable" //None, RemoteCertificateNotAvailable, RemoteCertificateNameMismatch, RemoteCertificateChainErrors
+      }
+    ],
+
+    "VirtualHost": "/",
+    "UserName": "admin",
+    "Password": "password",
+    "Product": "devon4net",
+    "RequestedHeartbeat": 10, //Set to zero for no heartbeat
+    "PrefetchCount": 50,
+    "PublisherConfirms": false,
+    "PersistentMessages": true,
+    "Platform": "localhost",
+    "Timeout": 10,
+    "Backup": {
+      "UseLocalBackup": true,
+      "DatabaseName": "devon4netMessageBackup.db"
+    }
+  },
+----
+
+NOTE: Please refer to the https://github.com/EasyNetQ/EasyNetQ/wiki/Connecting-to-RabbitMQ[official EasyNetQ documentation] for further details about connection parameters.
+
+=== Setting up in Devon
+
+For setting it up using the Devon4NetApi template configure it in the `appsettings.{environment}.json` file.
+
+A template is available in the RabbitMqManagement folder of the `Devon4Net.Application.WebAPI.Implementation` Business folder:
+
+.RabbitMQ Management folder structure
+image::images/RabbitMqManagement.png[]
+
+* `TodoCommand.cs`:
++
+[source, c#]
+----
+ public class TodoCommand : Command
+    {
+        public string Description { get; set; }
+    }
+----
++
+The `TodoCommand` inherits from `Command`, in this case, the `Description` will be added to the `Message`.
+
+* `TodoRabbitMqHandler.cs`:
++
+[source, c#]
+----
+ public class TodoRabbitMqHandler: RabbitMqHandler<TodoCommand>
+    {
+        private ITodoService TodoService { get; set; }
+
+        public TodoRabbitMqHandler(IServiceCollection services, IBus serviceBus, bool subscribeToChannel = false) : base(services, serviceBus, subscribeToChannel)
+        {
+        }
+
+        public TodoRabbitMqHandler(IServiceCollection services, IBus serviceBus, IRabbitMqBackupService rabbitMqBackupService, bool subscribeToChannel = false) : base(services, serviceBus, rabbitMqBackupService, subscribeToChannel)
+        {
+        }
+
+        public TodoRabbitMqHandler(IServiceCollection services, IBus serviceBus, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService, bool subscribeToChannel = false) : base(services, serviceBus, rabbitMqBackupLiteDbService, subscribeToChannel)
+        {
+        }
+
+        public TodoRabbitMqHandler(IServiceCollection services, IBus serviceBus, IRabbitMqBackupService rabbitMqBackupService, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService, bool subscribeToChannel = false) : base(services, serviceBus, rabbitMqBackupService, rabbitMqBackupLiteDbService, subscribeToChannel)
+        {
+        }
+
+        public override async Task<bool> HandleCommand(TodoCommand command)
+        {
+            TodoService = GetInstance<ITodoService>();
+
+            var result = await TodoService.CreateTodo(command.Description).ConfigureAwait(false);
+            return result!=null;
+        }
+    }
+----
++
+This class must to inherit from `RabbitMqHandler<T>` class.
+`HandleCommand(T command)` method should be overridden in order to send command to the queue, this method returns true if the message has been published.
+
+=== Setting up in other projects
+
+Install the package in your solution using the Package Manager Console:
+
+[source, console]
+----
+Install-Package Devon4Net.Infrastructure.RabbitMQ
+----
+
+Create a Configuration static class in order to add the `RabbitMqHandler` services, for example:
+
+[source, c#]
+----
+ public static class Configuration
+    {
+
+        public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
+        {
+
+            var rabbitMq = serviceProvider.GetService<IOptions<RabbitMqOptions>>();
+
+            if (rabbitMq?.Value != null && rabbitMq.Value.EnableRabbitMq)
+            {
+                SetupRabbitHandlers(services);
+            }
+        }
+
+        private static void SetupRabbitHandlers(IServiceCollection services)
+        {
+            services.AddRabbitMqHandler<TodoRabbitMqHandler>(true);
+        }
+    }
+----
+
+Add the following lines in the `Program.cs` class: 
+
+
+[source, c#]
+----
+builder.Services.SetupRabbitMq(builder.Configuration);
+builder.Services.SetupDependencyInjection(builder.Configuration);
+----
+
+After adding the default settings provided in the configuration section, you may use the RabbitMQ component in your code.
+
+NOTE: Please see the https://www.rabbitmq.com/download.html[ RabbitMQ official documentation] for instructions on installing the RabbitMQ Server. 
