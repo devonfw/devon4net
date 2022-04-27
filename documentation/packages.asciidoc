@@ -900,7 +900,7 @@ NOTE: You will need to specify the name of the algorithm (shown in 'algorithm' c
 
 NOTE: Please check https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/Supported-Algorithms[Windows Documentation] to get the latest updates on supported encryption algorithms.
 
-=== Setting up in devon
+=== Setting up in Devon
 For setting it up using the Devon4NetApi template configure it in the `appsettings.{environment}.json` file. 
 
 You will need to add a certificate that will be used for signing the token, please check the documentation about how to create a new certificate and add it to a project if you are not aware of how it's done.
@@ -1105,7 +1105,7 @@ The component configuration can be done in `appsettings.{environment}.json` with
 * `EnableLiteDb`: Boolean to activate the use of LiteDb.
 * `DatabaseLocation`: Relative path of the file containing all the documents.
 
-=== Setting up in devon
+=== Setting up in Devon
 For setting it up using the Devon4Net WebApi template just configure it in the `appsettings.Development.json`.
 
 Then you will need to inject the repositories. For that go to `Devon4Net.Application.WebAPI.Implementation.Configuration.DevonConfiguration` and add the folowing lines in `SetupDependencyInjection` method:
@@ -1225,7 +1225,7 @@ In the following table some validation methods are described:
 
 FluentValidation is a.NET library that allows users to create strongly-typed validation rules.
 
-=== Setting up in devon
+=== Setting up in Devon
 
 To establish a set of validation criteria for a specific object, build a class that inherits from `CustomFluentValidator<T>`, where `T` is the type of class to validate. For example:
 
@@ -1839,4 +1839,127 @@ builder.Services.SetupDependencyInjection(builder.Configuration);
 
 After adding the default settings provided in the configuration section, you may use the RabbitMQ component in your code.
 
-NOTE: Please see the https://www.rabbitmq.com/download.html[ RabbitMQ official documentation] for instructions on installing the RabbitMQ Server. 
+NOTE: Please see the https://www.rabbitmq.com/download.html[ RabbitMQ official documentation] for instructions on installing the RabbitMQ Server.
+
+== Devon4Net.Infrastructure.Middleware
+
+Middleware is software that's assembled into an app pipeline to handle requests and responses. Request delegates are used to construct the request pipeline. Each HTTP request is handled by a request delegate. 
+
+The diagram below represents the whole request processing pipeline for ASP.NET Core MVC and Razor Pages apps.
+You can see how existing middlewares are organized in a typical app and where additional middlewares are implemented. 
+
+.Middleware Order
+image::images/middleware-life-cycle.png[]
+
+The ASP.NET Core request pipeline is composed of a number of request delegates that are called one after the other. This concept is illustrated in the diagram below. The execution thread is shown by the black arrows. 
+
+.Delegates flow in middleware 
+image::images/middleware-delegates-flow.png[] 
+
+=== Configuration
+
+In this component there are four custom Middlewares classes, configuration is made on file `appsettings.{environment}.json` as follows: 
+
+1. `ClientCertificatesMiddleware.cs`: For the management of client certificates. 
++
+[source, json]
+----
+  "Certificates": {
+    "ServerCertificate": {
+      "Certificate": "",
+      "CertificatePassword": ""
+    },
+    "ClientCertificate": {
+      "EnableClientCertificateCheck": false,
+      "RequireClientCertificate": false,
+      "CheckCertificateRevocation": true,
+      "ClientCertificates": {
+        "Whitelist": [
+          ""
+        ]
+      }
+    }
+  },
+----
++
+The ClientCertificate Whitelist contains the client's certificate thumbprint. 
+
+2. `ExceptionHandlingMiddleware.cs`: Handles a few different types of exceptions. 
+
+3. `CustomHeadersMiddleware.cs`: To add or remove certain response headers.
++
+[source, json]
+----
+"Headers": {
+    "AccessControlExposeHeader": "Authorization",
+    "StrictTransportSecurityHeader": "",
+    "XFrameOptionsHeader": "DENY",
+    "XssProtectionHeader": "1;mode=block",
+    "XContentTypeOptionsHeader": "nosniff",
+    "ContentSecurityPolicyHeader": "",
+    "PermittedCrossDomainPoliciesHeader": "",
+    "ReferrerPolicyHeader": ""
+  },
+----
++
+On the sample above, the server application will add to the response headers the `AccessControlExposeHeader`, `XFrameOptionsHeader`, `XssProtectionHeader` and `XContentTypeOptionsHeader` headers.
+If the header response attribute does not have a value, it will not be added to the response headers.
++
+.Response Headers
+image::images/headers-middleware.png[]
++
+NOTE: Please refer to the link:howto.asciidoc[How To: Customize Headers] documentation for more information.
+
+4. `KillSwicthMiddleware.cs`: To enable or disable HTTP requests.
++
+[source, json]
+----
+"KillSwitch": {
+    "UseKillSwitch": false,
+    "EnableRequests": true,
+    "HttpStatusCode": 403
+  },
+----
+[options="header"]
+|=======================
+|*Property*|*Description*
+|UseKillSwitch| True to enable KillSwtich middleware
+|EnableRequests| True to enable HTTP requests.
+|HttpStatusCode| the HTTP status code that will be returned
+|=======================
+
+=== Setting up in Devon
+
+For setting it up using the Devon4NetApi template just configure it in the appsettings.Development.json file.
+
+=== Setting up in other projects
+
+Install the package on your solution using the Package Manager Console:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.Middleware
+----
+
+Configure the component in `Program.cs` adding the following lines:
+
+[source, c#]
+----
+using Devon4Net.Infrastructure.Middleware.Middleware;
+.
+.
+.
+builder.Services.SetupMiddleware(builder.Configuration);
+.
+.
+.
+app.SetupMiddleware(builder.Services);
+----
+
+Add the default configuration shown in the configuration section.
+
+=== References
+
+https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-6.0[ASP.NET Core Middleware - Microsoft Docs]
+
+https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/write?view=aspnetcore-6.0[Write custom ASP.NET Core middleware - Microsoft Docs]
