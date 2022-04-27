@@ -1102,6 +1102,7 @@ The component configuration can be done in `appsettings.{environment}.json` with
   "DatabaseLocation": "devon4net.db"
 }
 ----
+
 * `EnableLiteDb`: Boolean to activate the use of LiteDb.
 * `DatabaseLocation`: Relative path of the file containing all the documents.
 
@@ -1117,7 +1118,7 @@ using Devon4Net.Infrastructure.LiteDb.Repository;
 .
 .
 services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
----- 
+----
 
 Now you can use the `IRepository<T>` by injecting it wherever you want to use it. `T` will be the entity you will be working with in the repository.
 
@@ -1133,7 +1134,7 @@ public TodoController(IRepository<Todo> todoRepository)
 
 
 === Setting up in other projects
-For setting it up in other projects install it running the followin command in the Package Manager Console, or using the Package Manager in Visual Studio:
+For setting it up in other projects install it running the following command in the Package Manager Console, or using the Package Manager in Visual Studio:
 
 [source, console]
 ----
@@ -1205,3 +1206,210 @@ public class WeatherForecastController : ControllerBase
     }
 }
 ----
+
+== Devon4Net.Infrastructure.Kafka
+https://kafka.apache.org/[Apache Kafka] is an open-source distributed event streaming platform. Event streaming is the practice of capturing a stream of events and store it for later being able to retrieve it for processing it in the desired form. It guarantees a continuous flow of data between components in a distributed system. You can think of it as a data bus where components of a system can publish some events and can subscribe to others, the following diagram shows perfectly how the system works: 
+
+.Kafka diagram
+image::images/kafka.png[]
+
+In the image you can see how an event is sent to the Kafka server. This *Event* is a record of an action that happened and typically contains a key, value, timestamp and some metadata.
+
+This events are published by *Producers*, who are those client applications that write to Kafka; and readed and processed by *Consumers*, who are the clients subscribed to the different topics.
+
+*Topics* are the organization type of Kafka events, similar to a folder on a filesystem, being events the files in that folder. Unlike message queues, Kafka events are not deleted after being read. Instead you can choose how much time should Kafka keep track of the events.
+
+Other interesting concepts about Kafka are:
+
+* *Partitions*: Topics are divided into partitions. When a new event is published to a topic, it is actually appended to one of the topic's partitions. Events with the same event key are written to the same partition.
+
+* *Replication*: To make your data fault-tolerant and highly-available, every topic can be replicated so that there are always multiple brokers that have a copy of the data just in case things go wrong.
+
+=== Configuration
+The component configuration can be done in `appsettings.{environment}.json` with the following section:
+
+[source, json]
+----
+"Kafka": {
+    "EnableKafka": true,
+    "Administration": [
+      {
+        "AdminId": "Admin1",
+        "Servers": "127.0.0.1:9092"
+      }
+    ],
+    "Producers": [
+      {
+        "ProducerId": "Producer1", 
+        "Servers": "127.0.0.1:9092", 
+        "ClientId": "client1", 
+        "Topic": "devonfw", 
+        "MessageMaxBytes": 1000000, 
+        "CompressionLevel": -1, 
+        "CompressionType": "None", 
+        "ReceiveMessageMaxBytes": 100000000,
+        "EnableSslCertificateVerification": false,
+        "CancellationDelayMaxMs": 100, 
+        "Ack": "None", 
+        "Debug": "", 
+        "BrokerAddressTtl": 1000, 
+        "BatchNumMessages": 1000000, 
+        "EnableIdempotence": false, 
+        "MaxInFlight": 5,
+        "MessageSendMaxRetries": 5,
+        "BatchSize": 100000000 
+      }
+    ],
+    "Consumers": [
+      {
+        "ConsumerId": "Consumer1", 
+        "Servers": "127.0.0.1:9092",
+        "GroupId": "group1",
+        "Topics": "devonfw", 
+        "AutoCommit": true,
+        "StatisticsIntervalMs": 0, 
+        "SessionTimeoutMs": 10000, 
+        "AutoOffsetReset": "Largest", 
+        "EnablePartitionEof": true,
+        "IsolationLevel": "ReadCommitted", 
+        "EnableSslCertificateVerification": false,
+        "Debug": "" 
+      }
+    ]
+  }
+----
+
+* `EnableKafka`: Boolean to activate the use of Apache Kafka.
+* `Administration`: 
+** `AdminId`: Admin Identifier
+** `Servers`: Host IP address and port number in the form of `host:port`.
+* `Producers`: List of all kafka producers configuration.
+** `ProducerId`: Identifier of the producer in devon.
+** `Servers`: Host IP address and port number in the form of `host:port`.
+** `ClientId`: Identifier of the client in Kafka.
+** `Topic`: Topics where the event will be delivered.
+** `MessageMaxBytes`: Maximum Kafka protocol request message size. Due to differing framing overhead between protocol versions the producer is unable to reliably enforce a strict max message limit at produce time and may exceed the maximum size by one message in protocol ProduceRequests, the broker will enforce the the topic's `max.message.bytes` limit (see Apache Kafka documentation).
+** `CompressionLevel`: Compression level parameter for algorithm selected by configuration property compression.codec. Higher values will result in better compression at the cost of more CPU usage. Usable range is algorithm-dependent:
++
+[0-9] for gzip; [0-12] for lz4; only 0 for snappy; -1 = codec-dependent 
++
+Default is `-1`.
+
+** `CompressionType`: compression codec to use for compressing message sets. This is the default value for all topics, may be overridden by the topic configuration property compression.codec. Types are: `None`, `Gzip`, `Snappy`, `Lz4`, `Zstd`. Default is `None`.
+** `ReceiveMessageMaxBytes`: Maximum Kafka protocol response message size. Default is `100000000`.
+** `EnableSslCertificateVerification`: Enable OpenSSL's builtin broker (server) certificate verification. Default is `true`.
+** `CancellationDelayMaxMs`: The maximum time in milliseconds before a cancellation request is acted on. Low values may result in measurably higher CPU usage. Default is `100`.
+** `Ack`:
++
+|====
+|*Value* | *Description* 
+|`None` - default | Broker does not send any response/ack to client
+|`Leader` | The leader will write the record to its local log but will respond without awaiting full acknowledgement from all followers
+|`All` | Broker will block until message is committed by all in sync replicas (ISRs). If there are less than min.insync.replicas (broker configuration) in the ISR set the produce request will fail
+|====
++
+Default is `None`.
+
+** `Debug`:
+A comma-separated list of debug contexts to enable. Detailed Producer debugging: broker,topic,msg. Consumer: consumer,cgrp,topic,fetch
+** `BrokerAddressTtl`: How long to cache the broker address resolving results in milliseconds.
+** `BatchNumMessages`: Maximum size (in bytes) of all messages batched in one MessageSet, including protocol framing overhead. This limit is applied after the first message has been added to the batch, regardless of the first message's size, this is to ensure that messages that exceed `batch.size` are produced. The total MessageSet size is also limited by `batch.num.messages` and `message.max.bytes`
+** `EnableIdempotence`: When set to `true`, the producer will ensure that messages are successfully produced exactly once and in the original produce order. The following configuration properties are adjusted automatically (if not modified by the user) when idempotence is enabled: `max.in.flight.requests.per.connection=5` (must be less than or equal to 5), `retries=INT32_MAX` (must be greater than 0), `acks=all`, `queuing.strategy=fifo`. Producer instantation will fail if user-supplied configuration is incompatible
+** `MaxInFlight`: Maximum number of in-flight requests per broker connection. This is a generic property applied to all broker communication, however it is primarily relevant to produce requests. In particular, note that other mechanisms limit the number of outstanding consumer fetch request per broker to one. Default is `5`.
+** `MessageSendMaxRetries`: How many times to retry sending a failing Message. Default is `5`.
+** `BatchSize`: Maximum size (in bytes) of all messages batched in one MessageSet, including protocol framing overhead. This limit is applied after the first message has been added to the batch, regardless of the first message's size, this is to ensure that messages that exceed batch.size are produced. The total MessageSet size is also limited by batch.num.messages and `message.max.bytes`. Default is `1000000`.
+* `Consumers`: List of consumers configurations.
+** `ConsumerId`: Identifier of the consumer for devon.
+** `Servers`: Host IP address and port number in the form of `host:port`.
+** `GroupId`: Client group id string. All clients sharing the same group.id belong to the same group.
+** `Topics`: Topics where the event will be read from.
+** `AutoCommit`: Automatically and periodically commit offsets in the background. Note: setting this to false does not prevent the consumer from fetching previously committed start offsets. To circumvent this behaviour set specific start offsets per partition in the call to assign()
+** `StatisticsIntervalMs`: librdkafka statistics emit interval. The application also needs to register a stats callback using `rd_kafka_conf_set_stats_cb()`. The granularity is 1000ms. A value of 0 disables statistics
+** `SessionTimeoutMs`: Client group session and failure detection timeout. The consumer sends periodic heartbeats (heartbeat.interval.ms) to indicate its liveness to the broker. If no hearts are received by the broker for a group member within the session timeout, the broker will remove the consumer from the group and trigger a rebalance. Default is `0`.
+** `AutoOffsetReset`: Action to take when there is no initial offset in offset store or the desired offset is out of range: 'smallest','earliest' - automatically reset the offset to the smallest offset, 'largest','latest' - automatically reset the offset to the largest offset, 'error' - trigger an error which is retrieved by consuming messages and checking 'message-&gt;err'
+** `EnablePartitionEof`: Verify CRC32 of consumed messages, ensuring no on-the-wire or on-disk corruption to the messages occurred. This check comes at slightly increased CPU usage
+** `IsolationLevel`: Controls how to read messages written transactionally: `ReadCommitted` - only return transactional messages which have been committed. `ReadUncommitted` - return all messages, even transactional messages which have been aborted.
+** `EnableSslCertificateVerification`: Enable OpenSSL's builtin broker (server) certificate verification. Default is `true`.
+** `Debug`: A comma-separated list of debug contexts to enable. Detailed Producer debugging: broker,topic,msg. Consumer: consumer,cgrp,topic,fetch
+
+=== Setting up in Devon
+
+For setting it up using the Devon4Net WebApi template just configure it in the `appsettings.Development.json`. You can do this by copying the previously showed configuration with your desired values.
+
+NOTE: Please refer to the "How to use Kafka" and "Kafka template" documentation to learn more about Kafka.
+
+=== Setting up in other projects
+
+For setting it up in other projects install it running the following command in the Package Manager Console, or using the Package Manager in Visual Studio:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.Kafka
+----
+
+This will install all the packages the component needs to work properly. Now set the configuration in the `appsettings.{enviroment}.json`:
+[source, json]
+----
+"Kafka": {
+    "EnableKafka": true,
+    "Administration": [
+      {
+        "AdminId": "Admin1",
+        "Servers": "127.0.0.1:9092"
+      }
+    ],
+    "Producers": [
+      {
+        "ProducerId": "Producer1", 
+        "Servers": "127.0.0.1:9092", 
+        "ClientId": "client1", 
+        "Topic": "devonfw", 
+        "MessageMaxBytes": 1000000, 
+        "CompressionLevel": -1, 
+        "CompressionType": "None", 
+        "ReceiveMessageMaxBytes": 100000000,
+        "EnableSslCertificateVerification": false,
+        "CancellationDelayMaxMs": 100, 
+        "Ack": "None", 
+        "Debug": "", 
+        "BrokerAddressTtl": 1000, 
+        "BatchNumMessages": 1000000, 
+        "EnableIdempotence": false, 
+        "MaxInFlight": 5,
+        "MessageSendMaxRetries": 5,
+        "BatchSize": 100000000 
+      }
+    ],
+    "Consumers": [
+      {
+        "ConsumerId": "Consumer1", 
+        "Servers": "127.0.0.1:9092",
+        "GroupId": "group1",
+        "Topics": "devonfw", 
+        "AutoCommit": true,
+        "StatisticsIntervalMs": 0, 
+        "SessionTimeoutMs": 10000, 
+        "AutoOffsetReset": "Largest", 
+        "EnablePartitionEof": true,
+        "IsolationLevel": "ReadCommitted", 
+        "EnableSslCertificateVerification": false,
+        "Debug": "" 
+      }
+    ]
+  }
+----
+
+Navigate to your `Program.cs` file and add the following lines to configure the component:
+
+[source, c#]
+----
+using Devon4Net.Application.WebAPI.Configuration;
+.
+.
+.
+builder.Services.SetupKafka(builder.Configuration);
+----
+
+As you will be able to tell, the process is very similar to installing other components. Doing the previous actions will allow you to use the different handlers available with kafka. You can learn more 
+
+NOTE: Please refer to the "How to use Kafka" and "Kafka template" documentation to learn more about Kafka.
