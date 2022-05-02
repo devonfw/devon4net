@@ -1905,10 +1905,11 @@ The ClientCertificate Whitelist contains the client's certificate thumbprint.
 On the sample above, the server application will add to the response headers the `AccessControlExposeHeader`, `XFrameOptionsHeader`, `XssProtectionHeader` and `XContentTypeOptionsHeader` headers.
 If the header response attribute does not have a value, it will not be added to the response headers.
 +
+NOTE: Please refer to the link:howto.asciidoc[How To: Customize Headers] documentation for more information.
++
+
 .Response Headers
 image::images/headers-middleware.png[]
-+
-NOTE: Please refer to the link:howto.asciidoc[How To: Customize Headers] documentation for more information.
 
 4. `KillSwicthMiddleware.cs`: To enable or disable HTTP requests.
 +
@@ -1920,6 +1921,7 @@ NOTE: Please refer to the link:howto.asciidoc[How To: Customize Headers] documen
     "HttpStatusCode": 403
   },
 ----
++
 [options="header"]
 |=======================
 |*Property*|*Description*
@@ -1963,3 +1965,208 @@ Add the default configuration shown in the configuration section.
 https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-6.0[ASP.NET Core Middleware - Microsoft Docs]
 
 https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/write?view=aspnetcore-6.0[Write custom ASP.NET Core middleware - Microsoft Docs]
+
+== Devon4Net.Infrastructure.UnitOfWork
+
+The idea of Unit of Work is related to the successful implementation of the Repository Pattern. It is necessary to first comprehend the Repository Pattern in order to fully understand this concept.
+
+=== The Repository Pattern
+
+A repository is a class defined for an entity, that contains all of the operations that may be executed on that entity. For example, a repository for an entity Employee will contain basic CRUD operations as well as any additional potential actions connected to it. The following procedures can be used to implement the Repository Pattern:
+
+    * One repository per entity (non-generic) : This approach makes use of a single repository class for each entity. For instance, if you have two entities, Todo and Employee, each will have its own repository.
+    * Generic repository: A generic repository is one that can be used for all entities.
+
+==== Unit of Work in the Repository Pattern
+
+Unit of Work is referred to as a single transaction that involves multiple operations of insert/update/delete. It means that, for a specific user action, all transactions are performed in a single transaction rather than several database transactions.
+
+.Unit of work diagram
+image::images/Unit-of-work.png[]
+
+=== Configuration
+
+Connection strings must be added to the configuration in the file `appsettings.environment.json` as follows: 
+
+[source, json]
+----
+"ConnectionStrings": {
+    "Todo": "Add your database connection string here",
+    "Employee": "Add your database connection string here"
+  },
+----
+
+=== Setting up in Devon
+
+For setting it up using the Devon4NetApi template just configure the connection strings in the `appsettings.Development.json` file.
+
+To add Databases, use the SetupDatabase method in the `DevonConfiguration.cs` file:
+
+[source, c#]
+----
+  private static void SetupDatabase(IServiceCollection services, IConfiguration configuration)
+        {
+            services.SetupDatabase<TodoContext>(configuration, "Todo", DatabaseType.SqlServer, migrate:true).ConfigureAwait(false);
+            services.SetupDatabase<EmployeeContext>(configuration, "Employee", DatabaseType.SqlServer, migrate:true).ConfigureAwait(false);
+        }
+----
+
+You must provide the configuration, the connection string key, and the database type.
+
+The supported databases are:
+
+* SqlServer
+* Sqlite
+* InMemory
+* Cosmos
+* PostgreSQL
+* MySql
+* MariaDb
+* FireBird
+* Oracle
+* MSAccess
+
+Set the migrate property value to true if you need to use migrations, as shown above.
+
+NOTE: For more information about the use of migrations please visit the https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli[official microsoft documentation].
+
+Our typed repositories must inherit from the generic repository of the Unit Of Work component, as seen in the example below:
+
+[source, c#]
+----
+  public class TodoRepository : Repository<Todos>, ITodoRepository
+    {
+        public TodoRepository(TodoContext context) : base(context)
+        {
+            
+        }
+        .
+        .
+        .
+    }
+----
+
+Use the methods of the generic repository to perform your CRUD actions:
+
+[source, c#]
+----
+public Task<Todos> Create(string description)
+        {
+            
+            var todo = new Todos {Description = description};
+            return Create(todo);
+        }
+----
+
+The default value for `AutoSaveChanges` to the Database is true, you may change it to false if you need to employ transactions.
+
+Inject the Repository on the service of the business layer, as shown below: 
+
+[source, c#]
+----
+public class TodoService: Service<TodoContext>, ITodoService
+    {
+        private readonly ITodoRepository _todoRepository;
+
+        public TodoService(IUnitOfWork<TodoContext> uoW) : base(uoW)
+        {
+            _todoRepository = uoW.Repository<ITodoRepository>();
+        }
+        .
+        .
+        .
+    }
+----
+
+=== Setting up in other projects
+
+Install the package on your solution using the Package Manager Console:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.UnitOfWork
+----
+
+Create a Configuration static class in order to add the `IRequestHandler` services, for example:
+
+[source, c#]
+----
+public static class Configuration
+    {
+        public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
+        {
+            SetupDatabase(services, configuration);
+        }
+
+        private static void SetupDatabase(IServiceCollection services, IConfiguration configuration)
+        {
+            services.SetupDatabase<TodoContext>(configuration, "Default", DatabaseType.SqlServer).ConfigureAwait(false);
+        }
+    }
+----
+
+Configure the component in `Program.cs` adding the following lines:
+
+[source, c#]
+----
+using Devon4Net.Domain.UnitOfWork;
+.
+.
+.
+builder.Services.SetupUnitOfWork(typeof(Configuration));
+----
+
+Add the default configuration shown in the configuration section and follow the same steps as the previous section.
+
+=== Tips
+
+_Predicate expression builder_
+ 
+- Use this expression builder to generate lambda expressions dynamically: 
+
+[source,C#]
+----   
+var predicate =  PredicateBuilder.True<T>();
+----
+    
+Where `T` is a class. At this moment, you can build your expression and apply it to obtain your results in a efficient way and not retrieving data each time you apply an expression.
+    
+- Example from My Thai Star .Net Core implementation:
+
+[source,C#]
+----    
+
+public async Task<PaginationResult<Dish>> GetpagedDishListFromFilter(int currentpage, int pageSize, bool isFav, decimal maxPrice, int minLikes, string searchBy, IList<long> categoryIdList, long userId)
+{
+    var includeList = new List<string>{"DishCategory","DishCategory.IdCategoryNavigation", "DishIngredient","DishIngredient.IdIngredientNavigation","IdImageNavigation"};
+    
+    //Here we create our predicate builder
+    var dishPredicate = PredicateBuilder.True<Dish>();
+
+
+    //Now we start applying the different criteria:
+    if (!string.IsNullOrEmpty(searchBy))
+    {
+        var criteria = searchBy.ToLower();
+        dishPredicate = dishPredicate.And(d => d.Name.ToLower().Contains(criteria) || d.Description.ToLower().Contains(criteria));
+    }
+    
+    if (maxPrice > 0) dishPredicate = dishPredicate.And(d=>d.Price<=maxPrice);
+
+    if (categoryIdList.Any())
+    {
+        dishPredicate = dishPredicate.And(r => r.DishCategory.Any(a => categoryIdList.Contains(a.IdCategory)));
+    }
+    
+    if (isFav && userId >= 0)
+    {
+        var favourites = await UoW.Repository<UserFavourite>().GetAllAsync(w=>w.IdUser == userId);
+        var dishes = favourites.Select(s => s.IdDish);
+        dishPredicate = dishPredicate.And(r=> dishes.Contains(r.Id));                
+    }
+    
+    // Now we can use the predicate to retrieve data from database with just one call
+    return await UoW.Repository<Dish>().GetAllIncludePagedAsync(currentpage, pageSize, includeList, dishPredicate);
+
+}
+----
