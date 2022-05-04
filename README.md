@@ -1,116 +1,70 @@
+
 # The DEV-ON time Platform for the .NET stack
 
-devon4net is a real Clean Architecture designed templates to build cloud native solutions (AWS Serverless/Lambda), microservices, WebAPI applications and protobuf applications. 
+- [Features](#features)
+- [What sets devon4net apart?](#what-sets-devon4net-apart)
+- [What does devon4net include?](#what-does-devon4net-include)
+    - [Templates](#templates)
+    - [NuGet packages](#nuget-packages)
+    - [Complete documentation](#complete-documentation)
 
-It is build to simplify and standarize the development life-cycle by means of the Microsoft's .Net stack. 
+Devon4Net is part of the devonfw free and open source framework for the .NET stack. It provides a solid architectural model based on *Onion Layered Design* for building cloud native solutions, microservices, WebAPI applications and protocol buffers (protobuf) applications.
 
-All functionalities are built to work as individual and configurable components (well-defined json settings). So, that means you can use them separately or even use all of them in a single application.
+Devon4net is intended for building backend applications.
+However denvonfw also has tools to build frontend client applications such as devon4ng. 
 
-Some key-features are:
-- Real modular clean Architecture layer
-- Global configuration automated. devon4Net can be instantiated on any .net core application template with no effort like AWS templates for serverless applications
-- Number of minium libraries. Every component can be used isolated via Nuget in any .NET application without the Weab API Template
-- Full and configurable support for HTTP2
-- Red button functionality (aka killswitch) to stop attending API request with custom error
-- Global management via middleware with error management via custom HTTP errors, killswitch functionality, model state validation
-- Support to only accept request from clients with a specific client certificate on Kestrel server.
-- Cloud native. AWS templates integration. You can integrate devon4net in your serverless application in a easy way.
-- All components use IOptions pattern to be set up properly
-- Swagger generation compatible with the latest Open API version. 
-- External configuration file for each environment
-- .NET 6 working solution (Latest v6.0.0)
-- Packages and solution templates published on nuget
-- Full components customization by config file
-- Docker ready (My Thai Star sample fully working on docker)
-- Port specification by configuration
-- Dependency injection by Microsoft .net Core
-- Automapper support
-- Entity framework ORM (Unit of work, async methods, Model context generation guide)
-- Easy LiteDB support
-- Multiplatform support provided by the framework: Windows, Linux and Mac ready
-- Samples: My Thai Star backend, Google API integration, Azure login, AOP with Castle
-- Documentation site
-- Embedded SPA page support
-- Easy RabbitMq support (command and event handlers)
-- MediatR library for in memory messaging + event handling
-- Microfocus SMAX support (component is not maintained, but you can use it as sample to work with)
-- Easy class FluentValidation. Create your own rules to determine if an instance of a class is valid or not
-- CyberArk integration (component is not maintained, but you can use it as sample to work with)
-- Ansible Tower integration. devon4net integrates with Ansible Tower to setup your cloud servers in a easy way (component is not maintained, but you can use it as sample to work with)
-- gRPC + Protobuf support
-- Kafka: Message producer and consumer handlers. Create/Delete topics as well
-- Extra secrets/settings file support
-- Added ValidateAntiForgeryToken support via XSRF-TOKEN in cookie and header
+## Features
 
-Included features:
-- Cloud Native AWS :
-              - Serverless API project and Lambda Project with multifunction support able to manage secrets as configuration settings, S3, CDK...
-- Logging:
-              - Text File
-              - Sqlite database support
-              - Serilog Seq Server support
-              - Graylog integration ready through TCP/UDP/HTTP protocols
-              - API Call params interception (simple and compose objects)
-              - API error exception management
+* ***Clean Layered Architecture***: 
+The architecture is separated in different components, using the onion architecture pattern. Finding the balance between best practices and latest trends, and a short learning curve that helps us scale up and be productive.
 
-- Swagger:
-              - Swagger autogenerating client from comments and annotations on controller classes
-              - Full swagger client customization (Version, Title, Description, Terms, License, Json end point definition)
-              - Easy configuration with just one configuration node in your settings file
+* ***Modular & Easily Configurable***:
+All functionalities are built to work as individual and configurable components via 'appsettings.json'. That means you can use them separately or even use all of them in a single application.
 
-- JWT:
-              - Issuer, audience, token expiration customization by external file configuration
-              - Token generation via certificate
-              - MVC inherited classes to access JWT user properties
-              - API method security access based on JWT Claims
+* ***NuGet support***:
+Every component can be used isolated as a package via Nuget in any .NET application, without the need of using any devon template.
 
-- CORS:
-              - Simple CORS definition ready
-              - Multiple CORS domain origin definition with specific headers and verbs
+* ***AWS templates integration***:
+The devon4net project has different ready to use templates. This samples include Cloud Native, Kafka and Web API solutions.
+* ***Free & Open Source***:
+Devon4net is actively being developed on GitHub (Apache-2.0 license) and accepting contributions. This gives developers complete access to the source code.
 
-- Headers:
-              - Automatic header injection with middleware.
-              - Supported header definitions: AccessControlExposeHeader, StrictTransportSecurityHeader, XFrameOptionsHeader, XssProtectionHeader, XContentTypeOptionsHeader, ContentSecurityPolicyHeader, PermittedCrossDomainPoliciesHeader, ReferrerPolicyHeader
+* ***gRPC and protocol buffers support***:
+The supplied templates will allow you to easily construct standardized gRPC clients and services, or simply add gRPC support to your existing services.
 
-- Reporting server:
-              - Partial implementation of reporting server based on My-FyiReporting (now runs on linux container)
+## What sets devon4net apart?
 
-- Testing:
-              - Integration test template with sqlite support
-              - Unit test template
-              - Moq, xunit frameworks integrated
+* ***Productivity:*** The first step when starting a new project is to arrange the structure and implement the common components to make it work properly. But, why code it when you can just reuse it? You can skip this part and go straight to coding specialized components, leaving the common stuff to devon4net collaborators.
 
-- Circuit breaker:
-              - Integrated with HttpClient factory
-              - Client Certificate customization
-              - Number of retries customizables
+* ***Steep learning curve:*** When setting up this kind of technology, the key challenge is adjusting how team members perform to include its use. This can be counterproductive in some circumstances, since the time spent learning how to use them may be greater than the total time saved using them. As a result, one of our primary goals is to provide an easy-to-use and learn format so that implementation may be completed as quickly as possible.
 
-- LiteDb:
-            - Support for LiteDB
-            - Provided basic repository for CRUD operations
+* ***Code quality:*** We have a "0 errors, 0 warnings, 0 messages" policy when developing new features and functionalities in the solution. The usage of design patterns, well-known architectures, and best practices across the code has resulted in a clean code masterpiece, using tools such as SonarQube to scan the lines looking for bugs and code smells.
 
-- RabbitMq:
-            - Use of EasyQNet library to perform CQRS main functions between different microservices
-            - Send commands / Subscribe queues with one C# sentence
-            - Events management: Handled received commands to subscribed messages
-            - Automatic messaging backup when sent and handled (Internal database via LiteDB and database backup via Entity Framework)
+* ***Support & Mantainance:*** Behind the code, a large team of experts with years of experience in the field develop new features and provide support to the community helping to solve any type of issue.
 
-- MediatR:
-            - Use of MediatR library to perform CQRS main functions in memory
-            - Send commands / Subscribe queues with one C# sentence
-            - Events management: Handled received commands to subscribed messages
-            - Automatic messaging backup when sent and handled (Internal database via LiteDB and database backup via Entity Framework)
-- SmaxHcm:
-            - Component to manage Microfocus SMAX for cloud infrastructure services management
+* ***Integrated templates:*** You may use the template to develop a microservice solution with minimum setup. Furthermore, the devon4Net framework may be integrated into third-party templates such as the Amazon API template to enable the use of lambdas in serverless environments
 
-- CyberArk:
-            - Manage safe credentials with CyberArk
+## What does devon4net include?
 
-- AnsibleTower:
-            - Ansible automates the cloud infrastructure. devon4net integrates with Ansible Tower via API consumption endpoints
 
-- gRPC+Protobuf:
-            - Added Client + Server basic templates sample gRPC with Google's Protobuf protocol using devon4net
 
-- Kafka:
-            - Added Apache Kafka support for deliver/consume messages and create/delete topics as well             
+
+### Templates
+As mentioned before, devon4net includes a number of ready to use templates, they can be used thanks to the package manager NuGet. These templates provide you with a base structure and some classes that simplify the creation process:
+
+* *Web APIs*
+* *AWS* cloud solutions
+* *gRPC* clients and services
+* *Kafka* event streaming platforms
+
+More info about these topics and how to use them will be displayed in the documentation.
+
+### NuGet packages
+You will discover a mix of useful NuGet packages that are up to date as well as ones that are deprecated but may still be used. They will assist you in recycling common features across projects. Each package can easily be configured to suit your preferences. 
+
+Explore the packages in the [NuGet gallery](https://www.nuget.org/packages?q=devonfw).
+
+### Complete documentation
+The documentation contains all the information you need to use the different packages and templates together with videos and "how to" tutorials. Do not hesitate to review the documentation and consider asking the team any questions if necessary. 
+
+Explore the documentation in the [Wiki](https://github.com/devonfw/devon4net/wiki) or [site documentation](https://devonfw.com/website/pages/docs/devonfw-guide_devon4net.wiki_master-devon4net.asciidoc.html).
