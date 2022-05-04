@@ -900,7 +900,7 @@ NOTE: You will need to specify the name of the algorithm (shown in 'algorithm' c
 
 NOTE: Please check https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/Supported-Algorithms[Windows Documentation] to get the latest updates on supported encryption algorithms.
 
-=== Setting up in devon
+=== Setting up in Devon
 For setting it up using the Devon4NetApi template configure it in the `appsettings.{environment}.json` file. 
 
 You will need to add a certificate that will be used for signing the token, please check the documentation about how to create a new certificate and add it to a project if you are not aware of how it's done.
@@ -1105,7 +1105,7 @@ The component configuration can be done in `appsettings.{environment}.json` with
 * `EnableLiteDb`: Boolean to activate the use of LiteDb.
 * `DatabaseLocation`: Relative path of the file containing all the documents.
 
-=== Setting up in devon
+=== Setting up in Devon
 For setting it up using the Devon4Net WebApi template just configure it in the `appsettings.Development.json`.
 
 Then you will need to inject the repositories. For that go to `Devon4Net.Application.WebAPI.Implementation.Configuration.DevonConfiguration` and add the folowing lines in `SetupDependencyInjection` method:
@@ -1225,7 +1225,7 @@ In the following table some validation methods are described:
 
 FluentValidation is a.NET library that allows users to create strongly-typed validation rules.
 
-=== Setting up in devon
+=== Setting up in Devon
 
 To establish a set of validation criteria for a specific object, build a class that inherits from `CustomFluentValidator<T>`, where `T` is the type of class to validate. For example:
 
@@ -1583,7 +1583,7 @@ public class CreateTodoHandler : MediatrRequestHandler<CreateTodoCommand, TodoRe
 ----
 +
 This class must to inherit from `MediatrRequestHandler<TRequest, TResponse>` class that is explained above.
-On first place we inject the TodoService via dependency injection using the `Setup(ITodoService todoService)` method, and then we override the `HandleAction(TRequest request, CancellationToken cancellationToken)` method calling the service and returning the new DTO
+On first place we inject the TodoService via dependency injection using the `Setup(ITodoService todoService)` method, and then we overload the `HandleAction(TRequest request, CancellationToken cancellationToken)` method calling the service and returning the new DTO
 
 * `GetTodoHandler.cs`:
 +
@@ -1634,4 +1634,539 @@ builder.Services.SetupMediatR(builder.Configuration);
 builder.Services.SetupDependencyInjection(builder.Configuration);
 ----
 
-After adding the default settings provided in the configuration section, you may use the MediatR component in your code. 
+After adding the default settings provided in the configuration section, you may use the MediatR component in your code.
+
+== Devon4Net.Infrastructure.RabbitMQ
+
+`RabbitMQ` is an open-source message-broker software (also known as message-oriented middleware) that was developed to support the Advanced Message Queuing Protocol (AMQP) and has since been expanded with a plug-in architecture to support the Streaming Text Oriented Messaging Protocol (STOMP), MQ Telemetry Transport (MQTT), and https://www.rabbitmq.com/protocols.html[other protocols].
+
+In `RabbitMQ`, queues are defined to store messages sent by producers until they are received and processed by consumer applications. 
+
+=== Patterns
+
+* Publisher-Subscriber pattern
++
+Publish-Subscribe is a design pattern that allows loose coupling between the application components.
++
+Message senders, known as publishers, do not configure the messages to be sent directly to specific receivers, known as subscribers.
+Messages are released with no information of what they are or if any subscribers to that information exist.
+Delegate is the core of this C# design pattern.
++
+.RabbitMQ Queue system
+image::images/publish-suscribe.png[]
++
+To summarize :
++
+** A producer is a user application that sends messages.
+** A queue is a buffer that stores messages.
+** A consumer is a user application that receives messages.
+
+=== Key Classes
+
+In the case of this component the messages are created in the `Message` abstract class:
+   
+[source, c#]
+----
+public abstract class Message
+    {
+        public string MessageType { get; }
+        public Guid InternalMessageIdentifier { get; set; }
+
+        protected Message()
+        {
+            MessageType = GetType().Name;
+        }
+    }
+----
+
+Then the `Command` serializable class inherits from `Message` class:
+
+[source, c#]
+----
+[Serializable]
+public class Command : Message
+    {
+        public DateTime Timestamp { get; protected set; }
+        protected Command()
+        {
+            Timestamp = DateTime.Now;
+            InternalMessageIdentifier = Guid.NewGuid();
+        }
+    }
+----
+
+The message will have from base a Timestamp, a Guid as message identifier and the message type.
+
+=== Configuration
+
+Component configuration is made on file `appsettings.{environment}.json` as follows:
+
+[source, json]
+----
+  "RabbitMq": {
+    "EnableRabbitMq": true,
+    "Hosts": [
+      {
+        "Host": "127.0.0.1",
+        "Port": 5672,
+        "Ssl": false,
+        "SslServerName": "localhost",
+        "SslCertPath": "localhost.pfx",
+        "SslCertPassPhrase": "localhost",
+        "SslPolicyErrors": "RemoteCertificateNotAvailable" //None, RemoteCertificateNotAvailable, RemoteCertificateNameMismatch, RemoteCertificateChainErrors
+      }
+    ],
+
+    "VirtualHost": "/",
+    "UserName": "admin",
+    "Password": "password",
+    "Product": "devon4net",
+    "RequestedHeartbeat": 10, //Set to zero for no heartbeat
+    "PrefetchCount": 50,
+    "PublisherConfirms": false,
+    "PersistentMessages": true,
+    "Platform": "localhost",
+    "Timeout": 10,
+    "Backup": {
+      "UseLocalBackup": true,
+      "DatabaseName": "devon4netMessageBackup.db"
+    }
+  },
+----
+
+NOTE: Please refer to the https://github.com/EasyNetQ/EasyNetQ/wiki/Connecting-to-RabbitMQ[official EasyNetQ documentation] for further details about connection parameters.
+
+=== Setting up in Devon
+
+For setting it up using the Devon4NetApi template configure it in the `appsettings.{environment}.json` file.
+
+A template is available in the RabbitMqManagement folder of the `Devon4Net.Application.WebAPI.Implementation` Business folder:
+
+.RabbitMQ Management folder structure
+image::images/RabbitMqManagement.png[]
+
+* `TodoCommand.cs`:
++
+[source, c#]
+----
+ public class TodoCommand : Command
+    {
+        public string Description { get; set; }
+    }
+----
++
+The `TodoCommand` inherits from `Command`, in this case, the `Description` will be added to the `Message`.
+
+* `TodoRabbitMqHandler.cs`:
++
+[source, c#]
+----
+ public class TodoRabbitMqHandler: RabbitMqHandler<TodoCommand>
+    {
+        private ITodoService TodoService { get; set; }
+
+        public TodoRabbitMqHandler(IServiceCollection services, IBus serviceBus, bool subscribeToChannel = false) : base(services, serviceBus, subscribeToChannel)
+        {
+        }
+
+        public TodoRabbitMqHandler(IServiceCollection services, IBus serviceBus, IRabbitMqBackupService rabbitMqBackupService, bool subscribeToChannel = false) : base(services, serviceBus, rabbitMqBackupService, subscribeToChannel)
+        {
+        }
+
+        public TodoRabbitMqHandler(IServiceCollection services, IBus serviceBus, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService, bool subscribeToChannel = false) : base(services, serviceBus, rabbitMqBackupLiteDbService, subscribeToChannel)
+        {
+        }
+
+        public TodoRabbitMqHandler(IServiceCollection services, IBus serviceBus, IRabbitMqBackupService rabbitMqBackupService, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService, bool subscribeToChannel = false) : base(services, serviceBus, rabbitMqBackupService, rabbitMqBackupLiteDbService, subscribeToChannel)
+        {
+        }
+
+        public override async Task<bool> HandleCommand(TodoCommand command)
+        {
+            TodoService = GetInstance<ITodoService>();
+
+            var result = await TodoService.CreateTodo(command.Description).ConfigureAwait(false);
+            return result!=null;
+        }
+    }
+----
++
+This class must to inherit from `RabbitMqHandler<T>` class.
+`HandleCommand(T command)` method should be overridden in order to send command to the queue, this method returns true if the message has been published.
+
+=== Setting up in other projects
+
+Install the package in your solution using the Package Manager Console:
+
+[source, console]
+----
+Install-Package Devon4Net.Infrastructure.RabbitMQ
+----
+
+Create a Configuration static class in order to add the `RabbitMqHandler` services, for example:
+
+[source, c#]
+----
+ public static class Configuration
+    {
+
+        public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
+        {
+
+            var rabbitMq = serviceProvider.GetService<IOptions<RabbitMqOptions>>();
+
+            if (rabbitMq?.Value != null && rabbitMq.Value.EnableRabbitMq)
+            {
+                SetupRabbitHandlers(services);
+            }
+        }
+
+        private static void SetupRabbitHandlers(IServiceCollection services)
+        {
+            services.AddRabbitMqHandler<TodoRabbitMqHandler>(true);
+        }
+    }
+----
+
+Add the following lines in the `Program.cs` class: 
+
+
+[source, c#]
+----
+builder.Services.SetupRabbitMq(builder.Configuration);
+builder.Services.SetupDependencyInjection(builder.Configuration);
+----
+
+After adding the default settings provided in the configuration section, you may use the RabbitMQ component in your code.
+
+NOTE: Please see the https://www.rabbitmq.com/download.html[ RabbitMQ official documentation] for instructions on installing the RabbitMQ Server.
+
+== Devon4Net.Infrastructure.Middleware
+
+Middleware is software that's assembled into an app pipeline to handle requests and responses. Request delegates are used to construct the request pipeline. Each HTTP request is handled by a request delegate. 
+
+The diagram below represents the whole request processing pipeline for ASP.NET Core MVC and Razor Pages apps.
+You can see how existing middlewares are organized in a typical app and where additional middlewares are implemented. 
+
+.Middleware Order
+image::images/middleware-life-cycle.png[]
+
+The ASP.NET Core request pipeline is composed of a number of request delegates that are called one after the other. This concept is illustrated in the diagram below. The execution thread is shown by the black arrows. 
+
+.Delegates flow in middleware 
+image::images/middleware-delegates-flow.png[] 
+
+=== Configuration
+
+In this component there are four custom Middlewares classes, configuration is made on file `appsettings.{environment}.json` as follows: 
+
+1. `ClientCertificatesMiddleware.cs`: For the management of client certificates. 
++
+[source, json]
+----
+  "Certificates": {
+    "ServerCertificate": {
+      "Certificate": "",
+      "CertificatePassword": ""
+    },
+    "ClientCertificate": {
+      "EnableClientCertificateCheck": false,
+      "RequireClientCertificate": false,
+      "CheckCertificateRevocation": true,
+      "ClientCertificates": {
+        "Whitelist": [
+          ""
+        ]
+      }
+    }
+  },
+----
++
+The ClientCertificate Whitelist contains the client's certificate thumbprint. 
+
+2. `ExceptionHandlingMiddleware.cs`: Handles a few different types of exceptions. 
+
+3. `CustomHeadersMiddleware.cs`: To add or remove certain response headers.
++
+[source, json]
+----
+"Headers": {
+    "AccessControlExposeHeader": "Authorization",
+    "StrictTransportSecurityHeader": "",
+    "XFrameOptionsHeader": "DENY",
+    "XssProtectionHeader": "1;mode=block",
+    "XContentTypeOptionsHeader": "nosniff",
+    "ContentSecurityPolicyHeader": "",
+    "PermittedCrossDomainPoliciesHeader": "",
+    "ReferrerPolicyHeader": ""
+  },
+----
++
+On the sample above, the server application will add to the response headers the `AccessControlExposeHeader`, `XFrameOptionsHeader`, `XssProtectionHeader` and `XContentTypeOptionsHeader` headers.
+If the header response attribute does not have a value, it will not be added to the response headers.
++
+NOTE: Please refer to the link:howto.asciidoc[How To: Customize Headers] documentation for more information.
++
+
+.Response Headers
+image::images/headers-middleware.png[]
+
+4. `KillSwicthMiddleware.cs`: To enable or disable HTTP requests.
++
+[source, json]
+----
+"KillSwitch": {
+    "UseKillSwitch": false,
+    "EnableRequests": true,
+    "HttpStatusCode": 403
+  },
+----
++
+[options="header"]
+|=======================
+|*Property*|*Description*
+|UseKillSwitch| True to enable KillSwtich middleware
+|EnableRequests| True to enable HTTP requests.
+|HttpStatusCode| the HTTP status code that will be returned
+|=======================
+
+=== Setting up in Devon
+
+For setting it up using the Devon4NetApi template just configure it in the appsettings.Development.json file.
+
+=== Setting up in other projects
+
+Install the package on your solution using the Package Manager Console:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.Middleware
+----
+
+Configure the component in `Program.cs` adding the following lines:
+
+[source, c#]
+----
+using Devon4Net.Infrastructure.Middleware.Middleware;
+.
+.
+.
+builder.Services.SetupMiddleware(builder.Configuration);
+.
+.
+.
+app.SetupMiddleware(builder.Services);
+----
+
+Add the default configuration shown in the configuration section.
+
+=== References
+
+https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-6.0[ASP.NET Core Middleware - Microsoft Docs]
+
+https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/write?view=aspnetcore-6.0[Write custom ASP.NET Core middleware - Microsoft Docs]
+
+== Devon4Net.Infrastructure.UnitOfWork
+
+The idea of Unit of Work is related to the successful implementation of the Repository Pattern. It is necessary to first comprehend the Repository Pattern in order to fully understand this concept.
+
+=== The Repository Pattern
+
+A repository is a class defined for an entity, that contains all of the operations that may be executed on that entity. For example, a repository for an entity Employee will contain basic CRUD operations as well as any additional potential actions connected to it. The following procedures can be used to implement the Repository Pattern:
+
+    * One repository per entity (non-generic) : This approach makes use of a single repository class for each entity. For instance, if you have two entities, Todo and Employee, each will have its own repository.
+    * Generic repository: A generic repository is one that can be used for all entities.
+
+==== Unit of Work in the Repository Pattern
+
+Unit of Work is referred to as a single transaction that involves multiple operations of insert/update/delete. It means that, for a specific user action, all transactions are performed in a single transaction rather than several database transactions.
+
+.Unit of work diagram
+image::images/Unit-of-work.png[]
+
+=== Configuration
+
+Connection strings must be added to the configuration in the file `appsettings.environment.json` as follows: 
+
+[source, json]
+----
+"ConnectionStrings": {
+    "Todo": "Add your database connection string here",
+    "Employee": "Add your database connection string here"
+  },
+----
+
+=== Setting up in Devon
+
+For setting it up using the Devon4NetApi template just configure the connection strings in the `appsettings.Development.json` file.
+
+To add Databases, use the SetupDatabase method in the `DevonConfiguration.cs` file:
+
+[source, c#]
+----
+  private static void SetupDatabase(IServiceCollection services, IConfiguration configuration)
+        {
+            services.SetupDatabase<TodoContext>(configuration, "Todo", DatabaseType.SqlServer, migrate:true).ConfigureAwait(false);
+            services.SetupDatabase<EmployeeContext>(configuration, "Employee", DatabaseType.SqlServer, migrate:true).ConfigureAwait(false);
+        }
+----
+
+You must provide the configuration, the connection string key, and the database type.
+
+The supported databases are:
+
+* SqlServer
+* Sqlite
+* InMemory
+* Cosmos
+* PostgreSQL
+* MySql
+* MariaDb
+* FireBird
+* Oracle
+* MSAccess
+
+Set the migrate property value to true if you need to use migrations, as shown above.
+
+NOTE: For more information about the use of migrations please visit the https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli[official microsoft documentation].
+
+Our typed repositories must inherit from the generic repository of the Unit Of Work component, as seen in the example below:
+
+[source, c#]
+----
+  public class TodoRepository : Repository<Todos>, ITodoRepository
+    {
+        public TodoRepository(TodoContext context) : base(context)
+        {
+            
+        }
+        .
+        .
+        .
+    }
+----
+
+Use the methods of the generic repository to perform your CRUD actions:
+
+[source, c#]
+----
+public Task<Todos> Create(string description)
+        {
+            
+            var todo = new Todos {Description = description};
+            return Create(todo);
+        }
+----
+
+The default value for `AutoSaveChanges` to the Database is true, you may change it to false if you need to employ transactions.
+
+Inject the Repository on the service of the business layer, as shown below: 
+
+[source, c#]
+----
+public class TodoService: Service<TodoContext>, ITodoService
+    {
+        private readonly ITodoRepository _todoRepository;
+
+        public TodoService(IUnitOfWork<TodoContext> uoW) : base(uoW)
+        {
+            _todoRepository = uoW.Repository<ITodoRepository>();
+        }
+        .
+        .
+        .
+    }
+----
+
+=== Setting up in other projects
+
+Install the package on your solution using the Package Manager Console:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.UnitOfWork
+----
+
+Create a Configuration static class in order to add the `IRequestHandler` services, for example:
+
+[source, c#]
+----
+public static class Configuration
+    {
+        public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
+        {
+            SetupDatabase(services, configuration);
+        }
+
+        private static void SetupDatabase(IServiceCollection services, IConfiguration configuration)
+        {
+            services.SetupDatabase<TodoContext>(configuration, "Default", DatabaseType.SqlServer).ConfigureAwait(false);
+        }
+    }
+----
+
+Configure the component in `Program.cs` adding the following lines:
+
+[source, c#]
+----
+using Devon4Net.Domain.UnitOfWork;
+.
+.
+.
+builder.Services.SetupUnitOfWork(typeof(Configuration));
+----
+
+Add the default configuration shown in the configuration section and follow the same steps as the previous section.
+
+=== Tips
+
+_Predicate expression builder_
+ 
+- Use this expression builder to generate lambda expressions dynamically: 
+
+[source,C#]
+----   
+var predicate =  PredicateBuilder.True<T>();
+----
+    
+Where `T` is a class. At this moment, you can build your expression and apply it to obtain your results in a efficient way and not retrieving data each time you apply an expression.
+    
+- Example from My Thai Star .Net Core implementation:
+
+[source,C#]
+----    
+
+public async Task<PaginationResult<Dish>> GetpagedDishListFromFilter(int currentpage, int pageSize, bool isFav, decimal maxPrice, int minLikes, string searchBy, IList<long> categoryIdList, long userId)
+{
+    var includeList = new List<string>{"DishCategory","DishCategory.IdCategoryNavigation", "DishIngredient","DishIngredient.IdIngredientNavigation","IdImageNavigation"};
+    
+    //Here we create our predicate builder
+    var dishPredicate = PredicateBuilder.True<Dish>();
+
+
+    //Now we start applying the different criteria:
+    if (!string.IsNullOrEmpty(searchBy))
+    {
+        var criteria = searchBy.ToLower();
+        dishPredicate = dishPredicate.And(d => d.Name.ToLower().Contains(criteria) || d.Description.ToLower().Contains(criteria));
+    }
+    
+    if (maxPrice > 0) dishPredicate = dishPredicate.And(d=>d.Price<=maxPrice);
+
+    if (categoryIdList.Any())
+    {
+        dishPredicate = dishPredicate.And(r => r.DishCategory.Any(a => categoryIdList.Contains(a.IdCategory)));
+    }
+    
+    if (isFav && userId >= 0)
+    {
+        var favourites = await UoW.Repository<UserFavourite>().GetAllAsync(w=>w.IdUser == userId);
+        var dishes = favourites.Select(s => s.IdDish);
+        dishPredicate = dishPredicate.And(r=> dishes.Contains(r.Id));                
+    }
+    
+    // Now we can use the predicate to retrieve data from database with just one call
+    return await UoW.Repository<Dish>().GetAllIncludePagedAsync(currentpage, pageSize, includeList, dishPredicate);
+
+}
+----
