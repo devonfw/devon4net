@@ -16,7 +16,7 @@ In the following table we can see all the packages that make up the devon4net pr
 |https://github.com/confluentinc/confluent-kafka-dotnet[Confluent Kafka]|1.8.2|Kafka|https://github.com/confluentinc/confluent-kafka-dotnet/blob/master/LICENSE[Apache 2.0]
 |https://fluentvalidation.net/[Fluent Validation]|10.3.6|validation rules|https://licenses.nuget.org/Apache-2.0[Apache 2.0]
 |https://github.com/grpc/grpc-dotnet[GRPC]|2.43.0|RPC|https://licenses.nuget.org/Apache-2.0[Apache 2.0]
-|https://github.com/protocolbuffers/protobuf[Google Protobuf]|3.19.4|RPC|https://github.com/protocolbuffers/protobuf/blob/master/LICENSE[Copyright 2008 Google Inc]
+|https://github.com/protocolbuffers/protobuf[Google Protobuf]|3.19.4|RPC|https://github.com/protocolbuffers/protobuf/blob/master/LICENSE[Apache 2.0]
 |https://swagger.io/solutions/api-development/[Swagger]|6.3.0|documenting APIs|https://licenses.nuget.org/MIT[MIT license]
 |https://github.com/aws/aws-sdk-net/[AWS SDK]|3.7.1|cloud|https://aws.amazon.com/es/apache-2-0/[Apache 2.0]
 |https://aws.amazon.com/es/cdk/[AWS CDK]|2.15.0|cloud|https://aws.amazon.com/es/apache-2-0/[Apache 2.0]

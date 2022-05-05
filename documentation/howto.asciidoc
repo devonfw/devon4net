@@ -1093,3 +1093,159 @@ image::images/specflow_html.png[]
 
 * https://cucumber.io/docs/gherkin/[Gherkin Syntax - Cucumber Docs]
 * https://specflow.org/learn/gherkin/[Learn Gherkin - Specflow Docs]
+
+== How To: Circuit breaker communication with Certificates
+
+In this section we are going to configure two services communication for using certificates, and Circuit Breaker Pattern.
+
+NOTE: Please refer to the component documentation for more information about how to configure link:packages.asciidoc[CircuitBreaker] in devon4net and other projects
+
+=== Configuration
+
+We have to setup two services in order to implement Circuit Breaker pattern, in this scenario, we're creating a basic application that connects two services that are similar.
+
+==== ServiceA
+
+In the `appsettings.{development}.json` you must use the following configuration:
+
+[source, json]
+----
+"CircuitBreaker": {
+    "CheckCertificate": false,
+    "Endpoints": [
+      {
+        "Name": "ServiceB",
+        "BaseAddress": "https://localhost:5055",
+        "Headers": {
+        },
+        "WaitAndRetrySeconds": [
+          0.0001,
+          0.0005,
+          0.001
+        ],
+        "DurationOfBreak": 0.0005,
+        "UseCertificate": true,
+        "Certificate": "localhost.pfx",
+        "CertificatePassword": "localhost",
+        "SslProtocol": "Tls12", //Tls, Tls11,Tls12, Tls13, none
+        "CompressionSupport": true,
+        "AllowAutoRedirect": true
+      }
+    ]
+  }
+}
+----
+
+As an example, we call the `HttpClientHandler` in the controller, however it is preferable to do it in the service class:
+
+[source, c#]
+----
+    [ApiController]
+    [Route("[controller]")]
+    public class PingController : ControllerBase
+    {
+        private IHttpClientHandler HttpClientHandler { get; }
+
+        public PingController(IHttpClientHandler httpClientHandler)
+        {
+            HttpClientHandler = httpClientHandler;
+        }
+
+        /// <summary>
+        /// Returs Ping!
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [HttpOptions]
+        [Route("/v1/ping/")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult Ping()
+        {
+            return Ok("Ping!");
+        }
+
+        /// <summary>
+        /// Returs Ping!
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [HttpOptions]
+        [Route("/v1/remoteping/")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> RemotePing()
+        {
+            var result = await HttpClientHandler.Send<string>(HttpMethod.Get, "ServiceB", "/v1/pong", null, MediaType.ApplicationJson);
+            return Ok(result);
+        }
+    }
+----
+
+As shown in the code above, we inject the `HttpClientHandler`, and on the RemotePing() function, we use the HttpClientHandler's Send method to communicate ServiceA with ServiceB.
+
+The CircuitBreaker setup method must be added to Program.cs:
+
+[source, c#]
+----
+builder.Services.SetupCircuitBreaker(builder.Configuration);
+----
+
+Also, remember to install the certificate and add the folder containing the certificate to the project. 
+
+==== ServiceB
+
+ServiceB is implemented in the same way as ServiceA. You only have to change the name of the service and the base address in the `appsettings.{environment}.json`, and in the controller method you must change the service name and the endpoint:
+
+*`appsettings.Development.json`* :
+[source, json]
+----
+ "CircuitBreaker": {
+    "CheckCertificate": false,
+    "Endpoints": [
+      {
+        "Name": "ServicioA",
+        "BaseAddress": "https://localhost:9091",
+        "Headers": {
+        },
+        "WaitAndRetrySeconds": [
+          0.0001,
+          0.0005,
+          0.001
+        ],
+        "DurationOfBreak": 0.0005,
+        "UseCertificate": true,
+        "Certificate": "localhost.pfx",
+        "CertificatePassword": "localhost",
+        "SslProtocol": "Tls12", //Tls, Tls11,Tls12, Tls13, none
+        "CompressionSupport": true,
+        "AllowAutoRedirect": true
+      }
+    ]
+  }
+----
+
+*PongController*
+
+[source, c#]
+----
+public async Task<IActionResult> RemotePong()
+  {
+    var result = await HttpClientHandler.Send<string>(HttpMethod.Get, "ServicioA", "/v1/ping", null, MediaType.ApplicationJson);
+    return Ok(result);
+  }
+    
+----
+
+=== Video
+
+The preceding example is covered in detail in this video lesson:
+
+.How to setup Circuit Breaker with certificates
+video::videos/howto_circuitbreaker_certificates.mp4[]
