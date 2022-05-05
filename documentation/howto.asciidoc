@@ -744,7 +744,7 @@ As we are using Devon, we will need to go to `Devon4Net.Application.WebAPI.Imple
 [source, c#]
 ----
 services.SetupDatabase<DevonDatabaseContext>(configuration,"DevonDatabase", DatabaseType.SqlServer).ConfigureAwait(false);
----- 
+----
 
 Where:
 
@@ -835,6 +835,264 @@ NOTE: If the response header does not have a value or does not appear in the opt
 
 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers[HTTP headers - MDN Web Docs]
 * https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html[HTTP Security Response Headers Cheat Sheet - Owasp]
+
+== How to: Specflow
+
+In this part of the document you will learn to use Specflow in your projects for defining, managing and automatically execute readable acceptance tests in .NET.
+
+SpecFlow is a.NET test automation tool based on the BDD (Behavior-driven development) paradigm. Specflow tests use the Gherking language to write test cases that are then bound to your application code through bindings, allowing you to run the tests using your preferred testing framework.
+
+Before going into detail on how to use Specflow and how you can use it to implement your tests, you will need know Gherking syntax. It is used to write tests in a form that can be readed perfectly as a sentence. For example:
+
+[source, gherkin]
+----
+Feature: Calculator
+  Scenario: Sum two numbers
+    Given the first number is 10
+    And the second number is  5
+    When the two values are added
+    Then the result is 15
+----
+
+As you can see, thanks to Gherkin we have written a test for a calculator, which makes sure that when the values ​​`10` and `5` are added, the result is `15`. Because is a natural-language friendly language you can read the test, and understand the statement.
+
+The following table shows the keywords used in Gherkin syntax:
+
+|====
+| *Keyword* | *Description* 
+| `Feature` | Provides high level description of a software feature that wants to be tested and group related scenarios.
+| `Rule` | Represents one business rule that should be implemented.
+| `Scenario` or `Example` | List of steps that ilustrates a business rule.
+| `Steps` | Each step starts with `Given`, `When`, `Then`, `And` or `But`.
+| `Background` | Scenario context run before the `Scenario` tests but after `Before Hooks`.
+| `Scenario Outline` or `Scenario Template` | It is used to run the same `Scenario` multiple times, with different combinations of values.
+| `Scenarios` or `Examples` | Keyword used to define the variables of `Scenario Outline` in a table.
+| `""`| Strings
+| `@` | Tags
+| `#` | Comments
+| `\|` | Tables
+|====
+
+For example:
+
+[source, gherkin]
+----
+# Test for the calculator
+@mytag
+Feature: Calculator
+  Scenario Outline: Sum two numbers
+    Given the first number is <first>
+    And the second number is  <second>
+    When the two values are added
+    Then the result is <result>
+
+    Examples:
+    | first | second | result |
+    |    10 |   5    |   15   |
+    |    20 |   5    |   25   |
+----
+
+NOTE: Please refer to the https://cucumber.io/docs/gherkin/[Cucumber Documentation] or https://specflow.org/learn/gherkin/[Specflow Documentation] to learn more about the keywords used in Gherkin.
+
+=== Specflow Installation
+
+To use specflow you will need to add the Specflow extension to your Visual Studio 2022. This way you can use it in any of your projects. For that open visual studio and navigate to `Extensions > Manage Extensions`.
+
+This will open the extension manager, where you will have to search for the 'SpecFlow' extension and hit download:
+
+.SpecFlow for VS 2022 in Extension Manager 
+image::images/specflow_extension.png[]
+
+
+Hitting download will schedule the extension installation. At the time when you close VS2022, you will be able to install the extension by clicking `Modify` in the pop-up window shown below:
+
+.SpecFlow installation
+image::images/specflow_installation.png[]
+
+=== Create specflow project
+
+To create a specflow project for testing, first we will need to have something to test. In this example we will test a Calculator class that we created inside a class library project in an empty solution like shown in the following image:
+
+.SpecFlowTest solution directory tree
+image::images/specflow_directory_tree.png[]
+
+Where, the `Calculator` class implementation is:
+
+[source, c#]
+----
+public class Calculator
+{
+    public int FirstNumber { get; set; }
+    public int SecondNumber { get; set; }
+
+    protected int Add()
+    {
+        return FirstNumber + SecondNumber;
+    }
+}
+----
+
+Once we have the Calculator ready, we need to create a Specflow project. For that you can `Right click on the solution > Add > New Project...`. This will open a window where you can search the specflow project as shown in the next image:
+
+.Add new SpecFlow project
+image::images/new_specflow_project.png[]
+
+When creating the project you will be able to choose the .Net version that you are using, the library for the tests and if you want to use FluentAssertions library. For this example we will use the configuration shown below:
+
+.Choose the project options
+image::images/new_specflow_options.png[]
+
+The specflow template comes with a calculator test implemented, this is their example. But we will create the files from scratch so you know how to complete your testing project. 
+
+.Initial project structure
+image::images/specflow_project_structure.png[]
+
+
+As you can see also the template comes with a folder structure defined, you can redifine it as you want but this is the recommended one.
+
+=== Create specflow tests
+
+To create a new test using specflow, you can add a new item to your project by `Right click in any directory on the project > Add > New item...`:
+
+.Initial project structure
+image::images/new_specflow_feature.png[]
+
+
+You can type specflow in the search bar to look for the items available thanks to the library and select `Feature File for Specflow`. You can create a test there in Gherkin syntax:
+
+[source, Gherkin]
+----
+Feature: Calculator
+
+A short summary of the feature
+
+@mytag
+Scenario: Add two numbers
+	Given the first number is 50
+	And my favourite number is 70 
+	When the two numbers are added
+	Then the result should be 120
+----
+
+Once you have your test created you can build the project by navigating to `Build > Build Solution`. You will see that the test appears in a purple color, this is because it is not mapped to a definition yet. You can automatically create the definition by `Right clicking inside the feature file > Define Steps`. 
+
+This will open the following window:
+
+.Define SpecFlow Steps
+image::images/define_steps.png[]
+
+
+Once you press `Create` the test will no longer appear in purple and will be shown in a white color. This is because now they have a definition. You can also do this manually creating a class and marking it with the `[Binding]` attribute.
+
+This class will need to define the test steps such as Gherkin syntax can be transformed into `C#` code. You can implement this class as follows to test the Calculator:
+
+[source, c#]
+----
+using SpecflowCalculator;
+
+namespace SpecFlowProject.StepDefinitions
+{
+    [Binding]
+    public class CalculatorStepDefinitions
+    {
+        private Calculator _calculator;
+        private int _result;
+
+        public CalculatorStepDefinitions() 
+        {
+            _calculator = new Calculator();
+        }
+
+        [Given(@"the first number is (.*)")]
+        public void GivenTheFirstNumberIs(int p0)
+        {
+            _calculator.FirstNumber = p0;
+        }
+
+        [Given(@"my favourite number is (.*)")]
+        public void GivenMyFavouriteNumberIs(int p0)
+        {
+            _calculator.SecondNumber = p0;
+        }
+
+        [When(@"the two numbers are added")]
+        public void WhenTheTwoNumbersAreAdded()
+        {
+            _result = _calculator.Add();
+        }
+
+        [Then(@"the result should be (.*)")]
+        public void ThenTheResultShouldBe(int p0)
+        {
+            // xUnit assertions
+            Assert.Equal(_result, p0);
+
+            // FluentAssertions
+            _result.Should().Be(p0);
+        }
+    }
+}
+----
+
+Now build the solution again to be able to run the tests.
+
+NOTE: Please revise the https://specflow.org/learn/gherkin/[Specflow Documentation] to learn more about feature bindings.
+
+=== Run the tests
+
+To run the tests you can navigate to `Test > Test Explorer`:
+
+.VS2022 Test Explorer
+image::images/specflow_test_explorer.png[]
+
+By clicking the green play button you can run the tests and see the results as shown in the image above.
+
+=== Living documentation
+
+SpecFlow Living Documentation is a set of tools that allows you to share and collaborate on Gherkin Feature Files. It gives you the option to generate and share an `html` interactive file. You can do this directly for Azure DevOps or using a CLI (Command Line Interface). In this guide you will learn how to do this with the CLI continuing with the Calculator example.
+
+NOTE: Please refer to the https://docs.specflow.org/projects/specflow-livingdoc/en/latest/[Specflow+LivingDoc] documentation to learn more.
+
+==== Step 1 - Install CLI
+
+Install the tool by running the following command in your preferred terminal:
+
+[source, console]
+----
+dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
+----
+
+==== Step 2 - Navigate to the build output directory
+
+Now we need to navigate to the build directory of the Specflow Project taht contains the tests. In our case we can navigate to this path by running the following command:
+
+[source, console]
+----
+cd C:\Projects\devon4net\samples\SpecflowTest\SpecFlowProject\bin\Debug\net6.0
+----
+
+WARNING: Your path may be different depending on the root directory, the file structure of the solution and the .Net version you are using.
+
+==== Step 3 - Run command to generate results 
+
+To generate the file run the following command:
+
+[source, console]
+----
+livingdoc test-assembly SpecFlowProject.dll -t TestExecution.json
+----
+
+==== Step 4 - See html results
+
+The file generated can be seen with your favorite browser and will look like this:
+
+.Specflow LivingDoc results
+image::images/specflow_html.png[]
+
+=== References
+
+* https://cucumber.io/docs/gherkin/[Gherkin Syntax - Cucumber Docs]
+* https://specflow.org/learn/gherkin/[Learn Gherkin - Specflow Docs]
 
 == How To: Circuit breaker communication with Certificates
 
