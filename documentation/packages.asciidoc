@@ -215,7 +215,7 @@ Component configuration is made on file `appsettings.{environment}.json` as foll
 
 === Setting up in Devon
 
-For setting it up using the Devon4NetApi template just configure it in the `appsettings.Development.json` file.
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.{environment}.json` file.
 
 Add it using Dependency Injection on this case we instanciate Circuit Breaker in a Service Sample Class
 
@@ -503,7 +503,7 @@ WARNING: Don't set to true on production environments, doing so may expose criti
 
 === Setting up in Devon
 
-For setting it up using the Devon4NetApi template just configure it in the `appsettings.Development.json` file.
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.{environment}.json` file.
 
 You can use the methods implemented in Devon4NetLogger class, each method corresponds with a log level in .Net log levels system, for example:
 
@@ -603,7 +603,7 @@ In the following table all the configuration fields are described:
 
 === Setting up in Devon
 
-For setting it up using the Devon4NetApi template just configure it in the `appsettings.Development.json` file.
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.{environment}.json` file.
 
 You can enable CORS per action, per controller, or globally for all Web API controllers in your application:
 
@@ -1106,7 +1106,7 @@ The component configuration can be done in `appsettings.{environment}.json` with
 * `DatabaseLocation`: Relative path of the file containing all the documents.
 
 === Setting up in Devon
-For setting it up using the Devon4Net WebApi template just configure it in the `appsettings.Development.json`.
+For setting it up using the Devon4Net WebApi template just configure it in the `appsettings.{environment}.json`.
 
 Then you will need to inject the repositories. For that go to `Devon4Net.Application.WebAPI.Implementation.Configuration.DevonConfiguration` and add the folowing lines in `SetupDependencyInjection` method:
 
@@ -1495,7 +1495,7 @@ Component configuration is made on file `appsettings.{environment}.json` as foll
 
 === Setting up in Devon
 
-For setting it up using the Devon4NetApi template just configure it in the `appsettings.Development.json` file.
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.{environment}.json` file.
 
 A template is available in the MediatRManagement folder of the `Devon4Net.Application.WebAPI.Implementation` Business Layer:
 
@@ -1932,7 +1932,7 @@ image::images/headers-middleware.png[]
 
 === Setting up in Devon
 
-For setting it up using the Devon4NetApi template just configure it in the appsettings.Development.json file.
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.{environment}.json` file.
 
 === Setting up in other projects
 
@@ -1986,7 +1986,7 @@ image::images/Unit-of-work.png[]
 
 === Configuration
 
-Connection strings must be added to the configuration in the file `appsettings.environment.json` as follows: 
+Connection strings must be added to the configuration in the file `appsettings.{environment}.json` as follows: 
 
 [source, json]
 ----
@@ -1998,7 +1998,7 @@ Connection strings must be added to the configuration in the file `appsettings.e
 
 === Setting up in Devon
 
-For setting it up using the Devon4NetApi template just configure the connection strings in the `appsettings.Development.json` file.
+For setting it up using the Devon4NetApi template just configure the connection strings in the `appsettings.{environment}.json` file.
 
 To add Databases, use the SetupDatabase method in the `DevonConfiguration.cs` file:
 
