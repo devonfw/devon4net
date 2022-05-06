@@ -4,12 +4,12 @@ using LiteDB;
 
 namespace Devon4Net.Infrastructure.LiteDb.Repository
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class LiteDbRepository<T> : ILiteDbRepository<T> where T : class
     {
         private LiteDatabase LiteDb { get; }
         private string CollectionName { get; }
 
-        public Repository(ILiteDbContext liteDbContext)
+        public LiteDbRepository(ILiteDbContext liteDbContext)
         {
             LiteDb = liteDbContext?.Database ?? throw new ArgumentException("The context can not be null. Please check your DI container configuration and check if the container has declared the instance of the context");
             CollectionName = typeof(T).Name;

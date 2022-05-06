@@ -30,7 +30,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static void ConfigureMediatRGenericDependencyInjection(ref IServiceCollection services)
         {
             services.AddTransient(typeof(IJsonHelper), typeof(JsonHelper));
-            services.AddTransient(typeof(IRepository<MediatRBackup>), typeof(Repository<MediatRBackup>));
+            services.AddTransient(typeof(ILiteDbRepository<MediatRBackup>), typeof(LiteDbRepository<MediatRBackup>));
             services.AddTransient(typeof(IMediatRBackupService), typeof(MediatRBackupService));
             services.AddTransient(typeof(IMediatRHandler), typeof(MediatRHandler));
             services.AddMediatR(Assembly.GetExecutingAssembly());
