@@ -11,10 +11,10 @@ namespace Devon4Net.Infrastructure.RabbitMQ.Data.Service
 {
     public class RabbitMqBackupLiteDbService : IRabbitMqBackupLiteDbService
     {
-        private LiteDb.Repository.IRepository<RabbitBackup> RabbitMqBackupLiteDbRepository { get; }
+        private LiteDb.Repository.ILiteDbRepository<RabbitBackup> RabbitMqBackupLiteDbRepository { get; }
         private IJsonHelper JsonHelper { get; }
 
-        public RabbitMqBackupLiteDbService(LiteDb.Repository.IRepository<RabbitBackup> rabbitMqBackupLiteDbRepository, IJsonHelper jsonHelper)
+        public RabbitMqBackupLiteDbService(LiteDb.Repository.ILiteDbRepository<RabbitBackup> rabbitMqBackupLiteDbRepository, IJsonHelper jsonHelper)
         {
             RabbitMqBackupLiteDbRepository = rabbitMqBackupLiteDbRepository;
             JsonHelper = jsonHelper;

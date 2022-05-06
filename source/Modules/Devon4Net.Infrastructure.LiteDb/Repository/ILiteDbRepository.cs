@@ -2,7 +2,7 @@
 
 namespace Devon4Net.Infrastructure.LiteDb.Repository
 {
-    public interface IRepository<T>
+    public interface ILiteDbRepository<T>
     {
         BsonValue Create(T entity);
         bool Update(T entity);
