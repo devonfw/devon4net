@@ -1133,7 +1133,6 @@ In the `appsettings.{development}.json` you must use the following configuration
       }
     ]
   }
-}
 ----
 
 As an example, we call the `HttpClientHandler` in the controller, however it is preferable to do it in the service class:
@@ -1247,5 +1246,136 @@ public async Task<IActionResult> RemotePong()
 
 The preceding example is covered in detail in this video lesson:
 
-.How to setup Circuit Breaker with certificates
-video::videos/howto_circuitbreaker_certificates.mp4[]
+//.How to setup Circuit Breaker with certificates
+//video::videos/howto_circuitbreaker_certificates.mp4[]
+
+== How to: RabbitMQ
+
+=== Configure the Server
+
+There are several methods to configure the RabbitMQ server, depending on your operating system.
+
+In this tutorial, we will show you how to run a server via Docker, for testing purposes. If you want further information on how to configure and install the RabbitMQ server in a specific operating system, please consult the https://www.rabbitmq.com/download.html[official RabbitMQ documentation]
+
+First you must have docker installed on your machine. Run the following command to start the server:
+
+[source, console]
+----
+docker run -it --rm --name rabbitmq -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=password -p 5672:5672 -p 15672:15672 rabbitmq:3.9-management
+----
+
+This command shows several options parameters:
+
+* `-it`: To create an interactive container
+* `--rm`: To automatically clean up the container and remove the file system when the container exits.
+* `--name`: The name of the container
+* `-e`: Environment variables
+* `-p`: To expose a container's internal port
+
+The server will listen on port 5672, and you may access the management plugin at the following url: 
+
+http://localhost:15672/
+
+.RabbitMQ Management Plugin
+image::images/rabbit-management.png[]
+
+You may customize your Docker container as you like, please see the https://registry.hub.docker.com/_/rabbitmq/[official Docker  image documentation] for more information. 
+
+=== Configure the Client
+
+. Install the package in your solution using the Package Manager Console:
++
+[source, console]
+----
+Install-Package Devon4Net.Infrastructure.RabbitMQ
+----
+
+. Create a Configuration static class in order to add the `RabbitMqHandler` services, for example:
++
+[source, c#]
+----
+ public static class Configuration
+    {
+
+        public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
+        {
+
+            var rabbitMq = serviceProvider.GetService<IOptions<RabbitMqOptions>>();
+
+            if (rabbitMq?.Value != null && rabbitMq.Value.EnableRabbitMq)
+            {
+                SetupRabbitHandlers(services);
+            }
+        }
+
+        private static void SetupRabbitHandlers(IServiceCollection services)
+        {
+            services.AddRabbitMqHandler<TodoRabbitMqHandler>(true);
+        }
+    }
+----
+
+. Add the following lines in the `Program.cs` class: 
++
+[source, c#]
+----
+builder.Services.SetupRabbitMq(builder.Configuration);
+builder.Services.SetupDependencyInjection(builder.Configuration);
+----
+
+. Configure the component in the file `appsettings.{environment}.json`, for example:
++
+[source, json]
+----
+  "RabbitMq": {
+    "EnableRabbitMq": true,
+    "Hosts": [
+      {
+        "Host": "127.0.0.1",
+        "Port": 5672,
+        "Ssl": false,
+        "SslServerName": "localhost",
+        "SslCertPath": "localhost.pfx",
+        "SslCertPassPhrase": "localhost",
+        "SslPolicyErrors": "RemoteCertificateNotAvailable" //None, RemoteCertificateNotAvailable, RemoteCertificateNameMismatch, RemoteCertificateChainErrors
+      }
+    ],
+
+    "VirtualHost": "/",
+    "UserName": "admin",
+    "Password": "password",
+    "Product": "devon4net",
+    "RequestedHeartbeat": 10, //Set to zero for no heartbeat
+    "PrefetchCount": 50,
+    "PublisherConfirms": false,
+    "PersistentMessages": true,
+    "Platform": "localhost",
+    "Timeout": 10,
+    "Backup": {
+      "UseLocalBackup": true,
+      "DatabaseName": "devon4netMessageBackup.db"
+    }
+  },
+----
++
+Where:
+
+* `EnableRabbitMq`: True for enabling the RabbitMQ component
+* `Hosts`: Host configuration, which might be a list of multiple hosts
+* `VirtualHost`:  Virtual host's name
+* `UserName`: User's name
+* `Password`: password for connecting
+* `RequestedHeartbeat`: The heartbeat timeout setting specifies how long the peer TCP connection should be considered unreachable by RabbitMQ and client libraries. Should be set to zero for no heartbeat.
+* `PrefetchCount`:  The amount of messages transmitted by RabbitMQ before EasyNetQ sends a response.
+* `PublisherConfirms`: True for enabling Publisher confirms that simply speaking is an AMQP extension that sends a callback when your message is successfully received by the broker.
+* `PersistentMessages`: When set to true, RabbitMQ will retain messages to disk and survive server restarts. When set to false, performance increases might be expected.
+* `Platform`: The value given here will be shown in the RabbitMQ management interface.
+* `TimeOut`: Range from 0 to 65535. Format is in seconds. For infinite timeout please use 0. Throws System.TimeoutException when value exceeded.
+* `Backup`: Configuration of Message's BackUp. Its default database is LiteDB. 
+
+NOTE: Check the link:packages.asciidoc[RabbitMQ Component section] for examples of the component's implementation and essential classes. 
+
+=== References
+
+* https://www.rabbitmq.com/documentation.html[RabbitMQ Documentation]
+* https://docs.docker.com/engine/reference/run/[Docker docs]

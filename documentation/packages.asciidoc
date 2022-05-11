@@ -2275,7 +2275,7 @@ builder.Services.SetupDependencyInjection(builder.Configuration);
 
 After adding the default settings provided in the configuration section, you may use the RabbitMQ component in your code.
 
-NOTE: Please see the https://www.rabbitmq.com/download.html[ RabbitMQ official documentation] for instructions on installing the RabbitMQ Server.
+NOTE: Please see the https://www.rabbitmq.com/download.html[ RabbitMQ official documentation] for instructions on installing the RabbitMQ Server. You can also visit the link:howto.asciidoc[RabbitMQ How-to section]
 
 == Devon4Net.Infrastructure.Middleware
 
