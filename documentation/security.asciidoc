@@ -1,0 +1,76 @@
+:toc: 
+
+= OWASP Top 10
+
+toc::[]
+
+== Overview
+
+The OWASP Top 10 is a standard awareness document for web application security and developers.
+It reflects widespread agreement on the most serious security threats to web applications.
+
+In the Top 10 for 2021, there are three new categories, four with nomenclature and scoping modifications, and some consolidation. 
+
+.Changes between OWASP top 10 (2017-2021)
+image::images/OWASP-Top10.png[]
+
+== Categories
+
+|===
+|*Name* |*Description*
+|A01:2021-Broken Access Control | Access control ensures that users do not exceed their intended permissions. 
+|A02:2021-Cryptographic Failures | Cryptographic failures (or lack thereof), which frequently result in the exposing of sensitive data 
+|A03:2021-Injection | This category includes `Cross-site Scripting`, `SQL Injection` and `External Control of File Name or Path`
+|A04:2021-Insecure Design | Missing or ineffective control design.
+|A05:2021-Security Misconfiguration | Including unnecessary features enabled or installed, default accounts and their passwords enabled and unchanged, among https://owasp.org/Top10/A05_2021-Security_Misconfiguration/[other vulnerabilities]
+|A06:2021-Vulnerable and Outdated Components | Every corporation must have a continuous process in place for monitoring, triaging, and implementing updates or configuration changes during the life of the application. 
+|A07:2021-Identification and Authentication Failures | To prevent against authentication-related threats, user identity verification, authentication, and session management are crucial. 
+|A08:2021-Software and Data Integrity Failures | Failures in software and data integrity are caused by code and infrastructure that do not prevent against integrity violations. 
+|A09:2021-Security Logging and Monitoring Failures  | Breach detection is unachievable without logging and monitoring. 
+|A10:2021-Server-Side Request Forgery | SSRF issues occur when a web application retrieves a remote resource without verifying the user-supplied URL.
+|===
+
+=== A01:2021-Broken Access Control
+
+=== A02:2021-Cryptographic Failures
+
+=== A03:2021-Injection
+
+=== A04:2021-Insecure Design
+
+How to Prevent:
+
+* Establish and use a secure development lifecycle with AppSec professionals to help evaluate and design security and privacy-related controls
+
+* Establish and use a library of secure design patterns or paved road ready to use components
+
+* Use threat modeling for critical authentication, access control, business logic, and key flows
+
+* Integrate security language and controls into user stories
+
+* Integrate plausibility checks at each tier of your application (from frontend to backend)
+
+* Write unit and integration tests to validate that all critical flows are resistant to the threat model. Compile use-cases and misuse-cases for each tier of your application.
+
+* Segregate tier layers on the system and network layers depending on the exposure and protection needs
+
+* Segregate tenants robustly by design throughout all tiers
+
+* Limit resource consumption by user or service
+
+
+=== A05:2021-Security Misconfiguration
+
+=== A06:2021-Vulnerable and Outdated Components
+
+=== A07:2021-Identification and Authentication Failures
+
+=== A08:2021-Software and Data Integrity Failures
+
+=== A09:2021-Security Logging and Monitoring Failures
+
+=== A10:2021-Server-Side Request Forgery
+
+== References
+
+https://owasp.org/www-project-top-ten/[OWASP Top Ten]
