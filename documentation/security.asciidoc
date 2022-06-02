@@ -34,7 +34,7 @@ image::images/OWASP-Top10.png[]
 
 Access control, also commonly referred to as authorization, is a set of mechanisms and policies that manage access over resources. Usually, once the server has determined your credentials using an authentication mechanism, it will then grant or restrict what resources you can access in the system.
 
-=== How to prevent
+==== How to prevent
 
 Access control is only effective in trusted server-side code or server-less API, where the attacker cannot modify the access control check or metadata.
 
@@ -53,6 +53,23 @@ Access control is only effective in trusted server-side code or server-less API,
 * Rate limit API and controller access to minimize the harm from automated attack tooling.
 
 * Stateful session identifiers should be invalidated on the server after logout. Stateless JWT tokens should rather be short-lived so that the window of opportunity for an attacker is minimized. For longer lived JWTs it's highly recommended to follow the OAuth standards to revoke access.
+
+==== Solve it with Devon
+
+===== JWT
+
+In devon4net we have the `Devon4Net.Infrastructure.JWT` component available. This component allows developers restrict access to different functionalities using a Json Web Token. This token has encrypted information, a time-to-live period, and can be verified, refreshed and discarded using cryptographic functions.
+
+This JWT verification occurs in the backend of the application so it cannot be bypassed easily.
+
+In addition, a developer that uses this component will have to come up with a secure sign in method that provides this token to the application client.
+
+===== CORS
+
+Devon implements `Devon4Net.Infrastructure.CORS`, which allows control over cross-origin resources.
+The user can set it to allow the required hosts.
+CORS policies can also be defined by method, class, or globally.
+There is a pre-configured policy that accepts any origins by default; the program will alert you about it, and it is not recommended in production environments. 
 
 === A02:2021-Cryptographic Failures
 
@@ -93,6 +110,16 @@ Do the following, at a minimum, and consult the references:
 
 * Verify independently the effectiveness of configuration and settings.
 
+==== Solve it with Devon
+
+===== HTTPS
+
+Although HTTP communication protocol can be used between the server and the client, HTTPS is highly recommended. In devon4net you can easily configure certificates for secure communication with latest public key cryptographic algorithms.
+
+===== TLS
+
+HTTPS protocol uses Transport Layer Security (TLS) protocol. So any information floating around in the net is encrypted.
+
 === A03:2021-Injection
 
 Some of the more common injections are SQL, NoSQL, OS command, Object Relational Mapping (ORM), LDAP, and Expression Language (EL) or Object Graph Navigation Library (OGNL) injection.
@@ -112,6 +139,16 @@ NOTE: Even when parameterized, stored procedures can still introduce SQL injecti
 NOTE: SQL structures such as table names, column names, and so on cannot be escaped, and thus user-supplied structure names are dangerous. This is a common issue in report-writing software.
 
 * Use LIMIT and other SQL controls within queries to prevent mass disclosure of records in case of SQL injection.
+
+==== Solve it with Devon
+
+===== Entity Framework
+
+Entity Framework Core is a modern object-database mapper for .NET. It supports LINQ queries, change tracking, updates, and schema migrations. By using EntityFramework we are using parametrized queries, which are a big protection against SQL injection attacks for example.
+
+===== Validation Middleware
+
+In devon4net we use FluentValidation library which can be used through the component `Devon4net.Infrastructure.FluentValidation`. This component provides a middleware that not only validates the stronged type data, but also any type of injection such as SQL Injection or XSS.
 
 === A04:2021-Insecure Design
 
@@ -138,6 +175,12 @@ One factor that contributes to insecure design is a lack of business risk profil
 
 * Limit resource consumption by user or service
 
+==== Solve it with Devon
+
+===== Onion Architecture
+
+In devon we use a layered architecture that increases decoupling between components, avoids dependencies of the Internal layer with external layers and can be quickly tested because the application core does not depend on anything.
+
 === A05:2021-Security Misconfiguration
 
 ==== How to prevent
@@ -156,6 +199,22 @@ Secure installation processes should be implemented, including:
 
 * An automated process to verify the effectiveness of the configurations and settings in all environments.
 
+==== Solve it with Devon
+
+===== Environment
+
+Devon4net is configurable and has many packages that can be adjusted to your needs through a configuration file.
+
+This file can have variations for each available environment, for example, we can have a configuration file for the production environment `appsettings.Production.json` and another for development `appsettings.Development.json`, each with different configuration.
+
+Thanks to .Net we can also specify some code for different environments. For example, maybe we want to add a default user if the environment is Development so we can do our testing. We can specify the code for adding this user with the condition of the environment being Development and this code wont be compiled in other enviroment than the specified.
+
+This provides the application with security because we treat each environment differently, increasing security in released versions.
+
+===== Middleware
+
+Talking to remove unnecesary information, devon4net provides developers with a middleware that allows you to hide headers that could consist a vulnerability for the application revealing unnecesary data such as server OS.
+
 === A06:2021-Vulnerable and Outdated Components
 
 ==== How to prevent
@@ -169,6 +228,12 @@ There should be a patch management process in place to:
 * Only obtain components from official sources over secure links. Prefer signed packages to reduce the chance of including a modified, malicious component (See A08:2021-Software and Data Integrity Failures).
 
 * Monitor for libraries and components that are unmaintained or do not create security patches for older versions. If patching is not possible, consider deploying a virtual patch to monitor, detect, or protect against the discovered issue.
+
+==== Solve it with Devon
+
+===== Packages and libraries
+
+In our framework, we keep all of the libraries and components up to date, constantly evaluating and monitoring all of our libraries searching for vulnerabilities and updated versions, and we don't have any unnecessary dependencies. Every time we modify our code, we use https://www.sonarqube.org/features/security/owasp/?gads_campaign=Europe-1-Generic&gads_ad_group=OWASP&gads_keyword=owasp%20top%2010&gclid=Cj0KCQjw4PKTBhD8ARIsAHChzRJBUhY1kl96yyGXFzbChZKcCRqTlXNbHIkpS_Dy7M7moOBUhuCjCJUaAipdEALw_wcB[SonarQube] to check the code quality and vulnerabilities. 
 
 === A07:2021-Identification and Authentication Failures
 
@@ -190,6 +255,12 @@ Confirmation of the user's identity, authentication, and session management is c
 
 * Use a server-side, secure, built-in session manager that generates a new random session ID with high entropy after login. Session identifier should not be in the URL, be securely stored, and invalidated after logout, idle, and absolute timeouts.
 
+===== JWT
+
+The authentication service must be implemented by the developer. But devon4net promotes the use of secure session variables thanks to the JWT component `Devon4Net.Infrastructure.JWT`.
+
+This component is prepared to provide session variables that expire and can be refreshed securely if necessary.
+
 
 === A08:2021-Software and Data Integrity Failures
 
@@ -209,6 +280,12 @@ Software and data integrity failures relate to code and infrastructure that does
 
 * Ensure that unsigned or unencrypted serialized data is not sent to untrusted clients without some form of integrity check or digital signature to detect tampering or replay of the serialized data
 
+===== Packages and libraries
+
+In devon4net we take great care in which packages we include or use.
+
+all packages used are official, open source and updated to the latest version available with long-term support (LTS).
+
 
 === A09:2021-Security Logging and Monitoring Failures
 
@@ -227,6 +304,13 @@ This category is to help detect, escalate, and respond to active breaches. Witho
 * DevSecOps teams should establish effective monitoring and alerting such that suspicious activities are detected and responded to quickly.
 
 * Establish or adopt an incident response and recovery plan, such as National Institute of Standards and Technology (NIST) 800-61r2 or later.
+
+==== Solve it with Devon
+
+===== Logging
+
+In devon we have the Devon4Net.Infrastructure.Logger component that allows developers to log all the information that they need. It can be organiced in different log levels according to its purpose, for example you can log debugging information or critical errors, into a file or a database. 
+Furthermore all the devon4net components have their own logging implemented. 
 
 
 === A10:2021-Server-Side Request Forgery
@@ -253,6 +337,18 @@ SSRF flaws occur whenever a web application is fetching a remote resource withou
 
 ** Be aware of the URL consistency to avoid attacks such as DNS rebinding and “time of check, time of use” (TOCTOU) race conditions
 
+== SonarQube
+
+SonarQube is a tool for automatically detecting bugs, vulnerabilities, and code smells in your code.
+It may be integrated into your existing workflow to allow for continuous code analysis across project branches and pull requests. 
+
+It covers also security by raising OWASP Top 10-related issues to developers early in the process,
+SonarQube helps you protect your systems, your data and your users.
+
+image::images/SonarQube-owasp.png[]
+
 == References
 
-https://owasp.org/www-project-top-ten/[OWASP Top Ten]
+* https://owasp.org/www-project-top-ten/[OWASP Top 10]
+
+* https://www.sonarqube.org/features/security/owasp/?gads_campaign=Europe-1-Generic&gads_ad_group=OWASP&gads_keyword=owasp%20top%2010&gclid=Cj0KCQjw4PKTBhD8ARIsAHChzRJBUhY1kl96yyGXFzbChZKcCRqTlXNbHIkpS_Dy7M7moOBUhuCjCJUaAipdEALw_wcB[SonarQube]
