@@ -406,12 +406,12 @@ For example lets specify the next:
 .JWT configuration example
 image::images/json_jwt_example.png[]
 
-NOTE: The property `SecretKey` will be encrypted automatically using the algorithm specified.
+NOTE: The property `SecretKey` needs to be an encrypted key using the algorithm specified.
 
 This would create the following configuration:
 
 * A token with audience and issuer equal to `devon4net`.
-* It will expire in 5 minutes 
+* It will expire in 60 minutes 
 * It will validate the signature and if the token is valid in time
 * It will require tokens that are signed, and have both expiration time and audience specified.
 * It will use the secret key encrypted with SHA 512
@@ -436,11 +436,13 @@ In JWT component we have a handler that is cofigured on the installation of the 
 
 |====
 |*Return Type* |*Method Name* |*Parameters* |*Description*
-|string |CreateClientToken |List<Claim> clientClaims |Returns the encrypted jwt given a list of claims. 
+|string |CreateJwtToken |List<Claim> clientClaims |Returns the encrypted jwt given a list of claims. 
 |List<Claim> |GetUserClaims |string jwtToken |Returns a list of claims given an encrypted token.
 |string |GetClaimValue |List<Claim> claimList, string claim |Returns the value of a claim given a list of claims and the type of the claim to recover formatted as a string.
 |string |GetClaimValue |string token, string claim |Returns the value of a claim given an encrypted token and the type of the claim to recover formatted as a string.
 |SecurityKey |GetIssuerSigningKey |- |Returns the issuer's signing key.
+|bool |ValidateToken |string jwtToken, out ClaimsPrincipal claimsPrincipal, out SecurityToken securityToken |Returns true if the token is valid.
+|string |CreateRefreshToken |- |Creates a refresh token for the JWT token.
 |====
 
 === Video
@@ -1246,8 +1248,8 @@ public async Task<IActionResult> RemotePong()
 
 The preceding example is covered in detail in this video lesson:
 
-//.How to setup Circuit Breaker with certificates
-//video::videos/howto_circuitbreaker_certificates.mp4[]
+.How to setup Circuit Breaker with certificates
+video::videos/howto_circuitbreaker_certificates.mp4[]
 
 == How to: RabbitMQ
 
@@ -1379,3 +1381,272 @@ NOTE: Check the link:packages.asciidoc[RabbitMQ Component section] for examples 
 
 * https://www.rabbitmq.com/documentation.html[RabbitMQ Documentation]
 * https://docs.docker.com/engine/reference/run/[Docker docs]
+
+== How to: Kafka
+
+In this part of the document you will learn how to use kafka component and create and use Producers and Consumers for your application. You will also learn to use the different Handlers available in the `Devon4Net.Infrastructure.Kafka` component and how to configure them.
+
+=== Previous steps
+
+To use Kafka you need to have an active Kafka server. There are multple ways to use a kafka server, we are using a docker image but you can choose any desired form.
+
+NOTE: We recommend you to go through https://kafka.apache.org/[Kafka Documentation] to learn how to get started with Apache Kafka.
+
+Once you have an Apache Kafka Server up and running you will need to create a project using the `Devon4Net` template or add `Devon4Net.Infrastructure.Kafka` NuGet package reference to your project.
+
+NOTE: You can learn how to set up the component in your project by reading the component documentation.
+
+=== Configuration
+
+When you have both things ready, you can start by adding the following line in your `Program.cs`
+
+[source, c#]
+----
+builder.Services.SetupKafka(builder.Configuration);
+----
+
+Now is the time to configure all the producers and consumers you will be using in the application. You will later be relating this configuration to the Consumer and Producer Handler classes. For that you will need to complete the following configuration in `appsettings.{environment}.json` file with your preferred parameters.
+
+[source, json]
+----
+"Kafka": {
+    "EnableKafka": true,
+    "Administration": [
+      {
+        "AdminId": "Admin1",
+        "Servers": "127.0.0.1:9092"
+      }
+    ],
+    "Producers": [
+      {
+        "ProducerId": "Producer1", 
+        "Servers": "127.0.0.1:9092", 
+        "ClientId": "client1", 
+        "Topic": "devonfw", 
+        "MessageMaxBytes": 1000000, 
+        "CompressionLevel": -1, 
+        "CompressionType": "None", 
+        "ReceiveMessageMaxBytes": 100000000,
+        "EnableSslCertificateVerification": false,
+        "CancellationDelayMaxMs": 100, 
+        "Ack": "None", 
+        "Debug": "", 
+        "BrokerAddressTtl": 1000, 
+        "BatchNumMessages": 1000000, 
+        "EnableIdempotence": false, 
+        "MaxInFlight": 5,
+        "MessageSendMaxRetries": 5,
+        "BatchSize": 100000000 
+      }
+    ],
+    "Consumers": [
+      {
+        "ConsumerId": "Consumer1", 
+        "Servers": "127.0.0.1:9092",
+        "GroupId": "group1",
+        "Topics": "devonfw", 
+        "AutoCommit": true, 
+        "StatisticsIntervalMs": 0, 
+        "SessionTimeoutMs": 10000, 
+        "AutoOffsetReset": "Largest", 
+        "EnablePartitionEof": true, 
+        "IsolationLevel": "ReadCommitted", 
+        "EnableSslCertificateVerification": false,
+        "Debug": "" 
+      }
+    ]
+  }
+----
+
+NOTE: Please refer to the component documentation to learn more about the configuration.
+
+=== Producer
+
+After defining the configuration in the `appsettings.{environment}.json` now you can create your handlers extending the ones available in the Kafka component.
+
+For the producer you can do something as the following:
+
+[source, c#]
+----
+public class MessageProducerHandler : KafkaProducerHandler<string,string>
+{
+    public MessageProducerHandler(IServiceCollection services, IKakfkaHandler kafkaHandler, string producerId) : base(services, kafkaHandler, producerId)
+    {
+    }
+}
+----
+
+You will need to add this handler to your dependencies. For that you can use the following method, and include the `Id` of the configuration as a parameter:
+
+[source, c#]
+----
+builder.Services.AddKafkaProducer<MessageProducerHandler>("Producer1");
+----
+
+
+Now you can use the handler in any constructor via dependency injection:
+ 
+[source, c#]
+----
+public class KafkaController : ControllerBase
+{
+    private MessageProducerHandler MessageProducer { get; }
+
+    public KafkaController(MessageProducerHandler messageProducer)
+    {
+        MessageProducer = messageProducer;
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(DeliveryResult<string,string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Route("/v1/kafka/deliver")]
+    public async Task<IActionResult> DeliverMessage(string key, string value)
+    {
+        Devon4NetLogger.Debug("Executing DeliverMessage from controller KafkaController");
+        var result = await MessageProducer.SendMessage(key, value).ConfigureAwait(false);
+        return Ok(result);
+    }
+}
+----
+
+For example, in the previous piece of code, you can see how we are delivering a message to the Kafka server using a POST method in our API. This is done thanks to the `SendMessage` method.
+
+=== Consumer
+
+The consumer is a little different, as you can see in the following piece of code, you will need to override the `HandleCommand` method. This will handle the process of consuming new messages to which the consumer is subscribed.
+
+[source, c#]
+----
+public class MessageConsumerHandler : KafkaConsumerHandler<string, string>
+{
+    public MessageConsumerHandler(IServiceCollection services, IKakfkaHandler kafkaHandler, string consumerId, bool commit = false, int commitPeriod = 5) : base(services, kafkaHandler, consumerId, commit, commitPeriod)
+    {
+    }
+
+    public override void HandleCommand(string key, string value)
+    {
+        Devon4NetLogger.Information($"Consumed message key: {key} | value: {value}");
+    }
+}
+----
+
+Similar to the producer, the Consumer also needs to be related to a configuration via the `Id` as follows: 
+
+[source, c#]
+----
+builder.Services.AddKafkaConsumer<MessageConsumerHandler>("Consumer1");
+----
+
+== How to: Protocol buffers
+
+Protocol buffers are Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data. You can see it as a JSON or a XML file, but smaller, faster and with an easier syntax. 
+
+Protocol buffers are ideal for any situation in which you need to serialize data in a neutral language. Very useful when defining communications such as gRPC protocol.
+
+In this guide you will learn how to create a protocol buffer using `proto3` language.
+
+The `.proto` file starts with a package declaration, which helps to prevent naming conflicts between different projects.
+
+[source, proto3]
+----
+syntax = "proto3";
+
+option csharp_namespace = "Devon4Net.Application.GrpcClient.Protos";
+
+package greet;
+----
+
+Also for C#, you can specify the `csharp_namespace` option. If it wasn't specified, the generated classes would be placed in a namespace matching the package name.
+
+=== Messages
+
+You also have message definitions, which is an aggregate containing a set of typed fields:
+
+[source, proto3]
+----
+message Person {
+  string name = 1;
+  int32 id = 2;  
+  string email = 3;
+}
+----
+
+The previous example defines a type Person with `name`, `id` and `email`. Each field needs a unique identifier, which is the number shown after the `=`. The data types are the standard ones including `bool`, `int32`, `float`, `double`, and `string`.
+
+Let's say that this Person can have many phone numbers, we could do something like:
+
+[source, proto3]
+----
+message Person {
+  string name = 1;
+  int32 id = 2;  
+  string email = 3;
+  repeated PhoneNumber phoneNumbers = 4;
+}
+
+message PhoneNumber {
+  string number = 1;
+  PhoneType type = 2;
+}
+
+enum PhoneType {
+  MOBILE = 0;
+  HOME = 1;
+  WORK = 2;
+}
+----
+
+As you can see, if a field is `repeated`, the field may be repeated any number of times, including 0. You can also define `enum` types if you want one of your fields to have one of a predefined list of values.
+
+=== Services
+
+If you want to use your message types with an RPC system, you may specify an RPC service interface in a.proto file, and the protocol buffer compiler will create code and stubs in your preferred language.
+
+For example you could define the following contract:
+
+[source, proto3]
+----
+service SearchService {
+  rpc Search(SearchRequest) returns (SearchResponse);
+}
+----
+
+In this case we will have a `SearchService` class with a `Search` method that accepts a `SearchRequest` and returns a `SearchResponse`. Both (SearchRequest and SearchResponse) need to be mapped to a message.
+
+The following example shows the complete `.proto` file used in the devon gRPC templates.
+
+[source, proto3]
+----
+syntax = "proto3";
+
+option csharp_namespace = "Devon4Net.Application.GrpcClient.Protos";
+
+package greet;
+
+// The greeting service definition.
+service Greeter {
+  // Sends a greeting
+  rpc SayHello (HelloRequest) returns (HelloReply);
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings.
+message HelloReply {
+  string message = 1;
+}
+----
+
+NOTE: Please revise the template documentation and the component documentation to learn more about gRPC
+
+=== References 
+
+* https://developers.google.com/protocol-buffers[Protocol Buffers - Google Docs]
+
