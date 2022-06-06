@@ -132,7 +132,7 @@ namespace Devon4Net.Infrastructure.AWS.S3
             }
             catch (Exception ex)
             {
-                Devon4NetLogger.Error($"File {key} could not be deleted.");
+                Devon4NetLogger.Error(ex, $"File {key} could not be deleted.");
                 return false;
             }
         }
@@ -162,7 +162,7 @@ namespace Devon4Net.Infrastructure.AWS.S3
             }
             catch (Exception ex)
             {
-                Devon4NetLogger.Error($"Could not get files for {bucketName} bucket");
+                Devon4NetLogger.Error(ex, $"Could not get files for {bucketName} bucket");
                 throw;
             }
         }
@@ -191,7 +191,7 @@ namespace Devon4Net.Infrastructure.AWS.S3
             }
             catch (Exception ex)
             {
-                Devon4NetLogger.Error($"Could not copy or update the desired object: {sourceKey}");
+                Devon4NetLogger.Error(ex, $"Could not copy or update the desired object: {sourceKey}");
                 throw;
             }
         }
