@@ -83,14 +83,14 @@ namespace Devon4Net.Infrastructure.AWS.S3
 
                 var upload = await s3Client.PutObjectAsync(request).ConfigureAwait(false);
                 if (!autoCloseStream) streamFile.Position = 0;
+
+                return upload.HttpStatusCode == System.Net.HttpStatusCode.OK;
             }
             catch (Exception ex)
             {
                 Devon4NetLogger.Fatal(ex);
                 throw;
             }
-
-            return true;
         }
 
         public async Task<GetObjectMetadataResponse> GetObjectMetadata(string key, string bucketName)
@@ -127,7 +127,7 @@ namespace Devon4Net.Infrastructure.AWS.S3
             var s3Client = GetS3Client(AwsRegion, AwsSecretAccessKeyId, AwsSecretAccessKey);
             try
             {
-                await s3Client.DeleteObjectAsync(key, bucketName).ConfigureAwait(false);
+                await s3Client.DeleteObjectAsync(bucketName, key ).ConfigureAwait(false);
                 return true;
             }
             catch (Exception ex)
@@ -279,7 +279,7 @@ namespace Devon4Net.Infrastructure.AWS.S3
 
         #endregion
         #region Private methods
-        private void CheckUploadObjectParams(Stream streamFile, string keyName, string bucketName)
+        private static void CheckUploadObjectParams(Stream streamFile, string keyName, string bucketName)
         {
             if (streamFile == null || streamFile.Length == 0 || !streamFile.CanRead)
             {
@@ -300,7 +300,7 @@ namespace Devon4Net.Infrastructure.AWS.S3
             }
         }
 
-        private IAmazonS3 GetS3Client(string awsRegion, string awsSecretAccessKeyId, string awsSecretAccessKey)
+        private static IAmazonS3 GetS3Client(string awsRegion, string awsSecretAccessKeyId, string awsSecretAccessKey)
         {
             if (string.IsNullOrEmpty(awsRegion))
             {
@@ -324,6 +324,7 @@ namespace Devon4Net.Infrastructure.AWS.S3
 
             return new AmazonS3Client(awsSecretAccessKeyId, awsSecretAccessKey, region);
         }
+
         private async Task<List<string>> CreateListOfDirectories(string bucketName, List<string> foldersInBucket, IAmazonS3 s3Client, ListObjectsV2Request listObjectsrequest)
         {
             var listofObjects = await s3Client.ListObjectsV2Async(listObjectsrequest).ConfigureAwait(false);
