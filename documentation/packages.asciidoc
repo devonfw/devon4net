@@ -774,9 +774,10 @@ Component configuration is made on file `appsettings.{environment}.json` as foll
 
 [source, json]
 ----
-"JWT": {
+ "JWT": {
     "Audience": "devon4Net",
     "Issuer": "devon4Net",
+    "ValidateIssuer": true,
     "ValidateIssuerSigningKey": true,
     "ValidateLifetime": true,
     "RequireSignedTokens": true,
@@ -799,6 +800,7 @@ In the following list all the configuration fields are described:
 * `Audience`: Represents a valid audience that will be used to check against the token's audience.
 * `Issuer`: Represents a valid issuer that will be used to check against the token's issuer.
 //* `TokenExpirationTime`: -------
+* `ValidateIssuer`: Boolean that controls if validation of the Issuer is done.
 * `ValidateIssuerSigningKey`: Boolean that controls if validation of the SecurityKey that signed the securityToken is called.
 * `ValidateLifetime`: Boolean to control if the lifetime will be validated during token validation.
 * `RequireSignedTokens`: Boolean that indicates wether a security token has to be signed oe not.
@@ -926,7 +928,7 @@ In the following piece of code, you will find how the client token is created us
 .
 .
 .
-var token = JwtHandler.CreateClientToken(new List<Claim>
+var token = JwtHandler.CreateJwtToken(new List<Claim>
 {
     new Claim(ClaimTypes.Role, AuthConst.DevonSampleUserRole),
     new Claim(ClaimTypes.Name,user),
@@ -1001,6 +1003,7 @@ Now we will configure the JWT component in `appsettings.{environment}.json` as s
 "JWT": {
     "Audience": "devon4Net",
     "Issuer": "devon4Net",
+    "ValidateIssuer": true,
     "ValidateIssuerSigningKey": true,
     "ValidateLifetime": true,
     "RequireSignedTokens": true,
@@ -1038,7 +1041,7 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     public IActionResult GetToken()
     {
-        var token = _jwtHandler.CreateClientToken(new List<Claim>
+        var token = _jwtHandler.CreateJwtToken(new List<Claim>
         {
             new Claim(ClaimTypes.Role, "MyRole"),
             new Claim(ClaimTypes.Name, "MyName"),
