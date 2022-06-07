@@ -83,7 +83,7 @@ image::images/environment-10.png[]
 +
 [source, console]
 ----
-> dotnet --version
+dotnet --version
 ----
 +
 .CMD dotnet command
@@ -97,7 +97,7 @@ Download and install *C# extension (by OmniSharp)*:
 .Extensions Site in Visual Code Studio
 image::images/environment-12.png[]
 
-=== Linux Systems
+=== For Linux Systems
 
 This guide is intended for Ubuntu/Debian distributions; if you are using another Linux distribution, please refer to the https://code.visualstudio.com/docs/setup/linux[official Visual Code Studio documentation]
 
@@ -170,6 +170,86 @@ Download and install *C# extension (by OmniSharp)*:
 .Extensions Site in Visual Code Studio
 image::images/environment-12.png[]
 
+=== For MacOS
+
+==== Visual Studio Code
+
+Download and install *Visual Studio Code*:
+
+. Download the latest version https://code.visualstudio.com/download[here]
++
+.Download Page
+image::images/environment-18.png[]
+
+. Allow the download for this website by clicking the Allow button: 
++
+.Download Page
+image::images/environment-19.png[]
+
+. Go to the Downloads folder and Drag `Visual Studio Code.app` to the Applications folder, making it available in the macOS Launchpad:
++
+.MacOS Launchpad
+image::images/environment-21.png[]
+
+. Launch Visual Studio Code:
++
+When you initially start Visual Studio Code, you must authorize the program to launch by clicking the open button. 
++
+.Opening VSCode
+image::images/environment-20.png[]
++
+TIP: Add VS Code to your Dock by right-clicking on the icon, located in the Dock, to bring up the context menu and choosing Options, Keep in Dock
+
+==== .Net Core SDK
+
+. Download https://dotnet.microsoft.com/en-us/download[.Net 6.0 SDK] for your cpu architecture (x64 or Arm64).
++
+.Download Page .Net 6.0
+image::images/environment-22.png[]
+
+. Allow the download clicking the allow button in the next window:
++
+.Download Page .Net 6.0
+image::images/environment-23.png[]
+
+. Go to the downloads folder, open the downloaded installer, and click on the continue button:
++
+.Microsoft .NET SDK Installer
+image::images/environment-24.png[]
+
+. Select the destination disk where you want to install the Microsoft .NET SDK, and click continue:
++
+.Microsoft .NET SDK Installer
+image::images/environment-25.png[]
+
+. Click on the install button to perform a standard installation:
++
+.Microsoft .NET SDK Installer
+image::images/environment-26.png[]
+
+. Type your credentials and click the Install Software button to begin the installation: 
++
+.Microsoft .NET SDK Installer
+image::images/environment-27.png[]
+
+. To verify the installation, open a terminal and enter the following command: 
++
+[source, console]
+----
+dotnet --version
+----
++
+.CMD terminal command
+image::images/environment-28.png[]
+
+==== OmniSharp extension
+
+Download and install *C# extension (by OmniSharp)*:
+
+. Open Visual Studio, go to the extensions section (1), search for C# extensions (2) and install the C# extension by OmniSharp:
++
+.Extensions Site in Visual Code Studio
+image::images/environment-12.png[]
 
 == Devon4net.Web.Api.Template
 
@@ -182,7 +262,7 @@ image::images/environment-12.png[]
 *   Select the folder you want your C# project to be in and click **Select Folder**. For our example, we'll create a folder for our project named `'ApiTest'`.
 
 . Initialize a C# project:
-*   Open the Integrated Terminal from Visual Studio Code by typing `CTRL+(backtick)`. Alternatively, you can select **View** > **Terminal** from the main menu.
+*   Open the Integrated Terminal from Visual Studio Code by typing `Left CTRL + backtick`. Alternatively, you can select **View** > **Terminal** from the main menu.
 * You must select Command Prompt instead of PowerShell:
 +
 .CMD in Visual Code Studio
@@ -230,7 +310,7 @@ You may now start working with C# and the devon4net api template in the Visual S
 *   Select the folder you want your C# project to be in and click **Select Folder**. For our example, we'll create a folder for our project named `'ApiTest'`.
 
 . Initialize a C# project:
-*   Open the Integrated Terminal from Visual Studio Code by typing `CTRL+(backtick)`. Alternatively, you can select **View** > **Terminal** from the main menu.
+*   Open the Integrated Terminal from Visual Studio Code by typing `Left CTRL + backtick`. Alternatively, you can select **View** > **Terminal** from the main menu.
 
 *   In the terminal window, type:
 +
@@ -263,7 +343,51 @@ dotnet run
 
 * You can now test the template by going to the swagger page at: https://localhost:8085/swagger/index.html. 
 
-You may now start working with C# and the devon4net api template in the Visual Studio Code environment. 
+You may now start working with C# and the devon4net api template in the Visual Studio Code environment.
+
+=== For MacOS
+
+. Open a project:
+*    Open Visual Studio Code.
+*   Click on the Explorer icon on the left menu and then click **Open Folder**.
+
+*   Select the folder you want your C# project to be in and click **Select Folder**. For our example, we'll create a folder for our project named `'ApiTest'`.
+
+. Initialize a C# project:
+*   Open the Integrated Terminal from Visual Studio Code by typing `Left CTRL+ Left Shift + backtick`. Alternatively, you can select **View** > **Terminal** from the main menu.
+
+*   In the terminal window, type:
++
+[source, console]
+----
+dotnet new -i Devon4Net.WebAPI.Template
+----
+
+*   This will install the Devon4Net.WebAPI.Template with the latest version, next to create your project you must run the following command.
++
+[source, console]
+----
+dotnet new Devon4NetAPI
+----
+
+. Run the "ApiTest" program:
+* Go to the path where the Program.cs file is found typing the following command:
++
+[source, console]
+----
+cd Templates/WebAPI/Devon4Net.Application.WebAPI
+----
++
+And then type:
++
+[source, console]
+----
+dotnet run
+----
+
+* You can now test the template by going to the swagger page at: https://localhost:8085/swagger/index.html. 
+
+You may now start working with C# and the devon4net api template in the Visual Studio Code environment.
 
 == Debug
 
