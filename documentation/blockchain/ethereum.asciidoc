@@ -1,0 +1,164 @@
+:toc:
+
+= Ethereum
+
+== Introduction to Ethereum
+
+=== What is Ethereum?
+https://ethereum.org/[Ethereum] is one of the most popular blockchain platforms, right behind Bitcoin. It's a community-built technology and has its own cryptocurrency called Ether (ETH) that you can buy and sell.
+
+What makes Ethereum unique is that it's the "world's programmable blockchain". By using Ethereum, you can code contract definitions, also known as smart contracts. Smart contracts are used to describe how blockchain participants transfer digital assets. Solidity is the primary programming language used to develop on the Ethereum platform, and it's built and maintained by Ethereum developers.
+
+=== Bitcoin vs Ethereum
+
+Bitcoin was launched in 2009. It introduced a novel idea set out in a white paper by the mysterious Satoshi Nakamoto.Bitcoin offers the promise of an online currency that is secured without any central authority, unlike government-issued currencies.
+Bitcoin was meant to be only for Bitcoin transactions.
+
+Ethereum is the largest and most well-established, open-ended decentralized software platform. Ethereum enables the deployment of smart contracts and decentralized applications (dApps) to be built and run without any downtime, fraud, control, or interference from a third party.
+
+Ethereum comes complete with its own programming language that runs on a blockchain, enabling developers to build and run distributed applications. And apart from this development features it also comes with its own online currency, Ether. Ether is used mainly for two purposes: It is traded as a digital currency on exchanges in the same fashion as other cryptocurrencies, and it is used on the Ethereum network to run applications. According to Ethereum, “people all over the world use ETH to make payments, as a store of value, or as collateral.”
+
+=== Ethereum Virtual Machine (EVM)
+
+The Ethereum Virtual Machine (EVM) is the runtime environment for smart contracts in Ethereum. All smart contracts and state changes on the Ethereum blockchain are executed by transactions. The EVM handles all of the transaction processing on the Ethereum network.
+
+As with any virtual machine, the EVM creates a level of abstraction between the executing code and the executing machine (an Ethereum node). Currently the EVM is running on thousands of nodes distributed across the world.
+
+=== Ethereum Networks
+
+When you are developing for the blockchain, whether they are smart contracts or decentralized applications, you'll want to run your code before deploying it on the mainnet and emptying your wallet with fees. For that, developers use either a local development network or an official testnet.
+
+Similar to how you might run a local server on your computer for web development, you can use a development network to create a local blockchain instance to test your dapp. These Ethereum development networks provide features that allow for much faster iteration than a public testnet.
+
+There are a variety of networks available in the Ethereum ecosystem apart from the mainnet, which is the official primary one. These are networks used by protocol developers or smart contract developers to test both protocol upgrades as well as potential smart contracts in a production-like environment before deployment to Mainnet.
+
+==== Local development networks
+
+* https://www.trufflesuite.com/ganache[Ganache]: Quickly fire up a personal Ethereum blockchain which you can use to run tests, execute commands, and inspect state while controlling how the chain operates.
+* https://hardhat.org/[Hardhat]: A local Ethereum network designed for development. It allows you to deploy your contracts, run your tests and debug your code.
+
+==== Ethereum public networks
+
+The *Mainnet* (short for "main network"), is the primary public Ethereum production blockchain, where actual-value transactions occur on the distributed ledger. 
+
+Aside from this network, ethereum has a number other test networks to choose from:
+
+* https://sepolia.dev/[*Sepolia*] Testnet: A proof-of-work testnet; this means it's the best like-for-like representation of Ethereum.
+
+* https://goerli.net/[*Görli*] Testnet: A proof-of-authority testnet that works across clients; an ideal testnet for application developers.
+
+* (_deprecated_) *Ropsten* Testnet: A proof-of-work testnet. It only serves historical relevance and is mainly used by core developers for testing protocol upgrades.
+
+* (_deprecated_) *Rinbkeby* Testnet: A proof-of-authority testnet for those running old versions of the Geth client.
+
+* (_deprecated_) *Kovan* Testnet: A very old proof-of-authority testnet for those still running OpenEthereum clients.
+
+== Smart Contracts 
+
+A smart contract is a program that's stored inside a blockchain. Smart contracts extend blockchain from data to code. They represent a coded agreement between parties, and when an action happens, the code runs and provides a response.
+Smart contracts run on their own, send events which trigger state transitions, and call functions. 
+
+Properties:
+
+* Transparency: Blockchain users can read smart contracts and can access them.
+* Immutability: Smart contract execution creates immutable logs.
+* Distribution: The output of the contract is validated and verified by nodes on the network.
+
+=== Languages
+A great aspect about Ethereum is that smart contracts can be programmed using relatively developer-friendly languages.
+
+The two most used and mantained are:
+
+* https://docs.soliditylang.org/[Solidity]: Solidity is an object-oriented, high-level language for implementing smart contracts.
++
+[source, Solidity]
+----
+pragma solidity >=0.7.0 <0.9.0;
+
+contract Promise {
+    
+    string promiseMessage;
+    
+    function setPromise( string memory _promise) public{
+        promiseMessage=_promise;
+    }
+    
+    function getPromise()public view returns(string memory){
+        return promiseMessage;
+    } 
+}
+
+----
+
+* https://vyper.readthedocs.io/[Vyper]: Vyper is a contract-oriented, pythonic programming language.
++
+[source, Vyper]
+----
+# @version ^0.2.12
+
+promiseMessage: public(String[100])
+
+@external
+def setPromise(_promise:String[100]):
+    self.promiseMessage=_promise
+
+@view
+@external
+def getPromise()->String[100]:
+    return self.promiseMessage
+----
+
+Both examples show a simple smart contract that has a state variable named `promiseMessage` and has two functions: `setPromise` and `getPromise`.
+
+NOTE: See https://reference.auditless.com/cheatsheet/[Solidity & Vyper Cheat Sheet] to notice differences of their syntax.
+
+There are also some other languages that are great for smart contract development:
+
+* Yul
+* Yul+
+* Fe
+
+=== Contract Standards
+
+Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform. The proposals include core protocol specifications, client APIs, and contract standards.
+
+Standards for four primary ERC types have been widely adopted:
+
+==== ERC20
+
+The most widely known and used. ERC20 is the technical standard that's used for smart contracts on the Ethereum blockchain to implement tokens. ERC20 has a simple interface for basic tokens.
+
+You can keep track of fungible tokens by using ERC20 token contracts.
+
+==== ERC721
+
+Top solution for non-fungible tokens (NFTs). Like all other tokens, NFTs represent ownership both of virtual and physical assets:
+
+* Collectible items
+* Physical assets
+* Negative-value assets (debts)
+
+Also, with the ERC721 token, each function has an argument to specify the token ID that uniquely identifies the token being used in the smart contract.
+
+==== ERC777
+
+This standard defines advanced features to interact with a token contract while remaining backward compatible with ERC20. For example, operators can send tokens on behalf of another address and send/receive hooks to offer token holders more control over their tokens.
+
+==== ERC1155
+
+A standard interface for contracts that manage multiple token types. A single deployed contract may include any combination of fungible tokens, non-fungible tokens or other configurations.
+
+NOTE: See https://www.openzeppelin.com/[OpenZeppelin] library for using contract standards on your applications.
+
+=== Decentralized applications (dApps)
+
+Dapps differ from traditional applications because they don't rely on a centralized server network. Instead, they operate on a decentralized peer-to-peer blockchain network.
+
+A dapp can have front-end code written in any language, just like a traditional web app, that can make calls to its back end, which are smart contracts that run on a blockchain.
+
+== Next Steps
+
+=== References
+
+
+
