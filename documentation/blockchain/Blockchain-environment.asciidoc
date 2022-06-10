@@ -1,0 +1,312 @@
+:toc:
+
+= Environment
+
+== Blockchain Utilities
+
+=== Metamask
+
+MetaMask is the tool that allows users interact and experience with Web3. It is currently available as a browser extension and as a mobile app on both Android and iOS devices.
+
+Go to your preferred browser and download the Metamask extension from https://metamask.io/[here]
+
+.Metamask official site
+image::images\metamask-4.png[]
+
+Click the download button, then select your current browser and click on install.
+
+.Metamask official site
+image::images\metamask-5.png[]
+
+You will be taken to your browser's add-ons page; add the extension in order to install it.
+
+.Firefox add-ons store
+image::images\metamask-6.png[]
+
+Once the extension is installed, you may click in the extension icon on the navigation bar on your browser and open it.
+
+
+.Metamask extension
+image::images\metamask-7.png[]
+
+If you click the begin button you can export your wallets with your seed phrase and your password, or you can create a new one
+
+Once you have your wallet imported or created in the extension you may consult the private key, seed phrase, you may generate more addresses, etc...
+
+=== Infura
+
+Infura provides the tools and infrastructure that allow developers to easily take their blockchain application from testing to scaled deployment - with simple, reliable access to Ethereum and IPFS.
+
+The interaction with the Ethereum network must be done through a client node that allows sending requests, We will utilize Infura for this.
+
+All you have to do is go to the https://infura.io/[Infura website] and create an account to begin creating new projects. 
+
+
+=== Etherscan
+
+https://etherscan.io/[Etherscan] is a block explorer and analytics platform that provides information on each Ethereum blockchain transaction, whether it is pending or confirmed.
+
+Etherscan, sometimes known as "Ethplorer," is the most reliable tool for traversing through all of the public data on the Ethereum blockchain. This data includes transaction data, wallet addresses and smart contracts.
+
+On the next image you can see all of the important sections of the ether scan home page:
+
+.Etherscan Home Page 
+image::images\etherscan-1.png[]
+
+Where:
+
+. Is the Search Bar, you can search by Address, transacation hash, block number, token and apply some filters
+
+. The latest blocks in the blockchain
+
+. The latest transactions and the involved addresses
+
+. Network selection, where the different networks of the Ethereum blockchain can be selected
+
+If you search by Address you will be redirected to the Address page and you will see something like this:
+
+.Address page
+image::images\etherscan-2.png[]
+
+Where:
+
+. It's a summary of the wallet's balance
+
+. It's a transaction list that includes the transaction method, the block that contains the transaction, the age of the transaction, the addresses involved, and so on.
+
+If the address that you are searching is from a contract you will see something like this:
+
+
+.Contract page
+image::images\etherscan-3.png[]
+
+. As you can see, the address type is now a Contract.
+
+. You have now two new tabs:
+
+.. The Contract tab that contains the contract bytecode
+
+.. The Events tab that shows the internal events of the contract
+
+=== OpenZeppelin
+
+OpenZeppelin is a library with the most common smart contracts standards. For installing run the command:
+
+[source, console]
+----
+npm install @openzeppelin/contracts
+----
+
+For more information about this library, please visit the https://docs.openzeppelin.com/[official OpenZeppelin documentation]
+
+== Frameworks
+
+=== Wornking with Truffle suite
+
+The truffle suite is a collection of tools for dealing with smart contracts and developing dApps.We have three key resources: 
+
+* Truffle: A world-class development environment, testing framework, and asset pipeline for blockchains based on the Ethereum Virtual Machine (EVM), with the goal of making life simpler for developers.
+
+* Ganache: A local Ethereum blockchain that you may use to deploy contracts, create applications, and perform tests.
+It is accessible as both a desktop program and a command-line utility (formerly known as the TestRPC).
+
+* Drizzle: A front-end libraries collection that make the dApp's development easier. The Drizzle's core is bases on a Redux store, therefore you can access to the development tools of Redux.
+
+NOTE: For more information please refer to the https://trufflesuite.com/docs/[official truffle suite documentation]
+
+==== Pre-requisites
+
+===== For Windows
+
+. Last Version of *Python*
+
+.. Go to the https://www.python.org/downloads/[python downloads site] and download the installer:
++
+image::images\python-1.png[]
+
+.. Launch the installer to begin the installation. 
+
+. *Node.js*
+
+.. Go to the https://nodejs.org/en/download/[node.js downloads site] and download the installer:
++
+image::images\nodejs-1.png[]
+
+.. Run the installer and click the next button.
++
+image::images\nodejs-2.png[]
+
+.. Accept terms and conditions and click the next button.
++
+image::images\nodejs-3.png[]
+
+.. If necessary, change the installation directory and then click next. 
++
+image::images\nodejs-4.png[]
+
+.. Click next for a standard installation.
++
+image::images\nodejs-5.png[]
+
+.. Click next in the next window
++
+image::images\nodejs-6.png[]
+
+.. Click install to begin the installation process
++
+image::images\nodejs-7.png[]
+
+
+. *Git*
+
+.. In order to install git, you can download the installer https://git-scm.com/downloads[here]
++
+image::images\git-1.png[]
+
+.. Launch the installer and click Next to begin the setup:
++
+image::images\git-2.png[]
+
+.. Select the destination folder and click Next:
++
+image::images\git-3.png[]
+
+.. Select the components you want to install, and click next
++
+image::images\git-4.png[]
+
+.. Continue to the nexts setup windows for standard installation by clicking next.
+
+.. Run the following command in a command prompt to see if git was successfully installed.
++
+[source, console]
+----
+git --version
+----
+
+. *Visual Studio*
+
+You must have this IDE installed in order to use truffle, and you must change its installation to enable the following options: 
+
+image::images\visualstudio-options.png[]
+
+===== For Linux
+
+. *Node.js*
+
+.. Run the following commands in the system terminal:
++
+[source, console]
+----
+sudo apt update
+sudo apt install nodejs
+----
+
+.. Enter the following command to verify the installation:
++
+[source, console]
+----
+nodejs -v
+----
+
+. *npm*
+
+.. Run the following commands in the system terminal:
++
+[source, console]
+----
+sudo apt update
+sudo apt install npm
+----
+
+.. Enter the following command to verify the installation:
++
+[source, console]
+----
+npm -v
+----
+
+. *Git*
+
+.. Run the following commands in the system terminal:
++
+[source, console]
+----
+sudo apt update
+sudo apt install git
+----
+
+.. Enter the following command to verify the installation:
++
+[source, console]
+----
+git --version
+----
+
+==== Installing Truffle
+
+===== For Windows
+
+Run the following command for installing truffle globally in your system:
+
+[source, console]
+----
+npm install -g truffle@5.5.14
+----
+
+==== For Linux
+
+Run the following command for installing truffle globally in your system:
+
+[source, console]
+----
+sudo npm install truffle -g
+----
+
+For verify the installation you may launch the command:
+
+[source, console]
+----
+truffle version
+----
+
+Your output should look as the following image:
+
+image::images\truffle-version.png[]
+
+==== Installing Ganache
+
+===== For Windows
+
+Run the following command for installing ganache globally in your system:
+
+[source, console]
+----
+npm install -g ganache
+----
+
+==== Truffle for VSCode extension
+
+Go to the extensions market of VSCode and install the Truffle extension for VSCode:
+
+image::images\truffle-extension.png[]
+
+=== Working with Nethereum
+
+==== Pre-requisites (Using VSCode extension)
+
+. Visual Studio Code
+. https://marketplace.visualstudio.com/items?itemName=JuanBlanco.solidity[Solidity vscode extension].
+
+==== Pre-requisites (Using Nugget autocode generation)
+
+. Visual Studio and Visual Studio Code.
+. https://marketplace.visualstudio.com/items?itemName=JuanBlanco.solidity[Solidity vscode extension].
+. A solidity Smart Contract.
+. Dotnet Core 2.1 must be installed on the machine. The code generator runs on Dotnet Core 2.1, BUT your target project does not need to be a Dotnet core project.
+
+You can install it from the visual studio installer, modifying your current installation:
+
+image::images\visualStudio-1.png[]
+.Visual Studio Installer
+image::images\VisualStudio-2.png[]
