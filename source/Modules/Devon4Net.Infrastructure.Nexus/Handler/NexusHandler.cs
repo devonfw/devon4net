@@ -33,11 +33,11 @@ namespace Devon4Net.Infrastructure.Nexus.Handler
         /// Get components by repository name
         /// </summary>
         /// <param name="repositoryName"></param>
-        public async Task<IList<Component>> GetComponents(string repositoryName)
+        public async Task<IList<NexusComponent>> GetComponents(string repositoryName)
         {
             var endpoint = $"{NexusConst.ComponentsUrl}?repository={repositoryName}";
 
-            var response = await _httpClientHandler.Send<NexusResponse<Component>>(HttpMethod.Get, "Nexus", endpoint, null, MediaType.ApplicationJson, GetLoginHeaders(NexusOptions.UserName, NexusOptions.Password)).ConfigureAwait(false);
+            var response = await _httpClientHandler.Send<NexusResponse<NexusComponent>>(HttpMethod.Get, "Nexus", endpoint, null, MediaType.ApplicationJson, GetLoginHeaders(NexusOptions.UserName, NexusOptions.Password)).ConfigureAwait(false);
 
             return response.Items;
         }
@@ -47,11 +47,11 @@ namespace Devon4Net.Infrastructure.Nexus.Handler
         /// </summary>
         /// <param name="repositoryName"></param>
         /// <param name="componentGroup"></param>
-        public async Task<IList<Component>> GetComponents(string repositoryName, string componentGroup)
+        public async Task<IList<NexusComponent>> GetComponents(string repositoryName, string componentGroup)
         {
             var endpoint = $"{NexusConst.SearchUrl}?repository={repositoryName}&group=/{componentGroup}";
 
-            var response = await _httpClientHandler.Send<NexusResponse<Component>>(HttpMethod.Get, "Nexus", endpoint, null, MediaType.ApplicationJson, GetLoginHeaders(NexusOptions.UserName, NexusOptions.Password)).ConfigureAwait(false);
+            var response = await _httpClientHandler.Send<NexusResponse<NexusComponent>>(HttpMethod.Get, "Nexus", endpoint, null, MediaType.ApplicationJson, GetLoginHeaders(NexusOptions.UserName, NexusOptions.Password)).ConfigureAwait(false);
 
             return response.Items;
         }
@@ -61,11 +61,11 @@ namespace Devon4Net.Infrastructure.Nexus.Handler
         /// </summary>
         /// <param name="repositoryName"></param>
         /// <param name="componentName"></param>
-        public async Task<Component> GetComponent(string repositoryName, string componentName)
+        public async Task<NexusComponent> GetComponent(string repositoryName, string componentName)
         {
             var endpoint = $"{NexusConst.SearchUrl}?repository={repositoryName}&name={componentName}";
 
-            var response = await _httpClientHandler.Send<NexusResponse<Component>>(HttpMethod.Get, "Nexus", endpoint, null, MediaType.ApplicationJson, GetLoginHeaders(NexusOptions.UserName, NexusOptions.Password)).ConfigureAwait(false);
+            var response = await _httpClientHandler.Send<NexusResponse<NexusComponent>>(HttpMethod.Get, "Nexus", endpoint, null, MediaType.ApplicationJson, GetLoginHeaders(NexusOptions.UserName, NexusOptions.Password)).ConfigureAwait(false);
 
             return response.Items.FirstOrDefault();
         }
@@ -74,9 +74,9 @@ namespace Devon4Net.Infrastructure.Nexus.Handler
         /// Get component by component id
         /// </summary>
         /// <param name="componentId"></param>
-        public Task<Component> GetComponent(string componentId)
+        public Task<NexusComponent> GetComponent(string componentId)
         {
-            return _httpClientHandler.Send<Component>(HttpMethod.Get, "Nexus", string.Concat(NexusConst.ComponentsUrl, "/", componentId), null, MediaType.ApplicationJson, GetLoginHeaders(NexusOptions.UserName, NexusOptions.Password));
+            return _httpClientHandler.Send<NexusComponent>(HttpMethod.Get, "Nexus", string.Concat(NexusConst.ComponentsUrl, "/", componentId), null, MediaType.ApplicationJson, GetLoginHeaders(NexusOptions.UserName, NexusOptions.Password));
         }
 
         /// <summary>
@@ -158,13 +158,13 @@ namespace Devon4Net.Infrastructure.Nexus.Handler
         {
             var endpoint = $"{NexusConst.ComponentsUrl}?repository={uploadComponent.RepositoryName}";
 
-            new FileExtensionContentTypeProvider().TryGetContentType(uploadComponent.AssetPath, out var contentType);
+            var foundFileContentType = new FileExtensionContentTypeProvider().TryGetContentType(uploadComponent.AssetPath, out var contentType);
             var fileContent = new ByteArrayContent(File.ReadAllBytes(uploadComponent.AssetPath));
-            fileContent.Headers.ContentType = contentType != null ? new MediaTypeHeaderValue(contentType) : new MediaTypeHeaderValue("application/octet-stream");
+            fileContent.Headers.ContentType = foundFileContentType ? new MediaTypeHeaderValue(contentType) : new MediaTypeHeaderValue("application/octet-stream");
 
             var form = uploadComponent.GetMultiPartFormData(fileContent);
 
-            return _httpClientHandler.Send<dynamic>(HttpMethod.Post, "Nexus", endpoint, form, MediaType.MultipartFormData, GetLoginHeaders(NexusOptions.UserName, NexusOptions.Password));
+            return _httpClientHandler.Send(HttpMethod.Post, "Nexus", endpoint, form, MediaType.MultipartFormData, GetLoginHeaders(NexusOptions.UserName, NexusOptions.Password));
         }
 
         #endregion
@@ -177,7 +177,7 @@ namespace Devon4Net.Infrastructure.Nexus.Handler
         /// <param name="componentId"></param>
         public Task DeleteComponent(string componentId)
         {
-            return _httpClientHandler.Send<NexusResponse<Component>>(HttpMethod.Delete, "Nexus", string.Concat(NexusConst.ComponentsUrl, "/", componentId), null, MediaType.ApplicationJson, GetLoginHeaders(NexusOptions.UserName, NexusOptions.Password));
+            return _httpClientHandler.Send<NexusResponse<NexusComponent>>(HttpMethod.Delete, "Nexus", string.Concat(NexusConst.ComponentsUrl, "/", componentId), null, MediaType.ApplicationJson, GetLoginHeaders(NexusOptions.UserName, NexusOptions.Password));
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace Devon4Net.Infrastructure.Nexus.Handler
         /// <param name="assetId"></param>
         public Task DeleteAsset(string assetId)
         {
-            return _httpClientHandler.Send<NexusResponse<Component>>(HttpMethod.Delete, "Nexus", string.Concat(NexusConst.AssetsUrl, "/", assetId), null, MediaType.ApplicationJson, GetLoginHeaders(NexusOptions.UserName, NexusOptions.Password));
+            return _httpClientHandler.Send<NexusResponse<NexusComponent>>(HttpMethod.Delete, "Nexus", string.Concat(NexusConst.AssetsUrl, "/", assetId), null, MediaType.ApplicationJson, GetLoginHeaders(NexusOptions.UserName, NexusOptions.Password));
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace Devon4Net.Infrastructure.Nexus.Handler
         /// Create new repository
         /// </summary>
         /// <param name="repositoryDto"></param>
-        public Task CreateRepository<T>(T repositoryDto) where T : Repository
+        public Task CreateRepository<T>(T repositoryDto) where T : NexusRepository
         {
             var repoType = EnumOperations.GetEnumMemberAttrValue(typeof(RepositoryType), repositoryDto.GetType().Name).Split("-");
 

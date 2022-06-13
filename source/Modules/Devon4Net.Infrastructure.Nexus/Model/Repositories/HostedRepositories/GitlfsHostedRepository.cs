@@ -2,7 +2,7 @@
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.HostedRepositories
 {
-    public class GitlfsHostedRepository : RepositoryHosted
+    public class GitlfsHostedRepository : NexusRepositoryHosted
     {
     }
 }

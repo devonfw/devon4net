@@ -2,7 +2,7 @@
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.HostedRepositories
 {
-    public class BowerHostedRepository : RepositoryHosted
+    public class BowerHostedRepository : NexusRepositoryHosted
     {
     }
 }

@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Components
 {
-    public class Component
+    public class NexusComponent
     {
         [JsonPropertyName("id")]
         public string Id { get; set; }

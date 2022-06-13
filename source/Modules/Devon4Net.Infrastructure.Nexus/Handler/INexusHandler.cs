@@ -13,27 +13,27 @@ namespace Devon4Net.Infrastructure.Nexus.Handler
         /// Get components by repository name
         /// </summary>
         /// <param name="repositoryName"></param>
-        Task<IList<Component>> GetComponents(string repositoryName);
+        Task<IList<NexusComponent>> GetComponents(string repositoryName);
 
         /// <summary>
         /// Get components by repository name and component group
         /// </summary>
         /// <param name="repositoryName"></param>
         /// <param name="componentGroup"></param>
-        Task<IList<Component>> GetComponents(string repositoryName, string componentGroup);
+        Task<IList<NexusComponent>> GetComponents(string repositoryName, string componentGroup);
 
         /// <summary>
         /// Get component by repository name and component name
         /// </summary>
         /// <param name="repositoryName"></param>
         /// <param name="componentName"></param>
-        Task<Component> GetComponent(string repositoryName, string componentName);
+        Task<NexusComponent> GetComponent(string repositoryName, string componentName);
 
         /// <summary>
         /// Get component by component id
         /// </summary>
         /// <param name="componentId"></param>
-        Task<Component> GetComponent(string componentId);
+        Task<NexusComponent> GetComponent(string componentId);
 
         /// <summary>
         /// Get assets by repository name
@@ -111,7 +111,7 @@ namespace Devon4Net.Infrastructure.Nexus.Handler
         /// Create new repository
         /// </summary>
         /// <param name="repositoryDto"></param>
-        Task CreateRepository<T>(T repositoryDto) where T : Repository;
+        Task CreateRepository<T>(T repositoryDto) where T : NexusRepository;
 
         #endregion
     }

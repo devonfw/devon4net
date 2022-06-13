@@ -2,7 +2,7 @@
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.ProxyRepositories
 {
-    public class GoProxyRepository : RepositoryProxy
+    public class GoProxyRepository : NexusRepositoryProxy
     {
     }
 }

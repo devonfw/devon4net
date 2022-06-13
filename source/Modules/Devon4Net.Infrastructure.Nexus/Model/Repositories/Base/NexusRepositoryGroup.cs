@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.Base
 {
-    public class RepositoryGroup : Repository
+    public class NexusRepositoryGroup : NexusRepository
     {
         [JsonPropertyName("group")]
         public Group Group { get; set; }

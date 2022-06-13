@@ -2,7 +2,7 @@
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.GroupRepositories
 {
-    public class BowerGroupRepository : RepositoryGroup
+    public class BowerGroupRepository : NexusRepositoryGroup
     {
     }
 }

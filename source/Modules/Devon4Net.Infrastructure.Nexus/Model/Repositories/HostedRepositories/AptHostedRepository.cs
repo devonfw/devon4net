@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.HostedRepositories
 {
-    public class AptHostedRepository : RepositoryHosted
+    public class AptHostedRepository : NexusRepositoryHosted
     {
         [JsonPropertyName("apt")]
         public Apt Apt { get; set; }

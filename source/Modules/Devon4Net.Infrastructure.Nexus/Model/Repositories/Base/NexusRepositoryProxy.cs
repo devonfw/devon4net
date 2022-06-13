@@ -2,7 +2,7 @@
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.Base
 {
-    public class RepositoryProxy : Repository
+    public class NexusRepositoryProxy : NexusRepository
     {
         [JsonPropertyName("proxy")]
         public Proxy Proxy { get; set; }

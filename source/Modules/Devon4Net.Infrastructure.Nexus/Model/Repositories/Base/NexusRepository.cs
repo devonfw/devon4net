@@ -2,7 +2,8 @@
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.Base
 {
-    public class Repository
+    //TODO: Modify to interface or abstract
+    public class NexusRepository
     {
         [JsonPropertyName("name")]
         public string Name { get; set; }

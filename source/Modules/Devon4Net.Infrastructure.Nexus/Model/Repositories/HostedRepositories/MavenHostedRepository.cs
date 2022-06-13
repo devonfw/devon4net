@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.HostedRepositories
 {
-    public class MavenHostedRepository : RepositoryHosted
+    public class MavenHostedRepository : NexusRepositoryHosted
     {
         [JsonPropertyName("maven")]
         public Maven Maven { get; set; }

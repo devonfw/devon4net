@@ -2,7 +2,7 @@
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.GroupRepositories
 {
-    public class PypiGroupRepository : RepositoryGroup
+    public class PypiGroupRepository : NexusRepositoryGroup
     {
     }
 }

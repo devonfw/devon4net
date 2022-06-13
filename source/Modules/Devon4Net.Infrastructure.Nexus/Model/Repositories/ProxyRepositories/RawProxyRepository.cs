@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.ProxyRepositories
 {
-    public class RawProxyRepository : RepositoryProxy
+    public class RawProxyRepository : NexusRepositoryProxy
     {
         [JsonPropertyName("raw")]
         public Raw Raw { get; set; }

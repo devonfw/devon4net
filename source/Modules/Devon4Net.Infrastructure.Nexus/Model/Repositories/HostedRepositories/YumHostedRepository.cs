@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.HostedRepositories
 {
-    public class YumHostedRepository : RepositoryHosted
+    public class YumHostedRepository : NexusRepositoryHosted
     {
         [JsonPropertyName("yum")]
         public Yum Yum { get; set; }

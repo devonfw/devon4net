@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.Base
 {
-    public class RepositoryHosted : Repository
+    public class NexusRepositoryHosted : NexusRepository
     {
         [JsonPropertyName("cleanup")]
         public Cleanup Cleanup { get; set; }

@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.HostedRepositories
 {
-    public class RawHostedRepository : RepositoryHosted
+    public class RawHostedRepository : NexusRepositoryHosted
     {
         [JsonPropertyName("raw")]
         public Raw Raw { get; set; }

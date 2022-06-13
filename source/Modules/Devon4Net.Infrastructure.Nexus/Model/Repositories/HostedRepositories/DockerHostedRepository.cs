@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.HostedRepositories
 {
-    public class DockerHostedRepository : RepositoryHosted
+    public class DockerHostedRepository : NexusRepositoryHosted
     {
         [JsonPropertyName("docker")]
         public Docker Docker { get; set; }

@@ -2,7 +2,7 @@
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.GroupRepositories
 {
-    public class NpmGroupRepository : RepositoryGroup
+    public class NpmGroupRepository : NexusRepositoryGroup
     {
     }
 }

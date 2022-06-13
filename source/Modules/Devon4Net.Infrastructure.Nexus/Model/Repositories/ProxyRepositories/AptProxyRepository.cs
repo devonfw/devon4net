@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.ProxyRepositories
 {
-    public class AptProxyRepository : RepositoryProxy
+    public class AptProxyRepository : NexusRepositoryProxy
     {
         [JsonPropertyName("apt")]
         public Apt Apt { get; set; }

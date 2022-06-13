@@ -2,7 +2,7 @@
 
 namespace Devon4Net.Infrastructure.Nexus.Model.Repositories.ProxyRepositories
 {
-    public class ConanProxyRepository : RepositoryProxy
+    public class ConanProxyRepository : NexusRepositoryProxy
     {
     }
 }
