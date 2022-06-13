@@ -1,15 +1,14 @@
 using Devon4Net.Application.WebAPI.Configuration;
-using Devon4Net.Infrastructure.CircuitBreaker;
-using Devon4Net.Infrastructure.Swagger;
-using Devon4Net.Infrastructure.Middleware.Middleware;
-using Devon4Net.Domain.UnitOfWork;
-using Devon4Net.Infrastructure.Kafka;
-using Devon4Net.Infrastructure.Grpc;
-using Devon4Net.Infrastructure.Logger;
-using Devon4Net.Application.WebAPI.Implementation.Configuration;
 using Devon4Net.Application.WebAPI.Configuration.Application;
-using Devon4Net.Infrastructure.WebAPI.Configuration;
+using Devon4Net.Application.WebAPI.Implementation.Configuration;
+using Devon4Net.Domain.UnitOfWork;
+using Devon4Net.Infrastructure.CircuitBreaker;
+using Devon4Net.Infrastructure.Grpc;
+using Devon4Net.Infrastructure.Kafka;
+using Devon4Net.Infrastructure.Logger;
+using Devon4Net.Infrastructure.Middleware.Middleware;
 using Devon4Net.Infrastructure.Nexus;
+using Devon4Net.Infrastructure.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
