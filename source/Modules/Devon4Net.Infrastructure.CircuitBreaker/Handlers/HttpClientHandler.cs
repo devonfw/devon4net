@@ -28,11 +28,11 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             JsonHelper = new JsonHelper();
         }
 
-        public async Task<HttpResponseMessage> Send(HttpMethod httpMethod, string endPointName, string url, object content, string mediaType, bool contentAsJson = true, bool useCamelCase = false, Dictionary<string, string> headers = null)
+        public async Task<HttpResponseMessage> Send(HttpMethod httpMethod, string endPointName, string url, object content, string mediaType, bool contentAsJson = true, bool useCamelCase = false, Dictionary<string, string> headers = null, bool escapeDataString = false)
         {
             try
             {
-                return await SendCommand(httpMethod, endPointName, url, content, mediaType, headers, contentAsJson, useCamelCase).ConfigureAwait(false);
+                return await SendCommand(httpMethod, endPointName, url, content, mediaType, headers, contentAsJson, useCamelCase, escapeDataString).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -41,11 +41,11 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             }
         }
 
-        public async Task<Stream> Send(HttpMethod httpMethod, string endPointName, string url, object content, string mediaType, Dictionary<string, string> headers = null, bool contentAsJson = true, bool useCamelCase = false)
+        public async Task<Stream> Send(HttpMethod httpMethod, string endPointName, string url, object content, string mediaType, Dictionary<string, string> headers = null, bool contentAsJson = true, bool useCamelCase = false, bool escapeDataString = false)
         {
             try
             {
-                using var httpResponseMessage = await SendCommand(httpMethod, endPointName, url, content, mediaType, headers, contentAsJson, useCamelCase).ConfigureAwait(false);
+                using var httpResponseMessage = await SendCommand(httpMethod, endPointName, url, content, mediaType, headers, contentAsJson, useCamelCase, escapeDataString).ConfigureAwait(false);
                 return await ManageHttpResponseAsStream(httpResponseMessage, endPointName).ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -55,16 +55,13 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             }
         }
 
-        public async Task<T> Send<T>(HttpMethod httpMethod, string endPointName, string url, object content, string mediaType, Dictionary<string, string> headers = null, bool contentAsJson = true, bool useCamelCase = false)
+        public async Task<T> Send<T>(HttpMethod httpMethod, string endPointName, string url, object content, string mediaType, Dictionary<string, string> headers = null, bool contentAsJson = true, bool useCamelCase = false, bool escapeDataString = false)
         {
             try
             {
-                using var httpResponseMessage = await SendCommand(httpMethod, endPointName, url, content, mediaType, headers, contentAsJson, useCamelCase).ConfigureAwait(false);
+                using var httpResponseMessage = await SendCommand(httpMethod, endPointName, url, content, mediaType, headers, contentAsJson, useCamelCase, escapeDataString).ConfigureAwait(false);
                 var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName).ConfigureAwait(false);
-                var result = JsonHelper.Deserialize<T>(httpResult, useCamelCase);
-                if (result != null) return result;
-
-                throw new BadHttpRequestException("The request could not be performed. A null object was obtained after the deserialization process. Please check the request and the type of result mapping object");
+                return JsonHelper.Deserialize<T>(httpResult, useCamelCase);
             }
             catch (Exception ex)
             {
@@ -73,12 +70,12 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             }
         }
 
-        public async Task<string> SendSoapRequest(string endPointName, string url, string soapMessage, string soapActionUrl = null, Dictionary<string, string> headers = null)
+        public async Task<string> SendSoapRequest(string endPointName, string url, string soapMessage, string soapActionUrl = null, Dictionary<string, string> headers = null, bool escapeDataString = false)
         {
             try
             {
                 var soapHeaders = AddSoapHeaders(headers, soapActionUrl);
-                using var httpResponseMessage = await SendCommand(HttpMethod.Post, endPointName, url, soapMessage, MediaType.TextXml, soapHeaders, false).ConfigureAwait(false);
+                using var httpResponseMessage = await SendCommand(HttpMethod.Post, endPointName, url, soapMessage, MediaType.TextXml, soapHeaders, false, false, escapeDataString).ConfigureAwait(false);
                 return await ManageHttpResponse(httpResponseMessage, endPointName).ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -88,12 +85,12 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             }
         }
 
-        public async Task<T> SendFormRequest<T>(string endPointName, string url, IEnumerable<KeyValuePair<string, string>> dataToSend, Dictionary<string, string> headers = null, string mediaType = MediaType.ApplicationXwww, bool useCamelCase = false)
+        public async Task<T> SendFormRequest<T>(string endPointName, string url, IEnumerable<KeyValuePair<string, string>> dataToSend, Dictionary<string, string> headers = null, string mediaType = MediaType.ApplicationXwww, bool useCamelCase = false, bool escapeDataString = false)
         {
             try
             {
                 using var dataForm = new FormUrlEncodedContent(dataToSend);
-                using var httpResponseMessage = await SendCommand(HttpMethod.Post, endPointName, url, dataForm, mediaType, headers, false).ConfigureAwait(false);
+                using var httpResponseMessage = await SendCommand(HttpMethod.Post, endPointName, url, dataForm, mediaType, headers, false, false, escapeDataString).ConfigureAwait(false);
                 var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName).ConfigureAwait(false);
                 var result = JsonHelper.Deserialize<T>(httpResult, useCamelCase);
                 if (result != null) return result;
@@ -107,11 +104,11 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             }
         }
 
-        public async Task<T> SendFormRequest<T>(string endPointName, string url, IFormCollection dataToSend, Dictionary<string, string> headers = null, string mediaType = MediaType.ApplicationXwww, bool useCamelCase = false)
+        public async Task<T> SendFormRequest<T>(string endPointName, string url, IFormCollection dataToSend, Dictionary<string, string> headers = null, string mediaType = MediaType.ApplicationXwww, bool useCamelCase = false, bool escapeDataString = false)
         {
             try
             {
-                using var httpResponseMessage = await SendCommand(HttpMethod.Post, endPointName, url, dataToSend, mediaType, headers, false).ConfigureAwait(false);
+                using var httpResponseMessage = await SendCommand(HttpMethod.Post, endPointName, url, dataToSend, mediaType, headers, false, false, escapeDataString).ConfigureAwait(false);
                 var httpResult = await ManageHttpResponse(httpResponseMessage, endPointName).ConfigureAwait(false);
                 var result = JsonHelper.Deserialize<T>(httpResult, useCamelCase);
                 if (result != null) return result;
@@ -175,7 +172,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             return result;
         }
 
-        private async Task<HttpResponseMessage> SendCommand(HttpMethod httpMethod, string endPointName, string url, object content, string mediaType = MediaType.ApplicationJson, Dictionary<string, string> headers = null, bool contentAsJson = true, bool useCamelCase = false) //NOSONAR false positive
+        private async Task<HttpResponseMessage> SendCommand(HttpMethod httpMethod, string endPointName, string url, object content, string mediaType = MediaType.ApplicationJson, Dictionary<string, string> headers = null, bool contentAsJson = true, bool useCamelCase = false, bool escapeDataString = false) //NOSONAR false positive
         {
             HttpResponseMessage httpResponseMessage;
 
@@ -185,7 +182,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
 
                 using var httpClient = GetDefaultClient(endPointName, headers);
 
-                var request = new HttpRequestMessage(method, GetEncodedUrl(httpClient.BaseAddress?.ToString(), url));
+                var request = new HttpRequestMessage(method, GetEncodedUrl(httpClient.BaseAddress?.ToString(), url, escapeDataString));
 
                 if (content != null)
                 {
@@ -234,7 +231,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
 
             HttpContent httpContent = new StringContent(requestBody);
 
-            if (mediaType != null)
+            if (mediaType != null && mediaType!=MediaType.MultipartFormData)
             {
                 httpContent.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
             }
@@ -309,7 +306,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
             return $"HttpContent for {endPointName}:{contentResult}";
         }
 
-        private static string GetEncodedUrl(string baseAddress, string endPoint)
+        private static string GetEncodedUrl(string baseAddress, string endPoint, bool escapeDataString = false)
         {
             if (string.IsNullOrEmpty(baseAddress)) {
                 Devon4NetLogger.Information("GetEncodedUrl method inoveed with empty baseAddres");
@@ -343,7 +340,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
                 result = $"{baseAddress}{endPoint}";
             }
 
-            return Uri.EscapeDataString(result);
+            return escapeDataString ? Uri.EscapeDataString(result) : result;
         }
 
         private static HttpContent FormCollectionToHttpContent(IFormCollection collection, string contentTypeHeader)

@@ -161,9 +161,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Database
                 Engine = engine,
                 RemovalPolicy = removalPolicy,
                 DeletionProtection = deletionProtection,
-                Credentials = Credentials.FromPassword(userName, SecretValue.PlainText(password)),
+                Credentials = Credentials.FromPassword(userName, SecretValue.UnsafePlainText(password)),
                 StorageType = storageType,
-                DatabaseName = licenseOption == LicenseModel.LICENSE_INCLUDED.ToString() ? null : databaseName,
+                DatabaseName = licenseOption == nameof(LicenseModel.LICENSE_INCLUDED) ? null : databaseName,
                 VpcSubnets = subnetSelection,
                 Vpc = vpc,
                 SecurityGroups = new[]

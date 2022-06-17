@@ -9,9 +9,9 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.Business.StringManagement.Functions.Upper.UpperFunction::FunctionHandler",
-        "Runtime": "dotnetcore3.1",
+        "Runtime": "dotnet6",
         "CodeUri": "",
-        "MemorySize": 512,
+        "MemorySize": 256,
         "Timeout": 30,
         "Role": null,
         "Policies": [
@@ -44,9 +44,9 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.business.StringManagement.Functions.Lower.LowerFunction::FunctionHandler",
-        "Runtime": "dotnetcore6.0",
+        "Runtime": "dotnet6",
         "CodeUri": "",
-        "MemorySize": 512,
+        "MemorySize": 256,
         "Timeout": 30,
         "Role": null,
         "Policies": [
@@ -79,9 +79,9 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.Business.SnsManagement.Functions.SnsFunction::FunctionHandler",
-        "Runtime": "dotnetcore6.0",
+        "Runtime": "dotnet6",
         "CodeUri": "",
-        "MemorySize": 512,
+        "MemorySize": 256,
         "Timeout": 30,
         "Role": null,
         "Policies": [
@@ -114,9 +114,9 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.Business.SqsManagement.Functions.SqsFunction::FunctionHandler",
-        "Runtime": "dotnetcore6.0",
+        "Runtime": "dotnet6",
         "CodeUri": "",
-        "MemorySize": 512,
+        "MemorySize": 256,
         "Timeout": 30,
         "Role": null,
         "Policies": [

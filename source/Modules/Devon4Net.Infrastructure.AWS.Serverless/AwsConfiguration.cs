@@ -8,6 +8,7 @@ using Devon4Net.Infrastructure.Common.Handlers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Amazon;
+using Devon4Net.Infrastructure.AWS.SQS.Handlers;
 
 namespace Devon4Net.Infrastructure.AWS.Serverless
 {
@@ -29,6 +30,10 @@ namespace Devon4Net.Infrastructure.AWS.Serverless
                 var awsRegion = services.LoadAwsRegionEndpoint();
                 (configuration as IConfigurationBuilder)?.AddSecretsHandler(credentials, awsRegion);
                 (configuration as IConfigurationBuilder)?.AddParameterStoreHandler(credentials, awsRegion);
+                if (AwsOptions.UseSqs)
+                {
+                    services.AddSingleton<ISqsClientHandler, SqsClientHandler>();
+                }
             }
         }
 

@@ -45,7 +45,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 }
                 else
                 {
-                    AwsCdkHandler.CreateEc2TaskDefinition(taskDefinitionOpt.Id, taskDefinitionOpt.Family, taskDefinitionOpt.Volumes);
+                    taskDefinition = AwsCdkHandler.CreateEc2TaskDefinition(taskDefinitionOpt.Id, taskDefinitionOpt.Family, taskDefinitionOpt.Volumes);
                 }
 
                 StackResources.EcsTaskDefinitions.Add(taskDefinitionOpt.Id, taskDefinition);
@@ -185,7 +185,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 }
             }
 
-            var ecsService = AwsCdkHandler.AddElasticContainerEc2Service(service.Id, service.ServiceName, cluster, taskDefinition, service.HealthCheckGracePeriod, strategyItems, service.DesiredCount);
+            var ecsService = AwsCdkHandler.AddElasticContainerEc2Service(service.Id, service.ServiceName, cluster, taskDefinition, service.HealthCheckGracePeriod, strategyItems, service.DesiredCount, service.UseDistinctInstances, service.PlacementStrategy);
             AwsCdkHandler.AddEc2ServiceECSDependencies(ecsService, capacityProviders);
 
             CreateContainerDefinition(definitionOptions, taskDefinition);

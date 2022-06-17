@@ -31,7 +31,11 @@ namespace Devon4Net.Application.WebAPI.Configuration
 
         public static void SetupCors(this IApplicationBuilder builder)
         {
-            if (CorsOptions == null || CorsOptions.Count == 0) return;
+            if (CorsOptions == null || CorsOptions.Count == 0)
+            {
+                builder.UseCors("CorsPolicy");
+                return;
+            }
 
             foreach (var policy in CorsOptions.Select(c => c.CorsPolicy))
             {

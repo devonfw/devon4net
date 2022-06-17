@@ -1,24 +1,24 @@
 ﻿using Devon4Net.Infrastructure.FluentValidation;
-using Devon4Net.Application.WebAPI.Implementation.Domain.Entities;
 using FluentValidation;
+using Devon4Net.Application.WebAPI.Implementation.Business.EmployeeManagement.Dto;
 
 namespace Devon4Net.Application.WebAPI.Implementation.Business.EmployeeManagement.Validators
 {
     /// <summary>
-    /// 
+    /// EmployeeFluentValidator implementation
     /// </summary>
-    public class EmployeeFluentValidator : CustomFluentValidator<Employee>
+    public class EmployeeFluentValidator : CustomFluentValidator<EmployeeDto>
     {
         /// <summary>
-        /// 
+        /// EmployeeFluentValidator constructor
         /// </summary>
-        /// <param name="launchExceptionWhenError"></param>
-        public EmployeeFluentValidator(bool launchExceptionWhenError) : base(launchExceptionWhenError)
+        /// <param name="launchExceptionWhenError">Please set to false to not launching an exception</param>
+        public EmployeeFluentValidator(bool launchExceptionWhenError = false) : base(launchExceptionWhenError)
         {
         }
 
         /// <summary>
-        /// 
+        /// Custom validation for EmployeeDto
         /// </summary>
         public override void CustomValidate()
         {

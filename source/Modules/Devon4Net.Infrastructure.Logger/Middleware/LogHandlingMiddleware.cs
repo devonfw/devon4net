@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using System.Net;
 using Devon4Net.Infrastructure.Logger.Logging;
+using System.Text.Json;
 
 namespace Devon4Net.Infrastructure.Logger.Middleware
 {
@@ -29,7 +29,7 @@ namespace Devon4Net.Infrastructure.Logger.Middleware
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             Devon4NetLogger.Error(exception);
-            var result = JsonConvert.SerializeObject(new { error = exception.Message });
+            var result = JsonSerializer.Serialize(new { error = exception.Message });
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             return context.Response.WriteAsync(result);

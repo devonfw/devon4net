@@ -2,13 +2,14 @@
 using Amazon.Runtime;
 using Amazon.SecretsManager;
 using Amazon.SecretsManager.Model;
+using Devon4Net.Infrastructure.AWS.Secrets.Handlers;
 using Microsoft.Extensions.Configuration;
 
 namespace Devon4Net.Infrastructure.AWS.Secrets
 {
     public class AwsSecretsConfigurationProvider : ConfigurationProvider, IDisposable
     {
-        private IAwsSecretsHandler AwsSecretsHandler { get; set; }
+        private IAwsSecretsHandler AwsSecretsHandler { get;}
 
         public AwsSecretsConfigurationProvider(AWSCredentials awsCredentials = null, RegionEndpoint regionEndpoint = null)
         {

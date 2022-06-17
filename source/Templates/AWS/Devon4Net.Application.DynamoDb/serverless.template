@@ -9,9 +9,9 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "Devon4Net.Application.DynamoDb::Devon4Net.Application.DynamoDb.business.DynamoDbManagement.Functions.DynamoDbManagementFunction::FunctionHandler",
-        "Runtime": "net6.0",
+        "Runtime": "dotnet6",
         "CodeUri": "",
-        "MemorySize": 512,
+        "MemorySize": 256,
         "Timeout": 30,
         "Role": null,
         "Policies": [
@@ -44,9 +44,9 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "Devon4Net.Application.DynamoDb::Devon4Net.Application.DynamoDb.business.DynamoDbManagement.Functions.DynamoDbComplexObjectFunction::FunctionHandler",
-        "Runtime": "net6.0",
+        "Runtime": "dotnet6",
         "CodeUri": "",
-        "MemorySize": 512,
+        "MemorySize": 256,
         "Timeout": 30,
         "Role": null,
         "Policies": [

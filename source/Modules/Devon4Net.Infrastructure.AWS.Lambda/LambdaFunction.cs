@@ -135,6 +135,11 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
                 ConfigurationBuilder.AddParameterStoreHandler(AWSCredentials);
             }
 
+            if (AwsOptions.UseSqs)
+            {
+                ConfigurationBuilder.AddParameterStoreHandler(AWSCredentials);
+            }
+
             if (AwsOptions.UseParameterStore || AwsOptions.UseSecrets)
             {
                 Configuration = ConfigurationBuilder.Build();
