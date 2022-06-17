@@ -1,0 +1,138 @@
+:toc:
+
+= Introduction to blockchain
+
+== What is Blockchain?
+Blockchain is a record-keeping and contract-enforcement technology that uses cryptography to
+make it extremely difficult to change previous history.
+
+Blockchain technology is referred to as a distributed ledger. Just like an accounting ledger, the
+distributed ledger is a history of transactions. Each transaction in the ledger affects the final
+state.
+
+Data in a blockchain represents state. That's why digital tokens like cryptocurrency are a good
+fit for blockchain. If the coin is in your pocket, the state of ownership is yours. If you give the
+coin to your friend, the state changes to your friend owning the coin. Blockchain uses
+transactions to change the state of the data from one value to another.
+
+.Blockchain transactions
+image::images/eth_transfer.png[]
+
+As you can see in _Figure 1_, the only information stored in the blockchain is the transaction information. Thanks to all of the history of ether (Ethereum cryptocurrency) transactions we know:
+
+* Maria mined 3 ether
+* Bill sent 2 ether to John
+* Maria sent 1 ether to John
+
+Grouping this information we can say that Jhon has currently 3 ether tokens in his account and Maria has 2.
+
+Same thing happens with other type of tokens and interactions with smart contracts. The information is stored in the form of state, which can be for example "Maria executed _function Vote(to: John)_ on contract _Ox92ad4_" or "Maria transfered token _House_ to _John_". And based on all of the history of transactions, we can know the current state of the token.
+
+=== Properties
+
+Thanks to the architecture and design behind the blockchain, you can successfully benefit from a variety of properties.
+
+* Decentralization: There is no centralized authority like in a bank or in a normal application where everything has to go through an entitiy that controls everything. The whole blockchain runs in a network mantained by the community. You can be part of the community by running a node on your own. If a node breaks, there are other thousands that will do the job unlike in a normal application where if the server fails it could mean some downtime.
+
+* Immutability and Consistency: The data cannot be changed and is consistent through all of the nodes in the network. Most of the nodes have a copy of the whole blockchain and they communicate with each other to verify that all have the same copy. When some differences appear, they arrive to a consensus on which is the correct version of the blockchain.
+
+* Transparency: All the data is available to the public. As long as you have access to a node all transactions can be inspected but are private thanks to asymmetric cryptography. There are web pages that allow you to see blocks and transactions such as https://etherscan.io/[EtherScan]. You can see that two anonymous addresses exchanged 2 tokens but you can't know who owns those addresses. 
+
+* Open-Source: Some blockchain implementations are open-source and let you see the code and also contribute such as https://github.com/ethereum/go-ethereum[Go Ethereum].
+
+* Privacy: Even though you can inspect the content of the blocks, you will never be able to relate an address to a person/entity unless that person/entity wants to share it with you.
+
+=== How can you trust data is inmmutable?
+
+Blockchain uses a cryptographic hash to create link between blocks. By linking blocks, the order
+of transactions can be agreed upon through the consensus algorithm.
+
+A cryptographic hash is an output of a hashing algorithm that given a piece, run a complex calculation on it and produce a fixed-length string as the result of the calculation. The output hash will always be diferent if the input changes. You can think of it as a digital fingerprint.
+
+Blockchain uses hashes to detect if any changes have been made to the blocks. By including the
+previous block's hash value when generating the next block's hash. Blocks are chained together
+through hashes as shown in _Figure 2_.
+
+.Hash connection between blocks
+image::images\inmutable_data.png[]
+
+This way, if something changes in block 1, the hash of block 1 will also change, and will be different of the stored copy of the hash in block 2. So changing a block requires regenerating all successors and redoing the work (solving to the entire chain ‘hard mathematical problems’) while other blocks are being mined, which is practically impossible. This protects the blockchain from tampering.
+
+=== How can you trust data is consistent?
+
+Blockchain uses a consensus mechanism to validate and agree on the data across all blockchain
+nodes. Consensus provides a way for all decentralized nodes to come to the same state.
+
+When a new block is mined a group of transactions is placed and locked into it. A block can be seen as cluster of data within the blockchain that stores transaction information.
+
+As part of consensus, the group of transactions is validated and the network must agree
+if the block should be included in the blockchain. The number of transactions in a block is usually time-based so as long as the block is not still mined, transactions will be continuosly placed in it.
+
+There are several blockchain consensus algorithms including proof of work, proof of stake, and
+proof of authority, which are the most used. Each algorithm solves consistency in a different way:
+
+* Proof of Work (PoW): This consensus algorithm is used to select a miner for the next block generation. Bitcoin uses this PoW consensus algorithm. The central idea behind this algorithm is to solve a complex mathematical puzzle that is very easily verifiable. This mathematical puzzle requires a lot of computational power and thus, the node who solves the puzzle as soon as possible gets to mine the next block.
++
+Bitcoin uses the Hashcash Proof of Work system as the mining basis. The ‘hard mathematical problem’ can be written in an abstract way like below :
++
+    Given data A, find a number x such as that the hash of x appended to A results is a number less than B.
++
+The answer to the problem needs to be a lower number than B, known as the ‘target hash’. A miner continues testing different unique values (known as nonce(s)) until a suitable one is produced.
+The miner who manages to solve the problem gets the cryptocurrency reward and adds the block into the blockchain by broadcasting that the block has been mined.
+
+* Proof of stake (PoS): This is the most common alternative to PoW. Ethereum has shifted from PoW to PoS consensus. In this type of consensus algorithm, instead of investing in expensive hardware to solve a complex puzzle, validators invest in the coins of the system by locking up some of their coins as stake. After that, all the validators will start validating the blocks. Validators will validate blocks by placing a bet on it if they discover a block which they think can be added to the chain. Based on the actual blocks added in the Blockchain, all the validators get a reward proportionate to their bets and their stake increase accordingly. In the end, a validator is chosen to generate a new block based on their economic stake in the network. Thus, PoS encourages validators through an incentive mechanism to reach to an agreement.
+
+* Proof of authority (PoA): This is a reputation-based consensus algorithm that introduces a practical and efficient solution for blockchain networks. The Proof of Authority model relies on a limited number of block validators and this is what makes it a highly scalable system. Blocks and transactions are verified by pre-approved participants, who act as moderators of the system.
+
+NOTE: See this https://youtu.be/ojxfbN78WFQ[Visual Guide] to understand this algorithms better.
+
+There are also some not so used algorithms, among which are:
+
+* Proof of Burn 
+* Proof of Capacity 
+* Proof of Elapsed Time 
+* Proof of Activity
+* Proof of Weight
+* Proof of Importance
+
+=== Blockchain types
+ll types of blockchains can be characterized as permissionless, permissioned, or both.  On the one hand, Permissionless blockchains allow any user to pseudo-anonymously join the blockchain network and do not restrict the rights of the nodes on the blockchain network.
+
+On the other hand, permissioned blockchains restrict access to the network to certain nodes and may also restrict the rights of those nodes on that network. The identities of the users of a permissioned blockchain are known to the other users of that permissioned blockchain.
+
+.Blockchain Types
+image::images\blockchain_types.png[]
+
+* Public blockchains: A public blockchain is decentralized with no single authority on the network. All transactions in
+the blockchain are visible by any node on the network.
++
+The consensus algorithms for public blockchains use cryptocurrency as a reward to validate
+blocks (miners validate transactions to earn crypto tokens). Public blockchains may also charge
+a cryptocurrency fee for validating transactions.
++
+Public blockchain privacy is limited.
+
+* Private blockchains
++
+Private networks are semi-trusted networks. In a private network, there is an agreement
+between all participants about how they will leverage the blockchain. They may also be referred to as managed blockchains, they are controlled by a single organization.
+
+* Hybrid blockchains: Hybrid blockchains are blockchains that are controlled by a single organization, but with a level of oversight performed by the public blockchain, which is required to perform certain transaction validations. 
+
+* Consortium blockchains: A consortium blockchain is a private blockchain but authority is distributed and acts in the best interests of the network. Consortium blockchains can restrict who has authority to participate
+in consensus. Trust is enforced by restricting only the participants be involved in validation. The
+group of participants is called a consortium. Consensus algorithms for consortium blockchains
+can use authority rather than cryptocurrency.
+
+|====
+|*Type* |*Advantages* |*Disadvantages* |*Use cases* 
+|*Public*|Independence, Transparency, Trust|Performance, security, scalability|Cryptocurrency, Document validation
+|*Private*|Access control, performance|Trust, Auditability|Supply Chain, Asset Ownership
+|*Hybrid*|Access control, performance, scalability|Transparency, Upgrading|Medical Records, Real Estate
+|*Consortium*|Access control, security, scalability|Transparency|Banking, Research, Supply Chain
+|====
+
+== Next Steps
+
+=== References
+
