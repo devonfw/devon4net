@@ -17,7 +17,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Entities
         public int MinCapacity { get; set; }
         public int MaxCapacity { get; set; }
         public int DesiredCapacity { get; set; }
-        public ISecurityGroup SecurityGroup { get; set; }
+        public List<ISecurityGroup> SecurityGroups { get; set; }
         public string TimeOutCreation { get; set; }
         public string KeyPairName { get; set; }
         public IRole Role { get; set; }

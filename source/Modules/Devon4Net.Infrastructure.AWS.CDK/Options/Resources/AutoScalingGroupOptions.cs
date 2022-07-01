@@ -13,7 +13,7 @@
         public int MinCapacity { get; set; }
         public int MaxCapacity { get; set; }
         public int DesiredCapacity { get; set; }
-        public string SecurityGroupId { get; set; }
+        public List<string> SecurityGroupIds { get; set; }
         public string Region { get; set; }
         public string CreationTimeOut { get; set; }
         public string RoleId { get; set; }
