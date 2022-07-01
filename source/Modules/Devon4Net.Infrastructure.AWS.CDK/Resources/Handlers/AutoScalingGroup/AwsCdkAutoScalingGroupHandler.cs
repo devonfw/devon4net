@@ -17,7 +17,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.AutoScalingGroup
             TagHandler = new TagHandler();
         }
 
-        public IAutoScalingGroup Create(string id, string instanceName, string instanceType, string machineImageType,  string machineAmiImage, IVpc vpc, bool allowAllOutbound, int minCapacity, int maxCapacity, int desiredCapacity, string region, List<ISecurityGroup> securityGroup, string timeOutCreation, IRole role, ISubnet[] subnets, string keyPairName, bool enableProtectionFromScaleIn, List<BlockDevicesOptions> blockDevicesOptions, List<string> userData)
+        public IAutoScalingGroup Create(string id, string instanceName, string instanceType, string machineImageType,  string machineAmiImage, IVpc vpc, bool allowAllOutbound, int minCapacity, int maxCapacity, int desiredCapacity, string region, List<ISecurityGroup> securityGroups, string timeOutCreation, IRole role, ISubnet[] subnets, string keyPairName, bool enableProtectionFromScaleIn, List<BlockDevicesOptions> blockDevicesOptions, List<string> userData)
         {
             var result = CreateInstance(new AutoScalingGroupEntity
             {
@@ -31,7 +31,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.AutoScalingGroup
                 MinCapacity = minCapacity,
                 MaxCapacity = maxCapacity,
                 DesiredCapacity = desiredCapacity,
-                SecurityGroups = securityGroup,
+                SecurityGroups = securityGroups,
                 TimeOutCreation = timeOutCreation,
                 Role = role,
                 KeyPairName = keyPairName,
