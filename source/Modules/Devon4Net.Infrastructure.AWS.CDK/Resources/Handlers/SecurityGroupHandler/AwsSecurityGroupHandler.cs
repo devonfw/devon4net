@@ -15,9 +15,14 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.SecurityGroupHandl
             TagHandler = new TagHandler();
         }
 
-        public ISecurityGroup Locate(string securityId, string securityGroupId)
+        public ISecurityGroup LocateById(string securityId, string securityGroupId)
         {
             return SecurityGroup.FromLookupById(Scope, securityId, securityGroupId);
+        }
+
+        public ISecurityGroup LocateByName(string securityId, string securityGroupName, IVpc securityGroupVpc)
+        {
+            return SecurityGroup.FromLookupByName(Scope, securityId, securityGroupName, securityGroupVpc);
         }
 
         public ISecurityGroup Create(string identification, string groupName, IVpc vpc, bool allowAllOutbound = false, bool disableInlineRules = false)

@@ -14,7 +14,22 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             {
                 if (securityGroupOption.LocateInsteadOfCreate)
                 {
-                    var securityGroup = AwsCdkHandler.LocateSecurityGroupById(securityGroupOption.SecurityGroupId, securityGroupOption.SecurityGroupId);
+                    ISecurityGroup securityGroup;
+
+                    if (!string.IsNullOrWhiteSpace(securityGroupOption.SecurityGroupId))
+                    {
+                        securityGroup = AwsCdkHandler.LocateSecurityGroupById(securityGroupOption.SecurityGroupId, securityGroupOption.SecurityGroupId);
+                    }
+                    else if (!string.IsNullOrWhiteSpace(securityGroupOption.SecurityGroupName))
+                    {
+                        var securityGroupVpc = LocateVpc(securityGroupOption.VpcId, $"The Vpc id {securityGroupOption.VpcId} of the security group {securityGroupOption.SecurityGroupName} was not found");
+                        securityGroup = AwsCdkHandler.LocateSecurityGroupByName(securityGroupOption.Id, securityGroupOption.SecurityGroupName, securityGroupVpc);
+                    }
+                    else
+                    {
+                        throw new ArgumentNullException($"Either SecurityGroupId or SecurityGroupName must be provided to locate a Security Group, Id: { securityGroupOption.Id }");
+                    }
+
                     StackResources.SecurityGroups.Add(securityGroupOption.Id, securityGroup);
                 }
                 else
@@ -23,9 +38,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                     var vpc = vpcResource.Value ?? AwsCdkHandler.LocateVpc(securityGroupOption.VpcId, $"The Vpc id {securityGroupOption.VpcId} of the security group {securityGroupOption.SecurityGroupName} was not found");
 
                     var securityGroup = AwsCdkHandler.AddSecurityGroup(securityGroupOption.SecurityGroupName, securityGroupOption.SecurityGroupName, vpc, securityGroupOption.AllowAllOutbound, securityGroupOption.DisableInlineRules);
+                    StackResources.SecurityGroups.Add(securityGroupOption.Id, securityGroup);
                     AddSecurityGroupRules(securityGroupOption, securityGroup, SecurityGroupRuleType.IngressRule);
                     AddSecurityGroupRules(securityGroupOption, securityGroup, SecurityGroupRuleType.EgressRule);
-                    StackResources.SecurityGroups.Add(securityGroupOption.Id, securityGroup);
                 }
             }
         }

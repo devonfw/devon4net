@@ -16,7 +16,12 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
 
         public ISecurityGroup LocateSecurityGroupById(string identification, string securityGroupId)
         {
-            return HandlerResources.AwsSecurityGroupHandler.Locate(identification, securityGroupId);
+            return HandlerResources.AwsSecurityGroupHandler.LocateById(identification, securityGroupId);
+        }
+
+        public ISecurityGroup LocateSecurityGroupByName(string identification, string securityGroupName, IVpc securityGroupVpc)
+        {
+            return HandlerResources.AwsSecurityGroupHandler.LocateByName(identification, securityGroupName, securityGroupVpc);
         }
     }
 }
