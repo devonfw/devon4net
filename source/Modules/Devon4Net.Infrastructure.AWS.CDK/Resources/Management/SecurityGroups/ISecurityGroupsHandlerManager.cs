@@ -7,5 +7,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
         ISecurityGroup AddSecurityGroup(string identification, string securityGroupName, Vpc vpc, bool allowAllOutbound = false, bool disableInlineRules = false);
         ISecurityGroup AddSecurityGroup(string identification, string securityGroupName, IVpc vpc, bool allowAllOutbound = false, bool disableInlineRules = false);
         ISecurityGroup LocateSecurityGroupById(string identification, string securityGroupId);
+        ISecurityGroup LocateSecurityGroupByName(string securityId, string securityGroupName, IVpc securityGroupVpc);
+
     }
 }
