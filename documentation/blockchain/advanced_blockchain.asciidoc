@@ -1,0 +1,83 @@
+:toc:
+
+= How does Blockchain work?
+
+The blockchain is incredibly complicated, and we have already covered the fundamentals in earlier documents. 
+
+After reading the `Introduction to Blockchain` document, you may have questions like: How are transactions verified? How are blocks "mined"? How do nodes communicate and know about other nodes? 
+
+As a result, there are a number of less-technical notions that need to be understood in order to start comprehending better how everything works. 
+
+== Transactions
+
+Transactions are the smallest unit to which the blockchain can be reduced. They are interactions that take place on the blockchain and change its state. These transactions are the core of the blockchain, the database that defines the current state of it.
+
+.Simple representation of a transaction
+image::images/change_of_state.png[]
+
+In Ethereum these transactions might, for instance, involve a transfer between two accounts or an interaction with a blockchain contract that changes some type of state thus needs to be stored.
+
+The set of all transactions is what forms the distributed ledger that we know today as blockchain.
+
+*But, how do we know who sends the transactions? Can they be hacked?*
+
+Transactions are cryptographically signed instructions from accounts. By using assymetric cryptography, we can sign transactions using a private key and then verify the signature by using a public key. So that whoever owns the key pair is the owner of the transaction.
+
+The owner of a key pair automatically loses control over who can transact or sign documents on their behalf if their private key is exposed.
+
+=== Accounts
+
+An account is made up of a public and a private key. Public key cryptography uses unique keys to secure information. These keys are based on mathematical functions that have a special property: it is very Seasy to calculate them, but hard to calculate their inverse. Based on these functions, cryptography enables the creation of digital secrets and unforgeable digital signatures, which are secured by the laws of mathematics.
+
+For example, multiplying two large prime numbers together is trivial. But given the product of two large primes, it is very difficult to find the prime factors (a problem called prime factorization). Let’s say we present the number 8,018,009 and tell you it is the product of two primes. Finding those two primes is much harder for you than it was for me to multiply them to produce 8,018,009.
+
+A more advanced category of mathematical functions that is useful in cryptography is based on arithmetic operations on an elliptic curve. In elliptic curve arithmetic, multiplication modulo a prime is simple but division (the inverse) is practically impossible. This is called the discrete logarithm problem and there are currently no known trapdoors. Elliptic curve cryptography is used extensively in modern computer systems and is the basis of Ethereum’s (and other cryptocurrencies’) use of private keys and digital signatures.
+
+.Elliptic curve cryptography representation
+image::images/ecc_diagram.png[]
+
+=== HD Wallets
+
+"HD Wallet" stands for Hierarchical Deterministic Wallets and they are cryptocurrency wallets that use a single seed of 12, 18 or 24 keywords, with which they can generate an unlimited number of addresses. This is done automatically, hierarchically, and sequentially. However, remembering the seed is somewhat complicated since it is an illegible alphanumeric character string, therefore, the mnemonic codes. They make this seed understandable words for us, so making a backup is much easier and more practical.
+
+This wallets are the most used among all users because they are easy to memorize and produce as much wallets as you want. As they always produce the same wallets, you can import them to any blockchain client that you want to use.
+
+Example of seed phrase:
+
+`witch collapse practice feed shame open despair creek road again ice least`
+
+WARNING: This seed phrase has been generated as an example. *DO NOT USE IT FOR ANY PURPOSE OTHER THAN TESTING!*
+
+== The chain of blocks
+
+Blocks are data structures within the blockchain database, where transaction data in a cryptocurrency blockchain are permanently recorded. A block records some or all of the most recent transactions not yet validated by the network. Once the data are validated, the block is closed. Then, a new block is created for new transactions to be entered into and validated.
+
+A block is thus a permanent store of records that, once written, cannot be altered or removed.
+
+A block stores information. There are many pieces of information included within a block, apart from the list of transactions, that do not occupy too much storage space. Blocks generally include these elements, but it might vary between different blockchains, but what they all include is:
+
+* *Previous block Hash*: The hash operation of the previous block.
+* *Block Hash*: The hash operation of the block.
+* *Transactions data*: A list of all of the transactions within a block.
+* *Nonce*: The encrypted number that a miner must solve to verify the block and close it. (In the case of _proof of work_)
+
+.Block content
+image::images/block.png[]
+
+=== Why Hashes?
+
+Hashes are the output of a hashing algorithm. These algorithms essentially aim to produce a unique, fixed-length string for any given piece of data.
+
+Hashes are used in the blockchain techonolgy because they are easy to compute and can be used to verify that the content of a block has not changed. If something changes inside a block the hash will also change and the chain will break.
+
+=== Blockchain
+
+The blockchain is the succession of all the blocks connected by their hashes forming a chain. It all starts in the `genesis` block, which is the first one and can't be connected to other block. Then the chain starts growing.
+
+.Blockchain first blocks
+image::images/blockchain_genesis.png[]
+
+The process of calculating hashes for the new blocks is difficult due to a problem that needs to be solved. Not all the hashes are valid, there is a condition known as "target hash" that needs to be satisfied for the hash to be valid. 
+
+== Next Steps
+=== References
