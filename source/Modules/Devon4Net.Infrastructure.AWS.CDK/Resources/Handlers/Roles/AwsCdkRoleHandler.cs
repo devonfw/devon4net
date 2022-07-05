@@ -147,5 +147,21 @@ namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
         {
             return ManagedPolicy.FromManagedPolicyName(Scope, policyName, policyName);
         }
+
+        /// <summary>
+        /// Returns a role in AWS by its Name
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="fromRoleArnOptions"></param>
+        /// <returns></returns>
+        public IRole LocateRoleByName(string id, string name)
+        {
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("The identification or name cannot be null");
+            }
+            return Role.FromRoleName(Scope, id, name);
+        }
     }
 }
