@@ -184,3 +184,7 @@ FakesAssemblies/
 project.lock.json
 /**/.vs/
 /**/.sonarqube/
+
+# AWS CDK
+/**/cdk.out
+/**/cdk.context.json
