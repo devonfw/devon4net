@@ -277,7 +277,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Database
                 throw new ArgumentException("The VPC provided to create the database is not valid");
             }
 
-            securityGroup = AwsSecurityGroupHandler.Locate(securityId, securityGroupId);
+            securityGroup = AwsSecurityGroupHandler.LocateById(securityId, securityGroupId);
 
             if (securityGroup == null)
             {
