@@ -26,7 +26,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 {
                     var currentBucket = AwsCdkHandler.LocateBucketByName(bucket.Id, bucket.BucketName);
                     AwsCdkHandler.AddLifeCycleRuleToExistingBucket(ref currentBucket, expiredDocumentsLifeCycleRules);
-                    StackResources.Buckets.Add(bucket.Id, AwsCdkHandler.LocateBucketByName(bucket.Id, bucket.BucketName));
+                    StackResources.Buckets.Add(bucket.Id, currentBucket);
                 }
                 else
                 {

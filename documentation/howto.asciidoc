@@ -1,285 +1,239 @@
-:toc: macro
+:toc:
+
+= How to use devon4net
+
 toc::[]
-:icons: font
-:iconfont-remote!:
-:iconfont-name: font-awesome
-:stylesdir: css
+== Introduction
 
+As you may know, https://devonfw.com/website/pages/docs/devonfw-guide_devon4net.wiki_master-devon4net.asciidoc.html[devon4net] is a framework that will assist you in getting started on your.NET applications and integrating high end configurable components. 
 
-= Introduction
+This article contains information in the form of a step-by-step guide on how to do a variety of operations.
 
-The aim of this document is to show  how to get devon4net things done in a easy way.
+== How to: Create a new devon4net project
+In this part, you will learn you how to easily create a new project using devon4net libraries and start working on it. You can create a variety of applications thanks to the different templates available. There are also multiple ways to create a new project, we will show you the most common ways.
 
-= How to
+NOTE: The configuration characteristics are not covered in this document. Please feel free to read the documentation for each component to discover how they work and the configuration options available.
 
-== Start a new devonfw project
+=== Command Line Interface (CLI)
+This is the fastest and most efficient way. You will be installing and starting a project thanks to the template available in the NuGet Gallery using CLI. For this part you will need to have .NET 6.0 SDK installed. You can run the following command to check your version:
 
-The _.Net Core 3.1_ template allows you to start developing an n-layer server application to provide the latest features. The template can be used in Visual Studio Code and Visual Studio 2019.
+[source, console]
+----
+> dotnet --version
+6.0.102
+----
 
-The application result can be deployed as a console application, microservice or web page.
+If you don't get any response please follow the https://docs.microsoft.com/en-us/dotnet/core/install/[installation guide] provided by Microsoft to install the latest version of .Net SDK for your OS.
 
-To start developing with devon4Net template, please follow this instructions:
+==== Step 1 - Install the Template
+Open your favourite terminal (Windows/Linux/macOS) and run the command showed below to install the latest version of the the https://www.nuget.org/packages/Devon4Net.WebAPI.Template/[devon4net web API template]:
 
-==== Using devon4Net template
-==== Option 1
+[source, console]
+----
+> dotnet new --install Devon4Net.WebAPI.Template
+The following template packages will be installed:
+   Devon4Net.WebApI.Template
 
-[listing]
-....
-Open your favourite terminal (Win/Linux/iOS)
-Go to future project's path
-Type dotnet new --install Devon4Net.WebAPI.Template
-Type dotnet new Devon4NetAPI
-Go to project's path
-You are ready to start developing with devon4Net
-....
+Success: Devon4Net.WebAPI.Template::6.0.3 installed the following templates:
+Template Name                    Short Name    Language  Tags
+-------------------------------  ------------  --------  ------------------------------
+Devon4Net API solution template  Devon4NetAPI  [C#]      devonfw/Devon4Net/Devon4NetAPI
+----
 
-==== Option 2
-[listing]
-....
-Create a new dotnet` API` project from scratch
-Add the NuGet package reference to your project:
-Install-Package Devon4Net.Application.WebAPI.Configuration
-....
+We recommend you updating the template to the latest version. However, using the following option, you can select the version of your interest:
+[source, console]
+----
+> dotnet new --install Devon4Net.WebAPI.Template::6.0.3
+----
 
-Set up your project as follows in program.cs file:
+Now you will have the template available in your Visual Studio 2022. Just type `devon4net` in the search bar when creating a new project!
+
+.Devon4Net API template in VS2022
+image::images/api_template_ide.png[]
+
+==== Step 2 - Create a new project
+To create a new project run the following command:
+[source, console]
+----
+> dotnet new Devon4NetAPI
+The template "Devon4Net API solution template" was created successfully.
+----
+This will create a project with the default name in the actual directory. If you want to specify the desired name and output directory you can specify the following options: 
+[source, console]
+----
+> dotnet new Devon4NetAPI --name MyProject --output C:\Projects\MyProject
+The template "Devon4Net API solution template" was created successfully.
+----
+
+You can do it also choosing the template when creating a new project in Visual Studio 2022 as shown in figure 1, and configuring the name and output directory as shown in figure 2.
+
+.Devon4Net API template in VS2022
+image::images/api_template_configure.png[]
+
+==== Step 3 - Run it
+After running it with Kestrel you will be able to access to the swagger `index.html` and try the API in the following link: https://localhost.8085/swagger/index.html[https://localhost.8085/swagger/index.html]
+
+=== Create it from scratch in Visual Studio 2022
+This method is a little more time consuming, but it allows for a more customized configuration and project structure. You will be using Visual Studio 2022 to create the project and add everything you need by hand. 
+
+==== Step 1 - Create a new project
+Create a new ASP.NET Core Web API project using the template provided by Visual Studio. You can type `api` in the search bar and select it as shown in figure 3.
+
+.ASP.NET Core Web API template in VS2022
+image::images/api_template_create_project.png[]
+
+Once you go through all the initial configuration process, choosing a name, location and so on; you will find your project as shown in the next image.
+
+.Default ASP.NET Core Web API template structure
+image::images\api_template_initial_structure.png[]
+
+You can delete both `WeatherForecastController.cs` and `WeatherForecast.cs` as they are an example in the template but we recommend you keeping them so you can try the API when done with all the steps.
+
+==== Step 2 - Add the NuGet reference
+To install the NuGet package for the API Configuration we will use the Visual Studio package manager console. To open it, go to `View > Other Windows > Package Manager Console` as shown in the figure below.
+
+.Package Manager Console location in menu
+image::images\api_template_package_manager.png[]
+
+Now you can run the following command. It will take a minute to download and install all the packages:
+[source, console]
+----
+PM> install-package Devon4Net.Infrastructure.WebAPI
+----
+Once its done, you should be able to see the dependency in the Package Dependencies of the project.
+
+==== Step 3 - Set up your project
+
+Now you will need to add some configuration in the `Program.cs`. The following lines will initialize the configuration for the WebHostBuilder and configure the components that were imported with the NuGet installation respectively, making use of extensions methods for the `ServiceCollection` and `WebHostBuilder` classes:
 
 [source, c#]
 ----
-
-        public static void Main(string[] args)
-        {
-            // Please use
-            // Devonfw.Configure<Startup>(args);
-            // Or : 
-
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .InitializeDevonFw()
-                .Build()
-                .Run();
-        }
+builder.WebHost.InitializeDevonFw();
+builder.Services.ConfigureDevonFw(builder.Configuration);
 ----
 
-Set up your project as follows in startup.cs file:
+Now you'll need to configure the middlewares included with the following line:
 
-```
+[source, c#]
+----
+app.SetupMiddleware(builder.Services);
+----
 
-    private IConfiguration Configuration { get; }
+NOTE: Don't forget to import the package to be able to use this methods!
 
+It is not necessary, but we recommend to also setup the logger so you can keep track of the trace running:
 
-   public Startup(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
-    
-    public void ConfigureServices(IServiceCollection services)
-    {
+[source, c#]
+----
+builder.Services.SetupLog(builder.Configuration);
+----
 
-        services.ConfigureDevonFw(Configuration);
-        SetupDatabase(services);
-        
-        ...
-    }
-    
+The `Program.cs` will end up looking like this:
 
-    private void SetupDatabase(IServiceCollection services)
-    {
-        // Default is the database connection name in appsettings.json file
-        services.SetupDatabase<TodoContext>(Configuration, "Default", DatabaseType.InMemory);
-    }
-    
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-        app.ConfigureDevonFw();    
-        ...
-    }
-    
-```
+[source, c#]
+----
+using Devon4Net.Application.WebAPI.Configuration;
+using Devon4Net.Application.WebAPI.Configuration.Application;
+using Devon4Net.Infrastructure.Middleware.Middleware;
 
-Add the devonfw configuration options in your appsettings.json file
+var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
 
-=== devon4net configuration files
+// devon4net
+builder.WebHost.InitializeDevonFw();
+builder.Services.SetupLog(builder.Configuration);
+builder.Services.SetupDevonfw(builder.Configuration);
 
-To start using devon4net in your .net core application add this configuration in your appsettings.json file:
+var app = builder.Build();
+app.UseHttpsRedirection();
+
+// devon4net
+app.SetupMiddleware(builder.Services);
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+----
+
+==== Step 4 - Configure components
+
+The lines added on the previous step will need some configuration in the `appsettings.json`:
 
 [source, json]
 ----
- "devonfw": {
+{
+  "devonfw": {
     "UseDetailedErrorsKey": true,
     "UseIIS": false,
     "UseSwagger": true,
+    "UseXsrf": true,
+    "UseModelStateValidation": true,
     "Environment": "Development",
-    "KillSwitch": {
-      "killSwitchSettingsFile": "killswitch.appsettings.json"
-    },
+    "ForceUseHttpsRedirection": false,
     "Kestrel": {
-      "UseHttps": true,
-      "HttpProtocol": "Http2", //Http1, Http2, Http1AndHttp2, none
-      "ApplicationPort": 8082,
-      "KeepAliveTimeout": 120, //in seconds
-      "MaxConcurrentConnections": 100,
-      "MaxConcurrentUpgradedConnections": 100,
-      "MaxRequestBodySize": 28.6, //In MB. The default maximum request body size is 30,000,000 bytes, which is approximately 28.6 MB
-      "Http2MaxStreamsPerConnection": 100,
-      "Http2InitialConnectionWindowSize": 131072, // From 65,535 and less than 2^31 (2,147,483,648)
-      "Http2InitialStreamWindowSize": 98304, // From 65,535 and less than 2^31 (2,147,483,648)
-      "AllowSynchronousIO": true,
-      "SslProtocol": "Tls12", //Tls, Tls11,Tls12, Tls13, Ssl2, Ssl3, none. For Https2 Tls12 is needed
-      "ServerCertificate": {
-        "Certificate": "localhost.pfx",
-        "CertificatePassword": "localhost"
-      },
-      "ClientCertificate": {
-        "DisableClientCertificateCheck": true,
-        "RequireClientCertificate": false,
-        "CheckCertificateRevocation": true,
-        "ClientCertificates": {
-          "Whitelist": [
-            "3A87A49460E8FE0E2A198E63D408DC58435BC501"
-          ],
-          "DisableClientCertificateCheck": false
-        }
+      "UseHttps": false,
+      "HttpProtocol": "Http1AndHttp2", //Http1, Http2, Http1AndHttp2, none
+      "ApplicationPort": 8085,
+      "SslProtocol": "Tls12", //Tls12, Tls13, none. For Https2 Tls12 is needed
+      "ExtraSettings": {
+        "KeepAliveTimeout": 120, //in seconds
+        "MaxConcurrentConnections": 100,
+        "MaxConcurrentUpgradedConnections": 100,
+        "MaxRequestBodySize": 28.6, //In MB. The default maximum request body size is 30,000,000 bytes, which is approximately 28.6 MB
+        "Http2MaxStreamsPerConnection": 100,
+        "Http2InitialConnectionWindowSize": 131072, // From 65,535 and less than 2^31 (2,147,483,648)
+        "Http2InitialStreamWindowSize": 98304, // From 65,535 and less than 2^31 (2,147,483,648)
+        "AllowSynchronousIO": true
       }
     },
     "IIS": {
       "ForwardClientCertificate": true,
       "AutomaticAuthentication": true,
-      "AuthenticationDisplayName" : ""
+      "AuthenticationDisplayName": ""
     }
   }
-
+}
 ----
 
-Also, for start using the devon4net components, you should add the next json options in your appsettings.json or appsettings.Development.json file:
+And also in the `appsettings.Development.json`:
 
-
-```
+[source, json]
+----
 {
   "ExtraSettingsFiles": [
-    "Put a directory path (relative/absolute/linux-like) like /run/secrets/global where there are many settings/secret files to load",
-    "Put a specific file name (with/without path) like /app-configs/app/extra-settings.json"
+    "appsettingsExtra.json",
+    "Directory path",
+    "Specific file name"
   ],
+  "KillSwitch": {
+    "UseKillSwitch": false,
+    "EnableRequests": false,
+    "HttpStatusCode": 403
+  },
   "ConnectionStrings": {
     "Default": "Todos",
     "Employee": "Employee",
     "RabbitMqBackup": "Add your database connection string here for messaging backup",
-    "MediatRBackup": "Add your database connection string here for messaging backup"
+    "MediatRBackup": "Add your databascere connection string here for messaging backup"
   },
-  "Logging": {
-    "LogLevel": {
-      "Default": "Debug",
-      "System": "Information",
-      "Microsoft": "Information"
-    }
-  },
-  "Swagger": {
-    "Version": "v1",
-    "Title": "devon4net API",
-    "Description": "devon4net API Contract",
-    "Terms": "https://www.devonfw.com/terms-of-use/",
-    "Contact": {
-      "Name": "devonfw",
-      "Email": "sample@mail.com",
-      "Url": "https://www.devonfw.com"
-    },
-    "License": {
-      "Name": "devonfw - Terms of Use",
-      "Url": "https://www.devonfw.com/terms-of-use/"
-    },
-    "Endpoint": {
-      "Name": "V1 Docs",
-      "Url": "/swagger/v1/swagger.json",
-      "UrlUi": "swagger",
-      "RouteTemplate": "swagger/v1/{documentName}/swagger.json"
-    }
-  },
-  "JWT": {
-    "Audience": "devon4Net",
-    "Issuer": "devon4Net",
-    "TokenExpirationTime": 60,
-    "ValidateIssuerSigningKey": true,
-    "ValidateLifetime": true,
-    "ClockSkew": 5,
-    "Security": {
-      "SecretKeyLengthAlgorithm": "",
-      "SecretKeyEncryptionAlgorithm": "",
-      "SecretKey": "",
+  "Certificates": {
+    "ServerCertificate": {
       "Certificate": "",
-      "CertificatePassword": "",
-      "CertificateEncryptionAlgorithm": ""
-    }
-  },
-  "Cors": []
-  //[
-  //  {
-  //    "CorsPolicy": "CorsPolicy1",
-  //    "Origins": "http://example.com,http://www.contoso.com",
-  //    "Headers": "accept,content-type,origin,x-custom-header",
-  //    "Methods": "GET,POST,HEAD",
-  //    "AllowCredentials": true
-  //  },
-  //  {
-  //    "CorsPolicy": "CorsPolicy2",
-  //    "Origins": "http://example.com,http://www.contoso.com",
-  //    "Headers": "accept,content-type,origin,x-custom-header",
-  //    "Methods": "GET,POST,HEAD",
-  //    "AllowCredentials": true
-  //  }
-  //]
-  ,
-  "CircuitBreaker": {
-    "CheckCertificate": false,
-    "Endpoints": [
-      {
-        "Name": "AnsibleTower",
-        "BaseAddress": "PUT THE IP ADDRESS HERE",
-        "Headers": {
-        },
-        "WaitAndRetrySeconds": [
-          0.0001,
-          0.0005,
-          0.001
-        ],
-        "DurationOfBreak": 0.0005,
-        "UseCertificate": false,
-        "Certificate": "localhost.pfx",
-        "CertificatePassword": "localhost",
-        "SslProtocol": "3072" //TLS12
-      },
-      {
-        "Name": "CyberArk",
-        "BaseAddress": "PUT THE IP ADDRESS HERE",
-        "Headers": {
-        },
-        "WaitAndRetrySeconds": [
-          0.0001,
-          0.0005,
-          0.001
-        ],
-        "DurationOfBreak": 0.0005,
-        "UseCertificate": false,
-        "Certificate": "localhost.pfx",
-        "CertificatePassword": "localhost",
-        "SslProtocol": "3072" //TLS12
-      },
-      {
-        "Name": "SmaxHcm",
-        "BaseAddress": "PUT THE IP ADDRESS HERE",
-        "Headers": {
-        },
-        "WaitAndRetrySeconds": [
-          0.0001,
-          0.0005,
-          0.001
-        ],
-        "DurationOfBreak": 0.0005,
-        "UseCertificate": false,
-        "Certificate": "localhost.pfx",
-        "CertificatePassword": "localhost",
-        "SslProtocol": "3072" //TLS12
+      "CertificatePassword": ""
+    },
+    "ClientCertificate": {
+      "DisableClientCertificateCheck": true,
+      "RequireClientCertificate": false,
+      "CheckCertificateRevocation": true,
+      "ClientCertificates": {
+        "Whitelist": [
+          "3A87A49460E8FE0E2A198E63D408DC58435BC501"
+        ]
       }
-    ]
+    }
   },
   "Headers": {
     "AccessControlExposeHeader": "Authorization",
@@ -291,25 +245,1092 @@ Also, for start using the devon4net components, you should add the next json opt
     "PermittedCrossDomainPoliciesHeader": "",
     "ReferrerPolicyHeader": ""
   },
-  "Log": {
-    "UseAOPTrace": false,
-    "LogLevel": "Debug",
-    "SqliteDatabase": "logs/log.db",
-    "LogFile": "logs/{0}_devonfw.log",
-    "SeqLogServerHost": "http://127.0.0.1:5341",
-    "GrayLog": {
-      "GrayLogHost": "127.0.0.1",
-      "GrayLogPort": "12201",
-      "GrayLogProtocol": "UDP",
-      "UseSecureConnection": true,
-      "UseAsyncLogging": true,
-      "RetryCount": 5,
-      "RetryIntervalMs": 15,
-      "MaxUdpMessageSize": 8192
+  "Cors": []
+}
+----
+
+=== References
+Here are some interesting references to continue learning about this topic:
+
+* https://docs.microsoft.com/en-us/dotnet/core/install/[Install .NET on your OS - Microsoft Docs]
+
+* https://docs.microsoft.com/es-es/dotnet/core/tools/[.NET CLI overview - Microsoft Docs]
+
+* https://docs.microsoft.com/es-es/dotnet/core/tools/dotnet-new-install[dotnet new --install option - Microsoft Docs]
+
+* https://docs.microsoft.com/es-es/dotnet/core/tools/dotnet-new[dotnet new - Microsoft Docs]
+
+
+== How to: Create and add certificates to a project
+In this part, you will learn how to easily create a new certificate and properly add it to your devon4net project. 
+
+
+=== Create a certificate using OpenSSL
+In order to create our own certificate for development purposes we will be using https://github.com/openssl/openssl[OpenSSL] toolkit. To ensure correct behavior, make sure the tool is properly installed.
+
+NOTE: Please refer to the https://www.openssl.org/docs/man3.0/man1/[OpenSSL command documentation] to learn more about the commands used in this guide and how to install the toolkit.
+
+To run commands for OpenSSL, you will need to add OpenSSL to your environment, variables, or open a OpenSSL command prompt.
+
+NOTE: The working directory (directory where all files are created and readed) is the console actual path. Use `cd` command to go to your desired directory.
+
+==== Step 1 - Create a Certificate Authority (CA)
+First we will need to create a Certificate Authority to sign the certificate. For that, we will run the following command which will create the certificate `RootCA.pem` and the corresponding private key `RootCA.key`. 
+
+[source, console]
+----
+> openssl req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout RootCA.key -out RootCA.pem -subj "/C=ES/ST=Valencia/L=Valencia/O=Certificates/CN=MyProjectCertificate.local"
+----
+
+Now we will create the public key `RootCA.crt` for the certificate by running the following command:
+
+[source, console]
+----
+> openssl x509 -outform pem -in RootCA.pem -out RootCA.crt
+----
+
+If you want to export the certificate you can run the command:
+
+[source, console]
+----
+> openssl pkcs12 -export -out RootCA.pfx -inkey RootCA.key -in RootCA.crt
+----
+
+==== Step 2 - Create a Certificate signed by the CA
+
+To create a new certificate run the following command:
+[source, console]
+----
+> openssl req -new -nodes -newkey rsa:2048 -keyout localhost.key -out localhost.csr -subj "/C=ES/ST=Valencia/L=Valencia/O=Certificates/CN=localhost.local"
+----
+
+Before signing it, create a `domains.ext` that contains the following:
+
+[source, txt]
+----
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = localhost
+DNS.2 = localhost.local
+DNS.3 = 127.0.0.1
+DNS.4 = fake1.local
+DNS.5 = fake2.local
+----
+
+Once the files are created, you'll need to sign the certificate with the CA we created earlier:
+[source, console]
+----
+> openssl x509 -req -sha256 -days 1024 -in localhost.csr -CA RootCA.pem -CAkey RootCA.key -CAcreateserial -extfile domains.ext -out localhost.crt
+----
+
+Run the next command to export the certificate:
+
+[source, console]
+----
+> openssl pkcs12 -export -out localhost.pfx -inkey localhost.key -in localhost.crt
+----
+
+You will end up having something like this:
+
+.Certification Authority (left) and localhost certificate signed by CA (right)
+image::images/certificates.png[]
+
+=== Add certificates to a devon4net project
+Once you have created a certificate or in case you already have yours, you can add it to your project thanks to devon4net tools. 
+
+==== Step 1 - Add it to your project 
+
+Locate the Certificates directory in your startup project. If it doesn't exist, please create it and drop your certificate `.pfx` as shown in figure 2.
+
+
+.Certificates directory in startup project
+image::images/certificates_add.png[]
+
+
+==== Step 2 - Configure your appsettings
+
+Now configure your certificate in `appsettings.Development.json`. For that, you'll need to specify the file name and the password you chose. Look for the `ServerCertificate` configuration and add something like this:
+
+[source, json]
+----
+"Certificates": {
+    "ServerCertificate": {
+        "Certificate": "localhost.pfx",
+        "CertificatePassword": "12345"
+    },
+    "ClientCertificate": {
+        "DisableClientCertificateCheck": true,
+        "RequireClientCertificate": false,
+        "CheckCertificateRevocation": true,
+        "ClientCertificates": {
+        "Whitelist": [
+            "3A87A49460E8FE0E2A198E63D408DC58435BC501"
+            ]
+        }
     }
+},
+----
+
+=== References
+Here are some interesting references to continue learning about this topic:
+
+* https://github.com/openssl/openssl[OpenSSL]
+
+* https://www.openssl.org/docs/man1.0.2/man1/openssl-req.html[`req` command documentation - OpenSSL Docs]
+
+* https://www.openssl.org/docs/man1.0.2/man1/x509.html[`x509` command documentation - OpenSSL Docs]
+
+* https://www.openssl.org/docs/man3.0/man1/pkcs12.html[`pkcs12` command documentation - OpenSSL Docs]
+
+== How to: Setup JWT
+
+As you may have learned at this point you can set up JWT component in a number of different ways according your needs. For that you'll need to configure your `appsettings.json`.
+
+NOTE: Please read documentation about JWT component first to learn what you need to do to use it in your project.
+
+Assuming that you already have the JWT component correctly installed and available in our project let's start thinking about how we can put it to good use.
+
+=== Configuration
+
+We can configure it to work either with a secret key or a certificate. 
+
+If you choose certificate, you will need to add a certificate to your project, and specify the password and the encryptionAlgorithm used. You can learn how to do it following the tutorial included in this document.
+
+If you specify both, the secret key will take priority.
+
+For example lets specify the next:
+
+.JWT configuration example
+image::images/json_jwt_example.png[]
+
+NOTE: The property `SecretKey` needs to be an encrypted key using the algorithm specified.
+
+This would create the following configuration:
+
+* A token with audience and issuer equal to `devon4net`.
+* It will expire in 60 minutes 
+* It will validate the signature and if the token is valid in time
+* It will require tokens that are signed, and have both expiration time and audience specified.
+* It will use the secret key encrypted with SHA 512
+
+=== Claims
+
+Json Web Tokens work with claims. A Claim is a piece of information about a subject. It is similar to a key-value pair, where the value will be the claim type, such as the name or the role of an authenticated user. This claims are stored inside a JSON and then encrypted forming the JWT. 
+
+In .Net we can create Claims using the `Claim` class avaiable in `System.Security.Claims`. It has many constructors but the most important is the following one, where you can create a Claim based on two strings.
+
+[source, c#]
+----
+var nameClaim = new Claim(ClaimType.Name, "DevonUser");
+var roleClaim = new Claim(ClaimType.Role, "Administrator");
+----
+
+You can choose between a variety of claim types thanks to the `ClaimType` class. As you can see in the previous piece of code, in this case we have asserted a name and a role in two claims. This could be for a user, for example.
+
+=== JwtHandler
+
+In JWT component we have a handler that is cofigured on the installation of the package and can be injected for use in any wanted service. This is the `JwtHandler`. This handler will allow us to manipulate, encrypt and extract information from Json Web Tokens.
+
+|====
+|*Return Type* |*Method Name* |*Parameters* |*Description*
+|string |CreateJwtToken |List<Claim> clientClaims |Returns the encrypted jwt given a list of claims. 
+|List<Claim> |GetUserClaims |string jwtToken |Returns a list of claims given an encrypted token.
+|string |GetClaimValue |List<Claim> claimList, string claim |Returns the value of a claim given a list of claims and the type of the claim to recover formatted as a string.
+|string |GetClaimValue |string token, string claim |Returns the value of a claim given an encrypted token and the type of the claim to recover formatted as a string.
+|SecurityKey |GetIssuerSigningKey |- |Returns the issuer's signing key.
+|bool |ValidateToken |string jwtToken, out ClaimsPrincipal claimsPrincipal, out SecurityToken securityToken |Returns true if the token is valid.
+|string |CreateRefreshToken |- |Creates a refresh token for the JWT token.
+|====
+
+=== Video
+
+=== References
+Here are some interesting references to continue learning about this topic:
+
+* https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-token-claims[JSON Web Token Claims - auth0]
+
+* https://docs.microsoft.com/es-es/dotnet/api/system.security.claims.claim?view=net-6.0[Claim Class - Microsoft Docs]
+
+* https://docs.microsoft.com/es-es/dotnet/api/system.security.claims.claimtypes?view=net-6.0[ClaimTypes Class - Microsoft Docs]
+
+
+== How to: Setup security and roles in API controllers
+
+In this part of the document, you will learn to use the different attributes over the controller methods that manage end-points. This attributes are provided by .Net core libraries and can be used to specify the behavior of Web API controllers and action methods.
+
+=== Attributtes
+You can use a large number of attributes, some are optional, for example to define the route of end-points `[Route("/GetSomething")]` and other are required, like `[ApiController]` to indicate that the class is an API controller.
+
+NOTE: We will be explaining the security related attributes. Those that are specific to the controllers will not be mentioned.
+
+==== [HttpOptions]
+
+This attribute identifies an API controller end-point that support the HTTP OPTIONS request. The HTTP OPTIONS method is used to get information about the communication options available for a specific URL or server.
+
+NOTE: Please do your research on this method if you are not familiar with it.
+
+==== [AllowAnonymous]
+
+`AllowAnonymous` allows any type of user (authorized or unauthorized) to access the information provided by the end-point. This attribute can be specified for controller class or for individual end-points. Specifying it for individual end-points will override the controller attribute. An example could be:
+
+[source, c#]
+----
+[HttpGet]
+[AllowAnonymous]
+[Route("/v1/getsomething")]
+public async Task<IActionResult> GetSomething()
+{
+  ...
+}
+----
+ 
+==== [Authorize]
+
+`Authorize` only enables you to restrict access to requests with an authorization specified in the header. This attribute can be specified for controller class or for individual end-points. Specifying it for individual end-points will override the controller attribute. You can specify different properties to the attribute:
+
+|====
+|*Property* |*Type* |*Description* |*Example*
+|`AuthenticationSchemes` |List of strings separated by comma |List of schemes from which user info is constructed |`[Authorize(AuthenticationSchemes = "Bearer")]`
+|`Policy` |String |Policy name that determines access to the resource |`[Authorize(Policy = "MyPolicy")]`
+|`Roles` |List of strings separated by comma |List of roles allowed to access |`[Authorize(Roles = "User")]`
+|====
+
+For example, lets create a controller that is authorized only for users with role 'Admin' and 'Tester' provided in 'Bearer' type authentication:
+
+[source, c#]
+----
+[ApiController]
+[Route("[controller]")]
+[Authorize(AuthenticationSchemes = "Berarer", Roles = "Admin,Tester")]
+public class DebugController: ControllerBase
+{
+  ...
+}
+----
+
+==== [EnableCors] & [DisableCors]
+
+NOTE: Please refer to the CORS component documentation to learn everything about CORS.
+
+You can enable a Cors policy for controller or individual end-points. Specifying it for individual end-points will override the controller attribute. You will need to specify the policy you want to enable. This policy will need to be described in the `appsettings.{environment}.json`.
+
+For example, lets create a CORS policy named 'CorsPolicy' and enable it for a controller, and disable it for a method:
+
+[source, json]
+----
+"Cors": //[], //Empty array allows all origins with the policy "CorsPolicy"
+[
+  {
+    "CorsPolicy": "CorsPolicy",
+    "Origins": "http://localhost:4200,https://localhost:4200,http://localhost,https://localhost;http://localhost:8085,https://localhost:8085",
+    "Headers": "accept,content-type,origin,x-custom-header,authorization",
+    "Methods": "GET,POST,HEAD,PUT,DELETE",
+    "AllowCredentials": true
+  }
+],
+----
+
+[source, c#]
+----
+[ApiController]
+[Route("[controller]")]
+[EnableCors("CorsPolicy")]
+public class MyController: ControllerBase
+{
+  ...
+  [HttpGet]
+  [Route("/v1/getsomething")]
+  [DisableCors]
+  public async Task<IActionResult> GetSomething()
+  {
+    ...
+  }
+  ...
+}
+----
+
+=== References
+Here are some interesting references to continue learning about this topic:
+
+* https://docs.microsoft.com/en-us/aspnet/core/security/authorization/introduction?view=aspnetcore-6.0[Introduction to authorization in ASP.NET Core - Microsoft Docs]
+
+* https://docs.microsoft.com/es-ES/dotnet/api/microsoft.aspnetcore.authorization?view=aspnetcore-6.0[Authorization Namespace - Microsoft Docs]
+
+* https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS[HTTP OPTIONS - MDN Web Docs]
+
+== How to: Avoid cross-site request forgery (XSRF or CSRF) attacks
+Every time you authenticate into a web app, your browser becomes trusted for an amount of time to that specific site. This way you can use the application without having to authenticate yourself each time you want to do an operation that requires authorization. This is achieved normally by providing authentication tokens that last a determinate amount of time. 
+
+Your browser includes in each request a token issued by the app at the moment of authentication, the app verifies it and then sends back the response. A cross-site request forgery is a type of attack where a malicious site can use your authentication token to issue requests through your browser. 
+
+This is done, without you even noticing and it works because browser requests automatically include all session cookies. So if the request is done from another site with all these cookies (including your authentication cookie) it wont be different from you actually doing the request.
+
+For example, you enter the site `vulnerable-bank.com` and forget to log out after doing all of your operations. Now you are surfing the net and enter the site `malicious-site.com` this site has a hidden script that performs the following request:
+
+[source]
+----
+POST /transaction HTTP/1.1
+Host: vulnerable-bank.com
+Content-Type: application/x-www-form-urlencoded
+Cookie: SessionID = 1n4j0sd7uohpf13j98nh570923c48u 
+
+account={MaliciousAccount}
+amount=1000
+----
+
+As all the session cookies are included in the request, the site will be allowed to process the transaction without you even noticing.
+
+The most common way to prevent this vulnerability is by making use of anti forgery tokens. This token is placed in the headers and is issued with the request. The malicious-site cannot 
+
+=== Configuration
+To configure Anti-Forgery protection in a devon4net project, you must set `UseXsrf` property in `devonfw` configuration section to true. You will find this section in `appsettings.json`:
+
+[source, json]
+----
+{
+  "devonfw": {
+    "UseXsrf": true
+  }
+}
+----
+
+Setting this property to true will allow you to use https://docs.microsoft.com/es-es/dotnet/api/microsoft.aspnetcore.antiforgery.iantiforgery?view=aspnetcore-6.0[`IAntiforgery`] interface through the service provider and dependency injection in your project.
+
+=== Use
+In the devon4net Web API Templaate you will be able to find an example of controller using this protection. You can inject the `IAntiforgery` interface in the controller constructor like so:
+
+[source, c#]
+----
+private readonly IAntiforgery _antiForgeryToken;
+
+public AntiForgeryTokenController(IAntiforgery antiForgeryToken)
+{
+    _antiForgeryToken = antiForgeryToken;
+}
+----
+
+Now you can access its methods to manage this special token. For creating one we can use `GetAndStoreTokens(HttpContext httpContext)` method available on `IAntiforgery`, and store it in the cookies as shown below:
+
+[source, c#]
+----
+var token = _antiForgeryToken.GetAndStoreTokens(HttpContext);
+HttpContext.Response.Cookies.Append(CustomMiddlewareHeaderTypeConst.XsrfToken, token.RequestToken);
+----
+
+NOTE: Visit the documentation about this interface to find more information about `IAntiforgery` methods.
+
+This will be done through a GET request. Now we can vaklidate this token in a controller thanks to the attribute `[ValidateAntiForgeryToken]`:
+
+[source, c#]
+----
+[HttpGet]
+[Route("/v1/antiforgeryToken/hellosecured")]
+[ValidateAntiForgeryToken]
+public ActionResult HelloSecured()
+{
+    return Ok("You have reached a secured AntiForgeryToken method!");
+}
+----
+
+=== Testing
+We will be using https://www.postman.com/[Postman] to test the use of the controller, as you can see in the next figure, if we try to access the end-point protected by the antiforgery token validation we get an error:
+
+.HelloSecured end-point error
+image::images/anti_forgery_hellosecure_error.png[]
+
+That is beacuse no valid token in `XSRF-TOKEN` header is specified. Lets access the end-point we created to provide an XSRF token:
+
+.Get XSRF token end-point
+image::images/anti_forgery_token.png[]
+
+Now that we have the token we can specify it in the request header as shown in the next figure:
+
+.HelloSecured end-point access
+image::images/anti_forgery_hellosecure_xsrf.png[]
+
+=== References
+Here are some interesting references to continue learning about this topic:
+
+* https://owasp.org/www-community/attacks/csrf[Cross Site Request Forgery (CSRF) - Owasp]
+
+* https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html[Cross Site Request Forgery Prevention Cheat Sheet - Owasp]
+
+* https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery?view=aspnetcore-6.0[Prevent Cross-Site Request Forgery (XSRF/CSRF) attacks in ASP.NET Core - Microsoft Docs]
+
+*  https://docs.microsoft.com/es-es/dotnet/api/microsoft.aspnetcore.antiforgery.iantiforgery?view=aspnetcore-6.0[IAntiforgery Interface - Microsoft Docs]
+
+== How to: Import a database
+In this part of the document you will learn how to easily import a database to your devon4net project or any .Net project. This process is known by a variety of different names: scaffolding, database first, reverse engineering... But they all refer to the process of creating entity models and/or database context automatically based on a database schema.
+
+=== Prerequisites
+You can import a database in your favourite type of schema, but for this example we will be using SQL Server and Visual Studio 2022.
+
+NOTE: Ensure that you have a connection ready to your database and a correct installation of Visual Studio 2022.
+
+For this example we used https://docs.microsoft.com/es-es/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15[Microsoft SQL Server Management Studio] to create our database and provide us with a local database connection.
+
+=== NuGet packages installation
+Before starting with the scaffolding you will need to install the following NuGet packages in your destination project. 
+
+==== Open the Package Manager Console
+
+To open the Package Manager Console, follow the next menu steps: `View > Other Windows > Package Manager Console` and then ensure that the default project in the console is set to the destination project as shown in the next figure.
+
+NOTE: If the destination project is not the same as the startup project, you may need to install some of the packages in the startup project too. The package manager console will warn you of that if it is necessary.
+
+.Package Manager Console default project
+image::images/pacakge_manager_console.png[]
+
+==== Install the packages
+
+* Microsoft.EntityFrameworkCore.Tools
+
+[source, console]
+----
+install-package Microsoft.EntityFrameworkCore.Tools
+----
+
+* Microsoft.EntityFrameworkCore.Design
+
+[source, console]
+----
+install-package Microsoft.EntityFrameworkCore.Design
+----
+
+* MIcrosoft.EntityFrameworkCore.SqlServer
++
+NOTE: As we mentioned we will be using a SQL Server schema, we are installing the database provider for it. Please choose your own https://docs.microsoft.com/en-us/ef/core/providers/?tabs=dotnet-core-cli[Database Provider].
++
+[source, console]
+----
+install-package Microsoft.EntityFrameworkCore.SqlServer
+----
+
+=== Scaffolding command
+
+Run the following command to execute the scaffolding operation:
+
+[source, console]
+----
+scaffold-dbcontext 'Server=(localdb)\mssqllocaldb;Database=DevonDatabase;' Microsoft.EntityFrameworkCore.SqlServer -Tables School,Teacher -ContextDir Domain\Database -OutputDir Domain\Entities
+----
+
+NOTE: Your connection string and database provider may be different.
+
+* The first argument is the connection string.
+* The second argument is the Database Provider package for the used schema.
+* `-Tables {Table list separated by comma}` is the list of the tables you want to scaffold.
+* `-ContextDir` will specify the relative path for the context.
+* `-OutputDir` will specify the relative path for the models.
+
+In our case, before doing the scaffolding we had something like this:
+
+.Directory tree before scaffolding
+image::images/before_scaffolding.png[]
+
+And the scaffolding produced the following directory tree:
+
+.Directory tree after scaffolding
+image::images/after_scaffolding.png[]
+
+If you do not specify `-Tables`, `-ContextDir` and `-OutputDir` all of the tables will be scaffolded and the default directories will be the project directory.
+
+=== Add the context for Dependency Injection
+Now that we have our context we will need to add it either in `Program.cs` or `SetupDatabase` method in `DevonConfiguration` class.
+
+As we are using Devon, we will need to go to `Devon4Net.Application.WebAPI.Implementation.Configuration.DevonConfiguration` and add the folowing line in `SetupDatabase` method:
+
+[source, c#]
+----
+services.SetupDatabase<DevonDatabaseContext>(configuration,"DevonDatabase", DatabaseType.SqlServer).ConfigureAwait(false);
+----
+
+Where:
+
+|===
+|*Parameter* |*Description*
+|`<DevonDatabaseContext>` | Database context you want to add
+|`configuration` | Available `IConfiguration` instance 
+|`"DevonDatabase"` | Name of the connection string defined at `ConnectionString` section in the `appsettings.{environment}.json` configuration file
+|`DatabaseType` | Database schema available in devon (see the following list).
+|===
+
+List of supported databases:
+
+* SqlServer
+* Sqlite
+* InMemory
+* Cosmos
+* PostgreSQL
+* MySql
+* MariaDb
+* FireBird
+* Oracle
+* MSAccess
+
+=== References 
+
+* https://docs.microsoft.com/en-us/ef/core/managing-schemas/scaffolding?tabs=vs[Reverse Engineering - Microsoft Docs]
+
+* https://docs.microsoft.com/en-us/ef/core/providers/?tabs=dotnet-core-cli[Database Providers - Microsoft Docs]
+
+
+== How to: Use LiteDb
+
+In this part you will learn how to easily start using a LiteDb database in your project. 
+
+NOTE: Please read the documentation of this component to learn more about how to set it up and use it.
+
+=== Video
+
+As you will find all the information in the component documentation, we prepared a video using LiteDb in a very short example:
+
+.How to setup and use LiteDb component
+video::videos/howto_litedb.mp4[]
+
+== How to: Customize Headers
+
+HTTP headers let the client and the server provide additional information with an HTTP request or a response. As this headers provide information about either the client or the server, it can be dangerous if this information lands in the wrong hands.
+
+As Owasp explains in great detail, proper HTTP headers can help prevent security vulnerabilities like Cross-Site Scripting, Clickjacking, Information disclosure and more. 
+
+In devon we take security very seriously, that's why we developed a very easy form of customizing HTTP headers. You will be able to do it configuring the headers in the `appsettings.{environment}.json` file. A middleware will be configured with those options and will modify each HTTP response according to the specified options.
+
+=== Configuration
+
+[source, json]
+----
+"Headers": {
+    "AccessControlExposeHeader": "Authorization",
+    "StrictTransportSecurityHeader": "",
+    "XFrameOptionsHeader": "DENY",
+    "XssProtectionHeader": "1;mode=block",
+    "XContentTypeOptionsHeader": "nosniff",
+    "ContentSecurityPolicyHeader": "",
+    "PermittedCrossDomainPoliciesHeader": "",
+    "ReferrerPolicyHeader": ""
   },
+----
+
+The following table shows the options that can be configured. 
+
+NOTE: Please refer to the links provided to learn more about each header and what can be done with it.
+
+|====
+|*Option* |*Header* |*Description*
+|`AccessControlExposeHeader` |https://developer.mozilla.org/es/docs/Web/HTTP/Headers/Access-Control-Expose-Headers[`Access-Control-Expose-Headers`] |Indicates which headers may be exposed as part of the response by listing their names.
+|`StrictTransportSecurityHeader` |https://developer.mozilla.org/es/docs/Web/HTTP/Headers/Strict-Transport-Security[`Strict-Transport-Security`] |Allows a website to tell browsers that it should only communicate with HTTPS instead of using HTTP. 
+|`XFrameOptionsHeader` |https://developer.mozilla.org/es/docs/Web/HTTP/Headers/X-Frame-Options[`X-Frame-Options`] | Can be used to indicate whether a browser should be allowed to render a page in a `<frame>`, `<iframe>`, `<embed>` or `<object>`, to prevent attacks such as click-jacking.
+|`XssProtectionHeader` |https://developer.mozilla.org/es/docs/Web/HTTP/Headers/X-XSS-Protection[`X-XSS-Protection`] |Prevents the loading of a page when it detects cross-site attacks.
+|`XContentTypeOptionsHeader` |https://developer.mozilla.org/es/docs/Web/HTTP/Headers/X-Content-Type-Options[`X-Content-Type-Options`] |It is a flag used by the server to indicate that the MIME types advertised in the `Content-Type` headers should not be changed or followed. 
+|`ContentSecurityPolicyHeader` |https://developer.mozilla.org/es/docs/Web/HTTP/Headers/Content-Security-Policy[`Content-Security-Policy`] |Allows the administrators of a website to control the resources that the User-Agent can upload to a page. 
+|`PermittedCrossDomainPoliciesHeader` |https://owasp.org/www-project-secure-headers/#x-permitted-cross-domain-policies[`X-Permitted-Cross-Domain-Policies`] |Grants a web client ermission to handle data across domains.
+|`ReferrerPolicyHeader` |https://developer.mozilla.org/es/docs/Web/HTTP/Headers/Referrer-Policy[`Referrer-Policy`] |Determines which referrer data, among those sent with the `Referer` header, should be included with the requests made. 
+|====
+
+NOTE: If the response header does not have a value or does not appear in the optons, it will not be added to the response headers.
+
+=== References
+
+* https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers[HTTP headers - MDN Web Docs]
+* https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html[HTTP Security Response Headers Cheat Sheet - Owasp]
+
+== How to: Specflow
+
+In this part of the document you will learn to use Specflow in your projects for defining, managing and automatically execute readable acceptance tests in .NET.
+
+SpecFlow is a.NET test automation tool based on the BDD (Behavior-driven development) paradigm. Specflow tests use the Gherking language to write test cases that are then bound to your application code through bindings, allowing you to run the tests using your preferred testing framework.
+
+Before going into detail on how to use Specflow and how you can use it to implement your tests, you will need know Gherking syntax. It is used to write tests in a form that can be readed perfectly as a sentence. For example:
+
+[source, gherkin]
+----
+Feature: Calculator
+  Scenario: Sum two numbers
+    Given the first number is 10
+    And the second number is  5
+    When the two values are added
+    Then the result is 15
+----
+
+As you can see, thanks to Gherkin we have written a test for a calculator, which makes sure that when the values ​​`10` and `5` are added, the result is `15`. Because is a natural-language friendly language you can read the test, and understand the statement.
+
+The following table shows the keywords used in Gherkin syntax:
+
+|====
+| *Keyword* | *Description* 
+| `Feature` | Provides high level description of a software feature that wants to be tested and group related scenarios.
+| `Rule` | Represents one business rule that should be implemented.
+| `Scenario` or `Example` | List of steps that ilustrates a business rule.
+| `Steps` | Each step starts with `Given`, `When`, `Then`, `And` or `But`.
+| `Background` | Scenario context run before the `Scenario` tests but after `Before Hooks`.
+| `Scenario Outline` or `Scenario Template` | It is used to run the same `Scenario` multiple times, with different combinations of values.
+| `Scenarios` or `Examples` | Keyword used to define the variables of `Scenario Outline` in a table.
+| `""`| Strings
+| `@` | Tags
+| `#` | Comments
+| `\|` | Tables
+|====
+
+For example:
+
+[source, gherkin]
+----
+# Test for the calculator
+@mytag
+Feature: Calculator
+  Scenario Outline: Sum two numbers
+    Given the first number is <first>
+    And the second number is  <second>
+    When the two values are added
+    Then the result is <result>
+
+    Examples:
+    | first | second | result |
+    |    10 |   5    |   15   |
+    |    20 |   5    |   25   |
+----
+
+NOTE: Please refer to the https://cucumber.io/docs/gherkin/[Cucumber Documentation] or https://specflow.org/learn/gherkin/[Specflow Documentation] to learn more about the keywords used in Gherkin.
+
+=== Specflow Installation
+
+To use specflow you will need to add the Specflow extension to your Visual Studio 2022. This way you can use it in any of your projects. For that open visual studio and navigate to `Extensions > Manage Extensions`.
+
+This will open the extension manager, where you will have to search for the 'SpecFlow' extension and hit download:
+
+.SpecFlow for VS 2022 in Extension Manager 
+image::images/specflow_extension.png[]
+
+
+Hitting download will schedule the extension installation. At the time when you close VS2022, you will be able to install the extension by clicking `Modify` in the pop-up window shown below:
+
+.SpecFlow installation
+image::images/specflow_installation.png[]
+
+=== Create specflow project
+
+To create a specflow project for testing, first we will need to have something to test. In this example we will test a Calculator class that we created inside a class library project in an empty solution like shown in the following image:
+
+.SpecFlowTest solution directory tree
+image::images/specflow_directory_tree.png[]
+
+Where, the `Calculator` class implementation is:
+
+[source, c#]
+----
+public class Calculator
+{
+    public int FirstNumber { get; set; }
+    public int SecondNumber { get; set; }
+
+    protected int Add()
+    {
+        return FirstNumber + SecondNumber;
+    }
+}
+----
+
+Once we have the Calculator ready, we need to create a Specflow project. For that you can `Right click on the solution > Add > New Project...`. This will open a window where you can search the specflow project as shown in the next image:
+
+.Add new SpecFlow project
+image::images/new_specflow_project.png[]
+
+When creating the project you will be able to choose the .Net version that you are using, the library for the tests and if you want to use FluentAssertions library. For this example we will use the configuration shown below:
+
+.Choose the project options
+image::images/new_specflow_options.png[]
+
+The specflow template comes with a calculator test implemented, this is their example. But we will create the files from scratch so you know how to complete your testing project. 
+
+.Initial project structure
+image::images/specflow_project_structure.png[]
+
+
+As you can see also the template comes with a folder structure defined, you can redifine it as you want but this is the recommended one.
+
+=== Create specflow tests
+
+To create a new test using specflow, you can add a new item to your project by `Right click in any directory on the project > Add > New item...`:
+
+.Initial project structure
+image::images/new_specflow_feature.png[]
+
+
+You can type specflow in the search bar to look for the items available thanks to the library and select `Feature File for Specflow`. You can create a test there in Gherkin syntax:
+
+[source, Gherkin]
+----
+Feature: Calculator
+
+A short summary of the feature
+
+@mytag
+Scenario: Add two numbers
+	Given the first number is 50
+	And my favourite number is 70 
+	When the two numbers are added
+	Then the result should be 120
+----
+
+Once you have your test created you can build the project by navigating to `Build > Build Solution`. You will see that the test appears in a purple color, this is because it is not mapped to a definition yet. You can automatically create the definition by `Right clicking inside the feature file > Define Steps`. 
+
+This will open the following window:
+
+.Define SpecFlow Steps
+image::images/define_steps.png[]
+
+
+Once you press `Create` the test will no longer appear in purple and will be shown in a white color. This is because now they have a definition. You can also do this manually creating a class and marking it with the `[Binding]` attribute.
+
+This class will need to define the test steps such as Gherkin syntax can be transformed into `C#` code. You can implement this class as follows to test the Calculator:
+
+[source, c#]
+----
+using SpecflowCalculator;
+
+namespace SpecFlowProject.StepDefinitions
+{
+    [Binding]
+    public class CalculatorStepDefinitions
+    {
+        private Calculator _calculator;
+        private int _result;
+
+        public CalculatorStepDefinitions() 
+        {
+            _calculator = new Calculator();
+        }
+
+        [Given(@"the first number is (.*)")]
+        public void GivenTheFirstNumberIs(int p0)
+        {
+            _calculator.FirstNumber = p0;
+        }
+
+        [Given(@"my favourite number is (.*)")]
+        public void GivenMyFavouriteNumberIs(int p0)
+        {
+            _calculator.SecondNumber = p0;
+        }
+
+        [When(@"the two numbers are added")]
+        public void WhenTheTwoNumbersAreAdded()
+        {
+            _result = _calculator.Add();
+        }
+
+        [Then(@"the result should be (.*)")]
+        public void ThenTheResultShouldBe(int p0)
+        {
+            // xUnit assertions
+            Assert.Equal(_result, p0);
+
+            // FluentAssertions
+            _result.Should().Be(p0);
+        }
+    }
+}
+----
+
+Now build the solution again to be able to run the tests.
+
+NOTE: Please revise the https://specflow.org/learn/gherkin/[Specflow Documentation] to learn more about feature bindings.
+
+=== Run the tests
+
+To run the tests you can navigate to `Test > Test Explorer`:
+
+.VS2022 Test Explorer
+image::images/specflow_test_explorer.png[]
+
+By clicking the green play button you can run the tests and see the results as shown in the image above.
+
+=== Living documentation
+
+SpecFlow Living Documentation is a set of tools that allows you to share and collaborate on Gherkin Feature Files. It gives you the option to generate and share an `html` interactive file. You can do this directly for Azure DevOps or using a CLI (Command Line Interface). In this guide you will learn how to do this with the CLI continuing with the Calculator example.
+
+NOTE: Please refer to the https://docs.specflow.org/projects/specflow-livingdoc/en/latest/[Specflow+LivingDoc] documentation to learn more.
+
+==== Step 1 - Install CLI
+
+Install the tool by running the following command in your preferred terminal:
+
+[source, console]
+----
+dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
+----
+
+==== Step 2 - Navigate to the build output directory
+
+Now we need to navigate to the build directory of the Specflow Project taht contains the tests. In our case we can navigate to this path by running the following command:
+
+[source, console]
+----
+cd C:\Projects\devon4net\samples\SpecflowTest\SpecFlowProject\bin\Debug\net6.0
+----
+
+WARNING: Your path may be different depending on the root directory, the file structure of the solution and the .Net version you are using.
+
+==== Step 3 - Run command to generate results 
+
+To generate the file run the following command:
+
+[source, console]
+----
+livingdoc test-assembly SpecFlowProject.dll -t TestExecution.json
+----
+
+==== Step 4 - See html results
+
+The file generated can be seen with your favorite browser and will look like this:
+
+.Specflow LivingDoc results
+image::images/specflow_html.png[]
+
+=== References
+
+* https://cucumber.io/docs/gherkin/[Gherkin Syntax - Cucumber Docs]
+* https://specflow.org/learn/gherkin/[Learn Gherkin - Specflow Docs]
+
+== How To: Circuit breaker communication with Certificates
+
+In this section we are going to configure two services communication for using certificates, and Circuit Breaker Pattern.
+
+NOTE: Please refer to the component documentation for more information about how to configure link:packages.asciidoc[CircuitBreaker] in devon4net and other projects
+
+=== Configuration
+
+We have to setup two services in order to implement Circuit Breaker pattern, in this scenario, we're creating a basic application that connects two services that are similar.
+
+==== ServiceA
+
+In the `appsettings.{development}.json` you must use the following configuration:
+
+[source, json]
+----
+"CircuitBreaker": {
+    "CheckCertificate": false,
+    "Endpoints": [
+      {
+        "Name": "ServiceB",
+        "BaseAddress": "https://localhost:5055",
+        "Headers": {
+        },
+        "WaitAndRetrySeconds": [
+          0.0001,
+          0.0005,
+          0.001
+        ],
+        "DurationOfBreak": 0.0005,
+        "UseCertificate": true,
+        "Certificate": "localhost.pfx",
+        "CertificatePassword": "localhost",
+        "SslProtocol": "Tls12", //Tls, Tls11,Tls12, Tls13, none
+        "CompressionSupport": true,
+        "AllowAutoRedirect": true
+      }
+    ]
+  }
+----
+
+As an example, we call the `HttpClientHandler` in the controller, however it is preferable to do it in the service class:
+
+[source, c#]
+----
+    [ApiController]
+    [Route("[controller]")]
+    public class PingController : ControllerBase
+    {
+        private IHttpClientHandler HttpClientHandler { get; }
+
+        public PingController(IHttpClientHandler httpClientHandler)
+        {
+            HttpClientHandler = httpClientHandler;
+        }
+
+        /// <summary>
+        /// Returs Ping!
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [HttpOptions]
+        [Route("/v1/ping/")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult Ping()
+        {
+            return Ok("Ping!");
+        }
+
+        /// <summary>
+        /// Returs Ping!
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [HttpOptions]
+        [Route("/v1/remoteping/")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> RemotePing()
+        {
+            var result = await HttpClientHandler.Send<string>(HttpMethod.Get, "ServiceB", "/v1/pong", null, MediaType.ApplicationJson);
+            return Ok(result);
+        }
+    }
+----
+
+As shown in the code above, we inject the `HttpClientHandler`, and on the RemotePing() function, we use the HttpClientHandler's Send method to communicate ServiceA with ServiceB.
+
+The CircuitBreaker setup method must be added to Program.cs:
+
+[source, c#]
+----
+builder.Services.SetupCircuitBreaker(builder.Configuration);
+----
+
+Also, remember to install the certificate and add the folder containing the certificate to the project. 
+
+==== ServiceB
+
+ServiceB is implemented in the same way as ServiceA. You only have to change the name of the service and the base address in the `appsettings.{environment}.json`, and in the controller method you must change the service name and the endpoint:
+
+*`appsettings.Development.json`* :
+[source, json]
+----
+ "CircuitBreaker": {
+    "CheckCertificate": false,
+    "Endpoints": [
+      {
+        "Name": "ServicioA",
+        "BaseAddress": "https://localhost:9091",
+        "Headers": {
+        },
+        "WaitAndRetrySeconds": [
+          0.0001,
+          0.0005,
+          0.001
+        ],
+        "DurationOfBreak": 0.0005,
+        "UseCertificate": true,
+        "Certificate": "localhost.pfx",
+        "CertificatePassword": "localhost",
+        "SslProtocol": "Tls12", //Tls, Tls11,Tls12, Tls13, none
+        "CompressionSupport": true,
+        "AllowAutoRedirect": true
+      }
+    ]
+  }
+----
+
+*PongController*
+
+[source, c#]
+----
+public async Task<IActionResult> RemotePong()
+  {
+    var result = await HttpClientHandler.Send<string>(HttpMethod.Get, "ServicioA", "/v1/ping", null, MediaType.ApplicationJson);
+    return Ok(result);
+  }
+    
+----
+
+=== Video
+
+The preceding example is covered in detail in this video lesson:
+
+.How to setup Circuit Breaker with certificates
+video::videos/howto_circuitbreaker_certificates.mp4[]
+
+== How to: RabbitMQ
+
+=== Configure the Server
+
+There are several methods to configure the RabbitMQ server, depending on your operating system.
+
+In this tutorial, we will show you how to run a server via Docker, for testing purposes. If you want further information on how to configure and install the RabbitMQ server in a specific operating system, please consult the https://www.rabbitmq.com/download.html[official RabbitMQ documentation]
+
+First you must have docker installed on your machine. Run the following command to start the server:
+
+[source, console]
+----
+docker run -it --rm --name rabbitmq -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=password -p 5672:5672 -p 15672:15672 rabbitmq:3.9-management
+----
+
+This command shows several options parameters:
+
+* `-it`: To create an interactive container
+* `--rm`: To automatically clean up the container and remove the file system when the container exits.
+* `--name`: The name of the container
+* `-e`: Environment variables
+* `-p`: To expose a container's internal port
+
+The server will listen on port 5672, and you may access the management plugin at the following url: 
+
+http://localhost:15672/
+
+.RabbitMQ Management Plugin
+image::images/rabbit-management.png[]
+
+You may customize your Docker container as you like, please see the https://registry.hub.docker.com/_/rabbitmq/[official Docker  image documentation] for more information. 
+
+=== Configure the Client
+
+. Install the package in your solution using the Package Manager Console:
++
+[source, console]
+----
+Install-Package Devon4Net.Infrastructure.RabbitMQ
+----
+
+. Create a Configuration static class in order to add the `RabbitMqHandler` services, for example:
++
+[source, c#]
+----
+ public static class Configuration
+    {
+
+        public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
+        {
+
+            var rabbitMq = serviceProvider.GetService<IOptions<RabbitMqOptions>>();
+
+            if (rabbitMq?.Value != null && rabbitMq.Value.EnableRabbitMq)
+            {
+                SetupRabbitHandlers(services);
+            }
+        }
+
+        private static void SetupRabbitHandlers(IServiceCollection services)
+        {
+            services.AddRabbitMqHandler<TodoRabbitMqHandler>(true);
+        }
+    }
+----
+
+. Add the following lines in the `Program.cs` class: 
++
+[source, c#]
+----
+builder.Services.SetupRabbitMq(builder.Configuration);
+builder.Services.SetupDependencyInjection(builder.Configuration);
+----
+
+. Configure the component in the file `appsettings.{environment}.json`, for example:
++
+[source, json]
+----
   "RabbitMq": {
-    "EnableRabbitMq": false,
+    "EnableRabbitMq": true,
     "Hosts": [
       {
         "Host": "127.0.0.1",
@@ -333,44 +1354,62 @@ Also, for start using the devon4net components, you should add the next json opt
     "Platform": "localhost",
     "Timeout": 10,
     "Backup": {
-      "UseLocalBackup": false,
+      "UseLocalBackup": true,
       "DatabaseName": "devon4netMessageBackup.db"
     }
   },
-  "MediatR": {
-    "EnableMediatR": false,
-    "Backup": {
-      "UseLocalBackup": false,
-      "DatabaseName": "devon4netMessageBackup.db"
-    }
-  },
-  "LiteDb": {
-    "DatabaseLocation": "devon4net.db"
-  },
-  "AnsibleTower": {
-    "EnableAnsible": false,
-    "Name": "AnsibleTower",
-    "CircuitBreakerName": "AnsibleTower",
-    "ApiUrlBase": "/api/v2/?format=json",
-    "Version": "1.0.5.29",
-    "Username": "",
-    "Password": ""
-  },
-  "CyberArk": {
-    "EnableCyberArk": false,
-    "Username": "",
-    "Password": "",
-    "CircuitBreakerName": "CyberArk"
-  },
-  "SmaxHcm": {
-    "EnableSmax": false,
-    "Username": "",
-    "Password": "",
-    "TenantId": "",
-    "CircuitBreakerName": "SmaxHcm",
-    "ProviderId": ""
-  },
-  "Kafka": {
+----
++
+Where:
+
+* `EnableRabbitMq`: True for enabling the RabbitMQ component
+* `Hosts`: Host configuration, which might be a list of multiple hosts
+* `VirtualHost`:  Virtual host's name
+* `UserName`: User's name
+* `Password`: password for connecting
+* `RequestedHeartbeat`: The heartbeat timeout setting specifies how long the peer TCP connection should be considered unreachable by RabbitMQ and client libraries. Should be set to zero for no heartbeat.
+* `PrefetchCount`:  The amount of messages transmitted by RabbitMQ before EasyNetQ sends a response.
+* `PublisherConfirms`: True for enabling Publisher confirms that simply speaking is an AMQP extension that sends a callback when your message is successfully received by the broker.
+* `PersistentMessages`: When set to true, RabbitMQ will retain messages to disk and survive server restarts. When set to false, performance increases might be expected.
+* `Platform`: The value given here will be shown in the RabbitMQ management interface.
+* `TimeOut`: Range from 0 to 65535. Format is in seconds. For infinite timeout please use 0. Throws System.TimeoutException when value exceeded.
+* `Backup`: Configuration of Message's BackUp. Its default database is LiteDB. 
+
+NOTE: Check the link:packages.asciidoc[RabbitMQ Component section] for examples of the component's implementation and essential classes. 
+
+=== References
+
+* https://www.rabbitmq.com/documentation.html[RabbitMQ Documentation]
+* https://docs.docker.com/engine/reference/run/[Docker docs]
+
+== How to: Kafka
+
+In this part of the document you will learn how to use kafka component and create and use Producers and Consumers for your application. You will also learn to use the different Handlers available in the `Devon4Net.Infrastructure.Kafka` component and how to configure them.
+
+=== Previous steps
+
+To use Kafka you need to have an active Kafka server. There are multple ways to use a kafka server, we are using a docker image but you can choose any desired form.
+
+NOTE: We recommend you to go through https://kafka.apache.org/[Kafka Documentation] to learn how to get started with Apache Kafka.
+
+Once you have an Apache Kafka Server up and running you will need to create a project using the `Devon4Net` template or add `Devon4Net.Infrastructure.Kafka` NuGet package reference to your project.
+
+NOTE: You can learn how to set up the component in your project by reading the component documentation.
+
+=== Configuration
+
+When you have both things ready, you can start by adding the following line in your `Program.cs`
+
+[source, c#]
+----
+builder.Services.SetupKafka(builder.Configuration);
+----
+
+Now is the time to configure all the producers and consumers you will be using in the application. You will later be relating this configuration to the Consumer and Producer Handler classes. For that you will need to complete the following configuration in `appsettings.{environment}.json` file with your preferred parameters.
+
+[source, json]
+----
+"Kafka": {
     "EnableKafka": true,
     "Administration": [
       {
@@ -380,361 +1419,234 @@ Also, for start using the devon4net components, you should add the next json opt
     ],
     "Producers": [
       {
-        "ProducerId": "Producer1", // devon identifier
-        "Servers": "127.0.0.1:9092", // Initial list of brokers as a CSV list of broker host or host:port. The application may also use `rd_kafka_brokers_add()` to add brokers during runtime
-        "ClientId": "client1", //Client identifier
-        "Topic": "devonfw", // topics to deliver the message
-        "MessageMaxBytes": 1000000, //Maximum Kafka protocol request message size. Due to differing framing overhead between protocol versions the producer is unable to reliably enforce a strict max message limit at produce time and may exceed the maximum size by one message in protocol ProduceRequests, the broker will enforce the the topic's `max.message.bytes` limit (see Apache Kafka documentation)
-        "CompressionLevel": -1, // [0-9] for gzip; [0-12] for lz4; only 0 for snappy; -1 = codec-dependent default compression level
-        "CompressionType": "None", // None, Gzip, Snappy, Lz4, Zstd
+        "ProducerId": "Producer1", 
+        "Servers": "127.0.0.1:9092", 
+        "ClientId": "client1", 
+        "Topic": "devonfw", 
+        "MessageMaxBytes": 1000000, 
+        "CompressionLevel": -1, 
+        "CompressionType": "None", 
         "ReceiveMessageMaxBytes": 100000000,
         "EnableSslCertificateVerification": false,
-        "CancellationDelayMaxMs": 100, // The maximum length of time (in milliseconds) before a cancellation request is acted on. Low values may result in measurably higher CPU usage
-        "Ack": "None", //Zero=Broker does not send any response/ack to client, One=The leader will write the record to its local log but will respond without awaiting full acknowledgement from all followers. All=Broker will block until message is committed by all in sync replicas (ISRs). If there are less than min.insync.replicas (broker configuration) in the ISR set the produce request will fail
-        "Debug": "", //A comma-separated list of debug contexts to enable. Detailed Producer debugging: broker,topic,msg. Consumer: consumer,cgrp,topic,fetch
-        "BrokerAddressTtl": 1000, //How long to cache the broker address resolving results (milliseconds)
-        "BatchNumMessages": 1000000, // Maximum size (in bytes) of all messages batched in one MessageSet, including protocol framing overhead. This limit is applied after the first message has been added to the batch, regardless of the first message's size, this is to ensure that messages that exceed batch.size are produced. The total MessageSet size is also limited by batch.num.messages and message.max.bytes
-        "EnableIdempotence": false, //When set to `true`, the producer will ensure that messages are successfully produced exactly once and in the original produce order. The following configuration properties are adjusted automatically (if not modified by the user) when idempotence is enabled: `max.in.flight.requests.per.connection=5` (must be less than or equal to 5), `retries=INT32_MAX` (must be greater than 0), `acks=all`, `queuing.strategy=fifo`. Producer instantation will fail if user-supplied configuration is incompatible
+        "CancellationDelayMaxMs": 100, 
+        "Ack": "None", 
+        "Debug": "", 
+        "BrokerAddressTtl": 1000, 
+        "BatchNumMessages": 1000000, 
+        "EnableIdempotence": false, 
         "MaxInFlight": 5,
         "MessageSendMaxRetries": 5,
-        "BatchSize": 100000000 // Maximum size (in bytes) of all messages batched in one MessageSet, including protocol framing overhead. This limit is applied after the first message has been added to the batch, regardless of the first message's size, this is to ensure that messages that exceed batch.size are produced. The total MessageSet size is also limited by batch.num.messages and message.max.bytes
+        "BatchSize": 100000000 
       }
     ],
     "Consumers": [
       {
-        "ConsumerId": "Consumer1", // devon identifier
+        "ConsumerId": "Consumer1", 
         "Servers": "127.0.0.1:9092",
         "GroupId": "group1",
-        "Topics": "devonfw", // Comma separated topics to subscribe  
-        "AutoCommit": true, //Automatically and periodically commit offsets in the background. Note: setting this to false does not prevent the consumer from fetching previously committed start offsets. To circumvent this behaviour set specific start offsets per partition in the call to assign()
-        "StatisticsIntervalMs": 0, //librdkafka statistics emit interval. The application also needs to register a stats callback using `rd_kafka_conf_set_stats_cb()`. The granularity is 1000ms. A value of 0 disables statistics
-        "SessionTimeoutMs": 10000, //Client group session and failure detection timeout. The consumer sends periodic heartbeats (heartbeat.interval.ms) to indicate its liveness to the broker. If no hearts are received by the broker for a group member within the session timeout, the broker will remove the consumer from the group and trigger a rebalance. The allowed range is configured with the **broker** configuration properties `group.min.session.timeout.ms` and `group.max.session.timeout.ms`. Also see `max.poll.interval.ms`
-        "AutoOffsetReset": "Largest", //Action to take when there is no initial offset in offset store or the desired offset is out of range: 'smallest','earliest' - automatically reset the offset to the smallest offset, 'largest','latest' - automatically reset the offset to the largest offset, 'error' - trigger an error which is retrieved by consuming messages and checking 'message-&gt;err'
-        "EnablePartitionEof": true, //Verify CRC32 of consumed messages, ensuring no on-the-wire or on-disk corruption to the messages occurred. This check comes at slightly increased CPU usage
-        "IsolationLevel": "ReadCommitted", //Controls how to read messages written transactionally: `ReadCommitted` - only return transactional messages which have been committed. `ReadUncommitted` - return all messages, even transactional messages which have been aborted.
+        "Topics": "devonfw", 
+        "AutoCommit": true, 
+        "StatisticsIntervalMs": 0, 
+        "SessionTimeoutMs": 10000, 
+        "AutoOffsetReset": "Largest", 
+        "EnablePartitionEof": true, 
+        "IsolationLevel": "ReadCommitted", 
         "EnableSslCertificateVerification": false,
-        "Debug": "" //A comma-separated list of debug contexts to enable. Detailed Producer debugging: broker,topic,msg. Consumer: consumer,cgrp,topic,fetch
+        "Debug": "" 
       }
     ]
   }
+----
+
+NOTE: Please refer to the component documentation to learn more about the configuration.
+
+=== Producer
+
+After defining the configuration in the `appsettings.{environment}.json` now you can create your handlers extending the ones available in the Kafka component.
+
+For the producer you can do something as the following:
+
+[source, c#]
+----
+public class MessageProducerHandler : KafkaProducerHandler<string,string>
+{
+    public MessageProducerHandler(IServiceCollection services, IKakfkaHandler kafkaHandler, string producerId) : base(services, kafkaHandler, producerId)
+    {
+    }
+}
+----
+
+You will need to add this handler to your dependencies. For that you can use the following method, and include the `Id` of the configuration as a parameter:
+
+[source, c#]
+----
+builder.Services.AddKafkaProducer<MessageProducerHandler>("Producer1");
+----
+
+
+Now you can use the handler in any constructor via dependency injection:
+ 
+[source, c#]
+----
+public class KafkaController : ControllerBase
+{
+    private MessageProducerHandler MessageProducer { get; }
+
+    public KafkaController(MessageProducerHandler messageProducer)
+    {
+        MessageProducer = messageProducer;
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(DeliveryResult<string,string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Route("/v1/kafka/deliver")]
+    public async Task<IActionResult> DeliverMessage(string key, string value)
+    {
+        Devon4NetLogger.Debug("Executing DeliverMessage from controller KafkaController");
+        var result = await MessageProducer.SendMessage(key, value).ConfigureAwait(false);
+        return Ok(result);
+    }
+}
+----
+
+For example, in the previous piece of code, you can see how we are delivering a message to the Kafka server using a POST method in our API. This is done thanks to the `SendMessage` method.
+
+=== Consumer
+
+The consumer is a little different, as you can see in the following piece of code, you will need to override the `HandleCommand` method. This will handle the process of consuming new messages to which the consumer is subscribed.
+
+[source, c#]
+----
+public class MessageConsumerHandler : KafkaConsumerHandler<string, string>
+{
+    public MessageConsumerHandler(IServiceCollection services, IKakfkaHandler kafkaHandler, string consumerId, bool commit = false, int commitPeriod = 5) : base(services, kafkaHandler, consumerId, commit, commitPeriod)
+    {
+    }
+
+    public override void HandleCommand(string key, string value)
+    {
+        Devon4NetLogger.Information($"Consumed message key: {key} | value: {value}");
+    }
+}
+----
+
+Similar to the producer, the Consumer also needs to be related to a configuration via the `Id` as follows: 
+
+[source, c#]
+----
+builder.Services.AddKafkaConsumer<MessageConsumerHandler>("Consumer1");
+----
+
+== How to: Protocol buffers
+
+Protocol buffers are Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data. You can see it as a JSON or a XML file, but smaller, faster and with an easier syntax. 
+
+Protocol buffers are ideal for any situation in which you need to serialize data in a neutral language. Very useful when defining communications such as gRPC protocol.
+
+In this guide you will learn how to create a protocol buffer using `proto3` language.
+
+The `.proto` file starts with a package declaration, which helps to prevent naming conflicts between different projects.
+
+[source, proto3]
+----
+syntax = "proto3";
+
+option csharp_namespace = "Devon4Net.Application.GrpcClient.Protos";
+
+package greet;
+----
+
+Also for C#, you can specify the `csharp_namespace` option. If it wasn't specified, the generated classes would be placed in a namespace matching the package name.
+
+=== Messages
+
+You also have message definitions, which is an aggregate containing a set of typed fields:
+
+[source, proto3]
+----
+message Person {
+  string name = 1;
+  int32 id = 2;  
+  string email = 3;
+}
+----
+
+The previous example defines a type Person with `name`, `id` and `email`. Each field needs a unique identifier, which is the number shown after the `=`. The data types are the standard ones including `bool`, `int32`, `float`, `double`, and `string`.
+
+Let's say that this Person can have many phone numbers, we could do something like:
+
+[source, proto3]
+----
+message Person {
+  string name = 1;
+  int32 id = 2;  
+  string email = 3;
+  repeated PhoneNumber phoneNumbers = 4;
 }
 
-
-```
-
-== devon4net Cobigen Guide
-
-=== Overview
-
-In this guide we will explain how to generate a new WebApi project from an OpenAPI 3.0.0 specification. This  means that we are going to use a “contract first” strategy. This is going to be possible due to these type of files that contain all the information about entities, operations, etc…
-
-In order to make it work we are using https://github.com/devonfw/cobigen[CobiGen], a powerful tool for generating source code. CobiGen allows users to generate all the structure and code of the components, helping to save a lot of time otherwise wasted on repetitive tasks.
-
-=== Getting things ready
-
-==== devonfw Distribution
-
-The devonfw distributions can be obtained from https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=com.devonfw.tools.ide&a=devonfw-ide-scripts&v=LATEST&p=tar.gz[here]. You can find all releases in https://repo.maven.apache.org/maven2/com/devonfw/tools/ide/devonfw-ide-scripts/[maven central].
-
-It is not necessary to install nor configure anything. Just extracting the zip content is enough to have a fully functional devonfw. The only thing you have to do is run *create-or-update-workspace.bat* and then *update-all-workspaces.bat* to set up all the needed tools.
-
-==== devon4net Templates
-
-We are going to use the template of devon4net as a base to generate all the code, so what we have to do now is to download said template using the following steps.
-
-First of all you have to set up all the environment for .NET, you can do this using https://devon4net.github.io/environment.html[the following tutorial]. Next we are going to create a new folder where we want to have the WebAPI project, lastly we are going to open the terminal there.
-
-Type the following:
-
-    dotnet new -i Devon4Net.WebAPI.Template
-    
-and then:
-
-    dotnet new Devon4NetAPI
-    
-==== OpenAPI File
-
-In order to let CobiGen generate all the files, we first have to make some modifications to our OpenAPI file. 
-
-It is obligatory to put the _“x-rootpackage”_ tag to indicate where CobiGen will place the generated files as well as the _"x-component"_ tags for each component, keep in mind that due to CobiGen's limitations each component *_must_* have its own entity.
-
-You can read more information about how to configure your OpenAPI file and a working example https://github.com/devonfw/cobigen/wiki/cobigen-openapipluginfull-example[here].
-
-=== Generating files
-
-Cobigen allow us to generate the files in two different ways. One of them is using Eclipse which it can be done by using the its graphical interface. The other way to generate the code is using the Cobigen` CLI` tool.
-
-==== Generating files through Eclipse
-In order to generate the files using Eclipse we need to follow some simple steps.
-
-First we are going to import our basic devon4net WebAPI Project into Eclipse. to do so open Eclipse with the “eclipse-main.bat” file that can be found in the devon distribution root folder. Once we are inside of Eclipse we go to *File > Open projects from file system...* and, under "Directory", search for your project.
-
-[[img-cobigen]]
-image::images/Project_selection.png["cobigen", width=="600", link=="images/Project_selection.png"]
-
-Next we copy our OpenAPI file into the root folder of the project.
-
-[[img-cobigen]]
-image::images/OpenAPI_file_root_folder.png["cobigen", width=="300", link=="images/OpenAPI_file_root_folder.png"]
-
-And then we right click on OpenAPI file and then select *CobiGen > Generate...* It will display a window like this:
-
-[[img-cobigen]]
-image::images/cobigen_generate0.png["cobigen", width=="800", link=="images/cobigen_generate0.png"]
-
-To select all .NET features choose *CRUD devon4net Server* otherwise you can select only those that interest you.
-
-[[img-cobigen]]
-image::images/cobigen_generate1.png["cobigen", width=="800", link=="images/cobigen_generate1.png]
-
-Ones you select all the files that you want to generate, click on the _“Finish”_ button to generate all the source code.
-
-==== Generating files through Cobigen` CLI`
-
-In order to generate the files using the Cobigen` CLI` it is needed to do the following steps:
-
-1. Go to devonfw distribution folder
-2. Run *console.bat*, this will open a console.
-3. Go to the folder you downloaded the *devon4net template* and your *yml* file.
-4. Run the command:
-
-    cobigen generate {yourOpenAPIFile}.yml
-
-5. A list of increments will be printed so that you can start the generation. It has to be selected *CRUD devon4net Server* increment.
-
-=== Configuration
-
-==== Dependency Injection configuration
-
-At this point it is needed to make some modifications in the code in order to configure correctly the server. To do so it is needed to locate the services and the repositories files that were created in *Devon4Net.WebAPI.Implementation*
-
-Services location:
-[[img-cobigen]]
-image::images/Services.png["cobigen", width=="300", link=="images/Services.png]
-
-Repositories location:
-[[img-cobigen]]
-image::images/Repositories.png["cobigen", width=="300", link=="images/Repositories.png]
-
-Now, we are going to open the following file *Devon4Net.WebAPI.Implementation\Configure\DevonConfiguration.cs*.
-In there we have to add the Dependency Injection for the services and the repositories that Cobigen has generated. The following image is an example of what is needed to add.
-
-[[img-cobigen]]
-image::images/BussinessConfiguration.png["cobigen", width=="800", link=="images/BussinessConfiguration.png]
-
-Moreover it is needed to remove the last line in order to be able to run the application:
-
-    `throw new NotImplementedException(...);`
-
-==== Configure data base
-
-Cobigen is generating an empty context that has to be filled with manually in order to be able to work with the database. The context can be found in *[Project_Name]/Devon4Net.WebAPI.Implementation/Domain/Database/CobigenContext.cs*.
-
-[[img-cobigen]]
-image::images/CobigenContextLocation.png["cobigen", width=="350", link=="images/CobigenContextLocation.png]
-
-==== Configure services
-
-In order to finish the configuration of the services it is needed to go to each service file of the managements generated. 
-
-In there we will see some `"NotImplementedExceptions"`, so it is needed to read carefully each comment inside of each exception in order to be able to use the service. It can be shown an example of the service with its `NotImplementedExceptions` comments:
-
-[[img-cobigen]]
-image::images/ServiceExample.png["cobigen", width=="800", link=="images/ServiceExample.png]
-
-==== Run the application
-
-After doing all the steps defined above, open a terminal in path: *[Project_Name]/Devon4Net.Application.WebAPI* and then type:
-
-    dotnet run
-    
-This will deploy our application in our localhost with the port 8081, so when you click https://localhost:8082/swagger/index.html[here] (https://localhost:8082/swagger) you can see, in swagger, all the services and the data model.
-
-
-== Use HTTP2 protocol
-
-You can specify the` HTTP` protocol to be used on your devon4net application modifying some node values at _devonfw_ node in your appsettings configuration file.
-
-=== HttpProtocol
-The supported protocols are:
-
-[options="header"]
-|=======================
-|*Protocol*|*Description*
-|Http1| Http1 protocol
-|Http2| Http2 Protocol
-|Http1AndHttp2| Both supported
-|=======================
-
-===` SSL`
-To activate the HTTP2, the _SslProtocol_ node must be set to _Tls12_ value.
-
-The` SSL` protocol supported version values are: 
-
-- Tls
-- Tls11
-- Tls12
-- Tls13
-- Ssl2
-- Ssl3
-
-
-== Create a certificate for development purposes
-
-In order to create a valid certificate for development purposes the Open` SSL` tools are needed. 
-
-
-
-=== Certificate authority (CA)
-
-Run the next commands in a shell:
-
-[source, numbered]
-----
-1. openssl req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout RootCA.key -out RootCA.pem -subj "/C=ES/ST=Valencia/L=Valencia/O=Certificates/CN=localhost.local"
- 
-2. openssl x509 -outform pem -in RootCA.pem -out RootCA.crt
+message PhoneNumber {
+  string number = 1;
+  PhoneType type = 2;
+}
+
+enum PhoneType {
+  MOBILE = 0;
+  HOME = 1;
+  WORK = 2;
+}
 ----
 
-If you want to convert your certificate run the command:
+As you can see, if a field is `repeated`, the field may be repeated any number of times, including 0. You can also define `enum` types if you want one of your fields to have one of a predefined list of values.
 
+=== Services
 
-[source, numbered]
+If you want to use your message types with an RPC system, you may specify an RPC service interface in a.proto file, and the protocol buffer compiler will create code and stubs in your preferred language.
+
+For example you could define the following contract:
+
+[source, proto3]
 ----
-openssl pkcs12 -export -out localhost.pfx -inkey RootCA.key -in RootCA.crt
-----
-
-
-
-=== Domain name certificate
-
-Run the next commands in a shell:
-
-[source, numbered]
-----
-1. openssl req -new -nodes -newkey rsa:2048 -keyout localhost.key -out localhost.csr -subj "/C=ES/ST=Valencia/L=Valencia/O=Certificates/CN=localhost.local"
-
-2. openssl x509 -req -sha256 -days 1024 -in localhost.csr -CA RootCA.pem -CAkey RootCA.key -CAcreateserial -extfile domains.ext -out localhost.crt
+service SearchService {
+  rpc Search(SearchRequest) returns (SearchResponse);
+}
 ----
 
+In this case we will have a `SearchService` class with a `Search` method that accepts a `SearchRequest` and returns a `SearchResponse`. Both (SearchRequest and SearchResponse) need to be mapped to a message.
 
-Where the _domains.ext_ file should contain:
+The following example shows the complete `.proto` file used in the devon gRPC templates.
 
-[source, numbered]
+[source, proto3]
 ----
-authorityKeyIdentifier=keyid,issuer
-basicConstraints=CA:FALSE
-keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
-subjectAltName = @alt_names
-[alt_names]
-DNS.1 = localhost
-DNS.2 = localhost.local
-DNS.3 = 127.0.0.1
-DNS.4 = fake1.local
-DNS.5 = fake2.local
+syntax = "proto3";
+
+option csharp_namespace = "Devon4Net.Application.GrpcClient.Protos";
+
+package greet;
+
+// The greeting service definition.
+service Greeter {
+  // Sends a greeting
+  rpc SayHello (HelloRequest) returns (HelloReply);
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings.
+message HelloReply {
+  string message = 1;
+}
 ----
 
-If you want to convert your certificate run the command:
+NOTE: Please revise the template documentation and the component documentation to learn more about gRPC
 
+=== References 
 
-[source, numbered]
-----
-openssl pkcs12 -export -out localhost.pfx -inkey localhost.key -in localhost.crt 
-----
-
-== Setup the database driver
-
-Add the database connection on the `SetupDatabase` method at Startup.cs
-    
-```
-       private void SetupDatabase(IServiceCollection services)
-        {
-            services.SetupDatabase<TodoContext>(Configuration, "Default", WebAPI.Configuration.Enums.DatabaseType.InMemory);
-        }
-```
-
-Where: 
-
-[options="header"]
-|=======================
-|*Param*|*Description*
-|`TodoContext`| Is the database context definition
-|Default| Is the connection string defined at `_ConnectionString_` node at the appsettings configuration file 
-|`WebAPI.Configuration.Enums.DatabaseType.InMemory`| Is the database driver selection. In this case InMemory data base is chosen
-|=======================
-
-The supported databases are:
-
-        - SqlServer
-        - Sqlite
-        - InMemory
-        - Cosmos
-        - PostgreSQL
-        - MySql
-        - MariaDb
-        - FireBird
-        - Oracle
-        - MSAccess
-
-
-== Change the JWT encryption algorithm
-
-In the appsettings.json configuration file, you can use the next values on the `_SecretKeyLengthAlgorithm_` and `_SecretKeyEncryptionAlgorithm_` nodes at JWT configuration:
-
-
-[options="header"]
-|=======================
-|*Algorithm*|*Description*
-|`Aes128Encryption`|"http://www.w3.org/2001/04/xmlenc#aes128-cbc"
-|`Aes192Encryption`|"http://www.w3.org/2001/04/xmlenc#aes192-cbc"
-|`Aes256Encryption`|"http://www.w3.org/2001/04/xmlenc#aes256-cbc"
-|`DesEncryption`|"http://www.w3.org/2001/04/xmlenc#des-cbc"
-|`Aes128KeyWrap`|"http://www.w3.org/2001/04/xmlenc#kw-aes128"
-|`Aes192KeyWrap`|"http://www.w3.org/2001/04/xmlenc#kw-aes192"
-|`Aes256KeyWrap`|"http://www.w3.org/2001/04/xmlenc#kw-aes256"
-|`RsaV15KeyWrap`|"http://www.w3.org/2001/04/xmlenc#rsa-1_5"
-|`Ripemd160Digest`|"http://www.w3.org/2001/04/xmlenc#ripemd160"
-|`RsaOaepKeyWrap`|"http://www.w3.org/2001/04/xmlenc#rsa-oaep"
-|`Aes128KW`|"A128KW"
-|`Aes256KW`|"A256KW"
-|`RsaPKCS1`|`"RSA1_5"`
-|`RsaOAEP`|`"RSA-OAEP"`
-|`ExclusiveC14n`|"http://www.w3.org/2001/10/xml-exc-c14n#"
-|`ExclusiveC14nWithComments`|"http://www.w3.org/2001/10/xml-exc-c14n#WithComments"
-|`EnvelopedSignature`|"http://www.w3.org/2000/09/xmldsig#enveloped-signature"
-|`Sha256Digest`|"http://www.w3.org/2001/04/xmlenc#sha256"
-|`Sha384Digest`|"http://www.w3.org/2001/04/xmldsig-more#sha384"
-|`Sha512Digest`|"http://www.w3.org/2001/04/xmlenc#sha512"
-|`Sha256`|"SHA256"
-|`Sha384`|"SHA384"
-|`Sha512`|"SHA512"
-|`EcdsaSha256Signature`|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"
-|`EcdsaSha384Signature`|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384"
-|`EcdsaSha512Signature`|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512"
-|`HmacSha256Signature`|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha256"
-|`HmacSha384Signature`|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha384"
-|`HmacSha512Signature`|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha512"
-|`RsaSha256Signature`|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
-|`RsaSha384Signature`|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha384"
-|`RsaSha512Signature`|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"
-|`RsaSsaPssSha256Signature`|"http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1"
-|`RsaSsaPssSha384Signature`|"http://www.w3.org/2007/05/xmldsig-more#sha384-rsa-MGF1"
-|`RsaSsaPssSha512Signature`|"http://www.w3.org/2007/05/xmldsig-more#sha512-rsa-MGF1"
-|`EcdsaSha256`|"ES256"
-|`EcdsaSha384`|"ES384"
-|`EcdsaSha512`|"ES512"
-|`HmacSha256`|"HS256"
-|`HmacSha384`|"HS384"
-|`HmacSha512`|"HS512"
-|None|"none"
-|`RsaSha256`|"RS256"
-|`RsaSha384`|"RS384"
-|`RsaSha512`|"RS512"
-|`RsaSsaPssSha256`|"PS256"
-|`RsaSsaPssSha384`|"PS384"
-|`RsaSsaPssSha512`|"PS512"
-|`Aes128CbcHmacSha256`|"A128CBC-HS256"
-|`Aes192CbcHmacSha384`|"A192CBC-HS384"
-|`Aes256CbcHmacSha512`|"A256CBC-HS512"
-|=======================
+* https://developers.google.com/protocol-buffers[Protocol Buffers - Google Docs]
 

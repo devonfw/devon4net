@@ -15,7 +15,12 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             foreach (var autoScalingGroup in CdkOptions.AutoScalingGroups)
             {
                 var vpc = LocateVpc(autoScalingGroup.VpcId, $"The VPC name {autoScalingGroup.VpcId} in Auto Scaling Group {autoScalingGroup.AutoScalingGroupName} does not exist");
-                var securityGroup = StackResources.SecurityGroups?.FirstOrDefault(s => s.Key == autoScalingGroup.SecurityGroupId).Value;
+                List<ISecurityGroup> securityGroups = new List<ISecurityGroup>();
+                if (autoScalingGroup.SecurityGroupIds?.Any() == true)
+                {
+                    var securityGroupIds = StackResources.SecurityGroups.Keys.Union(autoScalingGroup.SecurityGroupIds);
+                    securityGroups.AddRange(securityGroupIds.Select(key => StackResources.SecurityGroups[key]));
+                }
                 var role = LocateRole(autoScalingGroup.RoleId, $"The role {autoScalingGroup.RoleId} does not exists");
 
                 var subnets = new List<ISubnet>();
@@ -24,7 +29,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                     subnets.Add(LocateSubnet(subnetId, $"The subnet {subnetId} does not exists."));
                 }
 
-                var asgGroup = AwsCdkHandler.AddAutoScalingGroup(autoScalingGroup.Id, autoScalingGroup.AutoScalingGroupName, autoScalingGroup.InstanceTypeId, autoScalingGroup.MachineImage, autoScalingGroup.AmiId, vpc, autoScalingGroup.AllowAllOutbound, autoScalingGroup.MinCapacity, autoScalingGroup.MaxCapacity, autoScalingGroup.DesiredCapacity, autoScalingGroup.MachineImageRegion, securityGroup, autoScalingGroup.CreationTimeOut, role, subnets.ToArray(), autoScalingGroup.KeyPairName, autoScalingGroup.EnableProtectionFromScaleIn, autoScalingGroup.BlockDevices, autoScalingGroup.UserData);
+                var asgGroup = AwsCdkHandler.AddAutoScalingGroup(autoScalingGroup.Id, autoScalingGroup.AutoScalingGroupName, autoScalingGroup.InstanceTypeId, autoScalingGroup.MachineImage, autoScalingGroup.AmiId, vpc, autoScalingGroup.AllowAllOutbound, autoScalingGroup.MinCapacity, autoScalingGroup.MaxCapacity, autoScalingGroup.DesiredCapacity, autoScalingGroup.MachineImageRegion, securityGroups, autoScalingGroup.CreationTimeOut, role, subnets.ToArray(), autoScalingGroup.KeyPairName, autoScalingGroup.EnableProtectionFromScaleIn, autoScalingGroup.BlockDevices, autoScalingGroup.UserData);
                 StackResources.AutoScalingGroups.Add(autoScalingGroup.Id, asgGroup);
             }
         }
@@ -45,7 +50,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 }
                 else
                 {
-                    AwsCdkHandler.CreateEc2TaskDefinition(taskDefinitionOpt.Id, taskDefinitionOpt.Family, taskDefinitionOpt.Volumes);
+                    taskDefinition = AwsCdkHandler.CreateEc2TaskDefinition(taskDefinitionOpt.Id, taskDefinitionOpt.Family, taskDefinitionOpt.Volumes);
                 }
 
                 StackResources.EcsTaskDefinitions.Add(taskDefinitionOpt.Id, taskDefinition);
@@ -185,7 +190,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 }
             }
 
-            var ecsService = AwsCdkHandler.AddElasticContainerEc2Service(service.Id, service.ServiceName, cluster, taskDefinition, service.HealthCheckGracePeriod, strategyItems, service.DesiredCount);
+            var ecsService = AwsCdkHandler.AddElasticContainerEc2Service(service.Id, service.ServiceName, cluster, taskDefinition, service.HealthCheckGracePeriod, strategyItems, service.DesiredCount, service.UseDistinctInstances, service.PlacementStrategy);
             AwsCdkHandler.AddEc2ServiceECSDependencies(ecsService, capacityProviders);
 
             CreateContainerDefinition(definitionOptions, taskDefinition);

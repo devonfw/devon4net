@@ -83,7 +83,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static void ConfigureRabbitMqGenericDependencyInjection(IServiceCollection services)
         {
             services.AddTransient(typeof(IJsonHelper), typeof(JsonHelper));
-            services.AddTransient(typeof(IRepository<RabbitBackup>), typeof(Repository<RabbitBackup>));
+            services.AddTransient(typeof(ILiteDbRepository<RabbitBackup>), typeof(LiteDbRepository<RabbitBackup>));
             services.AddTransient(typeof(IRabbitMqBackupService), typeof(RabbitMqBackupService));
         }
 

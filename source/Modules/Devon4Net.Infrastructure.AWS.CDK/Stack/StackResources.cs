@@ -53,7 +53,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
         public IDictionary<string, IService> EcsServices { get; set; }
         public IDictionary<string, IInstance> Ec2Instances { get; set; }
         public IDictionary<string, INetworkLoadBalancer> NetworkLoadBalancers { get; set; }
-        public IDictionary<string, CfnEndpoint> DmsEndpoints { get; set; }
+        public IDictionary<string, Amazon.CDK.AWS.DMS.CfnEndpoint> DmsEndpoints { get; set; }
         public IDictionary<string, CfnReplicationInstance> DmsReplicationInstances { get; set; }
         public IDictionary<string, CfnReplicationSubnetGroup> DmsReplicationSubnetGroups { get; set; }
         public IDictionary<string, CfnReplicationTask> DmsMigrationTasks { get; set; }
@@ -71,7 +71,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             CodeBuildProjects = new Dictionary<string, IProject>();
             DatabaseParameterGroups = new Dictionary<string, IParameterGroup>();
             Databases = new Dictionary<string, IDatabaseInstance>();
-            DmsEndpoints = new Dictionary<string, CfnEndpoint>();
+            DmsEndpoints = new Dictionary<string, Amazon.CDK.AWS.DMS.CfnEndpoint>();
             DmsMigrationTasks = new Dictionary<string, CfnReplicationTask>();
             DmsReplicationInstances = new Dictionary<string, CfnReplicationInstance>();
             DmsReplicationSubnetGroups = new Dictionary<string, CfnReplicationSubnetGroup>();
@@ -148,7 +148,8 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 AutoScalingGroups,
                 AsgCapacityProviders,
                 PolicyDocuments,
-                NetworkTargetGroups
+                NetworkTargetGroups,
+                SnsTopics
             };
 
             return Array.Find(l, x => x is Dictionary<string, T>) as Dictionary<string, T>;

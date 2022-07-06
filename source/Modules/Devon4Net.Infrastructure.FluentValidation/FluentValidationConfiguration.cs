@@ -1,19 +1,23 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Devon4Net.Infrastructure.FluentValidation
 {
     public static class FluentValidationConfiguration
     {
-        public static void AddFluentValidation<T>(this IServiceCollection services, bool launchExceptionWhenError = false) where T : class
+        public static void AddFluentValidation<TService, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TImplementation>(this IServiceCollection services) where TService : class where TImplementation : class, TService
         {
-            var memberInfo = typeof(T).BaseType;
-            if (memberInfo != null && !memberInfo.Name.Contains("CustomFluentValidator"))
+            var memberInfo = typeof(TImplementation).BaseType;
+            if (memberInfo?.Name.Contains("CustomFluentValidator") == false)
             {
-                throw new ArgumentException($"The provided type {typeof(T).FullName} does not inherit from CustomFluentValidator");
+                throw new ArgumentException($"The provided type {typeof(TImplementation).FullName} does not inherit from CustomFluentValidator");
             }
 
-            var objValidator = (T) Activator.CreateInstance(typeof(T), args: launchExceptionWhenError);
-            services.AddSingleton(objValidator);
+            services.AddTransient<TService,TImplementation>();
         }
     }
 }

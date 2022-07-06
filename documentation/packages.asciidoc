@@ -1,101 +1,174 @@
-:toc: macro
-toc::[]
-:icons: font
-:iconfont-remote!:
-:iconfont-name: font-awesome
-:stylesdir: css
+
+:toc: 
 
 = Packages
 
-== Packages overview
+toc::[]
 
+== Overview
 
-NOTE: _devon4Net_ is composed by a number of packages that increases the functionality and boosts time development. Each package has it's own configuration to make them work properly. In _appsettings.json_ set up your environment. On _appsettings.{environment}.json_ you can configure each component.
+Devon4Net is made up of several components, all of which are described in this document. This components are available in the form of NuGet packages. In the https://github.com/devonfw/devon4net[Devon4Net repository] this packages are placed in the Infrastructure layer which is a cross-cutting layer that can be referenced from any level on the architecture.
 
+.Infrastructure directory
+image::images/Infrastructure_package.png[]
 
-== The packages
+Components are class librarys that collaborate with each other for a purpose. They group the necessary code so that they can work according to the specified configuration. For example, the package `Devon4Net.Infrastructure.Swagger` has isolated the swagger essential pieces of code and has been developed in such a manner that you just need to write a few lines and specify a couple options to get it working the way you need.
 
-You can get the devon4Net packages on https://www.nuget.org/packages?q=devonfw[nuget.org].
+=== Component structure
 
+All of the components follow a similar structure which includes the next directories:
 
-=== `Devon4Net`.Application.WebAPI.Configuration
-==== Description
-The devon4Net web API configuration core.
+* *Configuration:* Static configuration class (or multiple classes) that contains extension methods used to configure the component.
+* *Handlers:* Classes that are required to manage complex operations or communications.
+* *Helpers:* Normally static classes that help in small conversions and operations.
+* *Constants:* Classes that contain static constants to get rid of hard-coded values.
 
-==== Configuration
+NOTE: Because each component is unique, you may find some more directories or less than those listed above.
 
-- Install package on your solution:
+== Configuration basics
 
-    PM> Install-Package Devon4Net.Application.WebAPI.Configuration
+Any configuration for .Net Core 6.0 projects needs to be done in the `Program.cs` files which is placed on the startup application, but we can extract any configuration needed to an extension method and call that method from the component. As a result, the component will group everything required and the configuration will be much easier.
 
-==== Default configuration values
+=== Extension methods
 
-```
+https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/extension-methods[Extension methods] allow you to "add" methods to existing types without having to create a new derived type, or modify it in any way. Although they are static methods, they are referred to as instance methods on the extended type. For C# code, there is no difference in calling a extension method and a method defined in a type.
 
-  "devonfw": {
-    "UseDetailedErrorsKey": true,
-    "UseIIS": false,
-    "UseSwagger": true,
-    "Environment": "Development",
-    "KillSwitch": {
-      "killSwitchSettingsFile": "killswitch.appsettings.json"
-    },
-    "Kestrel": {
-      "UseHttps": true,
-      "HttpProtocol": "Http2", //Http1, Http2, Http1AndHttp2, none
-      "ApplicationPort": 8082,
-      "KeepAliveTimeout": 120, //in seconds
-      "MaxConcurrentConnections": 100,
-      "MaxConcurrentUpgradedConnections": 100,
-      "MaxRequestBodySize": 28.6, //In MB. The default maximum request body size is 30,000,000 bytes, which is approximately 28.6 MB
-      "Http2MaxStreamsPerConnection": 100,
-      "Http2InitialConnectionWindowSize": 131072, // From 65,535 and less than 2^31 (2,147,483,648)
-      "Http2InitialStreamWindowSize": 98304, // From 65,535 and less than 2^31 (2,147,483,648)
-      "AllowSynchronousIO": true,
-      "SslProtocol": "Tls12", //Tls, Tls11,Tls12, Tls13, Ssl2, Ssl3, none. For Https2 Tls12 is needed
-      "ServerCertificate": {
-        "Certificate": "localhost.pfx",
-        "CertificatePassword": "localhost"
-      },
-      "ClientCertificate": {
-        "DisableClientCertificateCheck": true,
-        "RequireClientCertificate": false,
-        "CheckCertificateRevocation": true,
-        "ClientCertificates": {
-          "Whitelist": [
-            "3A87A49460E8FE0E2A198E63D408DC58435BC501"
-          ],
-          "DisableClientCertificateCheck": false
-        }
-      }
-    },
-    "IIS": {
-      "ForwardClientCertificate": true,
-      "AutomaticAuthentication": true,
-      "AuthenticationDisplayName" : ""
+For example, the next extension method will extend the class `ExtendedClass` and it will need an `OptionalParameter` instance to do some configuration:
+
+[source, c#]
+----
+public static class ExtensionMethods
+{
+    public static void DoConfiguration(this ExtendedClass class,  OptionalParameter extra) 
+    {
+        // Do your configuration here
+        class.DoSomething();
+        class.AddSomething(extra)
     }
-  }
-```
+}
+----
 
-=== Devon4Net.Infrastructure.CircuitBreaker
-==== Description
-The Devon4Net.Infrastructure.CircuitBreaker component implements the retry pattern for HTTP/HTTPS calls.
+Thanks to the `this` modifier preceeding the first parameter, we are able to call the method directly on a instance of `ExtendedClass` as follows:
 
-==== Configuration
+[source, c#]
+----
+ExtendedClass class = new();
+OptionalParameter extra = new();
 
-- Install package on your solution:
+class.DoConfiguration(extra);
+----
 
-    PM> Install-Package Devon4Net.Infrastructure.CircuitBreaker
+As you can see, we don't need that a class derived from `ExtendedClass` to add some methods and we don't need those methods placed in the class itself either. This can be seen easily when extending a primitive type such as `string`:
 
-==== Default configuration values
+[source, c#]
+----
+public static class ExtensionMethods
+{
+    public static int CountWords(this string word,  char[] separationChar = null) 
+    {
+        if(separationChar == null) separationChar = new char[]{' '};
+        return word.Split(separationChar, StringSplitOptions.RemoveEmptyEntries).Length;
+    }
+}
+----
 
-```
-  "CircuitBreaker": {
-    "CheckCertificate": true,
+In the previous example we created a method that can count words given a list of separation characters. And now we can use it over any string as follows:
+
+[source, c#]
+----
+string s = "Hello World";
+Console.WriteLine(s.CountWords());
+----
+[source, output]
+----
+2
+----
+
+NOTE: Remember to reference the class so you can use the extension methods (`using` directive).
+
+=== Options pattern
+
+The https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-6.0[options design pattern] allows you to have strong typed options and provides you the ability to inject them into your services. To follow this pattern, the configuration present on the `appsettings.json` needs to be mapped into an object.
+
+This means, the following configuration:
+[source, json]
+----
+"essentialoptions" : {
+  "value1": "Hello",
+  "value2": "World"
+}
+----
+
+Would need the following class:
+[source, c#]
+----
+public class EssentialOptions 
+{
+    public string Value1 { get; set; }
+    public string Value2 { get; set; }
+}
+----
+
+In .Net we can easily map the configuration thanks to the `Configure<T>()` method from `IServiceCollection` and `GetSection()` method from `IConfiguration`. We could be loading the configuration as follows:
+
+[source, c#]
+----
+services.Configure<EssentialOptions>(configuration.GetSection("essentialoptions"));
+----
+
+And then injecting it making use of `IOptions<T>` interface:
+[source, c#]
+----
+public class MyService : IMyService
+{
+    private readonly EssentialOptions _options;
+
+    public MyService(IOptions<EssentialOptions> options) 
+    {
+        _options = options.Value;
+    }
+}
+----
+
+In devon4net, there is an `IServiceCollection` extension available that uses the methods described above and also returns the options injected thanks to `IOptions<T>`.  So, to load the same options, we should use the following:
+
+[source, c#]
+----
+EssentialOptions options = services.GetTypedOptions<EssentialOptions>(configuration, "essentialoptions");
+----
+
+=== Dependency Injection
+
+https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection[Dependency Injection] is a technique for achieving Inversion of Control Principle. In .Net it is a built-in part that comes with the framework.
+
+Using a service provider `IServiceProvider` available in .Net, we are able to add any service or option to a service stack that will be available for injection in constructors of the classes where it's used.
+
+Services can be registered with one of the following lifetimes:
+|=====
+|*Lifetime* | *Description* |*Example*
+|Transient |Transient lifetime services are created each time they're requested from the service container. Disposed at the end of the request. |services.AddTransient<IDependency, Dependency>();
+|Scoped |A scoped lifetime indicates that services are created once per client request (connection).  Disposed at the end of the request. |services.AddScoped<IDependency, Dependency>();
+|Singleton |Singleton lifetime services are created either the first time they're requested or by the developer. Every subsequent request of the service implementation from the dependency injection container uses the same instance. |services.AddSingleton<IDependency, Dependency>();
+|=====
+
+This injections would be done in the startup project in `Program.cs` file, and then injected in constructors where needed.
+
+== Devon4Net.Infrastructure.CircuitBreaker
+
+The Devon4Net.Infrastructure.CircuitBreaker component implements the retry pattern for HTTP/HTTPS calls. It may be used in both SOAP and REST services. 
+
+=== Configuration
+
+Component configuration is made on file `appsettings.{environment}.json` as follows:
+
+[source, json]
+----
+"CircuitBreaker": {
+    "CheckCertificate": false,
     "Endpoints": [
       {
         "Name": "SampleService",
-        "BaseAddress": "https://localhost:5001/",
+        "BaseAddress": "http://localhost:5001",
         "Headers": {
         },
         "WaitAndRetrySeconds": [
@@ -104,14 +177,16 @@ The Devon4Net.Infrastructure.CircuitBreaker component implements the retry patte
           0.001
         ],
         "DurationOfBreak": 0.0005,
-        "UseCertificate": true,
+        "UseCertificate": false,
         "Certificate": "localhost.pfx",
         "CertificatePassword": "localhost",
-        "SslProtocol": "3072" //TLS12
+        "SslProtocol": "Tls12", //Tls, Tls11,Tls12, Tls13, none
+        "CompressionSupport": true,
+        "AllowAutoRedirect": true
       }
     ]
   }
-```
+----
 [options="header"]
 |=======================
 |*Property*|*Description*
@@ -121,7 +196,9 @@ The Devon4Net.Infrastructure.CircuitBreaker component implements the retry patte
 |Headers| Not ready yet
 |WaitAndRetrySeconds| Array which determines the number of retries and the lapse period between each retry. The value is in milliseconds.
 |Certificate| Ceritificate client to use to perform the HTTP call
+|CertificatePassword| The password that you assign when exporting the certificate
 |`SslProtocol`| The secure protocol to use on the call
+
 |=======================
 
 ==== Protocols
@@ -136,30 +213,44 @@ The Devon4Net.Infrastructure.CircuitBreaker component implements the retry patte
 
 |=======================
 
-==== Usage
+=== Setting up in Devon
 
-Add via Dependency Injection the circuit breaker instance. PE:
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.{environment}.json` file.
+
+Add it using Dependency Injection on this case we instanciate Circuit Breaker in a Service Sample Class
 
 [source, C#]
 ----
-    public class FooService : Service<TodosContext>, ILoginService
+public class SampleService: Service<SampleContext>, ISampleService
     {
- public FooService(IUnitOfWork<AUTContext> uoW,  ICircuitBreakerHttpClient circuitBreakerClient,
-            ILogger<LoginService> logger) : base(uoW)
+        private readonly ISampleRepository _sampleRepository;
+        private IHttpClientHandler _httpClientHandler { get; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="uoW"></param>
+        public SampleService(IUnitOfWork<SampleContext> uoW, IHttpClientHandler httpClientHandler) : base(uoW)
         {
-        ...
+            _httpClientHandler = httpClientHandler;
+            _sampleRepository = uoW.Repository<ISampleRepository>();
         }
-    }
+    }    
 ----
 
-
-At this point you can use the circuit breaker functionality in your code.
-
-To perform a POST call you should use your circuit breaker instance as follows:
+Add the necessary references. 
 
 [source, C#]
 ----
-await circuitBreakerClient.PostAsync<YourOutputClass>(NameOftheService, EndPoint, InputData, MediaType.ApplicationJson).ConfigureAwait(false);
+using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
+using Devon4Net.Infrastructure.CircuitBreaker.Handlers;
+----
+
+You must give the following arguments to make a POST call:
+
+[source, C#]
+----
+await _httpClientHandler.Send<YourOutPutClass>(HttpMethod.POST, NameOfTheService, EndPoint, InputData, MediaType.ApplicationJson);    
 ----
 
 Where:
@@ -167,84 +258,2319 @@ Where:
 [options="header"]
 |=======================
 |*Property*|*Description*
-|YourOutputClass| The type of the class that you are expecting to retrieve from the POST call 
+|YourOutputClass| The type of the class that you are expecting to retrieve from the call 
 |NameOftheService| The key name of the endpoint provided in the appsettings.json file at Endpoints[] node
-|`EndPoint`|Part of the url to use with the base address. PE: _/validate_
-|`InputData`| Your instance of the class with values that you want to use in the POST call
-|`MediaType.ApplicationJson`| The media type flag for the POST call
+|`EndPoint`|Part of the url to use with the base address. E.g: _/validate_
+|`InputData`| Your instance of the class with values that you want to use in the call
+|`MediaType.ApplicationJson`| The media type flag for the call
 |=======================
 
 
-=== devon4Net.Domain.UnitOfWork
-==== Description
-Unit of work implementation for devon4net solution. This unit of work provides the different methods to access the data layer with an atomic context. Sync and Async repository operations are provided. Customized Eager Loading method also provided for custom entity properties.
+=== Setting up in other projects
 
-NOTE: This component will move on next releases to Infrastructure instead of being part of Domain components
+Install the package on your solution using the Package Manager Console:
 
-==== Configuration
+[source]
+----
+Install-Package Devon4Net.Infrastructure.CircuitBreaker
+----
 
-- Install package on your solution:
+next add via Dependency Injection the circuit breaker instance.On this case we use a Service
 
-    PM> Install-Package devon4Net.Domain.UnitOfWork
-
-- Adding the database connection information:
-
-Add the database connection on the `SetupDatabase` method at Startup.cs
-    
 [source, C#]
 ----
-       private void SetupDatabase(IServiceCollection services)
-        {
-            services.SetupDatabase<TodoContext>(Configuration, "Default", WebAPI.Configuration.Enums.DatabaseType.InMemory);
-        }
+public class SampleService : ISampleService
+ {
+   private IHttpClientHandler _httpClientHandler { get; }
+
+    public SampleService(IHttpClientHandler httpClientHandler)
+      {
+        _httpClientHandler = httpClientHandler;
+      }
+ }
 ----
 
-Where: 
+Don't forget to provide the necessary references. 
+
+[source, C#]
+----
+using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
+using Devon4Net.Infrastructure.CircuitBreaker.Handlers;
+----
+
+And configure CircuitBreaker in `Program.cs` adding the following lines:
+
+[source, C#]
+----
+using Devon4Net.Infrastructure.CircuitBreaker;
+.
+.
+.
+builder.Services.SetupCircuitBreaker(builder.Configuration);
+----
+
+You must add the default configuration shown in the configuration section and at this point you can use the circuit breaker functionality in your code.
+
+To perform a GET call you should use your circuit breaker instance as follows:
+
+[source, C#]
+----
+await _httpClientHandler.Send<YourOutPutClass>(HttpMethod.Get, NameOfTheService, EndPoint, InputData, MediaType.ApplicationJson);    
+----
+
+Where:
 
 [options="header"]
 |=======================
-|*Param*|*Description*
-|`TodoContext`| Is the database context definition
-|Default| Is the connection string defined at _ConnectionString_ node at the appsettings configuration file 
-|WebAPI.Configuration.Enums.DatabaseType.InMemory| Is the database driver selection. In this case `InMemory` data base is chosen
+|*Property*|*Description*
+|YourOutputClass| The type of the class that you are expecting to retrieve from the call 
+|NameOftheService| The key name of the endpoint provided in the appsettings.json file at Endpoints[] node
+|`EndPoint`|Part of the url to use with the base address. E.g: _/validate_
+|`InputData`| Your instance of the class with values that you want to use in the call
+|`MediaType.ApplicationJson`| The media type flag for the call
 |=======================
+
+== Devon4Net.Infrastructure.Swagger
+
+Swagger is a set of open source software tools for designing, building, documenting, and using RESTful web services. This component provides a full externalized configuration for the Swagger tool. 
+
+It primarily provides the swagger UI for visualizing and testing APIs, as well as automatic documentation generation via annotations in controllers.
+
+=== Configuration
+
+Component configuration is made on file `appsettings.{environment}.json` as follows:
+
+[source, json]
+----
+"Swagger": {
+    "Version": "v1",
+    "Title": "My Swagger API",
+    "Description": "Swagger API for devon4net documentation",
+    "Terms": "https://www.devonfw.com/terms-of-use/",
+    "Contact": {
+      "Name": "devonfw",
+      "Email": "sample@mail.com",
+      "Url": "https://www.devonfw.com"
+    },
+    "License": {
+      "Name": "devonfw - Terms of Use",
+      "Url": "https://www.devonfw.com/terms-of-use/"
+    },
+    "Endpoint": {
+      "Name": "V1 Docs",
+      "Url": "/swagger/v1/swagger.json",
+      "UrlUi": "swagger",
+      "RouteTemplate": "swagger/v1/{documentName}/swagger.json"
+    }
+},
+----
+
+In the following list all the configuration fields are described:
+
+* `Version`: Actual version of the API.
+* `Title`: Title of the API.
+* `Description`: Description of the API.
+* `Terms`: Link to the terms and conditions agreement.
+* `Contact`: Your contact information.
+* `License`: Link to the License agreement.
+* `Endpoint`: Swagger endpoints information.
+
+=== Setting up in Devon
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.{environment}.json` file.
+
+
+=== Setting up in other projects
+Install the package on your solution using the Package Manager Console:
+
+[source, console]
+----
+> install-package Devon4Net.Infrastructure.Swagger
+----
+
+Configure swagger in `Program.cs` adding the following lines:
+
+[source, c#]
+----
+using Devon4Net.Infrastructure.Swagger;
+.
+.
+.
+builder.Services.SetupSwagger(builder.Configuration);
+.
+.
+.
+app.ConfigureSwaggerEndPoint();
+----
+
+Add the default configuration shown in the configuration section.
+
+=== Tips
+
+* In order to generate the documentation annotate your actions with summary, remarks and response tags:
+[source, c#]
+----
+/// <summary>
+/// Method to make a reservation with potential guests. The method returns the reservation token.
+/// </summary>
+/// <param name="bookingDto"></param>
+/// <response code="201">Ok.</response>
+/// <response code="400">Bad request. Parser data error.</response>
+/// <response code="401">Unauthorized. Authentication fail.</response>
+/// <response code="403">Forbidden. Authorization error.</response>
+/// <response code="500">Internal Server Error. The search process ended with error.</response>
+[HttpPost]
+[HttpOptions]
+[Route("/mythaistar/services/rest/bookingmanagement/v1/booking")]
+[AllowAnonymous]
+[EnableCors("CorsPolicy")]
+public async Task<IActionResult> Booking([FromBody]BookingDto bookingDto)
+{
+    try
+    {
+
+    ...
+----
+* You can access the swagger UI on `http://localhost:yourport/swagger/index.html`
+
+== Devon4Net.Infrastructure.Logger
+
+Previously known as Devon4Net.Infrastructure.Log(v5.0 or lower)
+
+Logging is an essential component of every application's life cycle.
+A strong logging system becomes a critical component that assists developers to understand and resolve emerging problems. 
+
+NOTE: Starting with .NET 6, logging services no longer register the ILogger type. When using a logger, specify the generic-type alternative ILogger<TCategoryName> or register the `ILogger` with dependency injection (DI).
+
+Default .Net log levels system: 
+
+|=======================
+|*Type*|*Description*
+|Critical| Used to notify failures that force the program to shut down  
+|Error| Used to track major faults that occur during program execution 
+|Warning| Used to report non-critical unexpected behavior
+|Information| Informative messages
+|Debug| Used for debugging messages containing additional information about application operations 
+|Trace| For tracing the code
+|None| If you choose this option the loggin category will not write any messages
+|=======================
+
+=== Configuration
+
+Component setup is done in the `appsettings.{environment}.json` file using the following structure:
+
+[source, json]
+----
+  "Logging": {
+    "UseLogFile": true,
+    "UseSQLiteDb": true,
+    "UseGraylog": true,
+    "UseAOPTrace": false,
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    },
+    "SqliteDatabase": "logs/log.db",
+    "LogFile": "logs/{0}_devonfw.log",
+    "SeqLogServerHost": "http://127.0.0.1:5341",
+    "GrayLog": {
+      "GrayLogHost": "127.0.0.1",
+      "GrayLogPort": "12201",
+      "GrayLogProtocol": "UDP",
+      "UseSecureConnection": true,
+      "UseAsyncLogging": true,
+      "RetryCount": 5,
+      "RetryIntervalMs": 15,
+      "MaxUdpMessageSize": 8192
+    }
+  }
+----
+
+Where:
+
+* `UseLogFile`: When you set this option to true, you can store the log output to a file.  
+* `UseSQLiteDb`: True when you wish to insert the log output into a SQLiteDb
+* `UseGrayLog`: This option enables the use of GrayLog for loggin
+* `UseAOPTrace`: True if you need to trace the attributes of the controllers
+
+WARNING: Don't set to true on production environments, doing so may expose critical information. 
+
+* `LogLevel`: Sets the minimum level of logs to be captured
+* `SqliteDatabase`: path to SQlite database 
+* `LogFile`: path to the log file
+* `SeqLogServerHost`: url for Seq server, you need to install Seq  in order to use it, you can install it clicking https://datalust.co/download[here]
+* `GrayLog`: Some configuration parameters for Graylog service you can install it using https://www.graylog.org/products/open-source#download-open[this link] 
+
+
+=== Setting up in Devon
+
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.{environment}.json` file.
+
+You can use the methods implemented in Devon4NetLogger class, each method corresponds with a log level in .Net log levels system, for example:
+
+[source, c#]
+----
+Devon4NetLogger.Debug("Executing GetTodo from controller TodoController");
+----
+
+
+=== Setting up in other projects
+
+Install the package on your solution using the Package Manager Console:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.Logger
+----
+
+Add the following line of code to Progam.cs: 
+
+[source, c#]
+----
+builder.Services.SetupLog(builder.Configuration);
+----
+
+Add the default configuration shown in the configuration section.
+
+use the Devon4NetLogger class methods as explanied above:
+
+[source, c#]
+----
+Devon4NetLogger.Information("Executing GetSample from controller SampleController");
+----
+
+
+== Devon4Net.Infrastructure.Cors
+
+Allows CORS settings for the devon4Net application.
+Configuration may be used to configure several domains.
+Web clients (for example, Angular) must follow this rule to avoid performing AJAX calls to another domain. 
+
+Cross-Origin Resource Sharing (CORS) is an HTTP-header-based mechanism that allows a server to specify any origin (domain, scheme, or port) outside of its own from which a browser should allow resources to be loaded. CORS also makes use of a process in which browsers send a "preflight" request to the server hosting the cross-origin resource to ensure that the server will allow the actual request. During that preflight, the browser sends headers indicating the HTTP method as well as headers that will be used in the actual request.
+
+You may find out more by going to https://docs.microsoft.com/es-es/aspnet/core/security/cors?view=aspnetcore-6.0[Microsoft CORS documentation]
+
+=== Configuration
+
+Component setup is done in the `appsettings.{environment}.json` file using the following structure:
+
+[source, json]
+----
+ "Cors": //[], //Empty array allows all origins with the policy "CorsPolicy"
+  [
+    {
+      "CorsPolicy": "CorsPolicy",
+      "Origins": "http://localhost:4200,https://localhost:4200,http://localhost,https://localhost;http://localhost:8085,https://localhost:8085",
+      "Headers": "accept,content-type,origin,x-custom-header,authorization",
+      "Methods": "GET,POST,HEAD,PUT,DELETE",
+      "AllowCredentials": true
+    }
+  ]
+----
+
+You may add as many policies as you like following the JSON format. for example:
+
+[source, json]
+----
+ "Cors": //[], //Empty array allows all origins with the policy "CorsPolicy"
+  [
+    {
+      "CorsPolicy": "FirstPolicy",
+      "Origins": "http://localhost:4200",
+      "Headers": "accept,content-type,origin,x-custom-header,authorization",
+      "Methods": "GET,POST,DELETE",
+      "AllowCredentials": true
+    },
+    {
+      "CorsPolicy": "SecondPolicy",
+      "Origins": "https://localhost:8085",
+      "Headers": "accept,content-type,origin",
+      "Methods": "GET,POST,HEAD,PUT,DELETE",
+      "AllowCredentials": false
+    }
+  ]
+----
+
+In the following table all the configuration fields are described:
+
+|=======================
+|*Property*|*Description*
+|CorsPolicy| Name of the policy
+|Origins| The origin's url that you wish to accept.
+|Headers| Permitted request headers
+|Methods| Allowed Http methods
+|AllowCredentials| Set true to allow the exchange of credentials across origins
+|=======================
+
+=== Setting up in Devon
+
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.{environment}.json` file.
+
+You can enable CORS per action, per controller, or globally for all Web API controllers in your application:
+
+* Add this annotation in the Controller Class you want to use CORS policy
++
+[source, c#]
+----
+[EnableCors("CorsPolicy")]
+----
++
+As an example, consider this implementation on the EmployeeController class
++
+[source, c#]
+----
+namespace Devon4Net.Application.WebAPI.Implementation.Business.EmployeeManagement.Controllers
+{
+    /// <summary>
+    /// Employees controller
+    /// </summary>
+    [ApiController]
+    [Route("[controller]")]
+    [EnableCors("CorsPolicy")]
+    public class EmployeeController: ControllerBase
+    {
+      .
+      .
+      .
+    }
+}
+----
++
+The example above enables CORS for all the controller methods.
+
+* In the same way, you may enable CORS on any controller method:
++
+[source, c#]
+----
+[EnableCors("FirstPolicy")]
+public async Task<ActionResult> GetEmployee()
+{
+
+}
+        
+public async Task<ActionResult> ModifyEmployee(EmployeeDto employeeDto) 
+{
+
+}
+
+[EnableCors("SecondPolicy")]        
+public async Task<ActionResult> Delete([Required]long employeeId)
+{
+
+}
+----
++
+The example above enables CORS for the GetEmployee and Delete method. 
+
+=== Setting up in other projects
+
+Using the Package Manager Console, install the the next package on your solution: 
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.Cors
+----
+
+Add the following lines of code to Progam.cs: 
+
+[source, c#]
+----
+builder.Services.SetupCors(builder.Configuration);
+.
+.
+.
+app.SetupCors();
+----
+
+Add the default configuration shown in the configuration section.
+
+You can enable CORS per action, per controller, or globally for all Web API controllers in your application:
+
+* Add this annotation to the controller class that will be using the CORS policy. 
++
+[source, c#]
+----
+[EnableCors("SamplePolicy")]
+    public class SampleController: ControllerBase
+    {
+      .
+      .
+      .
+    }
+----
++
+Where "SamplePolicy" is the name you give the Policy in the `appsettings.{environment}.json`.
++
+The example above enables CORS for all the controller methods.
+
+* In the same way, you may enable any CORS-policy on any controller method:
++
+[source, c#]
+----
+[EnableCors("FirstPolicy")]
+public async Task<ActionResult> GetSample()
+{
+
+}
+        
+public async Task<ActionResult> Modify(SampleDto sampleDto)
+{
+
+} 
+
+[EnableCors("SecondPolicy")]        
+public async Task<ActionResult> Delete([Required]long sampleId)
+{
+
+}
+----
++
+The example above enables CORS for the GetSample and Delete method. 
+
+=== Tips
+
+* If you specify the CORS in the `appsettings.{environment}.json` configuration file as empty array, a default CORS-policy will be used with all origins enabled:
+
+[source, json]
+----
+ "Cors": [], //Empty array allows all origins with the policy "CorsPolicy" 
+----
+
+WARNING: Only use this policy in development environments
+
+This default CORS-policy is defined as "CorsPolicy," and it should be enabled on the Controller Class as a standard Policy:
+
+[source, c#]
+----
+[EnableCors("CorsPolicy")] 
+public IActionResult Index() {  
+    return View();  
+}  
+----
+
+* if you want to disable the CORS check use the following annotation on any controller method:
+
+[source, c#]
+----
+[DisableCors]
+public IActionResult Index() {
+    return View();
+}
+----
+
+* If you set the EnableCors attribute at more than one scope, the order of precedence is:
+
+1. Action
+2. Controller
+3. Global
+
+== Devon4Net.Infrastructure.JWT
+"JSON Web Token (JWT) is an open standard (https://datatracker.ietf.org/doc/html/rfc7519[RFC 7519]) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object. This information can be verified and trusted because it is digitally signed. JWTs can be signed using a secret (with the `HMAC` algorithm) or a public/private key pair using `RSA` or `ECDSA` ."
+-- https://jwt.io/introduction/[What is JSON Web Token?]
+
+In other words, a JSON Web Token is a JSON object encoded into an encrypted `string` that can be decoded and verified making use of cryptographic methods and algorithms. This tokens are mostly used to authenticate users in the context of websites, web applications and web services, but they can also be used to securely exchange information between parties.
+
+=== Configuration
+Component configuration is made on file `appsettings.{environment}.json` as follows:
+
+[source, json]
+----
+ "JWT": {
+    "Audience": "devon4Net",
+    "Issuer": "devon4Net",
+    "ValidateIssuer": true,
+    "ValidateIssuerSigningKey": true,
+    "ValidateLifetime": true,
+    "RequireSignedTokens": true,
+    "RequireExpirationTime": true,
+    "RequireAudience": true,
+    "ClockSkew": 5,
+    "Security": {
+      "SecretKeyEncryptionAlgorithm": "",
+      "SecretKey": "",
+      "Certificate": "",
+      "CertificatePassword": "",
+      "CertificateEncryptionAlgorithm": "",
+      "RefreshTokenEncryptionAlgorithm": ""
+    }
+  },
+----
+
+In the following list all the configuration fields are described:
+
+* `Audience`: Represents a valid audience that will be used to check against the token's audience.
+* `Issuer`: Represents a valid issuer that will be used to check against the token's issuer.
+//* `TokenExpirationTime`: -------
+* `ValidateIssuer`: Boolean that controls if validation of the Issuer is done.
+* `ValidateIssuerSigningKey`: Boolean that controls if validation of the SecurityKey that signed the securityToken is called.
+* `ValidateLifetime`: Boolean to control if the lifetime will be validated during token validation.
+* `RequireSignedTokens`: Boolean that indicates wether a security token has to be signed oe not.
+* `RequireExpirationTime`: Boolean that tells the handler if tokens need an expiration time specified or not.
+* `RequireAudience`: Boolean that indicates tokens need to have an audience specified to be valid or not.
+* `ClockSkew`: Expiration time in minutes.
+* `Security`: Certificate properties will be found in this part.
+** `SecretKeyEncryptionAlgorithm`: Algorithm used to encrypt the secret key. If no argument is specified, `HmacSha512` is used.
+** `SecretKey`: Private key used to sign with the certificates. This key will be encrypted and hashed using the specified algorithm.
+** `Certificate`: Name of certificate file or its path (if it is not in the same directory). If it doesn't exist an exception will be raised.
+** `CertificatePassword`: Password for the certificate selected.
+** `CertificateEncryptionAlgorithm`: Algorithm used to encrypt the certificate. If no argument is specified, `HmacSha512` is used.
+** `RefreshTokenEncryptionAlgorithm`: Algorithm used to encrypt the refresh token. If no argument is specified, `HmacSha512` is used.
+
+There are two ways of using and creating tokens:
+
+* Secret key: A key to encrypt and decrypt the tokens is specified. This key will be encrypted using the specified algorithm.
+* Certificates: A certificate is used to manage token encryption and decryption.
+
+NOTE: Because the secret key takes precedence over the other option, JWT with the secret key will be used if both configurations are supplied.
+
+==== Encryption algorithms
+
+The supported and tested algorithms are the following:
+
+|=======================
+|*Algorithm* |*Value*
+|`HmacSha256` | HS256
+|`HmacSha384` | HS384
+|`HmacSha512` | HS512
+|`HmacSha256Signature` | http://www.w3.org/2001/04/xmldsig-more#hmac-sha256
+|`HmacSha384Signature` | http://www.w3.org/2001/04/xmldsig-more#hmac-sha384
+|`HmacSha512Signature` | http://www.w3.org/2001/04/xmldsig-more#hmac-sha512
+|=======================
+
+For the refresh token encryption algorithm you will be able to use any algoritm from the previous table and the following table:
+
+|=======================
+|*Algorithm* |*Value*
+|`MD5` | MD5
+|`Sha` | SHA
+|=======================
+
+NOTE: You will need to specify the name of the algorithm (shown in 'algorithm' column) when configuring the component.
+
+////
+*RSA*
+|=======================
+|*Algorithm*|*Value*
+|`RsaSha256` | RS256
+|`RsaSha384` | RS384
+|`RsaSha512` | RS512
+|`RsaSha256Signature` | http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+|`RsaSha384Signature` | http://www.w3.org/2001/04/xmldsig-more#rsa-sha384
+|`RsaSha512Signature` | http://www.w3.org/2001/04/xmldsig-more#rsa-sha512
+|`RsaOAEP` | RS-OAEP
+|`RsaPKCS1` | RSA1_5
+|`RsaOaepKeyWrap` | http://www.w3.org/2001/04/xmlenc#rsa-oaep
+|=======================
+
+*ECDsa*
+|=======================
+|*Algorithm*|*Value*
+|`EcdsaSha256` | ES256
+|`EcdsaSha384` | ES384
+|`EcdsaSha512` | ES512
+|`EcdsaSha256Signature` | http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256
+|`EcdsaSha384Signature` | http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384
+|`EcdsaSha512Signature` | http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512
+|=======================
+
+*Hash*
+|=======================
+|*Algorithm*|*Value*
+|`Sha256` | SHA256
+|`Sha384` | SHA384
+|`Sha512` | SHA512
+|`Sha256Digest` | http://www.w3.org/2001/04/xmlenc#sha256
+|`Sha384Digest` | http://www.w3.org/2001/04/xmldsig-more#sha384
+|`Sha512Digest` | http://www.w3.org/2001/04/xmlenc#sha512
+|=======================
+
+*Symmetric*
+|=======================
+|*Algorithm*|*Value*
+|`Aes128CbcHmacSha256` | A128CBC-HS256
+|`Aes192CbcHmacSha384` | A192CBC-HS384
+|`Aes256CbcHmacSha512` | A256CBC-HS512
+|`Aes128KW` | A128KW
+|`Aes256KW` | A256KW
+|`HmacSha256` | HS256
+|`HmacSha384` | HS384
+|`HmacSha512` | HS512
+|`HmacSha256Signature` | http://www.w3.org/2001/04/xmldsig-more#hmac-sha256
+|`HmacSha384Signature` | http://www.w3.org/2001/04/xmldsig-more#hmac-sha384
+|`HmacSha512Signature` | http://www.w3.org/2001/04/xmldsig-more#hmac-sha512
+|=======================
+////
+
+NOTE: Please check https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/Supported-Algorithms[Windows Documentation] to get the latest updates on supported encryption algorithms.
+
+=== Setting up in Devon
+For setting it up using the Devon4NetApi template configure it in the `appsettings.{environment}.json` file. 
+
+You will need to add a certificate that will be used for signing the token, please check the documentation about how to create a new certificate and add it to a project if you are not aware of how it's done.
+
+Remember to configure your certificates in the JWT configuration.
+
+Navigate to `Devon4Net.Application.WebAPI.Implementation.Business.AuthManagement.Controllers`. There you will find `AuthController` sample class which is responsible of generating the token thanks to login method.
+
+[source, c#]
+----
+public AuthController(IJwtHandler jwtHandler)
+{
+    JwtHandler = jwtHandler;
+}
+----
+
+You can see how the `IJwtHandler` is injected in the constructor via its interface, which allows you to use its methods.
+
+In the following piece of code, you will find how the client token is created using a variety of claims. In this case this end-point will be available to not identified clients thanks to the `AllowAnonymous` attribute. The client will also have a sample role asigned, depending on which it will be able to access some end-points and not others. 
+[source, c#]
+----
+[AllowAnonymous]
+.
+.
+.
+var token = JwtHandler.CreateJwtToken(new List<Claim>
+{
+    new Claim(ClaimTypes.Role, AuthConst.DevonSampleUserRole),
+    new Claim(ClaimTypes.Name,user),
+    new Claim(ClaimTypes.NameIdentifier,Guid.NewGuid().ToString()),
+});
+
+return Ok(new LoginResponse { Token = token });
+----
+
+The following example will require clients to have the sample role to be able to use the end-point, thanks to the attribute `Authorize` with the `Roles` value specified. 
+
+It also shows how you can obtain information directly from the token using the `JwtHandler` injection.
+[source, c#]
+----
+[Authorize(AuthenticationSchemes = AuthConst.AuthenticationScheme, Roles = AuthConst.DevonSampleUserRole)]
+.
+.
+.
+//Get claims
+var token = Request.Headers["Authorization"].ToString().Replace($"{AuthConst.AuthenticationScheme} ", string.Empty);
+.
+.
+.
+// Return result with claims values
+var result = new CurrentUserResponse
+{
+    Id = JwtHandler.GetClaimValue(userClaims, ClaimTypes.NameIdentifier),
+    UserName = JwtHandler.GetClaimValue(userClaims, ClaimTypes.Name),
+    CorporateInfo = new List<CorporateBasicInfo> 
+    { 
+        new CorporateBasicInfo 
+        { 
+            Id = ClaimTypes.Role, 
+            Value = JwtHandler.GetClaimValue(userClaims, ClaimTypes.Role) 
+        } 
+    }
+};
+
+return Ok(result);
+----
+
+NOTE: Please check devon documentation of Security and Roles to learn more about method attributtes.
+
+=== Setting up in other projects
+Install the package on your solution using the Package Manager Console:
+
+[source, console]
+----
+> install-package Devon4Net.Infrastructure.JWT
+----
+
+Configure swagger in `Program.cs` adding the following lines:
+
+[source, c#]
+----
+using Devon4Net.Application.WebAPI.Configuration;
+.
+.
+.
+builder.Services.SetupJwt(builder.Configuration);
+----
+
+At this moment you'll need to have at least one certificate added to your project.
+
+
+NOTE: Please read the documentation of how to create and add certificates to a project.
+
+Now we will configure the JWT component in `appsettings.{environment}.json` as shown in the next piece of code:
+
+[source, json]
+----
+"JWT": {
+    "Audience": "devon4Net",
+    "Issuer": "devon4Net",
+    "ValidateIssuer": true,
+    "ValidateIssuerSigningKey": true,
+    "ValidateLifetime": true,
+    "RequireSignedTokens": true,
+    "RequireExpirationTime": true,
+    "RequireAudience": true,
+    "ClockSkew": 5,
+    "Security": {
+      "SecretKeyLengthAlgorithm": "",
+      "SecretKeyEncryptionAlgorithm": "",
+      "SecretKey": "",
+      "Certificate": "localhost.pfx",
+      "CertificatePassword": "12345",
+      "CertificateEncryptionAlgorithm": "HmacSha512",
+      "RefreshTokenEncryptionAlgorithm": "Sha"
+    }
+  },
+----
+
+For using it, you will need a method that provides you a token. So lets create an `AuthController` controller and add those methods:
+[source, c#]
+----
+[Route("api/[controller]")]
+[ApiController]
+public class AuthController : ControllerBase
+{
+    private readonly IJwtHandler _jwtHandler;
+
+    public AuthController(IJwtHandler jwtHandler)
+    {
+        _jwtHandler = jwtHandler;
+    }
+
+    [HttpGet]
+    [Route("/Auth")]
+    [AllowAnonymous]
+    public IActionResult GetToken()
+    {
+        var token = _jwtHandler.CreateJwtToken(new List<Claim>
+        {
+            new Claim(ClaimTypes.Role, "MyRole"),
+            new Claim(ClaimTypes.Name, "MyName"),
+            new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
+        });
+        return Ok(token);
+    }
+
+    [HttpGet]
+    [Route("/Auth/CheckToken")]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "MyRole")]
+    public IActionResult CheckToken()
+    {
+        var token = Request.Headers["Authorization"].ToString().Replace($"Bearer ", string.Empty);
+        var userClaims = _jwtHandler.GetUserClaims(token).ToList();
+        var result = new 
+        {
+            Id = _jwtHandler.GetClaimValue(userClaims, ClaimTypes.NameIdentifier),
+            UserName = _jwtHandler.GetClaimValue(token, ClaimTypes.Name),
+            Role = _jwtHandler.GetClaimValue(userClaims, ClaimTypes.Role)
+        };
+        return Ok(result);
+    }
+}
+----
+Reading the code of this controller you have to take in mind a few things:
+
+* `IJwtHandler` class is injected via dependency injection.
+
+** `string CreateClientToken(List<Claim> list)` will allow you to create the token through a list of claims. The claims shown are hard-coded examples.
+
+** `List<Claim> GetUserClaims(string token)` will allow you to get a list of claims given a token.
+
+** `string GetClaimValue(List<Claim> list, string claim)` will allow you to get the value given the ClaimType and either a list of claims or a token thanks to the `string GetClaimValue(string token, string claim)` overload.
+
+* `[AllowAnonymous]` attribute will allow access any client without authentication.
+
+* `[Authorize(AuthenticationSchemes = "Bearer", Roles = "MyRole")]` attribute will allow any client authenticated with a bearer token and the role `"MyRole"`.
+
+
+=== References
+
+* https://docs.microsoft.com/en-us/dotnet/api/microsoft.identitymodel.tokens.tokenvalidationparameters?view=azure-dotnet[TokenValidationParameterClass - Microsoft Docs]
+
+* https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/attributes/[Attributtes in C# - Microsoft Docs]
+
+* https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/Supported-Algorithms[Algorithms supported]
+
+== Devon4Net.Infrastructure.LiteDb
+https://www.litedb.org/[LiteDb] is an open-source NoSQL embedded database for .NET. Is a document store inspired by MongoDB database. It stores data in documents, which are JSON objects containing key-value pairs. It uses BSON which is a Binary representation of JSON with additional type information.
+
+One of the advantages of using this type of NoSQL database is that it allows the use of asynchronous programming techniques following ACID properties on its transactions. This properties are: Atomicity, Consistency, Isolation and Durability, and they ensure the highest possible data reliability and integrity. This means that you will be able to use `async/await` on your operations.
+
+=== Configuration
+The component configuration can be done in `appsettings.{environment}.json` with the following section:
+
+[source, json]
+----
+"LiteDb": {
+  "EnableLiteDb": true,
+  "DatabaseLocation": "devon4net.db"
+}
+----
+
+* `EnableLiteDb`: Boolean to activate the use of LiteDb.
+* `DatabaseLocation`: Relative path of the file containing all the documents.
+
+=== Setting up in Devon
+For setting it up using the Devon4Net WebApi template just configure it in the `appsettings.{environment}.json`.
+
+Then you will need to inject the repositories. For that go to `Devon4Net.Application.WebAPI.Implementation.Configuration.DevonConfiguration` and add the folowing lines in `SetupDependencyInjection` method:
+
+[source, c#]
+----
+using Devon4Net.Infrastructure.LiteDb.Repository;
+.
+.
+.
+services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+----
+
+Now you can use the `IRepository<T>` by injecting it wherever you want to use it. `T` will be the entity you will be working with in the repository.
+
+[source, c#]
+----
+private readonly IRepository<Todo> _todoRepository;
+
+public TodoController(IRepository<Todo> todoRepository)
+{
+    _todoRepository = todoRepository;
+}
+----
+
+
+=== Setting up in other projects
+For setting it up in other projects install it running the following command in the Package Manager Console, or using the Package Manager in Visual Studio:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.LiteDb
+----
+
+Now set the configuration in the `appsettings.{enviroment}.json`:
+[source, json]
+----
+"LiteDb": {
+  "EnableLiteDb": true,
+  "DatabaseLocation": "devon_database.db"
+}
+----
+
+NOTE: Remember to set `EnableLiteDb` to `true`.
+
+Navigate to your `Program.cs` file and add the following line to configure the component:
+
+[source, c#]
+----
+using Devon4Net.Application.WebAPI.Configuration;
+.
+.
+.
+builder.Services.SetupLiteDb(builder.Configuration);
+----
+
+You will need also to add the repositories you will be using to your services, either by injecting the generic:
+
+[source, c#]
+----
+builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+----
+
+Or by choosing to inject them one by one:
+
+[source, c#]
+----
+builder.Services.AddTransient<IRepository<WeatherForecast>, Repository<WeatherForecast>>();
+----
+
+Now you will be able to use the repositories in your class using dependency injection, for example:
+
+[source, c#]
+----
+[ApiController]
+[Route("[controller]")]
+public class WeatherForecastController : ControllerBase
+{
+    private readonly IRepository<WeatherForecast> _weatherForecastRepository;
+
+    public WeatherForecastController(IRepository<WeatherForecast> weatherForecastRepository)
+    {
+        _weatherForecastRepository = weatherForecastRepository;
+    }
+
+    [HttpGet]
+    public IEnumerable<WeatherForecast> Get()
+    {
+        return _weatherForecastRepository.Get();
+    }
+
+    [HttpPost]
+    public IEnumerable<WeatherForecast> PostAndGetAll(WeatherForecast weatherForecast)
+    {
+        _weatherForecastRepository.Create(weatherForecast);
+        return _weatherForecastRepository.Get();
+    }
+}
+----
+
+== Devon4Net.Infrastructure.Kafka
+https://kafka.apache.org/[Apache Kafka] is an open-source distributed event streaming platform. Event streaming is the practice of capturing a stream of events and store it for later being able to retrieve it for processing it in the desired form. It guarantees a continuous flow of data between components in a distributed system. You can think of it as a data bus where components of a system can publish some events and can subscribe to others, the following diagram shows perfectly how the system works: 
+
+.Kafka diagram
+image::images/kafka.png[]
+
+In the image you can see how an event is sent to the Kafka server. This *Event* is a record of an action that happened and typically contains a key, value, timestamp and some metadata.
+
+This events are published by *Producers*, who are those client applications that write to Kafka; and readed and processed by *Consumers*, who are the clients subscribed to the different topics.
+
+*Topics* are the organization type of Kafka events, similar to a folder on a filesystem, being events the files in that folder. Unlike message queues, Kafka events are not deleted after being read. Instead you can choose how much time should Kafka keep track of the events.
+
+Other interesting concepts about Kafka are:
+
+* *Partitions*: Topics are divided into partitions. When a new event is published to a topic, it is actually appended to one of the topic's partitions. Events with the same event key are written to the same partition.
+
+* *Replication*: To make your data fault-tolerant and highly-available, every topic can be replicated so that there are always multiple brokers that have a copy of the data just in case things go wrong.
+
+=== Configuration
+The component configuration can be done in `appsettings.{environment}.json` with the following section:
+
+[source, json]
+----
+"Kafka": {
+    "EnableKafka": true,
+    "Administration": [
+      {
+        "AdminId": "Admin1",
+        "Servers": "127.0.0.1:9092"
+      }
+    ],
+    "Producers": [
+      {
+        "ProducerId": "Producer1", 
+        "Servers": "127.0.0.1:9092", 
+        "ClientId": "client1", 
+        "Topic": "devonfw", 
+        "MessageMaxBytes": 1000000, 
+        "CompressionLevel": -1, 
+        "CompressionType": "None", 
+        "ReceiveMessageMaxBytes": 100000000,
+        "EnableSslCertificateVerification": false,
+        "CancellationDelayMaxMs": 100, 
+        "Ack": "None", 
+        "Debug": "", 
+        "BrokerAddressTtl": 1000, 
+        "BatchNumMessages": 1000000, 
+        "EnableIdempotence": false, 
+        "MaxInFlight": 5,
+        "MessageSendMaxRetries": 5,
+        "BatchSize": 100000000 
+      }
+    ],
+    "Consumers": [
+      {
+        "ConsumerId": "Consumer1", 
+        "Servers": "127.0.0.1:9092",
+        "GroupId": "group1",
+        "Topics": "devonfw", 
+        "AutoCommit": true,
+        "StatisticsIntervalMs": 0, 
+        "SessionTimeoutMs": 10000, 
+        "AutoOffsetReset": "Largest", 
+        "EnablePartitionEof": true,
+        "IsolationLevel": "ReadCommitted", 
+        "EnableSslCertificateVerification": false,
+        "Debug": "" 
+      }
+    ]
+  }
+----
+
+* `EnableKafka`: Boolean to activate the use of Apache Kafka.
+* `Administration`: 
+** `AdminId`: Admin Identifier
+** `Servers`: Host address and port number in the form of `host:port`.
+* `Producers`: List of all kafka producers configuration.
+** `ProducerId`: Identifier of the producer in devon.
+** `Servers`: Host address and port number in the form of `host:port`.
+** `ClientId`: Identifier of the client in Kafka.
+** `Topic`: Topics where the event will be delivered.
+** `MessageMaxBytes`: Maximum Kafka protocol request message size. Due to differing framing overhead between protocol versions the producer is unable to reliably enforce a strict max message limit at produce time and may exceed the maximum size by one message in protocol ProduceRequests, the broker will enforce the the topic's `max.message.bytes` limit (see Apache Kafka documentation).
+** `CompressionLevel`: Compression level parameter for algorithm selected by configuration property compression.codec. Higher values will result in better compression at the cost of more CPU usage. Usable range is algorithm-dependent:
++
+[0-9] for gzip; [0-12] for lz4; only 0 for snappy; -1 = codec-dependent 
++
+Default is `-1`.
+
+** `CompressionType`: compression codec to use for compressing message sets. This is the default value for all topics, may be overridden by the topic configuration property compression.codec. Types are: `None`, `Gzip`, `Snappy`, `Lz4`, `Zstd`. Default is `None`.
+** `ReceiveMessageMaxBytes`: Maximum Kafka protocol response message size. Default is `100000000`.
+** `EnableSslCertificateVerification`: Enable OpenSSL's builtin broker (server) certificate verification. Default is `true`.
+** `CancellationDelayMaxMs`: The maximum time in milliseconds before a cancellation request is acted on. Low values may result in measurably higher CPU usage. Default is `100`.
+** `Ack`:
++
+|====
+|*Value* | *Description* 
+|`None` - default | Broker does not send any response/ack to client
+|`Leader` | The leader will write the record to its local log but will respond without awaiting full acknowledgement from all followers
+|`All` | Broker will block until message is committed by all in sync replicas (ISRs). If there are less than min.insync.replicas (broker configuration) in the ISR set the produce request will fail
+|====
++
+Default is `None`.
+
+** `Debug`:
+A comma-separated list of debug contexts to enable. Detailed Producer debugging: broker,topic,msg. Consumer: consumer,cgrp,topic,fetch
+** `BrokerAddressTtl`: How long to cache the broker address resolving results in milliseconds.
+** `BatchNumMessages`: Maximum size (in bytes) of all messages batched in one MessageSet, including protocol framing overhead. This limit is applied after the first message has been added to the batch, regardless of the first message's size, this is to ensure that messages that exceed `batch.size` are produced. The total MessageSet size is also limited by `batch.num.messages` and `message.max.bytes`
+** `EnableIdempotence`: When set to `true`, the producer will ensure that messages are successfully produced exactly once and in the original produce order. The following configuration properties are adjusted automatically (if not modified by the user) when idempotence is enabled: `max.in.flight.requests.per.connection=5` (must be less than or equal to 5), `retries=INT32_MAX` (must be greater than 0), `acks=all`, `queuing.strategy=fifo`. Producer instantation will fail if user-supplied configuration is incompatible
+** `MaxInFlight`: Maximum number of in-flight requests per broker connection. This is a generic property applied to all broker communication, however it is primarily relevant to produce requests. In particular, note that other mechanisms limit the number of outstanding consumer fetch request per broker to one. Default is `5`.
+** `MessageSendMaxRetries`: How many times to retry sending a failing Message. Default is `5`.
+** `BatchSize`: Maximum size (in bytes) of all messages batched in one MessageSet, including protocol framing overhead. This limit is applied after the first message has been added to the batch, regardless of the first message's size, this is to ensure that messages that exceed batch.size are produced. The total MessageSet size is also limited by batch.num.messages and `message.max.bytes`. Default is `1000000`.
+* `Consumers`: List of consumers configurations.
+** `ConsumerId`: Identifier of the consumer for devon.
+** `Servers`: Host address and port number in the form of `host:port`.
+** `GroupId`: Client group id string. All clients sharing the same group.id belong to the same group.
+** `Topics`: Topics where the event will be read from.
+** `AutoCommit`: Automatically and periodically commit offsets in the background. Note: setting this to false does not prevent the consumer from fetching previously committed start offsets. To circumvent this behaviour set specific start offsets per partition in the call to assign()
+** `StatisticsIntervalMs`: librdkafka statistics emit interval. The application also needs to register a stats callback using `rd_kafka_conf_set_stats_cb()`. The granularity is 1000ms. A value of 0 disables statistics
+** `SessionTimeoutMs`: Client group session and failure detection timeout. The consumer sends periodic heartbeats (heartbeat.interval.ms) to indicate its liveness to the broker. If no hearts are received by the broker for a group member within the session timeout, the broker will remove the consumer from the group and trigger a rebalance. Default is `0`.
+** `AutoOffsetReset`: Action to take when there is no initial offset in offset store or the desired offset is out of range: 'smallest','earliest' - automatically reset the offset to the smallest offset, 'largest','latest' - automatically reset the offset to the largest offset, 'error' - trigger an error which is retrieved by consuming messages and checking 'message-&gt;err'
+** `EnablePartitionEof`: Verify CRC32 of consumed messages, ensuring no on-the-wire or on-disk corruption to the messages occurred. This check comes at slightly increased CPU usage
+** `IsolationLevel`: Controls how to read messages written transactionally: `ReadCommitted` - only return transactional messages which have been committed. `ReadUncommitted` - return all messages, even transactional messages which have been aborted.
+** `EnableSslCertificateVerification`: Enable OpenSSL's builtin broker (server) certificate verification. Default is `true`.
+** `Debug`: A comma-separated list of debug contexts to enable. Detailed Producer debugging: broker,topic,msg. Consumer: consumer,cgrp,topic,fetch
+
+=== Setting up in Devon
+
+For setting it up using the Devon4Net WebApi template just configure it in the `appsettings.Development.json`. You can do this by copying the previously showed configuration with your desired values.
+
+NOTE: Please refer to the "How to use Kafka" and "Kafka template" documentation to learn more about Kafka.
+
+=== Setting up in other projects
+
+For setting it up in other projects install it running the following command in the Package Manager Console, or using the Package Manager in Visual Studio:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.Kafka
+----
+
+This will install all the packages the component needs to work properly. Now set the configuration in the `appsettings.{enviroment}.json`:
+[source, json]
+----
+"Kafka": {
+    "EnableKafka": true,
+    "Administration": [
+      {
+        "AdminId": "Admin1",
+        "Servers": "127.0.0.1:9092"
+      }
+    ],
+    "Producers": [
+      {
+        "ProducerId": "Producer1", 
+        "Servers": "127.0.0.1:9092", 
+        "ClientId": "client1", 
+        "Topic": "devonfw", 
+        "MessageMaxBytes": 1000000, 
+        "CompressionLevel": -1, 
+        "CompressionType": "None", 
+        "ReceiveMessageMaxBytes": 100000000,
+        "EnableSslCertificateVerification": false,
+        "CancellationDelayMaxMs": 100, 
+        "Ack": "None", 
+        "Debug": "", 
+        "BrokerAddressTtl": 1000, 
+        "BatchNumMessages": 1000000, 
+        "EnableIdempotence": false, 
+        "MaxInFlight": 5,
+        "MessageSendMaxRetries": 5,
+        "BatchSize": 100000000 
+      }
+    ],
+    "Consumers": [
+      {
+        "ConsumerId": "Consumer1", 
+        "Servers": "127.0.0.1:9092",
+        "GroupId": "group1",
+        "Topics": "devonfw", 
+        "AutoCommit": true,
+        "StatisticsIntervalMs": 0, 
+        "SessionTimeoutMs": 10000, 
+        "AutoOffsetReset": "Largest", 
+        "EnablePartitionEof": true,
+        "IsolationLevel": "ReadCommitted", 
+        "EnableSslCertificateVerification": false,
+        "Debug": "" 
+      }
+    ]
+  }
+----
+
+Navigate to your `Program.cs` file and add the following lines to configure the component:
+
+[source, c#]
+----
+using Devon4Net.Application.WebAPI.Configuration;
+.
+.
+.
+builder.Services.SetupKafka(builder.Configuration);
+----
+
+As you will be able to tell, the process is very similar to installing other components. Doing the previous actions will allow you to use the different handlers available with kafka. You can learn more 
+
+NOTE: Please refer to the "How to use Kafka" and "Kafka template" documentation to learn more about Kafka.
+
+== Devon4Net.Infrastructure.Grpc
+
+As you may know at this point in Grpc communication two parties are involved: the client and the server. The server provides an implementation of a service that the client can access. Both have access to a file that acts as a contract between them, this way each of them can be written in a different language. This file is the protocol buffer. 
+
+To learn more you can read "Grpc Template" and "How to use Grpc" in devon documentation or forward to https://grpc.io/[gRPC official site].
+
+=== Configuration
+
+==== Grpc server
+
+The server does not need any type of specific configuration options other than the certificates, headers or other components that need to be used in the same project.
+
+==== Grpc Client
+On the other hand, the client needs the following configuration on the `appsettings.{environment}.json` file:
+
+[source, json]
+----
+"Grpc" : {
+    "EnableGrpc": true,
+    "UseDevCertificate": true,
+    "GrpcServer": "https://localhost:5002",
+    "MaxReceiveMessageSize": 16,
+    "RetryPatternOptions": {
+      "MaxAttempts": 5,
+      "InitialBackoffSeconds": 1,
+      "MaxBackoffSeconds": 5,
+      "BackoffMultiplier": 1.5,
+      "RetryableStatus": "Unavailable"
+    }
+}
+----
+
+* `EnableGrpc`: Boolean to enable the use of Grpc component.
+* `UseDevCertificate`: Boolean to bypass validation of client certificate. Only for development purposes.
+* `GrpcServer`: Grpc server host and port number in the form of `Host:Port`
+* `MaxReceiveMessageSize`: Maximum size of message that can be received by the server in MB.
+* `RetryPatternOptions`: Options for the retry pattern applied when communicating with the server.
+** `MaxAttempts`: Maximum number of communication attempts.
+** `InitialBackoffSeconds`: Initial delay time for next try in seconds. A randomized delay between 0 and the current backoff value will determine when the next retry attempt is made.
+** `MaxBackoffSeconds`: Maximum time in seconds that work as an upper limit on exponential backoff growth.
+** `BackoffMultiplier`: The backoff time will be multiplied by this number in its growth.
+** `RetryableStatus`: Status of the requests that may be retried.
++
+|===
+|*Status* |*Code*
+|OK |0
+|Cancelled |1
+|Unknown |2
+|InvalidArgument |3
+|DeadlineExceeded |4
+|NotFound |5
+|AlreadyExists |6
+|PermissionDenied |7
+|Unauthenticated |0x10
+|ResourceExhausted |8
+|FailedPrecondition |9
+|Aborted |10
+|OutOfRange |11
+|Unimplemented |12
+|Internal |13
+|Unavailable |14
+|DataLoss |0xF
+|===
+
+=== Setting up in Devon
+
+==== Grpc Server
+
+For setting up a Grpc server in a devon project you will need to first create the service that implements the contract specified in the proto file. Below an example of service is shown:
+
+[source, c#]
+----
+[GrpcDevonServiceAttribute]
+public class GreeterService : Greeter.GreeterBase
+{
+    public GreeterService() { }
+
+    public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
+    {
+        return Task.FromResult(new HelloReply
+        {
+            Message = "Hello " + request.Name
+        });
+    }
+}
+----
+
+This previous example of service will be extending the following protocol buffer (`.proto` file):
+
+[source, proto]
+----
+syntax = "proto3";
+option csharp_namespace = "Devon4Net.Application.GrpcServer.Protos";
+package greet;
+
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply);
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}
+----
+
+Once you have all your services created you will need to add them as Grpc services on your server. All of the services marked with the `GrpcDevonService` attribute will be automatically added, but you need to specify the assembly names where they are implemented. For that you can modify the following lines in the `Program.cs` file:
+
+[source, c#]
+----
+app.SetupGrpcServices(new List<string> { "Devon4Net.Application.GrpcServer" });
+----
+
+`SetupGrpcServices` method will accept a list of assembly names so feel free to organize your code as desired.
+
+==== Grpc Client
+
+In the client side, you will need to add the configuration with your own values on the `appsettings.{environment}.json` file, for that copy the configuration JSON shown in the previous part and add your own values.
+
+Everything is ready if you are using the template. So next step will be use the GrpcChanel via dependency injection and use the service created before as shown:
+
+[source, c#]
+----
+[ApiController]
+[Route("[controller]")]
+public class GrpcGreeterClientController : ControllerBase
+{
+    private GrpcChannel GrpcChannel { get; }
+
+    public GrpcGreeterClientController(GrpcChannel grpcChannel)
+    {
+        GrpcChannel = grpcChannel;
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(HelloReply), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<HelloReply> Get(string name)
+    {
+        try
+        {
+            var client = new Greeter.GreeterClient(GrpcChannel);
+            return await client.SayHelloAsync(new HelloRequest { Name = name }).ResponseAsync.ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Devon4NetLogger.Error(ex);
+            throw;
+        }
+    }
+}
+----
+
+=== Setting up in other projects
+
+==== Grpc Server
+For setting up a Grpc server in other projects you will need to install the component running the following command in the Package Manager Console, or using the Package Manager in Visual Studio:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.Grpc
+----
+
+This will install all the packages the component needs to work properly. Navigate to your `Program.cs` file and add the following lines to configure the component.
+
+[source, c#]
+----
+using Devon4Net.Infrastructure.Grpc;
+.
+.
+.
+builder.Services.AddGrpc();
+----
+
+You will need to add the assembly names for the services you created in the following line, so they can be automatically deployed to your server: 
+
+[source, c#]
+----
+app.SetupGrpcServices(new List<string> { "Devon4Net.Application.GrpcServer" });
+----
+
+NOTE: Please refer to "Grpc template" and "How to use Grpc" documentation to learn more.
+
+==== Grpc Client
+
+For setting up a Grpc client in other projects you will need to install the component running the following command in the Package Manager Console, or using the Package Manager in Visual Studio:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.Grpc
+----
+
+Now set the configuration in the `appsettings.{enviroment}.json` file as follows:
+
+[source, json]
+----
+"Grpc" : {
+    "EnableGrpc": true,
+    "UseDevCertificate": true,
+    "GrpcServer": "https://localhost:5002",
+    "MaxReceiveMessageSize": 16,
+    "RetryPatternOptions": {
+      "MaxAttempts": 5,
+      "InitialBackoffSeconds": 1,
+      "MaxBackoffSeconds": 5,
+      "BackoffMultiplier": 1.5,
+      "RetryableStatus": "Unavailable"
+    }
+}
+----
+
+Navigate to your `Program.cs` file and add the following lines to configure the component:
+
+[source, c#]
+----
+using Devon4Net.Infrastructure.Grpc;
+.
+.
+.
+builder.Services.SetupGrpc(builder.Configuration);
+----
+
+Following this steps will allow you to use `GrpcChannel` via dependency injection in your classes, so you can call any procedure through Grpc communication.
+
+== Devon4Net.Infrastructure.FluentValidation
+
+Validation is an automatic check to ensure that data entered is sensible and feasible.
+It is critical to add validation for data inputs when programming.
+This avoids unexpected or anomalous data from crashing your application and from obtaining unrealistic garbage outputs.
+
+In the following table some validation methods are described:
+
+|=======================
+|*Validation Method*|*Description*
+|Range check| Checks if the data is inside a given range. 
+|Type check| Checks that the data entered is of an expected type
+|Length check| 	Checks the number of characters meets expectations
+|Presence check| Checks that the user has at least inputted something
+|Check digit| An additional digit added to a number that is computed from the other digits; this verifies that the remainder of the number has been input correctly. 
+|=======================
+
+FluentValidation is a.NET library that allows users to create strongly-typed validation rules.
+
+=== Setting up in Devon
+
+To establish a set of validation criteria for a specific object, build a class that inherits from `CustomFluentValidator<T>`, where `T` is the type of class to validate. For example:
+
+[source, c#]
+----
+public class EmployeeFluentValidator : CustomFluentValidator<Employee>
+    {
+    }
+----
+
+Where Employee is the class to validate.
+
+Create a constructor for this class that will handle validation exceptions, and override the CustomValidate() method from the `CustomFluentValidator<T>` class to include the validation rules. 
+
+[source, c#]
+----
+public class EmployeeFluentValidator : CustomFluentValidator<Employee>
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="launchExceptionWhenError"></param>
+        public EmployeeFluentValidator(bool launchExceptionWhenError) : base(launchExceptionWhenError)
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void CustomValidate()
+        {
+            RuleFor(Employee => Employee.Name).NotNull();
+            RuleFor(Employee => Employee.Name).NotEmpty();
+            RuleFor(Employee => Employee.SurName).NotNull();
+            RuleFor(Employee => Employee.Surname).NotEmpty();
+        }
+    }
+----
+
+In this example, we want Employee entity to not accept Null or empty data.
+We can notice this error if we do not enter the needed data:
+
+.Fluent Validation exceptions
+image::images/fluent-validation-error.png[]
+
+We can also develop Custom Validators by utilizing the Predicate Validator to define a custom validation function.
+In the example above we can add:
+
+[source, c#]
+----
+ RuleFor(x => x.Todos).Must(list => list.Count < 10)
+      .WithMessage("The list must contain fewer than 10 items");
+----
+
+This rule restricts the Todo List from having more than ten items.
+
+NOTE: For more information about Validators (Rules, Custom Validators, etc...) please refer to this https://docs.fluentvalidation.net/en/latest/built-in-validators.html[link]
+
+=== Setting up in other projects
+
+Install the package on your solution using the Package Manager Console:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.FluentValidation
+----
+
+Follow the instructions described in the previous section.
+
+=== References
+
+ * https://fluentvalidation.net/[FluentValidation Documentation]
+
+== Devon4Net.Infrastructure.Common
+
+Library that contains common classes to manage the web api template configuration.
+
+The main classes are described in the table below:
+
+|=======================
+|*Folder*|*Classes*|*Description*
+|Common| AutoRegisterData.cs | Contains the data supplied between the various stages of the AutoRegisterDi extension methods
+|Http |ProtocolOperation.cs |Contains methods to obtain the Http or Tls protocols
+|IO |FileOperations.cs |Contains methods for managing file operations.
+|Constants |AuthConst.cs |Default values for AuthenticationScheme property in the JwtBearerAuthenticationOptions
+|Enums |MediaType.cs |Static class providing constants for different media types for the CircuitBreaker Handlers.
+|Exceptions | HttpCustomRequestException.cs| Public class that enables to create Http Custom Request Exceptions
+|Exceptions | IWebApiException.cs| Interface for webapi exceptions
+|Handlers | OptionsHandler.cs| Class with a method for retrieving the configuration of the components implementing the https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-6.0[options pattern]
+|Helpers | AutoRegisterHelpers.cs| Contains the extension methods for registering classes automatically
+|Helpers | StaticConstsHelper.cs| Assists in the retrieval of an object's value through reflection
+|=======================
+
+=== Options pattern
+
+The options pattern uses classes to provide strongly typed access to groups of related settings.
+
+It is usually preferable to have a group of related settings packed together in a highly typed object rather than simply a plain key-value pair collection.
+
+For the other hand strong typing will always ensure that the configuration settings have the required data types.
+
+Keeping related settings together ensures that the code meets two crucial design criteria: https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/tutorials/oop[encapsulation] and https://docs.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles#:~:text=Separation%20of%20concerns&text=This%20principle%20asserts%20that%20software,to%20make%20them%20more%20noticeable[separation of concerns].
+
+NOTE: If you require more information of the options pattern, please see https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-6.0[the official Microsoft documentation.]
+
+On this component, we have an *Options folder* that has the classes with all the attributes that store all of the configuration parameters.
+
+== Devon4Net.Infrastructure.Extensions
+
+Miscellaneous extension library which contains :
+
+* ObjectTypeHelper
+* JsonHelper
+* GuidExtension 
+* HttpContextExtensions
+* HttpRequestExtensions
+
+=== ObjectTypeHelper
+
+Provides a method for converting an instance of an object in the type of an object of a specified class name. 
+
+=== JsonHelper (Json Serializer)
+
+Serialization is the process of transforming an object's state into a form that can be saved or transmitted.
+Deserialization is the opposite of serialization in that it transforms a stream into an object.
+These procedures, when combined, allow data to be stored and transferred. 
+
+NOTE: More information about serializacion may be found in the official https://docs.microsoft.com/en-us/dotnet/standard/serialization/[Microsoft documentation.] 
+
+This helper is used in the devon4net components `CircuitBreaker`, `MediatR`, and `RabbitMQ`.
+
+=== GuidExtension
+
+This class has basic methods for managing GUIDs. Some devon4net components, such as `MediatR` or `RabbitMQ`, implement it in their Backup Services. 
+
+=== HttpContextExtensions
+
+Provides methods for managing response headers for example:
+
+* `TryAddHeader` method is used on `devon4Net.Infrastructure.Middleware` component to add automatically response header options such authorization.
+
+* `TryRemoveHeader` method is used on `devon4Net.Infrastructure.Middleware` component to remove automatically response header such AspNetVersion header.
+
+=== HttpRequestExtensions
+
+Provides methods for obtaining Culture and Language information from a `HttpRequest` object.
+
+=== Configuration
+
+Install the package on your solution via Package Manager Console by running the following command: 
+
+[source, console]
+----
+Install-Package devon4Net.Infrastructure.Extensions
+----
+
+== Devon4Net.Infrastructure.MediatR
+
+This component employs the `MediatR` library, which is a tool for implementing CQRS and Mediator patterns in .Net.
+`MediatR` handles the decoupling of the in-process sending of messages from handling messages.
+
+=== Patterns
+
+* Mediator pattern:
++
+The https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/microservice-application-layer-implementation-web-api[mediator pattern] is a behavioral design pattern that aids in the reduction of object dependencies. The pattern prevents the items from communicating directly with one another, forcing them to collaborate only through a mediator object. Mediator is used to decrease the communication complexity between multiple objects or classes. This pattern offers a mediator class that manages all communications between distinct classes and allows for easy code maintenance through loose coupling.
+
+* CQRS pattern:
++
+The acronym https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/apply-simplified-microservice-cqrs-ddd-patterns[CQRS] stands for Command and Query Responsibility Segregation, and it refers to a design that separates read and update processes for data storage.
+By incorporating CQRS into your application, you may improve its performance, scalability, and security.
+The flexibility gained by moving to CQRS enables a system to grow more effectively over time and prevents update instructions from triggering merge conflicts at the domain level. 
++
+.CQRS Diagram
+image::images/CQRS.png[]
++
+In this figure, we can see how we may implement this design by utilizing a Relational Database for Write operations and a https://docs.microsoft.com/en-us/azure/architecture/patterns/materialized-view[Materialized view] of this Database that is synchronized and updated via events.
+
+=== Key Classes
+
+In `MediatR`, you build a basic class that is identified as an implementation of the IRequest or IAsyncRequest interface.
+All of the properties that are required to be in the message will be defined in your message class. 
+
+In the case of this component the messages are created in the `ActionBase<T>` class:
+
+[source, c#]
+----
+public class ActionBase<T> : IRequest<T> where T : class
+    {
+        public DateTime Timestamp { get; }
+        public string MessageType { get; }
+        public Guid InternalMessageIdentifier { get; }
+
+        protected ActionBase()
+        {
+            Timestamp = DateTime.Now;
+            InternalMessageIdentifier = Guid.NewGuid();
+            MessageType = GetType().Name;
+        }
+    }
+----
+
+This `ActionBase<T>` class is then inherited by the `CommandBase<T>` and `QueryBase<T>` classes.
+
+Now that we've built a request message, we can develop a handler to reply to any messages of that type. We must implement the `IRequestHandler` or `IAsyncRequestHandler` interfaces, describing the input and output types.
+
+In the case of this component `MediatrRequestHandler<TRequest, TResponse>` abstract class is used for making this process generecic
+
+[source, c#]
+----
+public abstract class MediatrRequestHandler<TRequest, TResponse> : IRequestHandler<TRequest, TResponse> where TRequest : IRequest<TResponse>
+----
+
+This interface defines a single method called Handle, which returns a Task of your output type.
+This expects your request message object as an argument. In the `MediatrRequestHandler<TRequest, TResponse>` class has been implemented in this way.
+
+[source, c#]
+----
+public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
+        {
+            MediatrActions status;
+            TResponse result = default;
+            try
+            {
+                result = await HandleAction(request, cancellationToken).ConfigureAwait(false);
+                status = MediatrActions.Handled;
+            }
+            catch (Exception ex)
+            {
+                Devon4NetLogger.Error(ex);
+                status = MediatrActions.Error;
+            }
+            await BackUpMessage(request, status).ConfigureAwait(false);
+            return result;
+        }
+----
+
+The `HandleAction` method is defined in the following lines:
+[source, c#]
+----
+public abstract Task<TResponse> HandleAction(TRequest request, CancellationToken cancellationToken);
+----
+
+This method should be overridden in the application's business layer Handlers.
+
+=== Configuration
+
+Component configuration is made on file `appsettings.{environment}.json` as follows:
+
+[source, json]
+----
+  "MediatR": {
+    "EnableMediatR": true,
+    "Backup": {
+      "UseLocalBackup": true,
+      "DatabaseName": "devon4netMessageBackup.db"
+    }
+  },
+----
+
+|=======================
+|*Property*|*Description*
+|EnableMediatR| True for enabling the use of MediatR component
+|UseLocalBackup| True for using a LiteDB database as a local backup for the `MediatR` messages 
+|DatabaseName| The name of the LiteDB database
+|=======================
+
+=== Setting up in Devon
+
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.{environment}.json` file.
+
+A template is available in the MediatRManagement folder of the `Devon4Net.Application.WebAPI.Implementation` Business Layer:
+
+.MediatR Management Folder Structure
+image::images/MediatR-management.png[]
+
+As we can see, this example adheres to the CQRS pattern structure, with Commands for writing methods and Queries for reading operations, as well as one handler for each method:
+
+* `CreateTodoCommand.cs`:
++
+[source, c#]
+----
+ public class CreateTodoCommand : CommandBase<TodoResultDto>
+    {
+        public string Description { get; set; }
+
+        public CreateTodoCommand(string description)
+        {
+            Description = description;
+        }
+    }
+----
++
+The CreateTodoCommand inherits from `CommandBase<T>`, in this situation, the request message's additional properties, such as `Description` of the `Todo` entity, will be included. 
+
+* `GetTodoQuery.cs`:
++
+[source, c#]
+----
+public class GetTodoQuery : QueryBase<TodoResultDto>
+    {
+        public long TodoId{ get; set; }
+
+        public GetTodoQuery(long todoId)
+        {
+            TodoId = todoId;
+        }
+    }
+----
++
+Because GetTodoQuery inherits from `QueryBase<T>`, an `TodoId` of the `Todo` object will be attached to the message's properties in this case.
+
+* `CreateTodoHandler.cs`:
++
+[source, c#]
+----
+public class CreateTodoHandler : MediatrRequestHandler<CreateTodoCommand, TodoResultDto>
+    {
+        private ITodoService TodoService { get; set; }
+
+        public CreateTodoHandler(ITodoService todoService, IMediatRBackupService mediatRBackupService, IMediatRBackupLiteDbService mediatRBackupLiteDbService) : base(mediatRBackupService, mediatRBackupLiteDbService)
+        {
+            Setup(todoService);
+        }
+
+        public CreateTodoHandler(ITodoService todoService, IMediatRBackupLiteDbService mediatRBackupLiteDbService) : base(mediatRBackupLiteDbService)
+        {
+            Setup(todoService);
+        }
+
+        public CreateTodoHandler(ITodoService todoService, IMediatRBackupService mediatRBackupService) : base(mediatRBackupService)
+        {
+            Setup(todoService);
+        }
+
+        private void Setup(ITodoService todoService)
+        {
+            TodoService = todoService;
+        }
+
+        public override async Task<TodoResultDto> HandleAction(CreateTodoCommand request, CancellationToken cancellationToken)
+        {
+
+            var result = await TodoService.CreateTodo(request.Description).ConfigureAwait(false);
+
+            return new TodoResultDto
+            {
+                Id = result.Id,
+                Done = result.Done,
+                Description = result.Description
+            };
+
+        }
+    }
+----
++
+This class must to inherit from `MediatrRequestHandler<TRequest, TResponse>` class that is explained above.
+On first place we inject the TodoService via dependency injection using the `Setup(ITodoService todoService)` method, and then we overload the `HandleAction(TRequest request, CancellationToken cancellationToken)` method calling the service and returning the new DTO
+
+* `GetTodoHandler.cs`:
++
+All handlers may be configured using the same structure as `CreateTodoHandler.cs.` To do the required operation, just change the method called by the service. 
+
+
+=== Setting up in other projects
+
+Install the package in your solution using the Package Manager Console:
+
+[source, console]
+----
+Install-Package Devon4Net.Infrastructure.MediatR
+----
+
+Create a Configuration static class in order to add the `IRequestHandler` services, for example:
+
+[source, c#]
+----
+ public static class Configuration
+    {
+
+        public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
+        {
+
+            var mediatR = serviceProvider.GetService<IOptions<MediatROptions>>();
+
+            if (mediatR?.Value != null && mediatR.Value.EnableMediatR)
+            {
+                SetupMediatRHandlers(services);
+            }
+        }
+
+        private static void SetupMediatRHandlers(IServiceCollection services)
+        {
+            services.AddTransient(typeof(IRequestHandler<GetTodoQuery, TodoResultDto>), typeof(GetTodoHandler));
+            services.AddTransient(typeof(IRequestHandler<CreateTodoCommand, TodoResultDto>), typeof(CreateTodoHandler));
+        }
+    }
+----
+
+Add the following lines in the `Program.cs` class: 
+
+
+[source, c#]
+----
+builder.Services.SetupMediatR(builder.Configuration);
+builder.Services.SetupDependencyInjection(builder.Configuration);
+----
+
+After adding the default settings provided in the configuration section, you may use the MediatR component in your code.
+
+== Devon4Net.Infrastructure.RabbitMQ
+
+`RabbitMQ` is an open-source message-broker software (also known as message-oriented middleware) that was developed to support the Advanced Message Queuing Protocol (AMQP) and has since been expanded with a plug-in architecture to support the Streaming Text Oriented Messaging Protocol (STOMP), MQ Telemetry Transport (MQTT), and https://www.rabbitmq.com/protocols.html[other protocols].
+
+In `RabbitMQ`, queues are defined to store messages sent by producers until they are received and processed by consumer applications. 
+
+=== Patterns
+
+* Publisher-Subscriber pattern
++
+Publish-Subscribe is a design pattern that allows loose coupling between the application components.
++
+Message senders, known as publishers, do not configure the messages to be sent directly to specific receivers, known as subscribers.
+Messages are released with no information of what they are or if any subscribers to that information exist.
+Delegate is the core of this C# design pattern.
++
+.RabbitMQ Queue system
+image::images/publish-suscribe.png[]
++
+To summarize :
++
+** A producer is a user application that sends messages.
+** A queue is a buffer that stores messages.
+** A consumer is a user application that receives messages.
+
+=== Key Classes
+
+In the case of this component the messages are created in the `Message` abstract class:
+   
+[source, c#]
+----
+public abstract class Message
+    {
+        public string MessageType { get; }
+        public Guid InternalMessageIdentifier { get; set; }
+
+        protected Message()
+        {
+            MessageType = GetType().Name;
+        }
+    }
+----
+
+Then the `Command` serializable class inherits from `Message` class:
+
+[source, c#]
+----
+[Serializable]
+public class Command : Message
+    {
+        public DateTime Timestamp { get; protected set; }
+        protected Command()
+        {
+            Timestamp = DateTime.Now;
+            InternalMessageIdentifier = Guid.NewGuid();
+        }
+    }
+----
+
+The message will have from base a Timestamp, a Guid as message identifier and the message type.
+
+=== Configuration
+
+Component configuration is made on file `appsettings.{environment}.json` as follows:
+
+[source, json]
+----
+  "RabbitMq": {
+    "EnableRabbitMq": true,
+    "Hosts": [
+      {
+        "Host": "127.0.0.1",
+        "Port": 5672,
+        "Ssl": false,
+        "SslServerName": "localhost",
+        "SslCertPath": "localhost.pfx",
+        "SslCertPassPhrase": "localhost",
+        "SslPolicyErrors": "RemoteCertificateNotAvailable" //None, RemoteCertificateNotAvailable, RemoteCertificateNameMismatch, RemoteCertificateChainErrors
+      }
+    ],
+
+    "VirtualHost": "/",
+    "UserName": "admin",
+    "Password": "password",
+    "Product": "devon4net",
+    "RequestedHeartbeat": 10, //Set to zero for no heartbeat
+    "PrefetchCount": 50,
+    "PublisherConfirms": false,
+    "PersistentMessages": true,
+    "Platform": "localhost",
+    "Timeout": 10,
+    "Backup": {
+      "UseLocalBackup": true,
+      "DatabaseName": "devon4netMessageBackup.db"
+    }
+  },
+----
+
+NOTE: Please refer to the https://github.com/EasyNetQ/EasyNetQ/wiki/Connecting-to-RabbitMQ[official EasyNetQ documentation] for further details about connection parameters.
+
+=== Setting up in Devon
+
+For setting it up using the Devon4NetApi template configure it in the `appsettings.{environment}.json` file.
+
+A template is available in the RabbitMqManagement folder of the `Devon4Net.Application.WebAPI.Implementation` Business folder:
+
+.RabbitMQ Management folder structure
+image::images/RabbitMqManagement.png[]
+
+* `TodoCommand.cs`:
++
+[source, c#]
+----
+ public class TodoCommand : Command
+    {
+        public string Description { get; set; }
+    }
+----
++
+The `TodoCommand` inherits from `Command`, in this case, the `Description` will be added to the `Message`.
+
+* `TodoRabbitMqHandler.cs`:
++
+[source, c#]
+----
+ public class TodoRabbitMqHandler: RabbitMqHandler<TodoCommand>
+    {
+        private ITodoService TodoService { get; set; }
+
+        public TodoRabbitMqHandler(IServiceCollection services, IBus serviceBus, bool subscribeToChannel = false) : base(services, serviceBus, subscribeToChannel)
+        {
+        }
+
+        public TodoRabbitMqHandler(IServiceCollection services, IBus serviceBus, IRabbitMqBackupService rabbitMqBackupService, bool subscribeToChannel = false) : base(services, serviceBus, rabbitMqBackupService, subscribeToChannel)
+        {
+        }
+
+        public TodoRabbitMqHandler(IServiceCollection services, IBus serviceBus, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService, bool subscribeToChannel = false) : base(services, serviceBus, rabbitMqBackupLiteDbService, subscribeToChannel)
+        {
+        }
+
+        public TodoRabbitMqHandler(IServiceCollection services, IBus serviceBus, IRabbitMqBackupService rabbitMqBackupService, IRabbitMqBackupLiteDbService rabbitMqBackupLiteDbService, bool subscribeToChannel = false) : base(services, serviceBus, rabbitMqBackupService, rabbitMqBackupLiteDbService, subscribeToChannel)
+        {
+        }
+
+        public override async Task<bool> HandleCommand(TodoCommand command)
+        {
+            TodoService = GetInstance<ITodoService>();
+
+            var result = await TodoService.CreateTodo(command.Description).ConfigureAwait(false);
+            return result!=null;
+        }
+    }
+----
++
+This class must to inherit from `RabbitMqHandler<T>` class.
+`HandleCommand(T command)` method should be overridden in order to send command to the queue, this method returns true if the message has been published.
+
+=== Setting up in other projects
+
+Install the package in your solution using the Package Manager Console:
+
+[source, console]
+----
+Install-Package Devon4Net.Infrastructure.RabbitMQ
+----
+
+Create a Configuration static class in order to add the `RabbitMqHandler` services, for example:
+
+[source, c#]
+----
+ public static class Configuration
+    {
+
+        public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
+        {
+
+            var rabbitMq = serviceProvider.GetService<IOptions<RabbitMqOptions>>();
+
+            if (rabbitMq?.Value != null && rabbitMq.Value.EnableRabbitMq)
+            {
+                SetupRabbitHandlers(services);
+            }
+        }
+
+        private static void SetupRabbitHandlers(IServiceCollection services)
+        {
+            services.AddRabbitMqHandler<TodoRabbitMqHandler>(true);
+        }
+    }
+----
+
+Add the following lines in the `Program.cs` class: 
+
+
+[source, c#]
+----
+builder.Services.SetupRabbitMq(builder.Configuration);
+builder.Services.SetupDependencyInjection(builder.Configuration);
+----
+
+After adding the default settings provided in the configuration section, you may use the RabbitMQ component in your code.
+
+NOTE: Please see the https://www.rabbitmq.com/download.html[ RabbitMQ official documentation] for instructions on installing the RabbitMQ Server. You can also visit the link:howto.asciidoc[RabbitMQ How-to section]
+
+== Devon4Net.Infrastructure.Middleware
+
+Middleware is software that's assembled into an app pipeline to handle requests and responses. Request delegates are used to construct the request pipeline. Each HTTP request is handled by a request delegate. 
+
+The diagram below represents the whole request processing pipeline for ASP.NET Core MVC and Razor Pages apps.
+You can see how existing middlewares are organized in a typical app and where additional middlewares are implemented. 
+
+.Middleware Order
+image::images/middleware-life-cycle.png[]
+
+The ASP.NET Core request pipeline is composed of a number of request delegates that are called one after the other. This concept is illustrated in the diagram below. The execution thread is shown by the black arrows. 
+
+.Delegates flow in middleware 
+image::images/middleware-delegates-flow.png[] 
+
+=== Configuration
+
+In this component there are four custom Middlewares classes, configuration is made on file `appsettings.{environment}.json` as follows: 
+
+1. `ClientCertificatesMiddleware.cs`: For the management of client certificates. 
++
+[source, json]
+----
+  "Certificates": {
+    "ServerCertificate": {
+      "Certificate": "",
+      "CertificatePassword": ""
+    },
+    "ClientCertificate": {
+      "EnableClientCertificateCheck": false,
+      "RequireClientCertificate": false,
+      "CheckCertificateRevocation": true,
+      "ClientCertificates": {
+        "Whitelist": [
+          ""
+        ]
+      }
+    }
+  },
+----
++
+The ClientCertificate Whitelist contains the client's certificate thumbprint. 
+
+2. `ExceptionHandlingMiddleware.cs`: Handles a few different types of exceptions. 
+
+3. `CustomHeadersMiddleware.cs`: To add or remove certain response headers.
++
+[source, json]
+----
+"Headers": {
+    "AccessControlExposeHeader": "Authorization",
+    "StrictTransportSecurityHeader": "",
+    "XFrameOptionsHeader": "DENY",
+    "XssProtectionHeader": "1;mode=block",
+    "XContentTypeOptionsHeader": "nosniff",
+    "ContentSecurityPolicyHeader": "",
+    "PermittedCrossDomainPoliciesHeader": "",
+    "ReferrerPolicyHeader": ""
+  },
+----
++
+On the sample above, the server application will add to the response headers the `AccessControlExposeHeader`, `XFrameOptionsHeader`, `XssProtectionHeader` and `XContentTypeOptionsHeader` headers.
+If the header response attribute does not have a value, it will not be added to the response headers.
++
+NOTE: Please refer to the link:howto.asciidoc[How To: Customize Headers] documentation for more information.
++
+
+.Response Headers
+image::images/headers-middleware.png[]
+
+4. `KillSwicthMiddleware.cs`: To enable or disable HTTP requests.
++
+[source, json]
+----
+"KillSwitch": {
+    "UseKillSwitch": false,
+    "EnableRequests": true,
+    "HttpStatusCode": 403
+  },
+----
++
+[options="header"]
+|=======================
+|*Property*|*Description*
+|UseKillSwitch| True to enable KillSwtich middleware
+|EnableRequests| True to enable HTTP requests.
+|HttpStatusCode| the HTTP status code that will be returned
+|=======================
+
+=== Setting up in Devon
+
+For setting it up using the Devon4NetApi template just configure it in the `appsettings.{environment}.json` file.
+
+=== Setting up in other projects
+
+Install the package on your solution using the Package Manager Console:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.Middleware
+----
+
+Configure the component in `Program.cs` adding the following lines:
+
+[source, c#]
+----
+using Devon4Net.Infrastructure.Middleware.Middleware;
+.
+.
+.
+builder.Services.SetupMiddleware(builder.Configuration);
+.
+.
+.
+app.SetupMiddleware(builder.Services);
+----
+
+Add the default configuration shown in the configuration section.
+
+=== References
+
+https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-6.0[ASP.NET Core Middleware - Microsoft Docs]
+
+https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/write?view=aspnetcore-6.0[Write custom ASP.NET Core middleware - Microsoft Docs]
+
+== Devon4Net.Infrastructure.UnitOfWork
+
+The idea of Unit of Work is related to the successful implementation of the Repository Pattern. It is necessary to first comprehend the Repository Pattern in order to fully understand this concept.
+
+=== The Repository Pattern
+
+A repository is a class defined for an entity, that contains all of the operations that may be executed on that entity. For example, a repository for an entity Employee will contain basic CRUD operations as well as any additional potential actions connected to it. The following procedures can be used to implement the Repository Pattern:
+
+    * One repository per entity (non-generic) : This approach makes use of a single repository class for each entity. For instance, if you have two entities, Todo and Employee, each will have its own repository.
+    * Generic repository: A generic repository is one that can be used for all entities.
+
+==== Unit of Work in the Repository Pattern
+
+Unit of Work is referred to as a single transaction that involves multiple operations of insert/update/delete. It means that, for a specific user action, all transactions are performed in a single transaction rather than several database transactions.
+
+.Unit of work diagram
+image::images/Unit-of-work.png[]
+
+=== Configuration
+
+Connection strings must be added to the configuration in the file `appsettings.{environment}.json` as follows: 
+
+[source, json]
+----
+"ConnectionStrings": {
+    "Todo": "Add your database connection string here",
+    "Employee": "Add your database connection string here"
+  },
+----
+
+=== Setting up in Devon
+
+For setting it up using the Devon4NetApi template just configure the connection strings in the `appsettings.{environment}.json` file.
+
+To add Databases, use the SetupDatabase method in the `DevonConfiguration.cs` file:
+
+[source, c#]
+----
+  private static void SetupDatabase(IServiceCollection services, IConfiguration configuration)
+        {
+            services.SetupDatabase<TodoContext>(configuration, "Todo", DatabaseType.SqlServer, migrate:true).ConfigureAwait(false);
+            services.SetupDatabase<EmployeeContext>(configuration, "Employee", DatabaseType.SqlServer, migrate:true).ConfigureAwait(false);
+        }
+----
+
+You must provide the configuration, the connection string key, and the database type.
 
 The supported databases are:
 
-        - `SqlServer`
-        - Sqlite
-        - `InMemory`
-        - Cosmos
-        - PostgreSQL
-        - `MySql`
-        - `MariaDb`
-        - `FireBird`
-        - Oracle
-        - MSAccess
+* SqlServer
+* Sqlite
+* InMemory
+* Cosmos
+* PostgreSQL
+* MySql
+* MariaDb
+* FireBird
+* Oracle
+* MSAccess
 
+Set the migrate property value to true if you need to use migrations, as shown above.
 
-==== Notes
-Now you can use the unit of work via dependency injection on your classes:
+NOTE: For more information about the use of migrations please visit the https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli[official microsoft documentation].
 
-[[img-t-architecture]]
-.Use of Unit of work via dependency injection
-image::images/uow_sample.png["UOW `DI` Sample", width="*", link="images/uow_sample.png"]
+Our typed repositories must inherit from the generic repository of the Unit Of Work component, as seen in the example below:
 
+[source, c#]
+----
+  public class TodoRepository : Repository<Todos>, ITodoRepository
+    {
+        public TodoRepository(TodoContext context) : base(context)
+        {
+            
+        }
+        .
+        .
+        .
+    }
+----
 
-As you can see in the image, you can use Unit Of Work class with your defined `ModelContext` classes.
+Use the methods of the generic repository to perform your CRUD actions:
 
+[source, c#]
+----
+public Task<Todos> Create(string description)
+        {
+            
+            var todo = new Todos {Description = description};
+            return Create(todo);
+        }
+----
+
+The default value for `AutoSaveChanges` to the Database is true, you may change it to false if you need to employ transactions.
+
+Inject the Repository on the service of the business layer, as shown below: 
+
+[source, c#]
+----
+public class TodoService: Service<TodoContext>, ITodoService
+    {
+        private readonly ITodoRepository _todoRepository;
+
+        public TodoService(IUnitOfWork<TodoContext> uoW) : base(uoW)
+        {
+            _todoRepository = uoW.Repository<ITodoRepository>();
+        }
+        .
+        .
+        .
+    }
+----
+
+=== Setting up in other projects
+
+Install the package on your solution using the Package Manager Console:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.UnitOfWork
+----
+
+Create a Configuration static class in order to add the `IRequestHandler` services, for example:
+
+[source, c#]
+----
+public static class Configuration
+    {
+        public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
+        {
+            SetupDatabase(services, configuration);
+        }
+
+        private static void SetupDatabase(IServiceCollection services, IConfiguration configuration)
+        {
+            services.SetupDatabase<TodoContext>(configuration, "Default", DatabaseType.SqlServer).ConfigureAwait(false);
+        }
+    }
+----
+
+Configure the component in `Program.cs` adding the following lines:
+
+[source, c#]
+----
+using Devon4Net.Domain.UnitOfWork;
+.
+.
+.
+builder.Services.SetupUnitOfWork(typeof(Configuration));
+----
+
+Add the default configuration shown in the configuration section and follow the same steps as the previous section.
+
+=== Tips
 
 _Predicate expression builder_
  
-- Use this expression builder to generate lambda expressions dynamically. 
+- Use this expression builder to generate lambda expressions dynamically: 
 
-    var predicate =  PredicateBuilder.True<T>();
-
+[source,C#]
+----   
+var predicate =  PredicateBuilder.True<T>();
+----
     
 Where `T` is a class. At this moment, you can build your expression and apply it to obtain your results in a efficient way and not retrieving data each time you apply an expression.
     
 - Example from My Thai Star .Net Core implementation:
-
 
 [source,C#]
 ----    
@@ -283,751 +2609,3 @@ public async Task<PaginationResult<Dish>> GetpagedDishListFromFilter(int current
 
 }
 ----
-
-
-=== devon4Net.Infrastructure.Extensions
-==== Description
-Miscellaneous extension library which contains :
-- Predicate expression builder
-- `DateTime` formatter
-- `HttpClient` 
-- `HttpContext` (Middleware support)
-
-==== Configuration
-- Install package on your solution:
-
-    PM> Install-Package devon4Net.Infrastructure.Extensions 
-    
-
-_HttpContext_
-
-- TryAddHeader method is used on _devon4Net.Infrastructure.Middleware_ component to add automatically response header options such authorization.
-
-
-
-=== devon4Net.Infrastructure.JWT
-==== Description
-
-[quote, What is JSON Web Token?, https://jwt.io/introduction/]
-____
-JSON Web Token (JWT) is an open standard (RFC 7519) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object. This information can be verified and trusted because it is digitally signed. JWTs can be signed using a secret (with the` HMAC` algorithm) or a public/private key pair using `RSA` or `ECDSA`.
-____
-
-
-- devon4Net component to manage  JWT standard to provide security to .Net API applications.
-
-==== Configuration
-
-- Install package on your solution:
-
-    PM> devon4Net.Infrastructure.JWT
-
-
-==== Default configuration values
-
-```
-"JWT": {
-    "Audience": "devon4Net",
-    "Issuer": "devon4Net",
-    "TokenExpirationTime": 60,
-    "ValidateIssuerSigningKey": true,
-    "ValidateLifetime": true,
-    "ClockSkew": 5,
-    "Security": {
-      "SecretKeyLengthAlgorithm": "",
-      "SecretKeyEncryptionAlgorithm": "",
-      "SecretKey": "",
-      "Certificate": "",
-      "CertificatePassword": "",
-      "CertificateEncryptionAlgorithm": ""
-    }
-  }
-```
-
-
-- `_ClockSkew_` indicates the token expiration time in minutes
-
-- `_Certificate_` you can specify the name of your certificate (if it is on the same path) or the full path of the certificate. If the certificate does not exists an exception will be raised.
-
-- `_SecretKeyLengthAlgorithm_`, `_SecretKeyEncryptionAlgorithm_` and `_CertificateEncryptionAlgorithm_` supported algorithms are:
-
-[options="header"]
-|=======================
-|*Algorithm*|*Description*
-|`Aes128Encryption`|"http://www.w3.org/2001/04/xmlenc#aes128-cbc"
-|`Aes192Encryption`|"http://www.w3.org/2001/04/xmlenc#aes192-cbc"
-|`Aes256Encryption`|"http://www.w3.org/2001/04/xmlenc#aes256-cbc"
-|`DesEncryption`|"http://www.w3.org/2001/04/xmlenc#des-cbc"
-|Aes128KeyWrap|"http://www.w3.org/2001/04/xmlenc#kw-aes128"
-|Aes192KeyWrap|"http://www.w3.org/2001/04/xmlenc#kw-aes192"
-|Aes256KeyWrap|"http://www.w3.org/2001/04/xmlenc#kw-aes256"
-|RsaV15KeyWrap|"http://www.w3.org/2001/04/xmlenc#rsa-1_5"
-|`Ripemd160Digest`|"http://www.w3.org/2001/04/xmlenc#ripemd160"
-|RsaOaepKeyWrap|"http://www.w3.org/2001/04/xmlenc#rsa-oaep"
-|Aes128KW|"A128KW"
-|Aes256KW|"A256KW"
-|RsaPKCS1|"RSA1_5"
-|RsaOAEP|"RSA-OAEP"
-|`ExclusiveC14n`|"http://www.w3.org/2001/10/xml-exc-c14n#"
-|ExclusiveC14nWithComments|"http://www.w3.org/2001/10/xml-exc-c14n#WithComments"
-|`EnvelopedSignature`|"http://www.w3.org/2000/09/xmldsig#enveloped-signature"
-|`Sha256Digest`|"http://www.w3.org/2001/04/xmlenc#sha256"
-|`Sha384Digest`|"http://www.w3.org/2001/04/xmldsig-more#sha384"
-|`Sha512Digest`|"http://www.w3.org/2001/04/xmlenc#sha512"
-|Sha256|"SHA256"
-|Sha384|"SHA384"
-|Sha512|"SHA512"
-|EcdsaSha256Signature|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"
-|EcdsaSha384Signature|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384"
-|EcdsaSha512Signature|"http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512"
-|HmacSha256Signature|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha256"
-|HmacSha384Signature|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha384"
-|HmacSha512Signature|"http://www.w3.org/2001/04/xmldsig-more#hmac-sha512"
-|RsaSha256Signature|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
-|RsaSha384Signature|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha384"
-|RsaSha512Signature|"http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"
-|RsaSsaPssSha256Signature|"http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1"
-|RsaSsaPssSha384Signature|"http://www.w3.org/2007/05/xmldsig-more#sha384-rsa-MGF1"
-|RsaSsaPssSha512Signature|"http://www.w3.org/2007/05/xmldsig-more#sha512-rsa-MGF1"
-|`EcdsaSha256`|"ES256"
-|`EcdsaSha384`|"ES384"
-|`EcdsaSha512`|"ES512"
-|`HmacSha256`|"HS256"
-|`HmacSha384`|"HS384"
-|`HmacSha512`|"HS512"
-|None|"none"
-|`RsaSha256`|"RS256"
-|`RsaSha384`|"RS384"
-|`RsaSha512`|"RS512"
-|RsaSsaPssSha256|"PS256"
-|RsaSsaPssSha384|"PS384"
-|RsaSsaPssSha512|"PS512"
-|Aes128CbcHmacSha256|"A128CBC-HS256"
-|Aes192CbcHmacSha384|"A192CBC-HS384"
-|Aes256CbcHmacSha512|"A256CBC-HS512"
-|=======================
-
-
-
-
-NOTE: Please check https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/Supported-Algorithms[Microsoft documentation] to get the lastest updates on supported encryption algorithms
-
-
-- Add this line of code  (only if you use this component stand alone):
-
-```
-services.AddBusinessCommonJwtPolicy();
-```
-
-
-On
-
-    Startup.cs
-
-or on:
-
-    devon4Net.Application.Configuration.Startup/JwtApplicationConfiguration/ConfigureJwtPolicy method.
-
-
-
-- Inside the `_AddBusinessCommonJwtPolicy_` method you can add your  JWT Policy like in My Thai Star application sample:
-
-[source, C#]
-----
- services.ConfigureJwtAddPolicy("MTSWaiterPolicy", "role", "waiter");
-----
-
-==== Notes
-
-- The certificate will be used to generate the key to encrypt the json web token.
-
-
-
-=== devon4Net.Infrastructure.Middleware
-==== Description
-- devon4Net support for middleware classes.
-
-- In ASP.NET Core, middleware classes can handle an HTTP request or response. Middleware can either:
-
-* Handle an incoming HTTP request by generating an HTTP response.
-
-* Process an incoming HTTP request, modify it, and pass it on to another piece of middleware.
-
-* Process an outgoing HTTP response, modify it, and pass it on to either another piece of middleware, or the ASP.NET Core web server.
-
-- devon4Net supports the following automatic response headers:
-
-* `AccessControlExposeHeader`
-* `StrictTransportSecurityHeader`
-* `XFrameOptionsHeader`
-* `XssProtectionHeader`
-* `XContentTypeOptionsHeader`
-* `ContentSecurityPolicyHeader`
-* `PermittedCrossDomainPoliciesHeader`
-* `ReferrerPolicyHeader:toc: macro`
-
-==== Configuration
-- Install package on your solution:
-
-    PM> Install-Package devon4Net.Infrastructure.Middleware
-
-- You can configure your Middleware configuration on _appsettings.{environment}.json_:
-
-
-```
-
-"Middleware": {
-    "Headers": {
-      "AccessControlExposeHeader": "Authorization",
-      "StrictTransportSecurityHeader": "",
-      "XFrameOptionsHeader": "DENY",
-      "XssProtectionHeader": "1;mode=block",
-      "XContentTypeOptionsHeader": "nosniff",
-      "ContentSecurityPolicyHeader": "",
-      "PermittedCrossDomainPoliciesHeader": "",
-      "ReferrerPolicyHeader": ""
-    }
-}
-```
-
-- On the above sample, the server application will add to response header the `AccessControlExposeHeader`, XFrameOptionsHeader, XssProtectionHeader and XContentTypeOptionsHeader headers.
-- If the header response type does not have a value, it will not be added to the response headers.
-
-
-
-=== devon4Net.Infrastructure.Swagger
-==== Description
-- devon4net Swagger abstraction to provide full externalized easy configuration. 
-
-- Swagger offers the easiest to use tools to take full advantage of all the capabilities of the OpenAPI Specification (OAS).
-
-
-==== Configuration
-
-- Install package on your solution:
-
-    PM> devon4Net.Infrastructure.Swagger
-
-- You can configure your Swagger configuration on _appsettings.{environment}.json_:
-
-
-
-```
-"Swagger": {
-    "Version": "v1",
-    "Title": "devon4net API",
-    "Description": "devon4net API Contract",
-    "Terms": "https://www.devonfw.com/terms-of-use/",
-    "Contact": {
-      "Name": "devonfw",
-      "Email": "sample@mail.com",
-      "Url": "https://www.devonfw.com"
-    },
-    "License": {
-      "Name": "devonfw - Terms of Use",
-      "Url": "https://www.devonfw.com/terms-of-use/"
-    },
-    "Endpoint": {
-      "Name": "V1 Docs",
-      "Url": "/swagger/v1/swagger.json",
-      "UrlUi": "swagger",
-      "RouteTemplate": "swagger/v1/{documentName}/swagger.json"
-    }
-  }
-```
-
-- Add this line of code (only if you use this component stand alone):
-
-[source, C#]
-----
-services.ConfigureSwaggerService();
-----
-
-
-On
-
-    Startup.cs
-
-
-- Also add this line of code  (only if you use this component stand alone):
-
-[source, C#]
-----
-app.ConfigureSwaggerApplication();
-----
-
-
-On
-
-    Startup.cs/Configure(IApplicationBuilder app, IHostingEnvironment env)
-
-
-- Ensure your API actions and non-route parameters are decorated with explicit "Http" and "From" bindings.
-
-
-==== Notes
-
-- To access to swagger UI launch your API project and type in your html browser the url _http://localhost:yourPort/swagger_.
-
-- In order to generate the documentation annotate your actions with summary, remarks and response tags:
-
-```
-/// <summary>
-/// Method to make a reservation with potential guests. The method returns the reservation token with the format: {(CB_|GB_)}{now.Year}{now.Month:00}{now.Day:00}{_}{MD5({Host/Guest-email}{now.Year}{now.Month:00}{now.Day:00}{now.Hour:00}{now.Minute:00}{now.Second:00})}
-/// </summary>
-/// <param name="bookingDto"></param>
-/// <response code="201">Ok.</response>
-/// <response code="400">Bad request. Parser data error.</response>
-/// <response code="401">Unauthorized. Authentication fail.</response>
-/// <response code="403">Forbidden. Authorization error.</response>
-/// <response code="500">Internal Server Error. The search process ended with error.</response>
-[HttpPost]
-[HttpOptions]
-[Route("/mythaistar/services/rest/bookingmanagement/v1/booking")]
-[AllowAnonymous]
-[EnableCors("CorsPolicy")]
-public async Task<IActionResult> Booking([FromBody]BookingDto bookingDto)
-{
-    try
-    {
-
-    ...
-
-```
-
-- Ensure that your project has the _generateXMLdocumentationfile_ check active on build menu:
-
-
-[[img-t-architecture]]
-.Swagger documentation 
-image::images/swaggerDocXMLCheck.png["Generate documentation XML check", width="*", link="images/swaggerDocXMLCheck.png"]
-
-
-- Ensure that your XML files has the attribute copy always to true:
-
-
-[[img-t-architecture]]
-.Swagger documentation 
-image::images/swaggerDoc.png["Generate documentation XML check", width="*", link="images/swaggerDoc.png"]
-
-
-=== devon4Net.Infrastructure.Test
-==== Description
-devon4Net Base classes to create unit tests and integration tests with Moq and `xUnit`.
-
-==== Configuration
-- Load the template:
-    > dotnet new -i devon4Net.Test.Template 
-    > dotnet new devon4NetTest
-    
-
-
-==== Notes
-- At this point you can find this classes:
-* BaseManagementTest
-* DatabaseManagementTest<T> (Where `T` is a _devon4NetBaseContext_ class)
-
-
-    
-- For unit testing, inherit a class from _BaseManagementTest_.
-- For integration tests, inherit a class from _DatabaseManagementTest_.
-- The recommended databases in integration test are _in memory database_ or _SQlite database_.
-- Please check _My thai Star_ test project.
-
-== Deperecated packages
-
-=== devon4Net.Domain.Context
-==== Description
-devon4Net.Domain.Context contains the extended class devon4NetBaseContext in order to make easier the process of having a model context configured against different database engines. This configuration allows an easier testing configuration against local and in memory databases.
-
-==== Configuration
-
-- Install package on your solution:
-
-    PM> Install-Package devon4Net.Domain.Context
-
-- Add to _appsettings.{environment}.json_ file your database connections:
-
-```
-"ConnectionStrings": 
-{
-"DefaultConnection": 
-"Server=localhost;Database=MyThaiStar;User Id=sa;Password=sa;MultipleActiveResultSets=True;",
-    
-"AuthConnection":
-"Server=(localdb)\\mssqllocaldb;Database=aspnet-DualAuthCore-5E206A0B-D4DA-4E71-92D3-87FD6B120C5E;Trusted_Connection=True;MultipleActiveResultSets=true",
-    
-"SqliteConnection": "Data Source=c:\\tmp\\membership.db;"
-}
-```
-
-
-
-- On Startup.cs :
-
-[source, C#]
-----
-void ConfigureServices(IServiceCollection services)
-----
-- Add your database connections defined on previous point:
-
-[source, C#]
-----
-services.ConfigureDataBase(
-new Dictionary<string, string> { 
-{ConfigurationConst.DefaultConnection, Configuration.GetConnectionString(ConfigurationConst.DefaultConnection) }});
-----
-
-- On devon4Net.Application.Configuration.Startup/DataBaseConfiguration/ConfigureDataBase configure your connections.
-
-=== devon4Net.Infrastructure.ApplicationUser
-==== Description
-devon4Net Application user classes to implement basic Microsoft's basic authentication in order to be used on authentication methodologies such Jason Web Token (JWT).
-
-==== Configuration
-
-- Install package on your solution:
-
-    PM> devon4Net.Infrastructure.ApplicationUser 
-
-- Add the database connection string for user management on _appsettings.{environment}.json_:
-
-```
-"ConnectionStrings": 
-{
-"AuthConnection":
-"Server=(localdb)\\mssqllocaldb;Database=aspnet-DualAuthCore-5E206A0B-D4DA-4E71-92D3-87FD6B120C5E;Trusted_Connection=True;MultipleActiveResultSets=true"
-}
-```
-
-
-- Add the following line of code
-
-```
-services.AddApplicationUserDependencyInjection();
-```
-
-On
-
-    Startup.cs/ConfigureServices(IServiceCollection services)
-
-or on:
-
-    devon4Net.Application.Configuration.Startup/DependencyInjectionConfiguration/ConfigureDependencyInjectionService method.
-    
-    
-- Add the data seeder on Configure method on start.cs class:
-
-[source, C#]
-----
-
-public void Configure(IApplicationBuilder app, IHostingEnvironment env, DataSeeder seeder)
-{
-    ...
-    
-    app.UseAuthentication();
-    seeder.SeedAsync().Wait();
-
-    ...
-}
-
-----
-
- 
-==== Notes
-
-- You can use the following methods to set up the database configuration:
-
-```
-public static void AddApplicationUserDbContextInMemoryService(this IServiceCollection services)
-
-public static void AddApplicationUserDbContextSQliteService(this IServiceCollection services, string connectionString)
-
-public static void AddApplicationUserDbContextSQlServerService(this IServiceCollection services, string connectionString)
-```
-
-- The method `_AddApplicationUserDbContextInMemoryService_` uses the _AuthContext_ connection string name to set up the database.
-
-- This component is used with the components _devon4Net.Infrastructure.JWT_ and _devon4Net.Infrastructure.JWT.MVC_.
-
-
-=== devon4Net.Infrastructure.Communication
-==== Description
-Basic client classes to  invoke` GET`/POST methods asynchronously. This component has the minimal classes to send basic data. For more complex operations please use _ASP4Net.Infrastructure.Extensions_.
-
-==== Configuration
-
-- Install package on your solution:
-
-    PM> devon4Net.Infrastructure.Communication 
-
-- Create an instance of _RestManagementService_ class.
-- Use next methods to use GET/POST basic options:
-
-```
-public Task<string> CallGetMethod(string url);
-public Task<Stream> CallGetMethodAsStream(string url);
-public Task<string> CallPostMethod<T>(string url, T dataToSend);
-public Task<string> CallPutMethod<T>(string url, T dataToSend);
-```
-
-
-==== Notes
-- Example:
-
-[source, C#]
-----
-
-private async Task RestManagementServiceSample(EmailDto dataToSend)
-{
-    var url = Configuration["EmailServiceUrl"];
-    var restManagementService = new RestManagementService();
-    await restManagementService.CallPostMethod(url, dataToSend);
-}
-----
-
-
-=== devon4Net.Infrastructure.JWT.MVC
-==== Description
-- devon4Net Extended controller to interact with  JWT features
-
-==== Configuration
-
-- Extend your _ Microsoft.AspNetCore.Mvc.Controller_ class with _devon4NetJWTController_ class:
-
-[source, C#]
-----
-public class LoginController : devon4NetJWTController
-{        
-    private readonly ILoginService _loginService;
-
-    public LoginController(ILoginService loginService,  SignInManager<ApplicationUser>  signInManager, UserManager<ApplicationUser> userManager, ILogger<LoginController> logger, IMapper mapper) : base(logger,mapper)
-    {
-        _loginService = loginService;
-    }
-    
-    ....
-----
-
-==== Notes
-
-- In order to generate a  JWT, you should implement the  JWT generation on user login. For example, in My Thai Star is created as follows:
-
-```
-public async Task<IActionResult> Login([FromBody]LoginDto loginDto)
-{
-    try
-    {
-        if (loginDto == null) return Ok();
-        var logged = await _loginService.LoginAsync(loginDto.UserName, loginDto.Password);
-        
-        if (logged)
-        {
-            var user = await _loginService.GetUserByUserNameAsync(loginDto.UserName);
-            
-            var encodedJwt = new JwtClientToken().CreateClientToken(_loginService.GetUserClaimsAsync(user));
-            
-            Response.Headers.Add("Access-Control-Expose-Headers", "Authorization");
-            
-            Response.Headers.Add("Authorization", $"{JwtBearerDefaults.AuthenticationScheme} {encodedJwt}");
-            
-            return Ok(encodedJwt);
-        }
-        else
-        {
-            Response.Headers.Clear();
-            return StatusCode((int)HttpStatusCode.Unauthorized, "Login Error");
-        }
-        
-    }
-    catch (Exception ex)
-    {
-        return StatusCode((int)HttpStatusCode.InternalServerError, $"{ex.Message} : {ex.InnerException}");
-    }
-}
-```
-
-- In My Thai Star the  JWT will contain the user information such id, roles...
-
-- Once you extend your controller with _devon4NetJWTController_ you will have available these methods to simplify user management:
-
-[source, C#]
-----
-    public interface Idevon4NetJWTController
-    {
-        // Gets the current user
-        JwtSecurityToken GetCurrentUser(); 
-        
-        // Gets an specific assigned claim of current user
-        Claim GetUserClaim(string claimName, JwtSecurityToken jwtUser = null); 
-        
-        // Gets all the assigned claims of current user
-        IEnumerable<Claim> GetUserClaims(JwtSecurityToken jwtUser = null);
-    }
-----
-
-
-
-=== devon4Net.Infrastructure.MVC
-==== Description
-Common classes to extend controller functionality on API. Also provides support for paged results in devon4Net applications and automapper injected class.
-
-
-==== Configuration
-- Install package on your solution:
-
-    PM> devon4Net.Infrastructure.MVC
-    
-    
-==== Notes
-- The generic class _ResultObjectDto<T>_ provides a typed result object with pagination.
-
-
-- The extended class provides the following methods:
-
-[source,C#]
-----
-        ResultObjectDto<T> GenerateResultDto<T>(int? page, int? size, int? total);
-        ResultObjectDto<T> GenerateResultDto<T>(List<T> result, int? page = null, int? size = null);
-----
-
-- _GenerateResultDto_ provides typed _ResultObjectDto_ object or a list of typed _ResultObjectDto_ object. The aim of this methods is to provide a clean management for result objects and not repeating code through the different controller classes.
-
-- The following sample from _My Thai Star_ shows how to use it:
-
-[source, C#]
-----
-public async Task<IActionResult> Search([FromBody] FilterDtoSearchObject filterDto)
-{
-    if (filterDto == null) filterDto = new FilterDtoSearchObject();
-
-    try
-    {
-        var dishList = await _dishService.GetDishListFromFilter(false, filterDto.GetMaxPrice(), filterDto.GetMinLikes(), filterDto.GetSearchBy(),filterDto.GetCategories(), -1);
-        
-        
-        return new OkObjectResult(GenerateResultDto(dishList).ToJson());
-    }
-    catch (Exception ex)
-    {
-        return StatusCode((int)HttpStatusCode.InternalServerError, $"{ex.Message} : {ex.InnerException}");
-    }
-}
-----
-
-
-=== devon4Net.Infrastructure.AOP
-==== Description
-Simple AOP Exception handler for .Net Controller classes integrated with Serilog.
-
-==== Configuration
-- Install package on your solution:
-
-   PM> Install-Package devon4Net.Domain.AOP
-
-
-
-Add this line of code on `ConfigureServices` method on Startup.cs
-
-```
-services.AddAopAttributeService();
-```
-
-
-
-==== Notes
-
-Now automatically your exposed API methods exposed on controller classes will be tracked on the methods:
-
-- OnActionExecuting
-- OnActionExecuted
-- OnResultExecuting
-- OnResultExecuted
-
-If an exception occurs, a message will be displayed on log with the stack trace.
-
-
-
-=== devon4Net.Infrastructure.Cors
-==== Description
-Enables CORS configuration for devon4Net application. Multiple domains can be configured from configuration. Mandatory to web clients (p.e. Angular) to prevent making AJAX requests to another domain.
-
-Cross-Origin Resource Sharing (CORS) is a mechanism that uses additional HTTP headers to tell a browser to let a web application running at one origin (domain) have permission to access selected resources from a server at a different origin. A web application makes a cross-origin HTTP request when it requests a resource that has a different origin (domain, protocol, and port) than its own origin.
-
-Please refer to https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-2.1[this link] to get more information about CORS and .Net core.
-
-==== Configuration
-
-- Install package on your solution:
-
-    PM> devon4Net.Infrastructure.Cors
-
-- You can configure your Cors configuration on _appsettings.{environment}.json_:
-
-    `CorsPolicy`: indicates the name of the policy. You can use this name to add security headers on your API exposed methods.
-
-    Origins: The allowed domains
-    
-    Headers: The allowed headers such accept,content-type,origin,x-custom-header
-
-- If you specify the cors configuration as empty array, a default cors-policy will be used with all origins enabled:
-
-
-[source,json]
-----
-  "Cors": []
-----
-
-- On the other hand, you can specify different Cors policies in your solution as follows:
-
-```
-
-"Cors": []
-[
-  {
-    "CorsPolicy": "CorsPolicy1",
-    "Origins": "http:example.com,http:www.contoso.com",
-    "Headers": "accept,content-type,origin,x-custom-header",
-    "Methods": "GET,POST,HEAD",
-    "AllowCredentials": true
-  },
-  {
-    "CorsPolicy": "CorsPolicy2",
-    "Origins": "http:example.com,http:www.contoso.com",
-    "Headers": "accept,content-type,origin,x-custom-header",
-    "Methods": "GET,POST,HEAD",
-    "AllowCredentials": true
-  }
-]
-```
-
-==== Notes
-
-- To use CORS in your API methods, use the next notation:
-
-```    
-[EnableCors("YourCorsPolicy")] 
-public IActionResult Index() {  
-    return View();  
-}  
-```
-    
-    
-- if you want to disable the CORS check use the following annotation:
-
-[source,C#]
-----    
-[DisableCors]  
-public IActionResult Index() {  
-    return View();  
-}  
-----
-
-= Required software
-https://code.visualstudio.com/[Visual Studio Code]
-
-https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp[C# Extension for VS Code]
-
-https://www.microsoft.com/net/core[.Net Core SDK]
-
-https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-2.1[CORS in .Net Core]

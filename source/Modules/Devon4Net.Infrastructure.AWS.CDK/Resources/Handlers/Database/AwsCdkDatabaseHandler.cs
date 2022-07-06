@@ -164,7 +164,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Database
                 Engine = engine,
                 RemovalPolicy = removalPolicy,
                 DeletionProtection = deletionProtection,
-                Credentials = Credentials.FromPassword(userName, SecretValue.PlainText(password)),
+                Credentials = Credentials.FromPassword(userName, SecretValue.UnsafePlainText(password)),
                 StorageType = storageType,
                 InstanceIdentifier = instanceIdentifier,
                 SubnetGroup = subnetGroup,

@@ -12,6 +12,8 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Entities
         public List<CapacityProviderStrategy> CapacityProviderStrategies { get; set; }
         public int? HealthCheckGracePeriod { get; set; }
         public int? DesiredCount { get; set; }
+        public bool UseDistinctInstances { get; set; }
+        public string PlacementStrategy { get; set; }
     }
 }
 

@@ -11,10 +11,10 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
 {
     public class MediatRBackupLiteDbService : IMediatRBackupLiteDbService
     {
-        private IRepository<MediatRBackup> MediatRBackupLiteDbRepository { get; }
+        private ILiteDbRepository<MediatRBackup> MediatRBackupLiteDbRepository { get; }
         private IJsonHelper JsonHelper { get; }
 
-        public MediatRBackupLiteDbService(IRepository<MediatRBackup> mediatRBackupLiteDbRepository, IJsonHelper jsonHelper)
+        public MediatRBackupLiteDbService(ILiteDbRepository<MediatRBackup> mediatRBackupLiteDbRepository, IJsonHelper jsonHelper)
         {
             MediatRBackupLiteDbRepository = mediatRBackupLiteDbRepository;
             JsonHelper = jsonHelper;

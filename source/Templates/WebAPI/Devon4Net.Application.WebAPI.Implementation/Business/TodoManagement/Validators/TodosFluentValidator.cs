@@ -1,24 +1,24 @@
 ﻿using Devon4Net.Infrastructure.FluentValidation;
-using Devon4Net.Application.WebAPI.Implementation.Domain.Entities;
 using FluentValidation;
+using Devon4Net.Application.WebAPI.Implementation.Business.TodoManagement.Dto;
 
 namespace Devon4Net.Application.WebAPI.Implementation.Business.TodoManagement.Validators
 {
     /// <summary>
-    /// 
+    /// TodosFluentValidator implementation
     /// </summary>
-    public class TodosFluentValidator : CustomFluentValidator<Todos>
+    public class TodosFluentValidator : CustomFluentValidator<TodoDto>
     {
         /// <summary>
-        /// 
+        /// TodosFluentValidator constructor
         /// </summary>
-        /// <param name="launchExceptionWhenError"></param>
-        public TodosFluentValidator(bool launchExceptionWhenError) : base(launchExceptionWhenError)
+        /// <param name="launchExceptionWhenError">Please set to false to not launching an exception</param>
+        public TodosFluentValidator(bool launchExceptionWhenError = false) : base(launchExceptionWhenError)
         {
         }
 
         /// <summary>
-        /// 
+        /// Custom validation for TodoDto
         /// </summary>
         public override void CustomValidate()
         {
