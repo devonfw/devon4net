@@ -151,10 +151,13 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Database
             });
         }
 
-        public IDatabaseInstance CreateDatabaseSqlServer(DeputyBase databaseEngineVersion, string identification, string databaseName, string userName, string password, StorageType storageType, InstanceClass instanceClass, string instanceSize, IVpc vpc, ISecurityGroup security, string securityGroupId, string parameterGroupId = null, IRole[] roles = null, double? allocatedStorageGb = 5, RemovalPolicy removalPolicy = RemovalPolicy.DESTROY, bool deleteAutomatedBackups = false, int backupRetentionDays = 1, bool? deletionProtection = false, SubnetType subnetType = SubnetType.PRIVATE_ISOLATED, string defaultSubnetDomainSeparator = ",", string subnets = "", bool multiAZEnabled = true, bool? autoMinorVersionUpgrade = false, bool? storageEncrypted = true, string licenseOption = "LICENSE_INCLUDED", string edition = "ex")
+        public IDatabaseInstance CreateDatabaseSqlServer(DeputyBase databaseEngineVersion, string identification, string instanceIdentifier, string userName, string password, StorageType storageType, InstanceClass instanceClass, string instanceSize, IVpc vpc, ISecurityGroup security, string securityGroupId, ISubnetGroup subnetGroup, string parameterGroupId = null, IRole[] parameterGroupRoles = null, double? allocatedStorageGb = 5, RemovalPolicy removalPolicy = RemovalPolicy.DESTROY, bool deleteAutomatedBackups = false, int backupRetentionDays = 1, bool? deletionProtection = false, SubnetType subnetType = SubnetType.PRIVATE_WITH_NAT, string defaultSubnetDomainSeparator = ",", string subnets = "", bool multiAZEnabled = true, bool? autoMinorVersionUpgrade = false, bool? storageEncrypted = true, string licenseOption = "LICENSE_INCLUDED", string edition = "ex", List<ISecurityGroup> securityGroups = null, IRole monitoringRole = null, int monitoringInterval = 0, bool enablePerformanceInsights = false, int? performanceInsightsRetention = 0) //NOSONAR number of params
         {
             BasicDatabaseInfraWithHardcodedPassword(vpc, subnetType, defaultSubnetDomainSeparator, subnets, out var subnetSelection);
             var engine = GetInstanceEngine(databaseEngineVersion, edition);
+
+            if (securityGroups == null) securityGroups = new List<ISecurityGroup>();
+            if (security != null) securityGroups.Add(security);
 
             return new DatabaseInstance(Scope, identification, new DatabaseInstanceProps
             {
@@ -163,25 +166,41 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Database
                 DeletionProtection = deletionProtection,
                 Credentials = Credentials.FromPassword(userName, SecretValue.UnsafePlainText(password)),
                 StorageType = storageType,
-                DatabaseName = licenseOption == nameof(LicenseModel.LICENSE_INCLUDED) ? null : databaseName,
-                VpcSubnets = subnetSelection,
+                InstanceIdentifier = instanceIdentifier,
+                SubnetGroup = subnetGroup,
                 Vpc = vpc,
-                SecurityGroups = new[]
-                {
-                    security
-                },
+                SecurityGroups = securityGroups.ToArray(),
                 DeleteAutomatedBackups = deleteAutomatedBackups,
                 BackupRetention = Duration.Days(backupRetentionDays),
                 AllocatedStorage = allocatedStorageGb,
                 InstanceType = InstanceType.Of(instanceClass, GetInstanceSize(instanceSize)),
-                ParameterGroup = CreateClusterParameterGroup(parameterGroupId, engine, roles),
+                ParameterGroup = CreateClusterParameterGroup(parameterGroupId, engine, parameterGroupRoles),
                 MultiAz = multiAZEnabled,
                 AutoMinorVersionUpgrade = autoMinorVersionUpgrade,
                 StorageEncrypted = storageEncrypted,
-                LicenseModel = GetLicenseModel(licenseOption)
+                LicenseModel = GetLicenseModel(licenseOption),
+                MonitoringInterval = Duration.Seconds(monitoringInterval),
+                MonitoringRole = monitoringRole,
+                EnablePerformanceInsights = enablePerformanceInsights,
+                PerformanceInsightRetention = GetPerformanceInsightsRetention(enablePerformanceInsights, performanceInsightsRetention)
             });
         }
-        
+
+        private static PerformanceInsightRetention? GetPerformanceInsightsRetention(bool enablePerformanceInsights, int? performanceInsightsRetention)
+        {
+            if (!enablePerformanceInsights)
+            {
+                return null;
+            }
+
+            if (performanceInsightsRetention < 0 || performanceInsightsRetention > 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(performanceInsightsRetention), "Performance Insights Retention Period value must be 0 or 1");
+            }
+
+            return performanceInsightsRetention == 1 ? PerformanceInsightRetention.LONG_TERM : PerformanceInsightRetention.DEFAULT;
+        }
+
         public IParameterGroup LocateParameterGroupByName(string identification, string parameterGroupName)
         {
             return ParameterGroup.FromParameterGroupName(Scope, identification, parameterGroupName);
