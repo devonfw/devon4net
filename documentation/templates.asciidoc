@@ -593,9 +593,211 @@ public async Task<HelloReply> Get(string name)
 
 The `Greeter.GreeterClient` is created automatically and can be used when adding the reference to the proto file namespace with the `using` directive.
 
-
 === References
 
 * https://grpc.io/docs/what-is-grpc/introduction/[Introduction to gRPC - gRPC Docs]
 
 * https://developers.google.com/protocol-buffers/docs/overview[Protocol Buffers - Google Docs]
+
+== AWS Templates
+
+The devon4net stack includes a variety of templates aimed at developing applications with Amazon Web Services (AWS). AWS is the most used cloud computing platform and that is why Devon gives you the resources you need to make designing and developing for this cloud technology much more simpler and efficient.
+
+=== AWS Introduction
+
+Amazon Web Services (AWS) is a collection of cloud computing services that Amazon provides an online scalable and cost-effective platform to developers and companies dedicated to software. 
+
+It's mainly directed to online services and its the leading cloud provider in the marketplace providing over 100+ services and a platform to manage them all.
+
+=== Devon4Net.Application.Lambda
+
+This package is a template for constructing Lambda Functions for AWS. It makes use of the `Devon4Net.Infrastructure.AWS.Lambda`, so please read the documentation about this component before starting to use the template. You also have a 'How to: AWS Lambda' tutorial that shows you how you can develop a lambda function making use of this template.
+
+.lambda Template File structure
+image::images/aws_template_structure.png[]
+
+In the previous figure you can see the whole structure of the package. It has one main directory called `business` where you can find three different examples of Lambda functions that will be explained further on this document.
+
+Each of the three management directories is divides as follows:
+
+* `Dto`: Here are placed the necessary classes of the custom objects that are used to input and output the data in the lambda functions.
+* `Functions`: This folder will contain the function definition for the lambda functions.
+* `Handlers`: In this directory the classes that implement the `FunctionHandler` method that will define the lambda function behaviour.
+
+You will also find in the same level as the business directory some configuration files and a `Readme.md` file with some extra information.
+
+==== Configuration
+
+The configuration files are the following:
+
+===== appsettings.json
+
+This file contains the configuration for all of the components and the project in general. It can contain subversions following the structure `appsettings.{environment}.json` and it contains the following:
+
+[source, json]
+----
+{
+  "AWS": {
+    "UseSecrets": true,
+    "UseParameterStore": true,
+    "Credentials": {
+      "Profile": "",
+      "Region": "eu-west-1",
+      "AccessKeyId": "",
+      "SecretAccessKey": ""
+    }
+  }
+}
+----
+
+* `UseSecrets`: Boolean to indicate if AWS Secrets Manager is being used.
+
+* `UseParameterStore`: Boolean to indicate if AWS Parameter Store is being used.
+
+* `Credentials`: Credentials for connecting the app with your AWS profile.
+
+NOTE: Read the AWS components documentation to learn more about the configuration you can do in this type of files.
+
+===== aws-lambda-tools-defaults.json
+
+This file provides default values to the AWS CLI for configuring and deploy with Visual Studio. 
+
+Run this command to learn more:
+
+[source, console]
+----
+dotnet lambda deploy-serverless --help
+----
+
+This is the file:
+
+[source, json]
+----
+{
+  "Information": [
+    "This file provides default values for the deployment wizard inside Visual Studio and the AWS Lambda commands added to the .NET Core CLI.",
+    "To learn more about the Lambda commands with the .NET Core CLI execute the following command at the command line in the project root directory.",
+    "dotnet lambda help",
+    "All the command line options for the Lambda command can be specified in this file."
+  ],
+  "profile": "default",
+  "region": "eu-west-1",
+  "framework": "net6.0",
+  "configuration": "Release",
+  "s3-prefix": "AWSServerlessTest/",
+  "function-memory-size": 256,
+  "function-timeout": 30,
+  "function-handler": "Devon4Net.Application.Lambda::AWSLambda.Bussiness.StringManagement.UpperFunction::FunctionHandler",
+  "template": "serverless.template"
+}
+----
+
+The `function-handler` option is the function handler location in the form of `{DLL_NAME}::{NAMESPACE}::{FUNCTION_HANDLER_NAME}`. And the `template` option will point to a configuration file for the cloud formation.
+
+NOTE: Read the AWS documentation to learn more about this configuration.
+
+===== serverless.template
+
+This configuration provides all the information to the Cloud System so that you don't have to adjust anything for deploying the function/s.
+
+[source, json]
+----
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Transform": "AWS::Serverless-2016-10-31",
+  "Description": "An AWS Serverless Application that uses the ASP.NET Core framework running in Amazon Lambda.",
+  "Parameters": {},
+  "Conditions": {},
+  "Resources": {
+    "ToUpperFunction": {...},
+    "ToLowerFunction": {...},
+    "SnsManagementFunction": {...},
+    "SqsManagementFunction": {...},
+  },
+  "Outputs": {
+    "ApiURL": {
+      "Description": "API endpoint URL for Prod environment",
+      "Value": {
+        "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+      }
+    }
+  }
+}
+----
+
+As you will notice, the `Resources` part contains the configuration for each function.
+
+This configuration will look like this:
+
+[source, json]
+----
+"ToUpperFunction": {
+  "Type": "AWS::Serverless::Function",
+  "Properties": {
+    "Handler": "Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.Business.StringManagement.Functions.Upper.UpperFunction::FunctionHandler",
+    "Runtime": "dotnet6",
+    "CodeUri": "",
+    "MemorySize": 256,
+    "Timeout": 30,
+    "Role": null,
+    "Policies": [
+      "AWSLambdaFullAccess",
+      "AmazonSSMReadOnlyAccess",
+      "AWSLambdaVPCAccessExecutionRole"
+    ],
+    "Environment": {
+      "Variables": {}
+    },
+    "Events": {
+      "ProxyResource": {
+        "Type": "Api",
+        "Properties": {
+          "Path": "/{proxy+}",
+          "Method": "ANY"
+        }
+      },
+      "RootResource": {
+        "Type": "Api",
+        "Properties": {
+          "Path": "/",
+          "Method": "ANY"
+        }
+      }
+    }
+  }
+},
+----
+
+The `Properties` section will have the value of the location as we saw on the `aws-lambda-tools-defaults.json` file in the form of `{DLL_NAME}::{NAMESPACE}::{FUNCTION_HANDLER_NAME}`.
+
+NOTE: Read the AWS documentation to learn more about this configuration.
+
+==== Samples
+
+As you may know as this point this template includes three samples that show you how to develop lambda functions and also how to interact with other services such as SNS and SQS.
+
+WARNING: Please go through the code slowly to understand the trace it follows and what it does.
+
+===== SnsManagement
+
+Amazon Simple Notification Service (Amazon SNS) is a fully managed messaging service for both application-to-application (A2A) and application-to-person (A2P) communication.
+
+This Sample shows you the proper way of handling SNS Events and processing messages in a Lambda Function.
+
+===== SqsManagement
+
+Amazon Simple Queue Service (SQS) is a fully managed message queuing service that enables you to decouple and scale microservices, distributed systems, and serverless applications.
+
+This Sample shows you to handle and process Messages from an AWS Queue service directly in a Lambda Function
+
+===== StringManagement
+
+This is a very simple function that shows how you can perform a lambda to process a string and transform it to uppercase or lowercase.
+
+=== References
+
+* https://aws.amazon.com/lambda/[AWS Lambda]
+
+* https://docs.aws.amazon.com/code-samples/latest/catalog/lambda_functions-blank-csharp-src-blank-csharp-aws-lambda-tools-defaults.json.html[aws-lamda-tools-defaults.json]
+
+* https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/net-dg-advanced-config.html
