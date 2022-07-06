@@ -33,7 +33,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Cognito
         {
             var userPoolClients = new List<UserPoolClient>();
 
-            if (userPoolClientOptions == null || !userPoolClientOptions.Any()) return userPoolClients;
+            if (userPoolClientOptions?.Any() != true) return userPoolClients;
 
             foreach (var userPoolClientOption in userPoolClientOptions)
             {
@@ -46,7 +46,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Cognito
                 userPoolClientAwsOptions.EnableTokenRevocation = userPoolClientOption.EnableTokenRevocation;
                 userPoolClientAwsOptions.GenerateSecret = userPoolClientOption.GenerateSecret;
                 userPoolClientAwsOptions.UserPoolClientName = userPoolClientOption.UserPoolClientName;
-                userPoolClientAwsOptions.SupportedIdentityProviders = GetUserPoolClientIdentityProviders(userPoolClientOption.SupportedIdentityProviders);
+                userPoolClientAwsOptions.SupportedIdentityProviders = GetUserPoolClientIdentityProviders(userPoolClientOption.SupportedIdentityProviders).ToArray();
 
                 var userPoolClient = userPool.AddClient(userPoolClientOption.Id, userPoolClientAwsOptions);
                 userPoolClients.Add(userPoolClient);
@@ -59,7 +59,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Cognito
         {
             var resourceServers = new Dictionary<(string, UserPoolResourceServer), List<ResourceServerScope>>();
 
-            if (userPoolResourceServers == null || !userPoolResourceServers.Any()) return resourceServers;
+            if (userPoolResourceServers?.Any() != true) return resourceServers;
 
             foreach (var resourceServer in userPoolResourceServers)
             {
@@ -137,7 +137,6 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Cognito
 
         private OAuthScope[] GetOAuthScopes(List<string> scopeStrings, Dictionary<(string ResourceServerId, UserPoolResourceServer ResourceServer), List<ResourceServerScope>> resourceServersScopes, List<string> resourceServersIds)
         {
-
             var userPoolClientResourceServerScopes = GetUserPoolClientResourceServerScopes(resourceServersScopes, resourceServersIds);
 
             if (scopeStrings == null) return userPoolClientResourceServerScopes.ToArray();
@@ -173,7 +172,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Cognito
         {
             var scopes = new List<OAuthScope>();
 
-            if (resourceServersIds == null || !resourceServersIds.Any()) return scopes;
+            if (resourceServersIds?.Any() != true) return scopes;
 
             foreach (var resourceServerId in resourceServersIds)
             {
@@ -188,11 +187,11 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Cognito
             return scopes;
         }
 
-        private UserPoolClientIdentityProvider[] GetUserPoolClientIdentityProviders(List<string> identityProviderStrings)
+        private List<UserPoolClientIdentityProvider> GetUserPoolClientIdentityProviders(List<string> identityProviderStrings)
         {
-            List<UserPoolClientIdentityProvider> userPoolClientIdentityProviders = new List<UserPoolClientIdentityProvider>();
+            var userPoolClientIdentityProviders = new List<UserPoolClientIdentityProvider>();
 
-            if (identityProviderStrings == null || !identityProviderStrings.Any()) return null;
+            if (identityProviderStrings?.Any() != true) return userPoolClientIdentityProviders;
 
             foreach (var identityProviderString in identityProviderStrings)
             {
@@ -218,7 +217,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Cognito
                 }
             }
 
-            return userPoolClientIdentityProviders.ToArray();
+            return userPoolClientIdentityProviders;
         }
     }
 }

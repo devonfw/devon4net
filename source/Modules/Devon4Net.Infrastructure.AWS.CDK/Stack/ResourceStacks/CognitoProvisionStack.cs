@@ -29,14 +29,15 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 var (userPool, userPoolClients) = AwsCdkHandler.AddCognitoUserPool(userPoolOption.Id, userPoolOption.UserPoolName, userPoolOption.UserPoolResourceServers, userPoolOption.UserPoolClients);
                 StackResources.CognitoUserPools.Add(userPoolOption.Id, userPool);
 
-                if (string.IsNullOrWhiteSpace(CdkOptions.Cognito.ParameterStoreName)) continue;
+                if (!string.IsNullOrWhiteSpace(CdkOptions.Cognito.ParameterStoreName))
+                {
+                    var userPoolClientsParameterStore = userPoolClients.Select(userPoolClient => new AppClient { Id = userPoolClient.UserPoolClientId, Name = userPoolClient.UserPoolClientName });
 
-                var userPoolClientsParameterStore = userPoolClients.Select(userPoolClient => new AppClient { Id = userPoolClient.UserPoolClientId, Name = userPoolClient.UserPoolClientName });
+                    cognitoParameterStore.UserPools.Add(new UserPool { Id = userPool.UserPoolId, Name = userPoolOption.UserPoolName, AppClients = userPoolClientsParameterStore.ToList() });
 
-                cognitoParameterStore.UserPools.Add(new UserPool { Id = userPool.UserPoolId, Name = userPoolOption.UserPoolName, AppClients = userPoolClientsParameterStore.ToList() });
-
-                var jsonCognitoParameterStore = JsonConvert.SerializeObject(cognitoParameterStore);
-                AwsCdkHandler.AddParameter(CdkOptions.Cognito.ParameterStoreName, CdkOptions.Cognito.ParameterStoreName, jsonCognitoParameterStore);
+                    var jsonCognitoParameterStore = JsonConvert.SerializeObject(cognitoParameterStore);
+                    AwsCdkHandler.AddParameter(CdkOptions.Cognito.ParameterStoreName, CdkOptions.Cognito.ParameterStoreName, jsonCognitoParameterStore);
+                }                
             }
         }
     }
