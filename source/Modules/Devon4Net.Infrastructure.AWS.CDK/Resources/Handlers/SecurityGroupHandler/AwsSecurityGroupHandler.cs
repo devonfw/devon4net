@@ -25,9 +25,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.SecurityGroupHandl
             return SecurityGroup.FromLookupByName(Scope, securityId, securityGroupName, securityGroupVpc);
         }
 
-        public ISecurityGroup Create(string identification, string groupName, IVpc vpc, bool allowAllOutbound = false, bool disableInlineRules = false)
+        public ISecurityGroup Create(string securityId, string groupName, IVpc vpc, bool allowAllOutbound = false, bool disableInlineRules = false)
         {
-            var securityGroup = new SecurityGroup(Scope, identification, new SecurityGroupProps
+            var securityGroup = new SecurityGroup(Scope, securityId, new SecurityGroupProps
             {
                 AllowAllOutbound = allowAllOutbound,
                 SecurityGroupName = groupName,
@@ -39,7 +39,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.SecurityGroupHandl
             return securityGroup;
         }
 
-        public ISecurityGroup Create(string identification, string groupName, string vpcId, string vpcIdentification, bool allowAllOutbound = false, bool disableInlineRules = false)
+        public ISecurityGroup Create(string securityId, string groupName, string vpcId, string vpcIdentification, bool allowAllOutbound = false, bool disableInlineRules = false)
         {
             if (string.IsNullOrEmpty(vpcId))
             {
@@ -53,7 +53,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.SecurityGroupHandl
                 throw new ArgumentException($"The provided vpcId {vpcId} does not exists");
             }
 
-            return Create(identification, groupName, vpc, allowAllOutbound);
+            return Create(securityId, groupName, vpc, allowAllOutbound);
         }
     }
 }

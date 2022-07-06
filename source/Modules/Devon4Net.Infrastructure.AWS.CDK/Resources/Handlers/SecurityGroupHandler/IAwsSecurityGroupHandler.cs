@@ -4,8 +4,8 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.SecurityGroupHandl
 {
     public interface IAwsSecurityGroupHandler
     {
-        ISecurityGroup Create(string identification, string groupName, IVpc vpc, bool allowAllOutbound = false, bool disableInlineRules = false);
-        ISecurityGroup Create(string identification, string groupName, string vpcId, string vpcIdentification, bool allowAllOutbound = false, bool disableInlineRules = false);
+        ISecurityGroup Create(string securityId, string groupName, IVpc vpc, bool allowAllOutbound = false, bool disableInlineRules = false);
+        ISecurityGroup Create(string securityId, string groupName, string vpcId, string vpcIdentification, bool allowAllOutbound = false, bool disableInlineRules = false);
         ISecurityGroup LocateById(string securityId, string securityGroupId);
         ISecurityGroup LocateByName(string securityId, string securityGroupName, IVpc securityGroupVpc);
     }
