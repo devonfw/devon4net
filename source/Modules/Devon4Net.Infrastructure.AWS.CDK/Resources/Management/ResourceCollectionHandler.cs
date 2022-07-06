@@ -3,6 +3,7 @@ using Amazon.CDK;
 using Constructs;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.AutoScalingGroup;
+using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Cognito;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Database;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.DMS;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECR;
@@ -55,6 +56,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
         public AwsCdkDmsHandler AwsCdkDmsHandler { get; set; }
         public AwsCdkWafHandler AwsCdkWafHandler { get; set; }
         public AwsCdkSnsHandler AwsCdkSnsHandler { get; set; }
+        public AwsCdkCognitoHandler AwsCdkCognitoHandler { get; set; }
         #endregion
 
         public ResourceCollectionHandler(Construct scope, string applicationName, string environmentName, IStackProps stackProps)
@@ -92,6 +94,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
             AwsCdkDmsHandler = new AwsCdkDmsHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
             AwsCdkWafHandler = new AwsCdkWafHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
             AwsCdkSnsHandler = new AwsCdkSnsHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
+            AwsCdkCognitoHandler = new AwsCdkCognitoHandler(Scope, ApplicationName, EnvironmentName, EnvironmentProperties.Region);
         }
     }
 }

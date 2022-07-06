@@ -2,6 +2,7 @@
 using Amazon.CDK.AWS.AutoScaling;
 using Amazon.CDK.AWS.CodeBuild;
 using Amazon.CDK.AWS.CodePipeline;
+using Amazon.CDK.AWS.Cognito;
 using Amazon.CDK.AWS.DMS;
 using Amazon.CDK.AWS.DynamoDB;
 using Amazon.CDK.AWS.EC2;
@@ -59,6 +60,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
         public IDictionary<string, CfnReplicationTask> DmsMigrationTasks { get; set; }
         public IDictionary<string, AsgCapacityProvider> AsgCapacityProviders { get; set; }
         public IDictionary<string, CfnWebACL> WebAcls { get; set; }
+        public IDictionary<string, IUserPool> CognitoUserPools { get; set; }
         public Dictionary<string, ITopic> SnsTopics { get; set; }
 
         public StackResources()
@@ -97,6 +99,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             Subnets = new Dictionary<string, ISubnet>();
             Vpcs = new Dictionary<string, IVpc>();
             WebAcls = new Dictionary<string, CfnWebACL>();
+            CognitoUserPools = new Dictionary<string, IUserPool>();
             SnsTopics = new Dictionary<string, ITopic>();
         }
 
@@ -149,7 +152,8 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 AsgCapacityProviders,
                 PolicyDocuments,
                 NetworkTargetGroups,
-                SnsTopics
+                SnsTopics,
+                CognitoUserPools
             };
 
             return Array.Find(l, x => x is Dictionary<string, T>) as Dictionary<string, T>;
