@@ -91,12 +91,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
         private IParameterGroup LocateParameterGroup(DatabaseOptions databaseOption)
         {
             IParameterGroup parameterGroup = null;
-            if (!string.IsNullOrWhiteSpace(databaseOption.ParameterGroupId))
+            if (!string.IsNullOrWhiteSpace(databaseOption.ParameterGroupId) && !StackResources.DatabaseParameterGroups.TryGetValue(databaseOption.ParameterGroupId, out parameterGroup))
             {
-                if (!StackResources.DatabaseParameterGroups.TryGetValue(databaseOption.ParameterGroupId, out parameterGroup))
-                {
-                    throw new ArgumentException($"The parameter group { databaseOption.ParameterGroupId } of the database { databaseOption.DatabaseName} was not found");
-                }
+                throw new ArgumentException($"The parameter group { databaseOption.ParameterGroupId } of the database { databaseOption.DatabaseName} was not found");
             }
             return parameterGroup;
         }
