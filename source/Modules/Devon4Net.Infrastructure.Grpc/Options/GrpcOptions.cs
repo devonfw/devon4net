@@ -8,5 +8,4 @@
         public int MaxReceiveMessageSize { get; set; }
         public GrpcRetrypatternOptions RetryPatternOptions { get; set; }
     }
-
 }
