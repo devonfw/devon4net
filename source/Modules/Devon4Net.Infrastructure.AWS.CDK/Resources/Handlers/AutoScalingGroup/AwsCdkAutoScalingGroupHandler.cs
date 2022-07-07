@@ -17,7 +17,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.AutoScalingGroup
             TagHandler = new TagHandler();
         }
 
-        public IAutoScalingGroup Create(string id, string instanceName, string instanceType, string machineImageType,  string machineAmiImage, IVpc vpc, bool allowAllOutbound, int minCapacity, int maxCapacity, int desiredCapacity, string region, ISecurityGroup securityGroup, string timeOutCreation, IRole role, ISubnet[] subnets, string keyPairName, bool enableProtectionFromScaleIn, List<BlockDevicesOptions> blockDevicesOptions, List<string> userData)
+        public IAutoScalingGroup Create(string id, string instanceName, string instanceType, string machineImageType,  string machineAmiImage, IVpc vpc, bool allowAllOutbound, int minCapacity, int maxCapacity, int desiredCapacity, string region, List<ISecurityGroup> securityGroups, string timeOutCreation, IRole role, ISubnet[] subnets, string keyPairName, bool enableProtectionFromScaleIn, List<BlockDevicesOptions> blockDevicesOptions, List<string> userData)
         {
             var result = CreateInstance(new AutoScalingGroupEntity
             {
@@ -31,7 +31,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.AutoScalingGroup
                 MinCapacity = minCapacity,
                 MaxCapacity = maxCapacity,
                 DesiredCapacity = desiredCapacity,
-                SecurityGroup = securityGroup,
+                SecurityGroups = securityGroups,
                 TimeOutCreation = timeOutCreation,
                 Role = role,
                 KeyPairName = keyPairName,
@@ -67,7 +67,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.AutoScalingGroup
                 userData.AddCommands(autoScalingGroupEntity.UserData.ToArray());
             }
 
-            return new Amazon.CDK.AWS.AutoScaling.AutoScalingGroup(Scope, autoScalingGroupEntity.Id, new AutoScalingGroupProps
+            var autoScalingGroup = new Amazon.CDK.AWS.AutoScaling.AutoScalingGroup(Scope, autoScalingGroupEntity.Id, new AutoScalingGroupProps
             {
                 InstanceType = autoScalingGroupEntity.InstanceType,
                 MachineImage =  autoScalingGroupEntity.MachineImage,
@@ -79,7 +79,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.AutoScalingGroup
                 AllowAllOutbound = autoScalingGroupEntity.AllowAllOutbound,
                 MinCapacity = autoScalingGroupEntity.MinCapacity,
                 MaxCapacity = autoScalingGroupEntity.MaxCapacity,
-                SecurityGroup = autoScalingGroupEntity.SecurityGroup,
+                SecurityGroup = autoScalingGroupEntity.SecurityGroups.FirstOrDefault(),
                 DesiredCapacity = autoScalingGroupEntity.DesiredCapacity,
                 HealthCheck = healthCheck,
                 Role = autoScalingGroupEntity.Role,
@@ -89,6 +89,18 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.AutoScalingGroup
                 AutoScalingGroupName = autoScalingGroupEntity.AutoScalingGroupName,
                 UserData = userData
             });
+
+            // The AS resource constructor needs only one SG, but we want the option of adding more SGs, so:
+            // - The constructor will add the first element of the SG list
+            // - Create the AS resource
+            // - After the resource is created it will check if the list of SGs has more SG to be added so the first one used on the constructor will be deleted and then add the rest of SGs
+            if (autoScalingGroupEntity.SecurityGroups.Count > 1)
+            {
+                autoScalingGroupEntity.SecurityGroups.RemoveAt(0);
+                autoScalingGroupEntity.SecurityGroups.ForEach(securityGroup => autoScalingGroup.AddSecurityGroup(securityGroup));
+            }
+
+            return autoScalingGroup;
         }
 
         private static Amazon.CDK.AWS.AutoScaling.BlockDevice[] CreateBlockDevices(List<BlockDevicesOptions> blockDevicesOptions)

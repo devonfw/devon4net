@@ -406,12 +406,12 @@ For example lets specify the next:
 .JWT configuration example
 image::images/json_jwt_example.png[]
 
-NOTE: The property `SecretKey` will be encrypted automatically using the algorithm specified.
+NOTE: The property `SecretKey` needs to be an encrypted key using the algorithm specified.
 
 This would create the following configuration:
 
 * A token with audience and issuer equal to `devon4net`.
-* It will expire in 5 minutes 
+* It will expire in 60 minutes 
 * It will validate the signature and if the token is valid in time
 * It will require tokens that are signed, and have both expiration time and audience specified.
 * It will use the secret key encrypted with SHA 512
@@ -436,11 +436,13 @@ In JWT component we have a handler that is cofigured on the installation of the 
 
 |====
 |*Return Type* |*Method Name* |*Parameters* |*Description*
-|string |CreateClientToken |List<Claim> clientClaims |Returns the encrypted jwt given a list of claims. 
+|string |CreateJwtToken |List<Claim> clientClaims |Returns the encrypted jwt given a list of claims. 
 |List<Claim> |GetUserClaims |string jwtToken |Returns a list of claims given an encrypted token.
 |string |GetClaimValue |List<Claim> claimList, string claim |Returns the value of a claim given a list of claims and the type of the claim to recover formatted as a string.
 |string |GetClaimValue |string token, string claim |Returns the value of a claim given an encrypted token and the type of the claim to recover formatted as a string.
 |SecurityKey |GetIssuerSigningKey |- |Returns the issuer's signing key.
+|bool |ValidateToken |string jwtToken, out ClaimsPrincipal claimsPrincipal, out SecurityToken securityToken |Returns true if the token is valid.
+|string |CreateRefreshToken |- |Creates a refresh token for the JWT token.
 |====
 
 === Video
@@ -744,7 +746,7 @@ As we are using Devon, we will need to go to `Devon4Net.Application.WebAPI.Imple
 [source, c#]
 ----
 services.SetupDatabase<DevonDatabaseContext>(configuration,"DevonDatabase", DatabaseType.SqlServer).ConfigureAwait(false);
----- 
+----
 
 Where:
 
@@ -836,6 +838,264 @@ NOTE: If the response header does not have a value or does not appear in the opt
 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers[HTTP headers - MDN Web Docs]
 * https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html[HTTP Security Response Headers Cheat Sheet - Owasp]
 
+== How to: Specflow
+
+In this part of the document you will learn to use Specflow in your projects for defining, managing and automatically execute readable acceptance tests in .NET.
+
+SpecFlow is a.NET test automation tool based on the BDD (Behavior-driven development) paradigm. Specflow tests use the Gherking language to write test cases that are then bound to your application code through bindings, allowing you to run the tests using your preferred testing framework.
+
+Before going into detail on how to use Specflow and how you can use it to implement your tests, you will need know Gherking syntax. It is used to write tests in a form that can be readed perfectly as a sentence. For example:
+
+[source, gherkin]
+----
+Feature: Calculator
+  Scenario: Sum two numbers
+    Given the first number is 10
+    And the second number is  5
+    When the two values are added
+    Then the result is 15
+----
+
+As you can see, thanks to Gherkin we have written a test for a calculator, which makes sure that when the values ​​`10` and `5` are added, the result is `15`. Because is a natural-language friendly language you can read the test, and understand the statement.
+
+The following table shows the keywords used in Gherkin syntax:
+
+|====
+| *Keyword* | *Description* 
+| `Feature` | Provides high level description of a software feature that wants to be tested and group related scenarios.
+| `Rule` | Represents one business rule that should be implemented.
+| `Scenario` or `Example` | List of steps that ilustrates a business rule.
+| `Steps` | Each step starts with `Given`, `When`, `Then`, `And` or `But`.
+| `Background` | Scenario context run before the `Scenario` tests but after `Before Hooks`.
+| `Scenario Outline` or `Scenario Template` | It is used to run the same `Scenario` multiple times, with different combinations of values.
+| `Scenarios` or `Examples` | Keyword used to define the variables of `Scenario Outline` in a table.
+| `""`| Strings
+| `@` | Tags
+| `#` | Comments
+| `\|` | Tables
+|====
+
+For example:
+
+[source, gherkin]
+----
+# Test for the calculator
+@mytag
+Feature: Calculator
+  Scenario Outline: Sum two numbers
+    Given the first number is <first>
+    And the second number is  <second>
+    When the two values are added
+    Then the result is <result>
+
+    Examples:
+    | first | second | result |
+    |    10 |   5    |   15   |
+    |    20 |   5    |   25   |
+----
+
+NOTE: Please refer to the https://cucumber.io/docs/gherkin/[Cucumber Documentation] or https://specflow.org/learn/gherkin/[Specflow Documentation] to learn more about the keywords used in Gherkin.
+
+=== Specflow Installation
+
+To use specflow you will need to add the Specflow extension to your Visual Studio 2022. This way you can use it in any of your projects. For that open visual studio and navigate to `Extensions > Manage Extensions`.
+
+This will open the extension manager, where you will have to search for the 'SpecFlow' extension and hit download:
+
+.SpecFlow for VS 2022 in Extension Manager 
+image::images/specflow_extension.png[]
+
+
+Hitting download will schedule the extension installation. At the time when you close VS2022, you will be able to install the extension by clicking `Modify` in the pop-up window shown below:
+
+.SpecFlow installation
+image::images/specflow_installation.png[]
+
+=== Create specflow project
+
+To create a specflow project for testing, first we will need to have something to test. In this example we will test a Calculator class that we created inside a class library project in an empty solution like shown in the following image:
+
+.SpecFlowTest solution directory tree
+image::images/specflow_directory_tree.png[]
+
+Where, the `Calculator` class implementation is:
+
+[source, c#]
+----
+public class Calculator
+{
+    public int FirstNumber { get; set; }
+    public int SecondNumber { get; set; }
+
+    protected int Add()
+    {
+        return FirstNumber + SecondNumber;
+    }
+}
+----
+
+Once we have the Calculator ready, we need to create a Specflow project. For that you can `Right click on the solution > Add > New Project...`. This will open a window where you can search the specflow project as shown in the next image:
+
+.Add new SpecFlow project
+image::images/new_specflow_project.png[]
+
+When creating the project you will be able to choose the .Net version that you are using, the library for the tests and if you want to use FluentAssertions library. For this example we will use the configuration shown below:
+
+.Choose the project options
+image::images/new_specflow_options.png[]
+
+The specflow template comes with a calculator test implemented, this is their example. But we will create the files from scratch so you know how to complete your testing project. 
+
+.Initial project structure
+image::images/specflow_project_structure.png[]
+
+
+As you can see also the template comes with a folder structure defined, you can redifine it as you want but this is the recommended one.
+
+=== Create specflow tests
+
+To create a new test using specflow, you can add a new item to your project by `Right click in any directory on the project > Add > New item...`:
+
+.Initial project structure
+image::images/new_specflow_feature.png[]
+
+
+You can type specflow in the search bar to look for the items available thanks to the library and select `Feature File for Specflow`. You can create a test there in Gherkin syntax:
+
+[source, Gherkin]
+----
+Feature: Calculator
+
+A short summary of the feature
+
+@mytag
+Scenario: Add two numbers
+	Given the first number is 50
+	And my favourite number is 70 
+	When the two numbers are added
+	Then the result should be 120
+----
+
+Once you have your test created you can build the project by navigating to `Build > Build Solution`. You will see that the test appears in a purple color, this is because it is not mapped to a definition yet. You can automatically create the definition by `Right clicking inside the feature file > Define Steps`. 
+
+This will open the following window:
+
+.Define SpecFlow Steps
+image::images/define_steps.png[]
+
+
+Once you press `Create` the test will no longer appear in purple and will be shown in a white color. This is because now they have a definition. You can also do this manually creating a class and marking it with the `[Binding]` attribute.
+
+This class will need to define the test steps such as Gherkin syntax can be transformed into `C#` code. You can implement this class as follows to test the Calculator:
+
+[source, c#]
+----
+using SpecflowCalculator;
+
+namespace SpecFlowProject.StepDefinitions
+{
+    [Binding]
+    public class CalculatorStepDefinitions
+    {
+        private Calculator _calculator;
+        private int _result;
+
+        public CalculatorStepDefinitions() 
+        {
+            _calculator = new Calculator();
+        }
+
+        [Given(@"the first number is (.*)")]
+        public void GivenTheFirstNumberIs(int p0)
+        {
+            _calculator.FirstNumber = p0;
+        }
+
+        [Given(@"my favourite number is (.*)")]
+        public void GivenMyFavouriteNumberIs(int p0)
+        {
+            _calculator.SecondNumber = p0;
+        }
+
+        [When(@"the two numbers are added")]
+        public void WhenTheTwoNumbersAreAdded()
+        {
+            _result = _calculator.Add();
+        }
+
+        [Then(@"the result should be (.*)")]
+        public void ThenTheResultShouldBe(int p0)
+        {
+            // xUnit assertions
+            Assert.Equal(_result, p0);
+
+            // FluentAssertions
+            _result.Should().Be(p0);
+        }
+    }
+}
+----
+
+Now build the solution again to be able to run the tests.
+
+NOTE: Please revise the https://specflow.org/learn/gherkin/[Specflow Documentation] to learn more about feature bindings.
+
+=== Run the tests
+
+To run the tests you can navigate to `Test > Test Explorer`:
+
+.VS2022 Test Explorer
+image::images/specflow_test_explorer.png[]
+
+By clicking the green play button you can run the tests and see the results as shown in the image above.
+
+=== Living documentation
+
+SpecFlow Living Documentation is a set of tools that allows you to share and collaborate on Gherkin Feature Files. It gives you the option to generate and share an `html` interactive file. You can do this directly for Azure DevOps or using a CLI (Command Line Interface). In this guide you will learn how to do this with the CLI continuing with the Calculator example.
+
+NOTE: Please refer to the https://docs.specflow.org/projects/specflow-livingdoc/en/latest/[Specflow+LivingDoc] documentation to learn more.
+
+==== Step 1 - Install CLI
+
+Install the tool by running the following command in your preferred terminal:
+
+[source, console]
+----
+dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
+----
+
+==== Step 2 - Navigate to the build output directory
+
+Now we need to navigate to the build directory of the Specflow Project taht contains the tests. In our case we can navigate to this path by running the following command:
+
+[source, console]
+----
+cd C:\Projects\devon4net\samples\SpecflowTest\SpecFlowProject\bin\Debug\net6.0
+----
+
+WARNING: Your path may be different depending on the root directory, the file structure of the solution and the .Net version you are using.
+
+==== Step 3 - Run command to generate results 
+
+To generate the file run the following command:
+
+[source, console]
+----
+livingdoc test-assembly SpecFlowProject.dll -t TestExecution.json
+----
+
+==== Step 4 - See html results
+
+The file generated can be seen with your favorite browser and will look like this:
+
+.Specflow LivingDoc results
+image::images/specflow_html.png[]
+
+=== References
+
+* https://cucumber.io/docs/gherkin/[Gherkin Syntax - Cucumber Docs]
+* https://specflow.org/learn/gherkin/[Learn Gherkin - Specflow Docs]
+
 == How To: Circuit breaker communication with Certificates
 
 In this section we are going to configure two services communication for using certificates, and Circuit Breaker Pattern.
@@ -875,7 +1135,6 @@ In the `appsettings.{development}.json` you must use the following configuration
       }
     ]
   }
-}
 ----
 
 As an example, we call the `HttpClientHandler` in the controller, however it is preferable to do it in the service class:
@@ -991,3 +1250,403 @@ The preceding example is covered in detail in this video lesson:
 
 .How to setup Circuit Breaker with certificates
 video::videos/howto_circuitbreaker_certificates.mp4[]
+
+== How to: RabbitMQ
+
+=== Configure the Server
+
+There are several methods to configure the RabbitMQ server, depending on your operating system.
+
+In this tutorial, we will show you how to run a server via Docker, for testing purposes. If you want further information on how to configure and install the RabbitMQ server in a specific operating system, please consult the https://www.rabbitmq.com/download.html[official RabbitMQ documentation]
+
+First you must have docker installed on your machine. Run the following command to start the server:
+
+[source, console]
+----
+docker run -it --rm --name rabbitmq -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=password -p 5672:5672 -p 15672:15672 rabbitmq:3.9-management
+----
+
+This command shows several options parameters:
+
+* `-it`: To create an interactive container
+* `--rm`: To automatically clean up the container and remove the file system when the container exits.
+* `--name`: The name of the container
+* `-e`: Environment variables
+* `-p`: To expose a container's internal port
+
+The server will listen on port 5672, and you may access the management plugin at the following url: 
+
+http://localhost:15672/
+
+.RabbitMQ Management Plugin
+image::images/rabbit-management.png[]
+
+You may customize your Docker container as you like, please see the https://registry.hub.docker.com/_/rabbitmq/[official Docker  image documentation] for more information. 
+
+=== Configure the Client
+
+. Install the package in your solution using the Package Manager Console:
++
+[source, console]
+----
+Install-Package Devon4Net.Infrastructure.RabbitMQ
+----
+
+. Create a Configuration static class in order to add the `RabbitMqHandler` services, for example:
++
+[source, c#]
+----
+ public static class Configuration
+    {
+
+        public static void SetupDependencyInjection(this IServiceCollection services, IConfiguration configuration)
+        {
+
+            var rabbitMq = serviceProvider.GetService<IOptions<RabbitMqOptions>>();
+
+            if (rabbitMq?.Value != null && rabbitMq.Value.EnableRabbitMq)
+            {
+                SetupRabbitHandlers(services);
+            }
+        }
+
+        private static void SetupRabbitHandlers(IServiceCollection services)
+        {
+            services.AddRabbitMqHandler<TodoRabbitMqHandler>(true);
+        }
+    }
+----
+
+. Add the following lines in the `Program.cs` class: 
++
+[source, c#]
+----
+builder.Services.SetupRabbitMq(builder.Configuration);
+builder.Services.SetupDependencyInjection(builder.Configuration);
+----
+
+. Configure the component in the file `appsettings.{environment}.json`, for example:
++
+[source, json]
+----
+  "RabbitMq": {
+    "EnableRabbitMq": true,
+    "Hosts": [
+      {
+        "Host": "127.0.0.1",
+        "Port": 5672,
+        "Ssl": false,
+        "SslServerName": "localhost",
+        "SslCertPath": "localhost.pfx",
+        "SslCertPassPhrase": "localhost",
+        "SslPolicyErrors": "RemoteCertificateNotAvailable" //None, RemoteCertificateNotAvailable, RemoteCertificateNameMismatch, RemoteCertificateChainErrors
+      }
+    ],
+
+    "VirtualHost": "/",
+    "UserName": "admin",
+    "Password": "password",
+    "Product": "devon4net",
+    "RequestedHeartbeat": 10, //Set to zero for no heartbeat
+    "PrefetchCount": 50,
+    "PublisherConfirms": false,
+    "PersistentMessages": true,
+    "Platform": "localhost",
+    "Timeout": 10,
+    "Backup": {
+      "UseLocalBackup": true,
+      "DatabaseName": "devon4netMessageBackup.db"
+    }
+  },
+----
++
+Where:
+
+* `EnableRabbitMq`: True for enabling the RabbitMQ component
+* `Hosts`: Host configuration, which might be a list of multiple hosts
+* `VirtualHost`:  Virtual host's name
+* `UserName`: User's name
+* `Password`: password for connecting
+* `RequestedHeartbeat`: The heartbeat timeout setting specifies how long the peer TCP connection should be considered unreachable by RabbitMQ and client libraries. Should be set to zero for no heartbeat.
+* `PrefetchCount`:  The amount of messages transmitted by RabbitMQ before EasyNetQ sends a response.
+* `PublisherConfirms`: True for enabling Publisher confirms that simply speaking is an AMQP extension that sends a callback when your message is successfully received by the broker.
+* `PersistentMessages`: When set to true, RabbitMQ will retain messages to disk and survive server restarts. When set to false, performance increases might be expected.
+* `Platform`: The value given here will be shown in the RabbitMQ management interface.
+* `TimeOut`: Range from 0 to 65535. Format is in seconds. For infinite timeout please use 0. Throws System.TimeoutException when value exceeded.
+* `Backup`: Configuration of Message's BackUp. Its default database is LiteDB. 
+
+NOTE: Check the link:packages.asciidoc[RabbitMQ Component section] for examples of the component's implementation and essential classes. 
+
+=== References
+
+* https://www.rabbitmq.com/documentation.html[RabbitMQ Documentation]
+* https://docs.docker.com/engine/reference/run/[Docker docs]
+
+== How to: Kafka
+
+In this part of the document you will learn how to use kafka component and create and use Producers and Consumers for your application. You will also learn to use the different Handlers available in the `Devon4Net.Infrastructure.Kafka` component and how to configure them.
+
+=== Previous steps
+
+To use Kafka you need to have an active Kafka server. There are multple ways to use a kafka server, we are using a docker image but you can choose any desired form.
+
+NOTE: We recommend you to go through https://kafka.apache.org/[Kafka Documentation] to learn how to get started with Apache Kafka.
+
+Once you have an Apache Kafka Server up and running you will need to create a project using the `Devon4Net` template or add `Devon4Net.Infrastructure.Kafka` NuGet package reference to your project.
+
+NOTE: You can learn how to set up the component in your project by reading the component documentation.
+
+=== Configuration
+
+When you have both things ready, you can start by adding the following line in your `Program.cs`
+
+[source, c#]
+----
+builder.Services.SetupKafka(builder.Configuration);
+----
+
+Now is the time to configure all the producers and consumers you will be using in the application. You will later be relating this configuration to the Consumer and Producer Handler classes. For that you will need to complete the following configuration in `appsettings.{environment}.json` file with your preferred parameters.
+
+[source, json]
+----
+"Kafka": {
+    "EnableKafka": true,
+    "Administration": [
+      {
+        "AdminId": "Admin1",
+        "Servers": "127.0.0.1:9092"
+      }
+    ],
+    "Producers": [
+      {
+        "ProducerId": "Producer1", 
+        "Servers": "127.0.0.1:9092", 
+        "ClientId": "client1", 
+        "Topic": "devonfw", 
+        "MessageMaxBytes": 1000000, 
+        "CompressionLevel": -1, 
+        "CompressionType": "None", 
+        "ReceiveMessageMaxBytes": 100000000,
+        "EnableSslCertificateVerification": false,
+        "CancellationDelayMaxMs": 100, 
+        "Ack": "None", 
+        "Debug": "", 
+        "BrokerAddressTtl": 1000, 
+        "BatchNumMessages": 1000000, 
+        "EnableIdempotence": false, 
+        "MaxInFlight": 5,
+        "MessageSendMaxRetries": 5,
+        "BatchSize": 100000000 
+      }
+    ],
+    "Consumers": [
+      {
+        "ConsumerId": "Consumer1", 
+        "Servers": "127.0.0.1:9092",
+        "GroupId": "group1",
+        "Topics": "devonfw", 
+        "AutoCommit": true, 
+        "StatisticsIntervalMs": 0, 
+        "SessionTimeoutMs": 10000, 
+        "AutoOffsetReset": "Largest", 
+        "EnablePartitionEof": true, 
+        "IsolationLevel": "ReadCommitted", 
+        "EnableSslCertificateVerification": false,
+        "Debug": "" 
+      }
+    ]
+  }
+----
+
+NOTE: Please refer to the component documentation to learn more about the configuration.
+
+=== Producer
+
+After defining the configuration in the `appsettings.{environment}.json` now you can create your handlers extending the ones available in the Kafka component.
+
+For the producer you can do something as the following:
+
+[source, c#]
+----
+public class MessageProducerHandler : KafkaProducerHandler<string,string>
+{
+    public MessageProducerHandler(IServiceCollection services, IKakfkaHandler kafkaHandler, string producerId) : base(services, kafkaHandler, producerId)
+    {
+    }
+}
+----
+
+You will need to add this handler to your dependencies. For that you can use the following method, and include the `Id` of the configuration as a parameter:
+
+[source, c#]
+----
+builder.Services.AddKafkaProducer<MessageProducerHandler>("Producer1");
+----
+
+
+Now you can use the handler in any constructor via dependency injection:
+ 
+[source, c#]
+----
+public class KafkaController : ControllerBase
+{
+    private MessageProducerHandler MessageProducer { get; }
+
+    public KafkaController(MessageProducerHandler messageProducer)
+    {
+        MessageProducer = messageProducer;
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(DeliveryResult<string,string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Route("/v1/kafka/deliver")]
+    public async Task<IActionResult> DeliverMessage(string key, string value)
+    {
+        Devon4NetLogger.Debug("Executing DeliverMessage from controller KafkaController");
+        var result = await MessageProducer.SendMessage(key, value).ConfigureAwait(false);
+        return Ok(result);
+    }
+}
+----
+
+For example, in the previous piece of code, you can see how we are delivering a message to the Kafka server using a POST method in our API. This is done thanks to the `SendMessage` method.
+
+=== Consumer
+
+The consumer is a little different, as you can see in the following piece of code, you will need to override the `HandleCommand` method. This will handle the process of consuming new messages to which the consumer is subscribed.
+
+[source, c#]
+----
+public class MessageConsumerHandler : KafkaConsumerHandler<string, string>
+{
+    public MessageConsumerHandler(IServiceCollection services, IKakfkaHandler kafkaHandler, string consumerId, bool commit = false, int commitPeriod = 5) : base(services, kafkaHandler, consumerId, commit, commitPeriod)
+    {
+    }
+
+    public override void HandleCommand(string key, string value)
+    {
+        Devon4NetLogger.Information($"Consumed message key: {key} | value: {value}");
+    }
+}
+----
+
+Similar to the producer, the Consumer also needs to be related to a configuration via the `Id` as follows: 
+
+[source, c#]
+----
+builder.Services.AddKafkaConsumer<MessageConsumerHandler>("Consumer1");
+----
+
+== How to: Protocol buffers
+
+Protocol buffers are Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data. You can see it as a JSON or a XML file, but smaller, faster and with an easier syntax. 
+
+Protocol buffers are ideal for any situation in which you need to serialize data in a neutral language. Very useful when defining communications such as gRPC protocol.
+
+In this guide you will learn how to create a protocol buffer using `proto3` language.
+
+The `.proto` file starts with a package declaration, which helps to prevent naming conflicts between different projects.
+
+[source, proto3]
+----
+syntax = "proto3";
+
+option csharp_namespace = "Devon4Net.Application.GrpcClient.Protos";
+
+package greet;
+----
+
+Also for C#, you can specify the `csharp_namespace` option. If it wasn't specified, the generated classes would be placed in a namespace matching the package name.
+
+=== Messages
+
+You also have message definitions, which is an aggregate containing a set of typed fields:
+
+[source, proto3]
+----
+message Person {
+  string name = 1;
+  int32 id = 2;  
+  string email = 3;
+}
+----
+
+The previous example defines a type Person with `name`, `id` and `email`. Each field needs a unique identifier, which is the number shown after the `=`. The data types are the standard ones including `bool`, `int32`, `float`, `double`, and `string`.
+
+Let's say that this Person can have many phone numbers, we could do something like:
+
+[source, proto3]
+----
+message Person {
+  string name = 1;
+  int32 id = 2;  
+  string email = 3;
+  repeated PhoneNumber phoneNumbers = 4;
+}
+
+message PhoneNumber {
+  string number = 1;
+  PhoneType type = 2;
+}
+
+enum PhoneType {
+  MOBILE = 0;
+  HOME = 1;
+  WORK = 2;
+}
+----
+
+As you can see, if a field is `repeated`, the field may be repeated any number of times, including 0. You can also define `enum` types if you want one of your fields to have one of a predefined list of values.
+
+=== Services
+
+If you want to use your message types with an RPC system, you may specify an RPC service interface in a.proto file, and the protocol buffer compiler will create code and stubs in your preferred language.
+
+For example you could define the following contract:
+
+[source, proto3]
+----
+service SearchService {
+  rpc Search(SearchRequest) returns (SearchResponse);
+}
+----
+
+In this case we will have a `SearchService` class with a `Search` method that accepts a `SearchRequest` and returns a `SearchResponse`. Both (SearchRequest and SearchResponse) need to be mapped to a message.
+
+The following example shows the complete `.proto` file used in the devon gRPC templates.
+
+[source, proto3]
+----
+syntax = "proto3";
+
+option csharp_namespace = "Devon4Net.Application.GrpcClient.Protos";
+
+package greet;
+
+// The greeting service definition.
+service Greeter {
+  // Sends a greeting
+  rpc SayHello (HelloRequest) returns (HelloReply);
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings.
+message HelloReply {
+  string message = 1;
+}
+----
+
+NOTE: Please revise the template documentation and the component documentation to learn more about gRPC
+
+=== References 
+
+* https://developers.google.com/protocol-buffers[Protocol Buffers - Google Docs]
+

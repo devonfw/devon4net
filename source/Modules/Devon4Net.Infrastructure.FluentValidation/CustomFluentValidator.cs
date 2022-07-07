@@ -1,6 +1,7 @@
 ﻿using Devon4Net.Infrastructure.Logger.Logging;
 using FluentValidation;
 using FluentValidation.Results;
+using System;
 
 namespace Devon4Net.Infrastructure.FluentValidation
 {

@@ -37,7 +37,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             CreateOrLocateVpcs();
             LocateSubnetGroups();
             LocateSubnets();
-            CreateSecurityGroups();
+            CreateOrLocateSecurityGroups();
             CreateRoles();
             CreateOrLocateS3Buckets();
             CreateLambdas();
@@ -64,6 +64,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             CreateDynamoDB();
             CreateWaf();
             CreateSns();
+            CreateCognito();
 
             App.Synth();
         }

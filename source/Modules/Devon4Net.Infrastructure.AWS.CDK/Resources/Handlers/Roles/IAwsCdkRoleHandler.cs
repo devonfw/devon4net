@@ -13,5 +13,6 @@ namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
         IManagedPolicy LocateAwsManagedPolicyByName(string policyName);
         IManagedPolicy LocateManagedPolicyByName(string policyName);
         IRole LocateRoleByArn(string id, string arn, IFromRoleArnOptions fromRoleArnOptions = null);
+        IRole LocateRoleByName(string id, string name);
     }
 }

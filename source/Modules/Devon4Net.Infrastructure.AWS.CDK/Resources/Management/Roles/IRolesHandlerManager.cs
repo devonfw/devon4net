@@ -1,5 +1,4 @@
 ﻿using Amazon.CDK.AWS.IAM;
-using System.Collections.Generic;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
 {
@@ -13,5 +12,6 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
         bool AddRolePolicyStatement(ref IRole role, string[] actions, string[] resources, Effect effect = Effect.ALLOW);
         IManagedPolicy LocateAwsManagedPolicyByName(string policyName);
         IManagedPolicy LocateManagedPolicyByName(string policyName);
+        IRole LocateRoleByName(string id, string name);
     }
 }
