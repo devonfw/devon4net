@@ -1,8 +1,8 @@
 ﻿
 using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Common.Options;
 using Devon4Net.Infrastructure.Grpc.Constants;
 using Devon4Net.Infrastructure.Grpc.Helpers;
+using Devon4Net.Infrastructure.Grpc.Options;
 using Grpc.Core;
 using Grpc.Net.Client;
 using Grpc.Net.Client.Configuration;

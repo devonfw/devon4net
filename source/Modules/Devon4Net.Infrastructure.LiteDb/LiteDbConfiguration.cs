@@ -1,6 +1,6 @@
 ﻿using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Common.Options.LiteDb;
 using Devon4Net.Infrastructure.LiteDb.LiteDb;
+using Devon4Net.Infrastructure.LiteDb.Options;
 using Devon4Net.Infrastructure.LiteDb.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

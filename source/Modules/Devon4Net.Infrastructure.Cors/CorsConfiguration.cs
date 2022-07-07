@@ -1,5 +1,5 @@
 ﻿using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Common.Options.Cors;
+using Devon4Net.Infrastructure.Cors.Options;
 using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;

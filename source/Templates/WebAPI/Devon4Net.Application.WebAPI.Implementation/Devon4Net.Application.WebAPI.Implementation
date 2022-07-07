@@ -536,7 +536,7 @@
             Please setup your RabbitMq server in the configuration file
             </summary>
         </member>
-        <member name="M:Devon4Net.Application.WebAPI.Implementation.Business.RabbitMqManagement.Controllers.RabbitMqController.#ctor(Devon4Net.Application.WebAPI.Implementation.Business.RabbitMqManagement.Handlers.TodoRabbitMqHandler,Microsoft.Extensions.Options.IOptions{Devon4Net.Infrastructure.Common.Options.RabbitMq.RabbitMqOptions})">
+        <member name="M:Devon4Net.Application.WebAPI.Implementation.Business.RabbitMqManagement.Controllers.RabbitMqController.#ctor(Devon4Net.Application.WebAPI.Implementation.Business.RabbitMqManagement.Handlers.TodoRabbitMqHandler,Microsoft.Extensions.Options.IOptions{Devon4Net.Infrastructure.RabbitMQ.Options.RabbitMqOptions})">
             <summary>
             Class constructor
             </summary>

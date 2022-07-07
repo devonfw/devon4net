@@ -1,15 +1,15 @@
 ﻿using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using Devon4Net.Infrastructure.CircuitBreaker.Common;
-using Devon4Net.Infrastructure.CircuitBreaker.Handlers;
 using Devon4Net.Infrastructure.Common.Common.Http;
 using Devon4Net.Infrastructure.Common.Common.IO;
 using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Common.Options.CircuitBreaker;
+using Devon4Net.Infrastructure.CircuitBreaker.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using HttpClientHandler = Devon4Net.Infrastructure.CircuitBreaker.Handlers.HttpClientHandler;
+using Devon4Net.Infrastructure.CircuitBreaker.Handlers;
 
 namespace Devon4Net.Infrastructure.CircuitBreaker
 {

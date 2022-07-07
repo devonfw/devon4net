@@ -28,11 +28,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="RabbitMqBackupSqLite.db" />
+    <Compile Remove="Exception\**" />
+    <EmbeddedResource Remove="Exception\**" />
+    <None Remove="Exception\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Exception\" />
+    <None Remove="RabbitMqBackupSqLite.db" />
   </ItemGroup>
 
   <ItemGroup>

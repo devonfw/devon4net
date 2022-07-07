@@ -1,7 +1,6 @@
 ﻿using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
 using Devon4Net.Infrastructure.CircuitBreaker.Handlers;
 using Devon4Net.Infrastructure.Common.Enums;
-using Devon4Net.Infrastructure.Common.Options.Nexus;
 using Devon4Net.Infrastructure.Nexus.Constants;
 using Devon4Net.Infrastructure.Nexus.Enum;
 using Devon4Net.Infrastructure.Nexus.Model.Assets;
@@ -9,6 +8,7 @@ using Devon4Net.Infrastructure.Nexus.Model.Components;
 using Devon4Net.Infrastructure.Nexus.Model.Components.UploadComponent;
 using Devon4Net.Infrastructure.Nexus.Model.Repositories.Base;
 using Devon4Net.Infrastructure.Nexus.Model.Responses;
+using Devon4Net.Infrastructure.Nexus.Options;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;

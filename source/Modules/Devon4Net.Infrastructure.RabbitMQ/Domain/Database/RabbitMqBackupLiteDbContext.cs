@@ -1,6 +1,6 @@
 ﻿using Devon4Net.Infrastructure.Common.Common.IO;
-using Devon4Net.Infrastructure.Common.Options.RabbitMq;
 using Devon4Net.Infrastructure.LiteDb.LiteDb;
+using Devon4Net.Infrastructure.RabbitMQ.Options;
 using LiteDB;
 using Microsoft.Extensions.Options;
 

@@ -45,5 +45,9 @@
 		  <Pack>True</Pack>
 		  <PackagePath>\</PackagePath>
 	  </None>	  
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Options\Swagger\" />
   </ItemGroup>	
 </Project>
