@@ -225,15 +225,24 @@ namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers
 
         private HttpContent CreateHttpContent<T>(T requestContent, string mediaType, bool contentAsJson, bool useCamelCase)
         {
+            HttpContent httpContent;
+            string requestBody;
+
             if (requestContent == null) return null;
 
-            var requestBody = contentAsJson ? JsonHelper.Serialize(requestContent, useCamelCase) : requestContent.ToString();
+            requestBody = contentAsJson ? JsonHelper.Serialize(requestContent, useCamelCase) : requestContent.ToString();
+            httpContent = new StringContent(requestBody);
 
-            HttpContent httpContent = new StringContent(requestBody);
-
-            if (mediaType != null && mediaType!=MediaType.MultipartFormData)
+            switch (mediaType)
             {
-                httpContent.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
+                case MediaType.MultipartFormData:
+                    httpContent = requestContent as HttpContent;
+                    break;
+                case null:
+                    break;
+                default:
+                    httpContent.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
+                    break;
             }
 
             return httpContent;

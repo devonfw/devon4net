@@ -98,6 +98,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.AW
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.AWS.SQS.ConsoleApplication", "Templates\AWS\Devon4Net.Infrastructure.AWS.SQS.ConsoleApplication\Devon4Net.Infrastructure.AWS.SQS.ConsoleApplication.csproj", "{6B7EC34D-BC71-4292-98C8-7514F54BBC9E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devon4Net.Infrastructure.Nexus", "Modules\Devon4Net.Infrastructure.Nexus\Devon4Net.Infrastructure.Nexus.csproj", "{4F56675C-83FE-430F-A3C0-17090E552565}"
+EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
