@@ -4,8 +4,6 @@ using Amazon.CDK.AWS.ECS;
 using Amazon.CDK.AWS.ElasticLoadBalancingV2;
 using Amazon.CDK.AWS.IAM;
 using Devon4Net.Infrastructure.AWS.CDK.Options.Resources;
-using System;
-using System.Collections.Generic;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
 {
@@ -21,9 +19,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
             return HandlerResources.AwsCdkEcsHandler.CreateCapacityProviderStrategy(capacityProvider, capWeigth, capBase);
         }
 
-        public IService AddElasticContainerEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount, bool useDistinctInstances, string placementStrategy) //NOSONAR number of params
+        public IService AddElasticContainerEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount, bool useDistinctInstances, List<string> placementStrategies) //NOSONAR number of params
         {
-            return HandlerResources.AwsCdkEcsHandler.CreateEc2Service(id, serviceName, cluster, taskDefinition, healthCheckGracePeriod, capacityProviderStrategies, desiredCount, useDistinctInstances, placementStrategy);
+            return HandlerResources.AwsCdkEcsHandler.CreateEc2Service(id, serviceName, cluster, taskDefinition, healthCheckGracePeriod, capacityProviderStrategies, desiredCount, useDistinctInstances, placementStrategies);
         }
 
         public ILoadBalancerTargetProps AddEc2ServiceToNetworkTargetGroup(IService service, INetworkTargetGroup targetGroup, string containerName, double containerPort)

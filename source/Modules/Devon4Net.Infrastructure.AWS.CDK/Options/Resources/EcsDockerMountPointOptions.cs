@@ -4,6 +4,5 @@
     {
         public string SourceVolume { get; set; }
         public string ContainerPath { get; set; }
-
     }
 }

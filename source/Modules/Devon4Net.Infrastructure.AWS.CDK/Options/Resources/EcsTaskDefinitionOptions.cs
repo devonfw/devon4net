@@ -1,5 +1,4 @@
 ﻿using Amazon.CDK.AWS.ECS;
-using System.Collections.Generic;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Options.Resources
 {

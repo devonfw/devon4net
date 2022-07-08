@@ -18,16 +18,19 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             StackResources = new StackResources();
             AwsCdkHandler = new AwsCdkHandlerManager(App,
                 CdkOptions.ProvisionStack.Id,
-                CdkOptions.ProvisionStack.ApplicationName, 
-                CdkOptions.ProvisionStack.EnvironmentName, 
-                new StackProps { 
-                    Env = new Amazon.CDK.Environment { 
-                        Account = AwsAccount, 
-                        Region = AwsRegion 
-                    }, 
-                    Synthesizer = new DefaultStackSynthesizer ( new DefaultStackSynthesizerProps { 
+                CdkOptions.ProvisionStack.ApplicationName,
+                CdkOptions.ProvisionStack.EnvironmentName,
+                new StackProps
+                {
+                    Env = new Amazon.CDK.Environment
+                    {
+                        Account = AwsAccount,
+                        Region = AwsRegion
+                    },
+                    Synthesizer = new DefaultStackSynthesizer(new DefaultStackSynthesizerProps
+                    {
                         GenerateBootstrapVersionRule = cdkOptions.ProvisionStack.GenerateBootstrapVersionRule
-                    }) 
+                    })
                 });
         }
 
