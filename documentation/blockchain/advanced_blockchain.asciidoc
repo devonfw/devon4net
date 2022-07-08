@@ -6,7 +6,7 @@ The blockchain is incredibly complicated, and we have already covered the fundam
 
 After reading the `Introduction to Blockchain` document, you may have questions like: How are transactions verified? How are blocks "mined"? How do nodes communicate and know about other nodes? 
 
-As a result, there are a number of less-technical notions that need to be understood in order to start comprehending better how everything works. 
+As a result, there are a number of notions that need to be understood in order to start comprehending better how everything works. 
 
 == Transactions
 
@@ -59,7 +59,7 @@ A block stores information. There are many pieces of information included within
 * *Previous block Hash*: The hash operation of the previous block.
 * *Block Hash*: The hash operation of the block.
 * *Transactions data*: A list of all of the transactions within a block.
-* *Nonce*: The encrypted number that a miner must solve to verify the block and close it. (In the case of _proof of work_)
+* *Nonce*: The encrypted number that a miner must solve to verify the block and close it. (In case of _proof of work_)
 
 .Block content
 image::images/block.png[]
@@ -68,7 +68,7 @@ image::images/block.png[]
 
 Hashes are the output of a hashing algorithm. These algorithms essentially aim to produce a unique, fixed-length string for any given piece of data.
 
-Hashes are used in the blockchain techonolgy because they are easy to compute and can be used to verify that the content of a block has not changed. If something changes inside a block the hash will also change and the chain will break.
+Hashes are used in blockchain technology because they are easy to compute and can be used to verify that the content of a block has not changed. If something changes inside a block the hash will also change and the chain will break.
 
 === Blockchain
 
@@ -79,5 +79,92 @@ image::images/blockchain_genesis.png[]
 
 The process of calculating hashes for the new blocks is difficult due to a problem that needs to be solved. Not all the hashes are valid, there is a condition known as "target hash" that needs to be satisfied for the hash to be valid. 
 
+This helps to make impossible for hackers to try modifying the blockchain data. For example, imagine that we want to change something in `block 2` as shown in _Figure 4_. If the data changes, so will do the hash of `block 2`, which we will need to recalculate. This calculation will take a while and we will also need to recalculate all hashes of subsequent blocks. All of this while other blocks are being calculated and added to the chain by all the network power.
+
+This is almost, but not quite, impossible. 
+
+==== 51% Attack
+
+There is a type of attack where one entity controls more than half of the computing power within a blockchain network. This entity would be able to add incorrect blocks into the chain.
+
+The *consensus* algorythm of a blockchain system validates the record with the longest transactional history as we explain further in this document. That means that if a entity owns 51% of network power, they could add an incorrect block and eventually have the longest version of the chain, which will be treated as valid. 
+
+== P2P networks
+
+A peer-to-peer (P2P) network is a computer network in which all or some aspects function without fixed clients or servers, but rather a series of nodes that behave as equals to each other. Furthermore, they act simultaneously as clients and servers with respect to the other nodes of the network. 
+
+Peers make a portion of their resources, such as processing power, disk storage or network bandwidth, directly available to other network participants, without the need for central coordination. Peers are both suppliers and consumers of resources, and are in constant communication with each other.
+
+When a client enters this system, he makes a direct connection to one of the latter, where he collects and stores all the information and content available to share. It is then a program whose function is to connect users through a network without servers that facilitates transfer between nodes. These files are shared "from computer to computer" by the mere fact of having access to the system.
+
+.client-server vs p2p networks
+image::images/server_p2p.png[]
+
+Blockchains operate on peer-to-peer networks. As you can see in _Figure 5_ in a client-server, clients communicate with a centralized server. On the other hand, in a peer-to-peer network, all nodes are the same and interact with each other in a decentralized form.
+
+=== Nodes
+
+Blockchain nodes are network stakeholders and their devices that are authorized to keep track of the distributed ledger and serve as communication hubs for various network tasks.  A blockchain node’s primary job is to confirm the legality of each subsequent batch of network transactions, known as blocks.
+
+They are part of the network and serve the following functions:
+
+* Validate the signature of transactions.
+* Storing transaction history of all of the blocks that form the blockchain.
+* Mine new blocks by solving the problem of calculating a valid hash in exchange for cryptocurrency tokens.
+* Propagate new transactions and new blocks to neighbour nodes.
+* Arrive to a consensus with the rest of the network.
+
+Although all nodes act the same way in a peer-to-peer network there are different types of nodes that are classified according to its specific characteristics. 
+
+In Bitcoin for example you have two types of nodes. *Full nodes* which store a copy blockchain and thus guarantee the security and correctness of the data on the blockchain by validating data. And *lightweight nodes* which needs to connect to a full node in order to synchronize to the current state of the network and be able to participate.
+
+.Types of nodes in a P2P network
+image::images/node_types.png[]
+
+==== Lightweight nodes
+
+These types of nodes communicate with the blockchain while relying on full nodes to provide them with the necessary information. As they don’t store a copy of the chain, they only query the current status for which block is last, and broadcast transactions for processing.
+
+Its purpose is to serve as a door to the network and they don't participate in consensus mechanism.
+
+==== Full Nodes
+
+Full nodes act as a server in a decentralized network. Their main tasks include maintaining the consensus between other nodes and verification of transactions. They also store a copy of the blockchain, thus being more secure and enable custom functions such as instant send and private transactions.
+
+===== Pruned Full Node
+
+One type is the pruned full node. The specific characteristic here is that it begins downloading blocks from the beginning and once it reaches the set limit, deletes the oldest ones, retaining only their headers and chain placement.
+
+===== Archival Full Node
+
+Archival full nodes are what most people refer to when talking about full nodes. They envision a server which hosts the full blockchain in its database. The difference between pruned and archival node is one – the amount of hard drive space they take up.
+
+
+An archival full node can either be:
+ 
+* *Masternode:* 
+* *Mining node:*
+* *Staking node:*
+* *Authority node:*
+
+
+Discovery process (Bitcoin v Ethereum)
+Transaction verification
+Block validation
+
+== Proof of work
+
+Although the _proof of work_ algorithm is the most popular, it is not the only algorithm available. In this section we are going to introduce some important concepts about this algorithm to go a little deeper into how the blockchain works.
+
+
+=== Mining
+
+What happens when Forks
+
+=== Consensus
+
 == Next Steps
 === References
+
+
+
