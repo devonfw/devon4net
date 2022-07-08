@@ -19,8 +19,6 @@ using Amazon.CDK.AWS.SecretsManager;
 using Amazon.CDK.AWS.SNS;
 using Amazon.CDK.AWS.SSM;
 using Amazon.CDK.AWS.WAFv2;
-using System;
-using System.Collections.Generic;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Stack
 {
@@ -62,6 +60,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
         public IDictionary<string, CfnWebACL> WebAcls { get; set; }
         public IDictionary<string, IUserPool> CognitoUserPools { get; set; }
         public Dictionary<string, ITopic> SnsTopics { get; set; }
+        public IDictionary<string, IManagedPolicy> ManagedPolicies { get; set; }
 
         public StackResources()
         {
@@ -101,6 +100,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             WebAcls = new Dictionary<string, CfnWebACL>();
             CognitoUserPools = new Dictionary<string, IUserPool>();
             SnsTopics = new Dictionary<string, ITopic>();
+            ManagedPolicies = new Dictionary<string, IManagedPolicy>();
         }
 
         public T Locate<T>(string resourceId, string exceptionMessageIfResourceDoesNotExist, string exceptionMessageIfResourceIsEmpty = null)
@@ -153,7 +153,8 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 PolicyDocuments,
                 NetworkTargetGroups,
                 SnsTopics,
-                CognitoUserPools
+                CognitoUserPools,
+                ManagedPolicies
             };
 
             return Array.Find(l, x => x is Dictionary<string, T>) as Dictionary<string, T>;

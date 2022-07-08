@@ -1,10 +1,10 @@
 ﻿using Amazon.CDK.AWS.IAM;
 
-namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.PolicyDocuments
+namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management.PolicyDocuments
 {
-    public interface IAwsCdkPolicyDocumentHandler
+    public interface IPolicyDocumentsHandlerManager
     {
-        PolicyDocument Create(PolicyStatement[] statements);
+        PolicyDocument CreatePolicyDocument(PolicyStatement[] policyStatements);
         PolicyStatement CreatePolicyStatement(string[] actions, string[] resources, Effect effect);
         IManagedPolicy CreateManagedPolicy(string id, string name, PolicyDocument document, string description = null, string path = null);
         IManagedPolicy LocateAwsManagedPolicyByName(string policyName);

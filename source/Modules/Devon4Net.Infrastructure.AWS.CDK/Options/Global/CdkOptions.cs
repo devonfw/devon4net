@@ -1,5 +1,4 @@
 ﻿using Devon4Net.Infrastructure.AWS.CDK.Options.Resources;
-using System.Collections.Generic;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Options.Global
 {
@@ -37,6 +36,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Options.Global
         public List<WafOptions> Wafs { get; set; }
         public List<SnsTopicOptions> SnsTopics { get; set; }
         public List<SnsEmailSubscriptionOptions> SnsEmailSubscriptions { get; set; }
+        public List<ManagedPolicyOptions> ManagedPolicies { get; set; }
         public CognitoOptions Cognito { get; set; }
     }
 }

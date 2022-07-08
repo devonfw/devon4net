@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Devon4Net.Infrastructure.AWS.CDK.Options.Resources
+﻿namespace Devon4Net.Infrastructure.AWS.CDK.Options.Resources
 {
     public class RoleOptions
     {
