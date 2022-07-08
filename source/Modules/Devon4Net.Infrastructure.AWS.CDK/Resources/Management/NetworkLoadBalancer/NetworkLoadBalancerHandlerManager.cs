@@ -10,9 +10,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
         {
             return  HandlerResources.AwsCdkElbHandler.CreateNetworkTargetGroup(id, name, port, vpc, healthCheckCount);
         }
-        public INetworkLoadBalancer CreateNetworkLoadBalancer(string loadBalancerId, bool crossZoneEnabled, bool deletionProtection, bool internetFacing, string loadBalancerName, IVpc vpc, ISubnet[] subnets = null, ISubnetMappingProperty[] subnetMappingProperties = null) //NOSONAR number of params
+        public INetworkLoadBalancer CreateNetworkLoadBalancer(string loadBalancerId, bool crossZoneEnabled, bool deletionProtection, bool internetFacing, string loadBalancerName, IVpc vpc, ISubnet[] subnets = null) //NOSONAR number of params
         {
-            return HandlerResources.AwsCdkNetworkLoadBalancerHandler.Create(loadBalancerId, crossZoneEnabled, deletionProtection, internetFacing, loadBalancerName, vpc, subnets, subnetMappingProperties);
+            return HandlerResources.AwsCdkNetworkLoadBalancerHandler.Create(loadBalancerId, crossZoneEnabled, deletionProtection, internetFacing, loadBalancerName, vpc, subnets);
         }
     }
 }
