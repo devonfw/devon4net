@@ -139,29 +139,82 @@ One type is the pruned full node. The specific characteristic here is that it be
 
 Archival full nodes are what most people refer to when talking about full nodes. They envision a server which hosts the full blockchain in its database. The difference between pruned and archival node is one – the amount of hard drive space they take up.
 
-
 An archival full node can either be:
  
-* *Masternode:* 
-* *Mining node:*
-* *Staking node:*
-* *Authority node:*
+* *Masternode:*  Masternodes themselves cannot add blocks to the blockchain. Their only purpose is to keep a record of transactions and validate them. By running a masternode, you not only secure the network but can earn a share of the rewards for your services.
+
+* *Mining node (proof-of-work):* Miners are actually nodes which aim to prove that they’ve completed the required work to create a block. Participants in the process employ hardware components to solve a cryptographic problem. The first node to complete the task broadcasts his results to the network so it can be verified. For their work, miners are rewarded a pre-defined amount of coins in addition to any transaction fees for the block.
+
+* *Staking node (proof-of-stake):* In proof of stake the end goal is to determine, based on a pre-defined set of rules and luck chance factored in, who will be next to create a block and get rewarded. Instead of trying to solve a problem, you buy coins and hold them, while in return you receive an interest back as a reward.
 
 
-Discovery process (Bitcoin v Ethereum)
-Transaction verification
-Block validation
+* *Authority node (proof-of-authority):* Networks that make use of proof of authority need to define a fixed number of authority nodes. How many and who they’ll be is voted on by the community or defined by the development team. The task of these nodes is, as with full nodes, is to create and validate blocks, while at the same time distributing information to users on the network.
 
-== Proof of work
+=== Communication
 
-Although the _proof of work_ algorithm is the most popular, it is not the only algorithm available. In this section we are going to introduce some important concepts about this algorithm to go a little deeper into how the blockchain works.
+You are already aware that the blockchain relies on peer-to-peer networks, that these networks are composed of nodes, that nodes can take many different forms, and that nodes must perform a variety of tasks depending on their type.
+
+At the end, far from all these abstractions the blockchain is ultimately a network with many parties involved, thus it must adhere to a number of algorithms and communication protocols in order to operate properly. 
+
+For the many tasks it has to do, each blockchain network uses a particular set of protocols and algorithms. Some are better in security and others more eficient but they all address the same issues, among which are:
+
+* *Communication protocol:* Network protocol used from node-to-node communication.
+
+* *Discovery process:* When a new node is added to the network it needs a form of connecting to its neighbours. The discovery process is the process a node follows to discover and connect to its neighbours so that the network can continue growing. 
+
+* *Consensus algorithm:* Process used to reach an agreement throughout all the nodes in the network.
 
 
-=== Mining
+In *Bitcoin* for example the communication relies on the _TCP protocol_ and the discovery process starts by the new node connecting to a DNS Server. This server provides a form of connection to one of the nodes, which then provides the new node with all of its neighbours. This process is shown in the animation below.
 
-What happens when Forks
+.Discovery process in Bitcoin
+image::images/communication_bitcoin.gif[]
 
-=== Consensus
+On the other hand *Ethereum* relies on the _RLPx protocol suite_, which uses other protocols such as Kademlia and UDP. 
+
+Ethereum has some nodes in the network called "boot nodes" whose directions for connection are hard-coded in the blockchain implementation. For the discovery process, the new node connects to the boot nodes and asks them for neighbour nodes connections. Once the process is finished, it closes the connection with the boot nodes to let other new nodes connect to them.
+
+.Discovery process in Ethereum
+image::images/communication_ethereum.gif[]
+
+== Validation and consensus
+
+In this part we are going to follow the process of adding a new transaction and mining a block.
+
+As we explained above, the transaction validation is done by signing transactions with a key using asymmetric cryptography. An opposite process helps to verify the origin of the signature and thus verify that everything has been done correctly and it is not a ghost transaction.
+
+First of all, to add a transaction to the blockchain we must have access to the network, for that we need to own a node or have access to a client such as https://infura.io/[Infura].
+
+When a new transaction is added, this transaction is stored in a temporary list of transactions that will be added to the block when its mined. This transaction needs to be verified and propagated to the rest of the network so that whoever mines the block, can add the transaction to it.
+
+.Transaction propagation
+image::images/transaction_propagation.gif[]
+
+The previous figure shows how the transaction is verified by all of the nodes and then propagated to them neighbours until the whole network knows about the transaction.
+
+While transactions are being added to this temporary list, the nodes are also calculating a hash that satisfies the condition. For example, we can have the following condition:
+
+    Find a number x such as that the hash of x appended to the block hash results is a number less than the target hash.
+
+`X` will be the nonce, which is a number incremented randomly or progressively that at some point will produce a valid hash. Once the hash is calculated all the data is locked into the block, verified and then propagated to the neighbours.
+
+But, since this process is done simultaneously on all nodes, *what happens if two nodes mine the same block at the same time?*
+
+Well, that will produce two different forks on the blockchainn as shown in the following figure:
+
+.Forks produced by simultaneous mining
+image::images/forks.gif[]
+
+This is a pretty common situation and will eventually be solved when a block in one of the two branches mines the next block. 
+
+`The most correct version of the blockchain is the longest valid chain (the one that has more blocks that can be verified).`
+
+Looking at the previous animation example, we can see that there are two branches, each being 7 blocks long. As both have the same number of valid blocks, each branch continues on its way until a node mines block number 8.  Then, as can be seen in figure 11, this will be the "most correct" blockchain, and it will spread to the rest of the network.
+
+.Applied consensus
+image::images/consensus.gif[]
+
+The other chains will no longer live in the database and are discarded.
 
 == Next Steps
 === References
