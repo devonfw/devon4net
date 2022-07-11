@@ -23,8 +23,8 @@ namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
                 BillingMode = (BillingMode)billingModeInt,
                 ContributorInsights = contributorInsights,
                 PointInTimeRecovery = pointInTimeRecovery,
-                ReadCapacity = readCapacity.Value ?? default,
-                WriteCapacity = writeCapacity.Value ?? default
+                ReadCapacity = readCapacity == null ? default : readCapacity.Value,
+                WriteCapacity = writeCapacity == null ? default : writeCapacity.Value,
                 RemovalPolicy = (RemovalPolicy)removalPolicyInt,
                 SortKey = sortKey,
                 TimeToLiveAttribute = timeToLiveAttribute
