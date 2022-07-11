@@ -14,7 +14,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.VPC
         {
             if (string.IsNullOrEmpty(vpcId))
             {
-                throw new ArgumentException("The VPC id cannot be null ");
+                throw new ArgumentException("The VPC id cannot be null");
             }
 
 
@@ -27,7 +27,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.VPC
 
             if (result == null)
             {
-                throw new ArgumentException($"The provided vpcId {vpcId} does not exists");
+                throw new ArgumentException($"The provided vpcId {vpcId} does not exist");
             }
 
             return result;
