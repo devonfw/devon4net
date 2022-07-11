@@ -13,12 +13,12 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             foreach (var vpc in CdkOptions.Vpcs)
             {
                 if (vpc.LocateInsteadCreate)
-{
+                {
                     StackResources.Vpcs.Add(vpc.Id, AwsCdkHandler.LocateVpc(vpc.Id, vpc.AwsVpcId, vpc.IsDefault));
                 }
                 else
                 {
-                    throw new ArgumentException("Creating VPC is not supported yet in CDK auto Settings");
+                    throw new ArgumentException("Creating VPCs is not supported yet in CDK auto Settings");
                 }
             }
         }
