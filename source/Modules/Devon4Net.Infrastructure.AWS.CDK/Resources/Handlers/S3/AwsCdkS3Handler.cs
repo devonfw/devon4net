@@ -49,7 +49,8 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.S3
                 if (previousVersionsExpirationDays.HasValue)
                 {
                     nonCurrentVersionExpirationDuration = Duration.Days(previousVersionsExpirationDays.Value);
-                } else
+                }
+                else
                 {
                     throw new ArgumentException($"The LifeCycle rule {id} belongs to a versioned bucket and no previousVersionsExpirationDays has been established");
                 }
