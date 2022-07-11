@@ -11,6 +11,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Options.Resources
         public string LoadBalancerName { get; set; }
         public string VpcId { get; set; }
         public List<string> Subnets { get; set; }
+        public List<SubnetMappingOptions> SubnetMappings { get; set; }
         public List<NetworkLoadBalancerListenerOptions> Listeners { get; set; }
     }
 }
