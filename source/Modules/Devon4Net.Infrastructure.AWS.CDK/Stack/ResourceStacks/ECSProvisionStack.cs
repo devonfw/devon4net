@@ -15,7 +15,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             foreach (var autoScalingGroup in CdkOptions.AutoScalingGroups)
             {
                 var vpc = LocateVpc(autoScalingGroup.VpcId, $"The VPC name {autoScalingGroup.VpcId} in Auto Scaling Group {autoScalingGroup.AutoScalingGroupName} does not exist");
-                List<ISecurityGroup> securityGroups = new List<ISecurityGroup>();
+                var securityGroups = new List<ISecurityGroup>();
                 if (autoScalingGroup.SecurityGroupIds?.Any() == true)
                 {
                     var securityGroupIds = StackResources.SecurityGroups.Keys.Union(autoScalingGroup.SecurityGroupIds);
@@ -42,7 +42,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
 
             foreach (var taskDefinitionOpt in CdkOptions.EcsTaskDefinitions)
             {
-                TaskDefinition taskDefinition = null;
+                TaskDefinition taskDefinition;
                 if (!string.IsNullOrWhiteSpace(taskDefinitionOpt.RoleId))
                 {
                     var locatedRole = LocateRole(taskDefinitionOpt.RoleId, $"Could not find role with ID {taskDefinitionOpt.RoleId}");
@@ -158,7 +158,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
         }
 
         private void CreateEc2Service(EcsServiceOptions service, EcsTaskDefinitionOptions definitionOptions)
-{
+        {
             var taskDefinition = StackResources.EcsTaskDefinitions?.FirstOrDefault(t => t.Key == service.EcsTaskDefinitionId).Value;
 
             if (taskDefinition == null)
@@ -213,8 +213,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                             throw new ArgumentException("Load balancer type in service definition not recognized");
                     }
                 }
-}
-
+            }
             StackResources.EcsServices.Add(service.Id, ecsService);
         }
 

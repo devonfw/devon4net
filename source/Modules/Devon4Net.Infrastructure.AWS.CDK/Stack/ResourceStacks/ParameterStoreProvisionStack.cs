@@ -13,7 +13,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
         {
             GenerateDatabaseSsmParameters();
 
-            if (CdkOptions.SsmParameters == null || !CdkOptions.SsmParameters.Any()) return;
+            if (CdkOptions.SsmParameters?.Any() != true) return;
 
             foreach (var parameter in CdkOptions.SsmParameters)
             {

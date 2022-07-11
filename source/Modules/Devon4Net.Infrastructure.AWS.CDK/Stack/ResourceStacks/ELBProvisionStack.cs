@@ -31,7 +31,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                     var subnets = networkLoadBalancerOptions.Subnets.Select(x => LocateSubnet(x, $"The Subnet name {x} in Network Load Balancer {networkLoadBalancerOptions.LoadBalancerName} does not exist")).ToArray();
                     networkLoadBalancer = AwsCdkHandler.CreateNetworkLoadBalancer(networkLoadBalancerOptions.Id, networkLoadBalancerOptions.CrossZoneEnabled, networkLoadBalancerOptions.DeletionProtection, networkLoadBalancerOptions.InternetFacing, networkLoadBalancerOptions.LoadBalancerName, vpc, subnets);
                 }
-                
+
                 networkLoadBalancerOptions.Listeners.ForEach(x => AssignListenerToNetworkLoadBalancer(networkLoadBalancer, x));
                 StackResources.NetworkLoadBalancers.Add(networkLoadBalancerOptions.Id, networkLoadBalancer);
             }

@@ -39,20 +39,18 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
 
                 if (roleOption.CustomPolicies?.Any() == true)
                 {
-                    foreach (var managedPolicyOption in roleOption.CustomPolicies)
+                    IManagedPolicy managedPolicy;
+                    try
                     {
-                        IManagedPolicy managedPolicy;
-                        try
+                        foreach (var managedPolicyOption in roleOption.CustomPolicies)
                         {
                             managedPolicy = LocateManagedPolicy(managedPolicyOption, "Could not locate managed policy");
+                            policies.Add(managedPolicy);
                         }
-                        catch (ArgumentException)
-                        {
-                            managedPolicy = AwsCdkHandler.LocateManagedPolicyByName(managedPolicyOption);
-                            if (managedPolicy == null) throw;
-                        }
-
-                        policies.Add(managedPolicy);
+                    }
+                    catch (ArgumentException)
+                    {
+                        throw new ArgumentException("Cannot add the managed policy");
                     }
                 }
 

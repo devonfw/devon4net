@@ -14,7 +14,7 @@ namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
         }
         public ITable CreateProvisioned(string id, string tableName, string partitionKeyName, int partitionKeyType, int? billingModeInt, bool contributorInsights, bool pointInTimeRecovery, int? readCapacity, int? writeCapacity, int removalPolicyInt, string sortKeyName, int? sortKeyType, string timeToLiveAttribute = null)
         {
-            GetPartitionKeyAndSortKey(billingModeInt, removalPolicyInt, partitionKeyName, partitionKeyType, sortKeyName, sortKeyType, out var partitionKey, out var sortKey);
+            GetPartitionKeyAndSortKey(partitionKeyName, partitionKeyType, sortKeyName, sortKeyType, out var partitionKey, out var sortKey);
             return CreateDynamoDB(new DynamoDBEntity
             {
                 Id = id,
@@ -23,8 +23,8 @@ namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
                 BillingMode = (BillingMode)billingModeInt,
                 ContributorInsights = contributorInsights,
                 PointInTimeRecovery = pointInTimeRecovery,
-                ReadCapacity = readCapacity == null ? default : readCapacity.Value,
-                WriteCapacity = writeCapacity == null ? default : writeCapacity.Value,
+                ReadCapacity = readCapacity ?? default,
+                WriteCapacity = writeCapacity ?? default,
                 RemovalPolicy = (RemovalPolicy)removalPolicyInt,
                 SortKey = sortKey,
                 TimeToLiveAttribute = timeToLiveAttribute
@@ -32,7 +32,7 @@ namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
         }
         public ITable Create(string id, string tableName, string partitionKeyName, int partitionKeyType, int? billingModeInt, bool contributorInsights, bool pointInTimeRecovery, int removalPolicyInt, string sortKeyName, int? sortKeyType, string timeToLiveAttribute = null)
         {
-            GetPartitionKeyAndSortKey(billingModeInt, removalPolicyInt, partitionKeyName, partitionKeyType, sortKeyName, sortKeyType, out var partitionKey, out var sortKey);
+            GetPartitionKeyAndSortKey(partitionKeyName, partitionKeyType, sortKeyName, sortKeyType, out var partitionKey, out var sortKey);
             return CreateDynamoDB(new DynamoDBEntity
             {
                 Id = id,
@@ -46,7 +46,7 @@ namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
                 TimeToLiveAttribute = timeToLiveAttribute
             });
         }
-        private void GetPartitionKeyAndSortKey(int? billingModeInt, int removalPolicyInt, string partitionKeyName, int partitionKeyType, string sortKeyName, int? sortKeyType, out Attribute partitionKey, out Attribute sortKey)
+        private void GetPartitionKeyAndSortKey(string partitionKeyName, int partitionKeyType, string sortKeyName, int? sortKeyType, out Attribute partitionKey, out Attribute sortKey)
         {
             sortKey = null;
 

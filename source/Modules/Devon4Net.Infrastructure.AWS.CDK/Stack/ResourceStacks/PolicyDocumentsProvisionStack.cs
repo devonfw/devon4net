@@ -22,7 +22,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             foreach (var policyOptions in CdkOptions.ManagedPolicies)
             {
                 IManagedPolicy managedPolicy;
-                if (policyOptions.LocateInsteadOfCreate.HasValue && policyOptions.LocateInsteadOfCreate.Value)
+                if (policyOptions.LocateInsteadOfCreate == true)
                 {
                     managedPolicy = AwsCdkHandler.LocateAwsManagedPolicyByName(policyOptions.Name);
                 }
