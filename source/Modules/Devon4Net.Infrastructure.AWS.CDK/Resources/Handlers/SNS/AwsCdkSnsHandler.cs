@@ -1,12 +1,8 @@
-﻿using Amazon.CDK;
-using Amazon.CDK.AWS.KMS;
+﻿using Amazon.CDK.AWS.KMS;
 using Amazon.CDK.AWS.SNS;
 using Amazon.CDK.AWS.SNS.Subscriptions;
 using Amazon.CDK.AWS.SQS;
 using Constructs;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.SNS
 {

@@ -19,8 +19,6 @@ using Amazon.CDK.AWS.SecretsManager;
 using Amazon.CDK.AWS.SNS;
 using Amazon.CDK.AWS.SSM;
 using Amazon.CDK.AWS.WAFv2;
-using System;
-using System.Collections.Generic;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Stack
 {
