@@ -148,8 +148,8 @@ namespace Devon4Net.Infrastructure.AWS.S3
                     BucketName = bucketName,
                     Prefix = prefix,
                     MaxKeys = maxKeys,
-
                 };
+
                 var listofObjects = await s3Client.ListObjectsV2Async(listObjectsrequest).ConfigureAwait(false);
                 allObjects.AddRange(listofObjects.S3Objects);
                 while (listofObjects.IsTruncated)
@@ -196,7 +196,7 @@ namespace Devon4Net.Infrastructure.AWS.S3
             }
         }
 
-        public async Task<List<string>> GetDirectoriesNameFromBucket(string bucketName, List<string> foldersInBucket)
+        public Task<List<string>> GetDirectoriesNameFromBucket(string bucketName, List<string> foldersInBucket)
         {
             var s3Client = GetS3Client(AwsRegion, AwsSecretAccessKeyId, AwsSecretAccessKey);
             var listObjectsrequest = new ListObjectsV2Request()
@@ -204,9 +204,8 @@ namespace Devon4Net.Infrastructure.AWS.S3
                 BucketName = bucketName,
                 Delimiter = "/" //This is only to get the folder
             };
-            foldersInBucket = await CreateListOfDirectories(bucketName, foldersInBucket, s3Client, listObjectsrequest).ConfigureAwait(false);
 
-            return foldersInBucket;
+            return CreateListOfDirectories(bucketName, foldersInBucket, s3Client, listObjectsrequest);
         }
 
         public async Task<string> GetDirectoryNameFromBucket(string bucketName, string prefix)
@@ -221,7 +220,6 @@ namespace Devon4Net.Infrastructure.AWS.S3
 
             var listofObjects = await s3Client.ListObjectsV2Async(listObjectsrequest).ConfigureAwait(false);
             return listofObjects.CommonPrefixes.FirstOrDefault();
-
         }
 
         #endregion
