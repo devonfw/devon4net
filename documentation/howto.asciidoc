@@ -174,7 +174,7 @@ The lines added on the previous step will need some configuration in the `appset
     "Environment": "Development",
     "ForceUseHttpsRedirection": false,
     "Kestrel": {
-      "UseHttps": false,
+      "UseHttps": true,
       "HttpProtocol": "Http1AndHttp2", //Http1, Http2, Http1AndHttp2, none
       "ApplicationPort": 8085,
       "SslProtocol": "Tls12", //Tls12, Tls13, none. For Https2 Tls12 is needed
@@ -248,6 +248,54 @@ And also in the `appsettings.Development.json`:
   "Cors": []
 }
 ----
+
+=== Unable to start devon4net template on macOS or older Windows Versions
+
+If you try to execute the devon4net template on macOS or an earlier version of Windows, such as Windows 7, you will receive the following error message: 
+
+image::images/Exception-DevonWebAPI-MacEnvironment.png[]
+
+Because these operating systems lack ALPN(Application-Layer Protocol Negotiation) functionality, Kestrel does not handle HTTP/2 with TLS. 
+
+To resolve this, navigate to 'appsettings.json' and change the Kestrel configuration as seen below: 
+
+[source, json]
+----
+{
+  "devonfw": {
+    "UseDetailedErrorsKey": true,
+    "UseIIS": false,
+    "UseSwagger": true,
+    "UseXsrf": true,
+    "UseModelStateValidation": true,
+    "Environment": "Development",
+    "ForceUseHttpsRedirection": false,
+    "Kestrel": {
+      "UseHttps": true,
+      "HttpProtocol": "Http1AndHttp2", //Http1, Http2, Http1AndHttp2, none
+      "ApplicationPort": 8085,
+      "SslProtocol": "none", //Tls12, Tls13, none. For Https2 Tls12 is needed
+      "ExtraSettings": {
+        "KeepAliveTimeout": 120, //in seconds
+        "MaxConcurrentConnections": 100,
+        "MaxConcurrentUpgradedConnections": 100,
+        "MaxRequestBodySize": 28.6, //In MB. The default maximum request body size is 30,000,000 bytes, which is approximately 28.6 MB
+        "Http2MaxStreamsPerConnection": 100,
+        "Http2InitialConnectionWindowSize": 131072, // From 65,535 and less than 2^31 (2,147,483,648)
+        "Http2InitialStreamWindowSize": 98304, // From 65,535 and less than 2^31 (2,147,483,648)
+        "AllowSynchronousIO": true
+      }
+    },
+    "IIS": {
+      "ForwardClientCertificate": true,
+      "AutomaticAuthentication": true,
+      "AuthenticationDisplayName": ""
+    }
+  }
+}
+----
+
+WARNING: HTTP/2 without TLS should only be used during app development. Production apps should always use transport security. 
 
 === References
 Here are some interesting references to continue learning about this topic:

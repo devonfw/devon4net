@@ -1481,6 +1481,8 @@ On the other hand, the client needs the following configuration on the `appsetti
 |DataLoss |0xF
 |===
 
+WARNING: For macOS and older versions of Windows systems such as Windows 7, please disable TLS from the kestrel configuration in the `appsettings.json`. HTTP/2 without TLS should only be used during app development. Production apps should always use transport security. For more information, Refer to link:howto.asciidoc[How to: Create a new devon4net project] section for more information.
+
 === Setting up in Devon
 
 ==== Grpc Server

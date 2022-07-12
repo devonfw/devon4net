@@ -389,6 +389,31 @@ dotnet run
 
 You may now start working with C# and the devon4net api template in the Visual Studio Code environment.
 
+==== Troubleshoot
+
+It's possible that when you execute the program, you'll get the following error:
+
+image::images/Exception-DevonWebAPI-MacEnvironment.png[]
+
+That is why Kestrel does not support HTTP/2 with TLS in macOS.
+To fix this, navigate to the `appsettings.json` file and disable the TLS protocol in the Kestrel server setup as follows:
+
+[source, json]
+----
+{
+  "devonfw": {
+    "Kestrel": {
+      "UseHttps": true,
+      "HttpProtocol": "Http1AndHttp2", //Http1, Http2, Http1AndHttp2, none
+      "ApplicationPort": 8085,
+      "SslProtocol": "none", //Tls12, Tls13, none. For Https2 Tls12 is needed
+    }
+  }
+}
+----      
+
+WARNING: HTTP/2 without TLS should only be used during app development. Production apps should always use transport security. 
+
 == Debug
 
 . Open for example Program.cs by clicking on it. The first time you open a C# file in Visual Studio Code, OmniSharp will load in the editor.
