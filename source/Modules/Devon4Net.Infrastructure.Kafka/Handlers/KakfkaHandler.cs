@@ -1,8 +1,8 @@
 ﻿using Confluent.Kafka;
 using Confluent.Kafka.Admin;
-using Devon4Net.Infrastructure.Common.Options.Kafka;
 using Devon4Net.Infrastructure.Kafka.Common.Const;
 using Devon4Net.Infrastructure.Kafka.Exceptions;
+using Devon4Net.Infrastructure.Kafka.Options;
 using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.Extensions.Options;
 

@@ -1,10 +1,10 @@
 ﻿using Devon4Net.Infrastructure.AnsibleTower.Common;
 using Devon4Net.Infrastructure.AnsibleTower.Dto;
 using Devon4Net.Infrastructure.AnsibleTower.Handler;
+using Devon4Net.Infrastructure.AnsibleTower.Options;
 using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
 using Devon4Net.Infrastructure.CircuitBreaker.Handlers;
 using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Common.Options.AnsibleTower;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

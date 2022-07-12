@@ -7,7 +7,7 @@
 		<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
 		<Company>Capgemini S.A.</Company>
 		<Description>Configuration library for SQS message broker management</Description>
-		<Version>6.0.4</Version>
+		<Version>6.0.6</Version>
 		<Copyright>Copyright © Capgemini</Copyright>
 		<PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>

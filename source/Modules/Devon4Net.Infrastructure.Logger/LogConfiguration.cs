@@ -2,11 +2,11 @@
 using Devon4Net.Infrastructure.Logger.Attribute;
 using Serilog;
 using Serilog.Sinks.Graylog.Extended;
-using Devon4Net.Infrastructure.Common.Options.Log;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Devon4Net.Infrastructure.Common.Handlers;
 using Devon4Net.Infrastructure.Common.Common.IO;
+using Devon4Net.Infrastructure.Logger.Options;
 
 namespace Devon4Net.Infrastructure.Logger
 {

@@ -1,5 +1,5 @@
 ﻿using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Common.Options.SmaxHcm;
+using Devon4Net.Infrastructure.SmaxHcm.Options;
 using Devon4Net.Infrastructure.SMAXHCM.Handler;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

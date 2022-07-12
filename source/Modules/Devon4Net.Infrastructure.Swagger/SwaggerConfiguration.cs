@@ -1,6 +1,6 @@
 ﻿using Devon4Net.Infrastructure.Common.Constants;
 using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Common.Options.Swagger;
+using Devon4Net.Infrastructure.Swagger.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

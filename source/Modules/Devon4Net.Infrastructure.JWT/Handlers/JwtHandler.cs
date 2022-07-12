@@ -5,8 +5,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Devon4Net.Infrastructure.Common.Common.IO;
 using Devon4Net.Infrastructure.Common.Helpers;
-using Devon4Net.Infrastructure.Common.Options.JWT;
 using Devon4Net.Infrastructure.JWT.Common.Const;
+using Devon4Net.Infrastructure.JWT.Options;
 using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.IdentityModel.Tokens;
 

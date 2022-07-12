@@ -37,6 +37,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
         public void Process()
         {
             CreatePolicyDocuments();
+            CreateManagedPolicies();
             CreateOrLocateVpcs();
             LocateSubnetGroups();
             LocateSubnets();

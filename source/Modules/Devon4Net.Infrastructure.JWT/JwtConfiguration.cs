@@ -1,7 +1,7 @@
 ﻿using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Common.Options.JWT;
 using Devon4Net.Infrastructure.JWT.Common.Const;
 using Devon4Net.Infrastructure.JWT.Handlers;
+using Devon4Net.Infrastructure.JWT.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;

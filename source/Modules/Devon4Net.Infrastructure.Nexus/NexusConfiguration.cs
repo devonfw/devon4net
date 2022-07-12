@@ -1,6 +1,6 @@
 ﻿using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Common.Options.Nexus;
 using Devon4Net.Infrastructure.Nexus.Handler;
+using Devon4Net.Infrastructure.Nexus.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

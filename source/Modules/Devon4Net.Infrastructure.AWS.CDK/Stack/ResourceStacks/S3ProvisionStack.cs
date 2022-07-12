@@ -1,9 +1,6 @@
 ﻿using Amazon.CDK.AWS.Lambda;
 using Amazon.CDK.AWS.S3;
 using Devon4Net.Infrastructure.AWS.CDK.Options.Resources;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Stack
 {
@@ -15,21 +12,19 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
 
             foreach (var bucket in CdkOptions.S3Buckets)
             {
-                List<ILifecycleRule> expiredDocumentsLifeCycleRules = null;
-
-                if (bucket.ExpireDocumentRules?.Any() == true)
-                {
-                    expiredDocumentsLifeCycleRules = bucket.ExpireDocumentRules.ConvertAll(x => AwsCdkHandler.CreateLifecycleRule(x.RuleName, x.Expiration, x.TagName, x.TagValue, bucket.Versioned, x.PreviousVersionsExpirationDays));
-                }
-
                 if (bucket.LocateInsteadOfCreate)
                 {
-                    var currentBucket = AwsCdkHandler.LocateBucketByName(bucket.Id, bucket.BucketName);
-                    AwsCdkHandler.AddLifeCycleRuleToExistingBucket(ref currentBucket, expiredDocumentsLifeCycleRules);
-                    StackResources.Buckets.Add(bucket.Id, currentBucket);
+                    StackResources.Buckets.Add(bucket.Id, AwsCdkHandler.LocateBucketByName(bucket.Id, bucket.BucketName));
                 }
                 else
                 {
+                    List<ILifecycleRule> expiredDocumentsLifeCycleRules = null;
+
+                    if (bucket.ExpireDocumentRules?.Any() == true)
+                    {
+                        expiredDocumentsLifeCycleRules = bucket.ExpireDocumentRules.Select(x => AwsCdkHandler.CreateLifecycleRule(x.RuleName, x.Expiration, x.TagName, x.TagValue, bucket.Versioned, x.PreviousVersionsExpirationDays)).ToList();
+                    }
+
                     if (bucket.ExpirationDays.HasValue)
                     {
                         StackResources.Buckets.Add(bucket.Id, AwsCdkHandler.AddS3Bucket(bucket.BucketName, lifecycleRules: expiredDocumentsLifeCycleRules, versioned: bucket.Versioned, expirationDays: bucket.ExpirationDays.Value, enforceSSL: bucket.EnforceSSL, blockPublicAccess: bucket.BlockPublicAccess ?? true));

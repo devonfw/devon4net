@@ -7,7 +7,7 @@
 		<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
 		<Company>Capgemini S.A.</Company>
 		<Description>Nexus accellerator module to work with Nexus Repositories</Description>
-		<Version>6.0.2</Version>
+		<Version>6.0.6</Version>
 		<Copyright>Copyright © Capgemini</Copyright>
 		<PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
@@ -22,7 +22,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
 	</ItemGroup>
 

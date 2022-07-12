@@ -13,6 +13,12 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
         {
             return HandlerResources.AwsCdkRoleHandler.LocateRoleByArn(id, arn, fromRoleArnOptions);
         }
+
+        public IRole LocateRoleByName(string id, string name, IFromRoleNameOptions fromRoleNameOptions = null)
+        {
+            return HandlerResources.AwsCdkRoleHandler.LocateRoleByName(id, name, fromRoleNameOptions);
+        }
+
         public IRoleProps CreateRoleProperties(string roleName, string[] assumedBy, string policyName, string[] actions, string[] resources, IManagedPolicy[] managedPolicies = null, Dictionary<string, PolicyDocument> inlinePolicies = null, Effect effect = Effect.ALLOW)
         {
             return HandlerResources.AwsCdkRoleHandler.CreateRoleProperties(roleName, assumedBy, policyName, actions, resources, managedPolicies, effect, inlinePolicies);
@@ -31,21 +37,6 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
         public bool AddRolePolicyStatement(ref IRole role, string[] actions, string[] resources, Effect effect = Effect.ALLOW)
         {
             return HandlerResources.AwsCdkRoleHandler.AddRolePolicyStatement(ref role, actions, resources, effect);
-        }
-
-        public IManagedPolicy LocateAwsManagedPolicyByName(string policyName)
-        {
-            return HandlerResources.AwsCdkRoleHandler.LocateAwsManagedPolicyByName(policyName);
-        }
-
-        public IManagedPolicy LocateManagedPolicyByName(string policyName)
-        {
-            return HandlerResources.AwsCdkRoleHandler.LocateManagedPolicyByName(policyName);
-        }
-
-        public IRole LocateRoleByName(string id, string name)
-        {
-           return HandlerResources.AwsCdkRoleHandler.LocateRoleByName(id, name);
         }
     }
 }

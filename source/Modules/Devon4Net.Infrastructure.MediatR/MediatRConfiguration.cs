@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Common.Options.MediatR;
 using Devon4Net.Infrastructure.Extensions.Helpers;
 using Devon4Net.Infrastructure.LiteDb.LiteDb;
 using Devon4Net.Infrastructure.LiteDb.Repository;
@@ -10,6 +9,7 @@ using Devon4Net.Infrastructure.MediatR.Domain.Database;
 using Devon4Net.Infrastructure.MediatR.Domain.Entities;
 using Devon4Net.Infrastructure.MediatR.Domain.ServiceInterfaces;
 using Devon4Net.Infrastructure.MediatR.Handler;
+using Devon4Net.Infrastructure.MediatR.Options;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -2582,7 +2582,6 @@ public async Task<PaginationResult<Dish>> GetpagedDishListFromFilter(int current
     //Here we create our predicate builder
     var dishPredicate = PredicateBuilder.True<Dish>();
 
-
     //Now we start applying the different criteria:
     if (!string.IsNullOrEmpty(searchBy))
     {
@@ -2606,6 +2605,242 @@ public async Task<PaginationResult<Dish>> GetpagedDishListFromFilter(int current
     
     // Now we can use the predicate to retrieve data from database with just one call
     return await UoW.Repository<Dish>().GetAllIncludePagedAsync(currentpage, pageSize, includeList, dishPredicate);
-
 }
 ----
+
+== Devon4Net.Infrastructure.AWS.Lambda
+
+This component is part of the AWS Stack in Devon4Net. It provides the necessary classes for creating and deploying Lambda Functions in AWS Cloud. In addition it includes some utilities for managing these functions.
+
+=== Configuration
+
+The following configuration is for AWS in general and can be done in `appsettings.{environment}.json` file as follows:
+
+[source, json]
+----
+"AWS": {
+  "UseSecrets": true,
+  "UseParameterStore": true,
+  "Credentials": {
+    "Profile": "",
+    "Region": "eu-west-1",
+    "AccessKeyId": "",
+    "SecretAccessKey": ""
+  }
+}
+----
+
+* `UseSecrets`: Boolean that indicates if AWS Secrets Manager is being used.
+* `UseParameterStore`: Boolean to indicate if AWS Parameter Store is being used.
+* `Credentials`: Credentials for connecting with AWS.
+** `Profile`: A collection of settings is called a profile. This would be the name for the current settings.
+** `Region`: AWS Region whose servers you want to send your requests to by default. This is typically the Region closest to you.
+** `AccessKeyId`: Access key ID portion of the keypair configured to access your AWS account.
+** `SecretAccessKey`: Secret access key portion of the keypair configured to access your AWS account.
+
+NOTE: Access keys consist of an access key ID and secret access key, which are used to sign programmatic requests that you make to AWS. If you don't have access keys, you can create them from the AWS Management Console.
+
+For the configuration of Lambda functions we also need to fill another file with our values. This file is the `aws-lambda-tools-defaults.json`. We can specify all the options for the Lambda commands in the .NET Core CLI:
+
+[source, json]
+----
+{
+  "Information" : [
+    "This file provides default values for the deployment wizard inside Visual Studio and the AWS Lambda commands added to the .NET Core CLI.",
+    "To learn more about the Lambda commands with the .NET Core CLI execute the following command at the command line in the project root directory.",
+
+    "dotnet lambda help",
+
+    "All the command line options for the Lambda command can be specified in this file."
+  ],
+
+  "profile":"default",
+  "region" : "us-east-2",
+  "configuration" : "Release",
+  "framework" : "netcoreapp3.1",
+  "function-runtime":"dotnetcore3.1",
+  "function-memory-size" : 512,
+  "function-timeout" : 30,
+  "function-handler" : "blank-csharp::blankCsharp.Function::FunctionHandler"
+}
+----
+
+=== Setting up in devon
+
+For using it in a devon4net project, you could very easily do it by using the template. 
+
+NOTE: Read the template documentation to learn more about it.
+
+If you don't want to use the template, you will need to create a class library with all your files for your functions and add the configuration shown in sections above.
+
+If you don't have it yet, you will need to install the following tool using CLI like so:
+
+[source, console]
+----
+dotnet tool install -g Amazon.Lambda.Tools
+----
+
+NOTE: You can learn more in the `How to: AWS Lambda Function`
+
+=== Setting up in other projects
+
+For setting it up in other projects you will need to install first both the component and the Amazon Lambda tool for developing with Visual Studio:
+
+* *Install the tool:*
++
+[source, console]
+----
+dotnet tool install -g Amazon.Lambda.Tools
+----
+
+* *Install the component* in your project as a NuGet package, the project were we will install it and develop the functions will be a `Class library`:
++
+[source, console]
+----
+install-package Devon4Net.Infrastructure.AWS.Lambda
+----
+
+Once you have it set up you will need to create your lambda function handlers. If you want to learn how to do it please read the `How to: AWS Lambda Function` guide.
+
+Now you will need to create the following files:
+
+* `appsettings.{environment}.json` that contains the following configuration options:
++
+[source, json]
+----
+"AWS": {
+  "UseSecrets": true,
+  "UseParameterStore": true,
+  "Credentials": {
+    "Profile": "",
+    "Region": "eu-west-1",
+    "AccessKeyId": "",
+    "SecretAccessKey": ""
+  }
+}
+----
+
+* `aws-lambda-tools-defaults.json` with the default configuration values:
++
+[source, json]
+----
+{
+  "Information" : [
+    "This file provides default values for the deployment wizard inside Visual Studio and the AWS Lambda commands added to the .NET Core CLI.",
+    "To learn more about the Lambda commands with the .NET Core CLI execute the following command at the command line in the project root directory.",
+
+    "dotnet lambda help",
+
+    "All the command line options for the Lambda command can be specified in this file."
+  ],
+
+  "profile":"default",
+  "region" : "us-east-2",
+  "configuration" : "Release",
+  "framework" : "netcoreapp3.1",
+  "function-runtime":"dotnetcore3.1",
+  "function-memory-size" : 512,
+  "function-timeout" : 30,
+  "function-handler" : "blank-csharp::blankCsharp.Function::FunctionHandler"
+}
+----
+
+
+* *_[Optionally]_* `serverless.template` with more detailed configuration, very useful if you want to add more than one function:
++
+[source, json]
+----
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Transform": "AWS::Serverless-2016-10-31",
+  "Description": "An AWS Serverless Application that uses the ASP.NET Core framework running in Amazon Lambda.",
+  "Parameters": {},
+  "Conditions": {},
+  "Resources": {
+    "ToUpperFunction": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.Business.StringManagement.Functions.Upper.UpperFunction::FunctionHandler",
+        "Runtime": "dotnet6",
+        "CodeUri": "",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [
+          "AWSLambdaFullAccess",
+          "AmazonSSMReadOnlyAccess",
+          "AWSLambdaVPCAccessExecutionRole"
+        ],
+        "Environment": {
+          "Variables": {}
+        },
+        "Events": {
+          "ProxyResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/{proxy+}",
+              "Method": "ANY"
+            }
+          },
+          "RootResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/",
+              "Method": "ANY"
+            }
+          }
+        }
+      }
+    },
+    "ToLowerFunction": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.business.StringManagement.Functions.Lower.LowerFunction::FunctionHandler",
+        "Runtime": "dotnet6",
+        "CodeUri": "",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [
+          "AWSLambdaFullAccess",
+          "AmazonSSMReadOnlyAccess",
+          "AWSLambdaVPCAccessExecutionRole"
+        ],
+        "Environment": {
+          "Variables": {}
+        },
+        "Events": {
+          "ProxyResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/{proxy+}",
+              "Method": "ANY"
+            }
+          },
+          "RootResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/",
+              "Method": "ANY"
+            }
+          }
+        }
+      }
+    },
+  },
+  "Outputs": {
+    "ApiURL": {
+      "Description": "API endpoint URL for Prod environment",
+      "Value": {
+        "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+      }
+    }
+  }
+}
+----
+
+=== References
+
+* https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds[Configuration Basics - AWS Docs]
+
+* https://docs.aws.amazon.com/code-samples/latest/catalog/lambda_functions-blank-csharp-src-blank-csharp-aws-lambda-tools-defaults.json.html[aws-lambda-tools-defaults.json Code Sample - AWS Docs]
