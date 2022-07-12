@@ -40,20 +40,20 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
 
             StackResources.EcsTaskDefinitions = new Dictionary<string, TaskDefinition>();
 
-            foreach (var taskDefinitionOpt in CdkOptions.EcsTaskDefinitions)
+            foreach (var taskDefinitionOptions in CdkOptions.EcsTaskDefinitions)
             {
                 TaskDefinition taskDefinition;
-                if (!string.IsNullOrWhiteSpace(taskDefinitionOpt.RoleId))
+                if (!string.IsNullOrWhiteSpace(taskDefinitionOptions.RoleId))
                 {
-                    var locatedRole = LocateRole(taskDefinitionOpt.RoleId, $"Could not find role with ID {taskDefinitionOpt.RoleId}");
-                    taskDefinition = AwsCdkHandler.CreateEc2TaskDefinition(taskDefinitionOpt.Id, taskDefinitionOpt.Family, taskDefinitionOpt.Volumes, locatedRole);
+                    var locatedRole = LocateRole(taskDefinitionOptions.RoleId, $"Could not find role with ID {taskDefinitionOptions.RoleId}");
+                    taskDefinition = AwsCdkHandler.CreateEc2TaskDefinition(taskDefinitionOptions.Id, taskDefinitionOptions.Family, taskDefinitionOptions.Volumes, locatedRole);
                 }
                 else
                 {
-                    taskDefinition = AwsCdkHandler.CreateEc2TaskDefinition(taskDefinitionOpt.Id, taskDefinitionOpt.Family, taskDefinitionOpt.Volumes);
+                    taskDefinition = AwsCdkHandler.CreateEc2TaskDefinition(taskDefinitionOptions.Id, taskDefinitionOptions.Family, taskDefinitionOptions.Volumes);
                 }
 
-                StackResources.EcsTaskDefinitions.Add(taskDefinitionOpt.Id, taskDefinition);
+                StackResources.EcsTaskDefinitions.Add(taskDefinitionOptions.Id, taskDefinition);
             }
         }
 
@@ -101,9 +101,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
         {
             if (CdkOptions == null || CdkOptions.EcsClusters?.Any() != true) return;
 
-            foreach (var cluster in CdkOptions.EcsClusters)
+            foreach (var clusterOptions in CdkOptions.EcsClusters)
             {
-                ValidateClusterOptions(cluster);
+                ValidateClusterOptions(clusterOptions);
             }
 
             foreach (var cluster in CdkOptions.EcsClusters)
@@ -112,9 +112,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 var ec2Cluster = AwsCdkHandler.CreateEC2Cluster(cluster.Id, cluster.ClusterName, vpc);
                 StackResources.EcsClusters.Add(cluster.Id, ec2Cluster);
 
-                if (cluster.AutoScalingGroupIDs != null)
+                if (cluster.AutoScalingGroupIds != null)
                 {
-                    foreach (var asgId in cluster.AutoScalingGroupIDs)
+                    foreach (var asgId in cluster.AutoScalingGroupIds)
                     {
                         var asg = LocateAutoScalingGroup(asgId, "Could not found the autoScalingGroupneeded for the cluster");
                         AwsCdkHandler.AddAutoScalingGroupToCluster(asgId, asg as AutoScalingGroup, ec2Cluster as Cluster);
@@ -127,31 +127,31 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
         {
             if (CdkOptions == null || CdkOptions.EcsServices?.Any() != true) return;
 
-            foreach (var service in CdkOptions.EcsServices)
+            foreach (var serviceOptions in CdkOptions.EcsServices)
             {
-                if (service.LocateInsteadOfCreate)
+                if (serviceOptions.LocateInsteadOfCreate)
 {
-                    StackResources.EcsServices.Add(service.Id, AwsCdkHandler.LocateEcsServiceByArn(service.Id, service.ServiceName));
+                    StackResources.EcsServices.Add(serviceOptions.Id, AwsCdkHandler.LocateEcsServiceByArn(serviceOptions.Id, serviceOptions.ServiceName));
                 }
                 else
                 {
-                    var definitionOptions = CdkOptions.EcsTaskDefinitions?.FirstOrDefault(t => t.Id == service.EcsTaskDefinitionId);
+                    var taskDefinitionOptions = CdkOptions.EcsTaskDefinitions?.FirstOrDefault(t => t.Id == serviceOptions.EcsTaskDefinitionId);
 
-                    if (definitionOptions == null)
+                    if (taskDefinitionOptions == null)
                     {
                         throw new ArgumentException("Please add a task definition option properly set up on your json configuration");
                     }
 
-                    switch (definitionOptions.Compatibility)
+                    switch (taskDefinitionOptions.Compatibility)
                     {
                         case Compatibility.EC2:
-                            CreateEc2Service(service, definitionOptions);
+                            CreateEc2Service(serviceOptions, taskDefinitionOptions);
                             break;
                         case Compatibility.EC2_AND_FARGATE:
                         case Compatibility.FARGATE:
-                            throw new NotImplementedException($"The module only supports EC2 Compatibility. {definitionOptions.Compatibility} can be implemented.");
+                            throw new NotImplementedException($"The module only supports EC2 Compatibility. {taskDefinitionOptions.Compatibility} can be implemented.");
                         default:
-                            throw new ArgumentException($"An invalid Compatibility {definitionOptions.Compatibility} was defined for the TaskDefinition {definitionOptions.Id}");
+                            throw new ArgumentException($"An invalid Compatibility {taskDefinitionOptions.Compatibility} was defined for the TaskDefinition {taskDefinitionOptions.Id}");
                     }
                 }
             }
@@ -181,16 +181,16 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 strategyItems = new List<CapacityProviderStrategy>();
                 capacityProviders = new List<AsgCapacityProvider>();
 
-                foreach (var strategy in service.CapacityProviderStrategy)
+                foreach (var strategyItemOptions in service.CapacityProviderStrategy)
                 {
-                    var capacityProvider = LocateAsgCapacityProvider(strategy.ProviderId, "Could not find capacity provider for ecs service");
-                    var strategyItem = AwsCdkHandler.CreateCapacityProviderStrategy(capacityProvider, strategy.Weigth, strategy.Base);
-                    strategyItems.Add(strategyItem);
+                    var capacityProvider = LocateAsgCapacityProvider(strategyItemOptions.ProviderId, "Could not find capacity provider for ecs service");
+                    var strategy = AwsCdkHandler.CreateCapacityProviderStrategy(capacityProvider, strategyItemOptions.Weigth, strategyItemOptions.Base);
+                    strategyItems.Add(strategy);
                     capacityProviders.Add(capacityProvider);
                 }
             }
 
-            var ecsService = AwsCdkHandler.AddElasticContainerEc2Service(service.Id, service.ServiceName, cluster, taskDefinition, service.HealthCheckGracePeriod, strategyItems, service.DesiredCount, service.UseDistinctInstances, service.PlacementStrategy);
+            var ecsService = AwsCdkHandler.AddElasticContainerEc2Service(service.Id, service.ServiceName, cluster, taskDefinition, service.HealthCheckGracePeriod, strategyItems, service.DesiredCount, service.UseDistinctInstances, service.PlacementStrategies);
             AwsCdkHandler.AddEc2ServiceECSDependencies(ecsService, capacityProviders);
 
             CreateContainerDefinition(definitionOptions, taskDefinition);
@@ -217,11 +217,11 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             StackResources.EcsServices.Add(service.Id, ecsService);
         }
 
-        private void CreateContainerDefinition(EcsTaskDefinitionOptions definitionOptions, TaskDefinition taskDefinition)
+        private void CreateContainerDefinition(EcsTaskDefinitionOptions taskDefinitionOptions, TaskDefinition taskDefinition)
         {
-            foreach (var containerDef in definitionOptions.Containers)
+            foreach (var containerDefinitionOption in taskDefinitionOptions.Containers)
             {
-                var ecr = StackResources.EcrRepositories.FirstOrDefault(ecr => ecr.Key == containerDef.RepositoryId);
+                var ecr = StackResources.EcrRepositories.FirstOrDefault(ecr => ecr.Key == containerDefinitionOption.RepositoryId);
 
                 if (ecr.Key == null || ecr.Value == null)
                 {
@@ -229,14 +229,14 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 }
 
                 var portMapping = new List<PortMapping>();
-                if (containerDef.TCPPortMapping?.Any() == true)
+                if (containerDefinitionOption.TCPPortMapping?.Any() == true)
                 {
-                    foreach (var ports in containerDef.TCPPortMapping)
+                    foreach (var portMappingOption in containerDefinitionOption.TCPPortMapping)
                     {
                         portMapping.Add(new PortMapping
                         {
-                            ContainerPort = ports.ContainerPort,
-                            HostPort = ports.HostPort,
+                            ContainerPort = portMappingOption.ContainerPort,
+                            HostPort = portMappingOption.HostPort,
                             Protocol = Amazon.CDK.AWS.ECS.Protocol.TCP
                         });
                     }
@@ -245,21 +245,22 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 var containerDefinitionProps = new ContainerDefinitionProps
                 {
                     TaskDefinition = taskDefinition,
-                    Image = ContainerImage.FromEcrRepository(ecr.Value, containerDef.ImageTag),
-                    MemoryLimitMiB = containerDef.MemoryLimitMiB,
-                    Cpu = containerDef.CpuUnits,
-                    StartTimeout = Duration.Minutes(containerDef.StartTimeOutMinutes),
+                    Image = ContainerImage.FromEcrRepository(ecr.Value, containerDefinitionOption.ImageTag),
+                    MemoryLimitMiB = containerDefinitionOption.MemoryLimitMiB,
+                    Cpu = containerDefinitionOption.CpuUnits,
+                    StartTimeout = Duration.Minutes(containerDefinitionOption.StartTimeOutMinutes),
                     PortMappings = portMapping.ToArray(),
-                    Environment = containerDef.EnvironmentVariables,
-                    DnsServers = containerDef.DnsServers?.ToArray()
+                    Environment = containerDefinitionOption.EnvironmentVariables,
+                    DnsServers = containerDefinitionOption.DnsServers?.ToArray(),
+                    Essential = containerDefinitionOption.Essential ?? true,
                 };
 
-                var container = AwsCdkHandler.CreateContainerDefinitionByProps(containerDef.Id, containerDefinitionProps);
+                var containerDefinition = AwsCdkHandler.CreateContainerDefinitionByProps(containerDefinitionOption.Id, containerDefinitionProps);
 
-                if (definitionOptions.MountPoints?.Any() == true)
+                if (taskDefinitionOptions.MountPoints?.Any() == true)
                 {
                     var mountPoints = new List<MountPoint>();
-                    foreach (var mountPointOption in definitionOptions.MountPoints)
+                    foreach (var mountPointOption in taskDefinitionOptions.MountPoints)
                     {
                         mountPoints.Add(new MountPoint
                         {
@@ -267,7 +268,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                             ContainerPath = mountPointOption.ContainerPath
                         });
                     }
-                    container.AddMountPoints(mountPoints.ToArray());
+                    containerDefinition.AddMountPoints(mountPoints.ToArray());
                 }
             }
         }

@@ -1,5 +1,4 @@
 ﻿using Amazon.CDK.AWS.ECS;
-using System.Collections.Generic;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Entities
 {
@@ -13,7 +12,6 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Entities
         public int? HealthCheckGracePeriod { get; set; }
         public int? DesiredCount { get; set; }
         public bool UseDistinctInstances { get; set; }
-        public string PlacementStrategy { get; set; }
+        public List<string> PlacementStrategies { get; set; }
     }
 }
-
