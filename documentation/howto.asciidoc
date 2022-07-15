@@ -1926,3 +1926,105 @@ image::images/aws_template_test.png[]
 * https://aws.amazon.com/lambda/[AWS Lambda]
 * https://aws.amazon.com/sqs/[Amazon Simple Queue Service (SQS)]
 * https://aws.amazon.com/sns/[Amazon Simple Notification Service (SNS)]
+
+== How to: AWS Serverless
+
+In this section, you will learn how to launch a AWS WebAPI serverless using devon4net.
+
+NOTE: We will make use of the devon4net AWS template. So please make sure you have read its documentation to know where everything is placed.
+
+=== What is a serverless architecture?
+
+A serverless architecture is a way to build and run applications and services without having to manage infrastructure. Your application still runs on servers, but all the server management is done by AWS. 
+
+=== Install the AWS template and Visual Studio AWS tools
+
+In devon4Net you have some AWS templates available, to install them you can run the following command.
+
+[source, console]
+----
+dotnet new --install Devon4Net.AWS.Template
+----
+
+Following that, you will be able to build a project using the devon4net template that includes the components you need to begin building your first AWS serverless WebAPI. 
+
+=== Create a project using the template
+
+Now that everything is in place, you may begin by creating your project using the template:
+
+1. Open Visual Studio 2022 and select create a new project.
+2. Look for the devon4net AWS Template, select it and click next.
++
+.Create a new AWS project using devon4net
+image::images/aws_template_1.png[]
+3. Choose a name and project location and create it.
++
+.Create a new AWS project using devon4net
+image::images/aws_template_3.png[]
+
+These three procedures will result in the creation of the project in which we will develop our serverless WebAPI.
+For that, we will just use the project 'Devon4Net.Application.WebAPI.AwsServerless' from the template: 
+
+.Devon4Net.Application.WebAPI.AwsServerless file structure
+image::images/WebAPI-AwsServerless-structure.png[]
+
+==== Step 1 - Configure it in `appsettings.{environment}.json`
+
+[source, json]
+----
+{
+    "AWS": {
+    "EnableAws": true,
+    "UseSecrets": true,
+    "UseParameterStore": true,
+    "Credentials": {
+      "Profile": "default",
+      "Region": "eu-west-1",
+      "AccessKeyId": "",
+      "SecretAccessKey": ""
+    },
+    "Cognito": {
+      "IdentityPools": [
+        {
+          "IdentityPoolId": "",
+          "IdentityPoolName": "",
+          "ClientId": ""
+        }
+      ]
+    },
+    "SqSQueueList": [
+      {
+        "QueueName": "", // Mandatory. Put the name of the queue here
+        "Url": "", //optional. If it is not present, it will be requested to AWS
+        "UseFifo": false,
+        "MaximumMessageSize": 256,
+        "NumberOfThreads": 2,
+        "DelaySeconds": 0,
+        "ReceiveMessageWaitTimeSeconds": 0,
+        "MaxNumberOfMessagesToRetrievePerCall": 1,
+        "RedrivePolicy": {
+          "MaxReceiveCount": 1,
+          "RedrivePolicy": {
+            "MaxReceiveCount": 1,
+            "DeadLetterQueueUrl": ""
+          }
+        }
+      }
+    ]
+  }
+}
+----
+
+NOTE: If you want to learn more about these parameters you can check the template or the component documentation.
+
+==== Step 2 - Set up as startup project
+
+1. Right click in the `Devon4Net.Application.WebAPI.AwsServerless`.
+2. Select the "Set as Startup Project" option.
+
+.Setting a project as Startup project
+image::images/aws_template_startup.png[]
+
+==== Step 3 - Run it
+
+Run the project and now you can start to develop your serverless WebAPI.

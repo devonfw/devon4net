@@ -794,7 +794,7 @@ This Sample shows you to handle and process Messages from an AWS Queue service d
 
 This is a very simple function that shows how you can perform a lambda to process a string and transform it to uppercase or lowercase.
 
-=== References
+==== References
 
 * https://aws.amazon.com/lambda/[AWS Lambda]
 
@@ -879,9 +879,9 @@ It's the configuration file for the component. It can contain subversions follow
 
 ** `QueueName`: The name of the queue, this field is required.
 
-** `Url`: the queue's url, this parameter is optional.
+** `Url`: The queue's url, this parameter is optional.
 
-** `UseFifo`: We have two Queue types in Amazon SQS, use *false* for Standard Queues or set this parameter to *true* for FIFO Queues.
+** `UseFifo`: We have two queue types in Amazon SQS, use *false* for Standard Queues or set this parameter to *true* for FIFO Queues.
 
 ** `MaximumMessageSize`: The maximum message size for this queue.
 
@@ -897,7 +897,7 @@ It's the configuration file for the component. It can contain subversions follow
 
 NOTE: Read the https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-queue-parameters.html[AWS SQS documentation] to learn more about the configuration of this kind of queues.
 
-=== References
+==== References
 
 * https://aws.amazon.com/serverless/?nc1=h_ls[Serverless on AWS]
 
