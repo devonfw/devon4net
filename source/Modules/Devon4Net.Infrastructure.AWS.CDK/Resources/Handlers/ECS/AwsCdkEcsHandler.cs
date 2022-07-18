@@ -26,7 +26,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
             }));
         }
 
-        public IService CreateEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount, bool useDistinctInstances, string placementStrategy, List<string> strategies)
+        public IService CreateEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount, bool useDistinctInstances, List<string> placementStrategies)
         {
             var result = CreateEc2Service(new Ec2ServiceEntity
             {
@@ -38,8 +38,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
                 CapacityProviderStrategies = capacityProviderStrategies,
                 DesiredCount = desiredCount,
                 UseDistinctInstances = useDistinctInstances,
-                PlacementStrategy = placementStrategy,
-                Strategies = strategies
+                PlacementStrategies = placementStrategies
             });
 
             TagHandler.AddCustomTag("AmazonECSManaged", "true", result);
@@ -192,63 +191,37 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
                 result.AddPlacementConstraints(new PlacementConstraint[] { PlacementConstraint.DistinctInstances() });
             }
 
-            SetPlacementStrategy(result, entity.PlacementStrategy, entity.Strategies);
+            SetPlacementStrategy(result, entity.PlacementStrategies);
 
             TagHandler.LogTag($"{ApplicationName}{EnvironmentName}{entity.ServiceName}Ec2Service", result);
             return result;
         }
 
-        private void SetPlacementStrategy(Ec2Service entity, string strategy, List<string> strategies)
+        private void SetPlacementStrategy(Ec2Service entity, List<string> placementStrategies)
         {
-            switch (strategy.ToLower())
+            foreach (var strategy in placementStrategies)
             {
-                case "binpackmemory":
-                    entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.PackedByMemory() });
-                    break;
-                case "binpackcpu":
-                    entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.PackedByCpu() });
-                    break;
-                case "random":
-                    entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.Randomly() });
-                    break;
-                case "spread":
-                    entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.SpreadAcrossInstances() });
-                    break;
-                case "custom":
-                    if (strategies != null && strategies.Any())
-                    {
-                        foreach (string element in strategies)
-                        {
-                            switch (element.ToLower())
-                            {
-                                case "binpackmemory":
-                                    entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.PackedByMemory() });
-                                    break;
-                                case "binpackcpu":
-                                    entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.PackedByCpu() });
-                                    break;
-                                case "random":
-                                    entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.Randomly() });
-                                    break;
-                                case "spread_instance":
-                                    entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.SpreadAcrossInstances() });
-                                    break;
-                                case "spread_az":
-                                    entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.SpreadAcross(BuiltInAttributes.AVAILABILITY_ZONE) });
-                                    break;
-                                default:
-                                    throw new ArgumentException("Please provide one of the following valid Placement Strategies: binpackmemory, binpackcpu, random, spread_az, spread_instance");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        throw new ArgumentException("Please provide a set of strategies for custom placement strategy");
-                    }
 
-                    break;
-                default:
-                    throw new ArgumentException("Please provide one of the following valid Placement Strategies: binpackmemory, binpackcpu, random, spread, custom");
+                switch (strategy.ToLower())
+                {
+                    case "binpackmemory":
+                        entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.PackedByMemory() });
+                        break;
+                    case "binpackcpu":
+                        entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.PackedByCpu() });
+                        break;
+                    case "random":
+                        entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.Randomly() });
+                        break;
+                    case "spread_instance":
+                        entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.SpreadAcrossInstances() });
+                        break;
+                    case "spread_az":
+                        entity.AddPlacementStrategies(new PlacementStrategy[] { PlacementStrategy.SpreadAcross(BuiltInAttributes.AVAILABILITY_ZONE) });
+                        break;
+                    default:
+                        throw new ArgumentException("Please provide one of the following valid Placement Strategies: binpackmemory, binpackcpu, random, spread_az, spread_instance");
+                }
             }
         }
         #endregion

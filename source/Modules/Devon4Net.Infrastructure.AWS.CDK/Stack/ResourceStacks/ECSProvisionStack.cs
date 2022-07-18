@@ -190,7 +190,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 }
             }
 
-            var ecsService = AwsCdkHandler.AddElasticContainerEc2Service(service.Id, service.ServiceName, cluster, taskDefinition, service.HealthCheckGracePeriod, strategyItems, service.DesiredCount, service.UseDistinctInstances, service.PlacementStrategy, service.Strategies);
+            var ecsService = AwsCdkHandler.AddElasticContainerEc2Service(service.Id, service.ServiceName, cluster, taskDefinition, service.HealthCheckGracePeriod, strategyItems, service.DesiredCount, service.UseDistinctInstances, service.PlacementStrategies);
             AwsCdkHandler.AddEc2ServiceECSDependencies(ecsService, capacityProviders);
 
             CreateContainerDefinition(definitionOptions, taskDefinition);
