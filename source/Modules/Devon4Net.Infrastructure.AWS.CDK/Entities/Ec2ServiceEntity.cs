@@ -12,6 +12,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Entities
         public int? HealthCheckGracePeriod { get; set; }
         public int? DesiredCount { get; set; }
         public bool UseDistinctInstances { get; set; }
-        public List<string> PlacementStrategies { get; set; }
+        public string PlacementStrategy { get; set; }
+        public List<string> Strategies { get; set; }
     }
 }

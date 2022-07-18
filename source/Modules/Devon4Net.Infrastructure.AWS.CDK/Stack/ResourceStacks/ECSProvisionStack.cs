@@ -166,7 +166,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 throw new ArgumentException("Please add a task definition option properly set up on your json configuration. No task definition could be added.");
             }
 
-            var cluster = StackResources.EcsClusters.FirstOrDefault(c => c.Key == service.EcsClusterId).Value;
+            var cluster = StackResources.EcsClusters.FirstOrDefault(c => c.Key == service.EcsClusterId).Value as Cluster;
 
             if (cluster == null)
             {
@@ -181,16 +181,16 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 strategyItems = new List<CapacityProviderStrategy>();
                 capacityProviders = new List<AsgCapacityProvider>();
 
-                foreach (var strategyItemOptions in service.CapacityProviderStrategy)
+                foreach (var strategy in service.CapacityProviderStrategy)
                 {
-                    var capacityProvider = LocateAsgCapacityProvider(strategyItemOptions.ProviderId, "Could not find capacity provider for ecs service");
-                    var strategy = AwsCdkHandler.CreateCapacityProviderStrategy(capacityProvider, strategyItemOptions.Weigth, strategyItemOptions.Base);
-                    strategyItems.Add(strategy);
+                    var capacityProvider = LocateAsgCapacityProvider(strategy.ProviderId, "Could not find capacity provider for ecs service");
+                    var strategyItem = AwsCdkHandler.CreateCapacityProviderStrategy(capacityProvider, strategy.Weigth, strategy.Base);
+                    strategyItems.Add(strategyItem);
                     capacityProviders.Add(capacityProvider);
                 }
             }
 
-            var ecsService = AwsCdkHandler.AddElasticContainerEc2Service(service.Id, service.ServiceName, cluster, taskDefinition, service.HealthCheckGracePeriod, strategyItems, service.DesiredCount, service.UseDistinctInstances, service.PlacementStrategies);
+            var ecsService = AwsCdkHandler.AddElasticContainerEc2Service(service.Id, service.ServiceName, cluster, taskDefinition, service.HealthCheckGracePeriod, strategyItems, service.DesiredCount, service.UseDistinctInstances, service.PlacementStrategy, service.Strategies);
             AwsCdkHandler.AddEc2ServiceECSDependencies(ecsService, capacityProviders);
 
             CreateContainerDefinition(definitionOptions, taskDefinition);
@@ -214,6 +214,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                     }
                 }
             }
+
             StackResources.EcsServices.Add(service.Id, ecsService);
         }
 

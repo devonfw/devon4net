@@ -32,13 +32,14 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Options.Resources
         public double? AllocatedStorageGb { get; set; }
         public string LicenseOption { get; set; }
         public string InstanceSize { get; set; }
+        //TODO: Remove this after the approval
         public string Password { get; set; }
         public int BackupRetentionPeriod { get; set; }
         public StorageType StorageType { get; set; }
         public string DatabaseEngineVersion { get; set; }
         public InstanceClass InstanceType { get; set; }
         public int? EnhancedMonitoringIntervalSeconds { get; set; }
-        public string MonitoringRoleName { get; set; }
+        public string? MonitoringRoleId { get; set; }
         public bool? EnablePerformanceInsights { get; set; }
         public int? PerformanceInsightsRetentionPeriod { get; set; }
     }
