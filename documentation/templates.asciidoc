@@ -794,10 +794,121 @@ This Sample shows you to handle and process Messages from an AWS Queue service d
 
 This is a very simple function that shows how you can perform a lambda to process a string and transform it to uppercase or lowercase.
 
-=== References
+==== References
 
 * https://aws.amazon.com/lambda/[AWS Lambda]
 
 * https://docs.aws.amazon.com/code-samples/latest/catalog/lambda_functions-blank-csharp-src-blank-csharp-aws-lambda-tools-defaults.json.html[aws-lamda-tools-defaults.json]
 
 * https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/net-dg-advanced-config.html
+
+=== Devon4Net.Application.WebAPI.Serverless
+
+This package contains a template for building a serverless WebAPI.
+It makes use of the `Devon4Net.Infrastructure.WebAPI.Serverless` component, therefore please read the documentation about it before using the template.
+You also have a 'How to: AWS Serverless' guide that demonstrates you how to use this template to create a serverless WebAPI. 
+
+.webAPI serverless Template File structure
+image::images/WebAPI-AwsServerless-structure.png[]
+
+In the previous figure you can see the whole structure of the package.
+
+
+==== Configuration
+
+The configuration files are the following:
+
+===== appsettings.json
+
+It's the configuration file for the component. It can contain subversions following the structure `appsettings.{environment}.json`. 
+
+[source, json]
+----
+{
+    "AWS": {
+    "EnableAws": true,
+    "UseSecrets": true,
+    "UseParameterStore": true,
+    "Credentials": {
+      "Profile": "default",
+      "Region": "eu-west-1",
+      "AccessKeyId": "",
+      "SecretAccessKey": ""
+    },
+    "Cognito": {
+      "IdentityPools": [
+        {
+          "IdentityPoolId": "",
+          "IdentityPoolName": "",
+          "ClientId": ""
+        }
+      ]
+    },
+    "SqSQueueList": [
+      {
+        "QueueName": "", // Mandatory. Put the name of the queue here
+        "Url": "", //optional. If it is not present, it will be requested to AWS
+        "UseFifo": false,
+        "MaximumMessageSize": 256,
+        "NumberOfThreads": 2,
+        "DelaySeconds": 0,
+        "ReceiveMessageWaitTimeSeconds": 0,
+        "MaxNumberOfMessagesToRetrievePerCall": 1,
+        "RedrivePolicy": {
+          "MaxReceiveCount": 1,
+          "RedrivePolicy": {
+            "MaxReceiveCount": 1,
+            "DeadLetterQueueUrl": ""
+          }
+        }
+      }
+    ]
+  }
+}
+----
+
+* `UseSecrets`: Boolean to indicate if AWS Secrets Manager is being used.
+
+* `UseParameterStore`: Boolean to indicate if AWS Parameter Store is being used.
+
+* `Credentials`: Credentials for connecting the app with your AWS profile.
+
+* `Cognito`: Amazon Cognito identity pools provide temporary AWS credentials for users who are guests (unauthenticated) and for users who have been authenticated and received a token. An identity pool is a store of user identity data specific to your account. In this section you can configure multiple IdentityPools.
+
+* `SqSQueueList`: This section is used to configure the Amazon Simple Queue Service (SQS). You must configure some parameters about the queue:
+
+** `QueueName`: The name of the queue, this field is required.
+
+** `Url`: The queue's url, this parameter is optional.
+
+** `UseFifo`: We have two queue types in Amazon SQS, use *false* for Standard Queues or set this parameter to *true* for FIFO Queues.
+
+** `MaximumMessageSize`: The maximum message size for this queue.
+
+** `NumberOfThreads`: The number of threads of the queue.
+
+** `DelaySeconds`: The amount of time that Amazon SQS will delay before delivering a message that is added to the queue.
+
+** `ReceiveMessageWaitTimeSeconds`: The maximum amount of time that Amazon SQS waits for messages to become available after the queue gets a receive request.
+
+** `MaxNumberOfMessagesToRetrievePerCall`: The maximum number of messages to retrieve per call.
+
+** `RedrivePolicy`: Defines which source queues can use this queue as the dead-letter queue
+
+NOTE: Read the https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-queue-parameters.html[AWS SQS documentation] to learn more about the configuration of this kind of queues.
+
+==== References
+
+* https://aws.amazon.com/serverless/?nc1=h_ls[Serverless on AWS]
+
+* https://docs.aws.amazon.com/cognito/latest/developerguide/identity-pools.html[Using identity pools]
+
+* https://aws.amazon.com/sqs/?nc1=h_ls[Amazon SQS]
+
+* https://aws.amazon.com/sqs/features/[Amazon SQS features]
+
+* https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-queue-parameters.html[Configuring queue parameters]
+
+* https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-delay-queues.html[Amazon SQS delay queues]
+
+* https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html[Amazon SQS dead-letter queues]
