@@ -1,5 +1,7 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
 {

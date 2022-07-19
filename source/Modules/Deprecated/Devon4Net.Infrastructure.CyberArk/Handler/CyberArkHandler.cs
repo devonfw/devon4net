@@ -1,6 +1,5 @@
 ﻿using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
 using Devon4Net.Infrastructure.CircuitBreaker.Handlers;
-using Devon4Net.Infrastructure.Common.Options.CyberArk;
 using Devon4Net.Infrastructure.CyberArk.Common.Const;
 using Devon4Net.Infrastructure.CyberArk.Dto.Account;
 using Devon4Net.Infrastructure.CyberArk.Dto.Group;
@@ -8,6 +7,7 @@ using Devon4Net.Infrastructure.CyberArk.Dto.Logon;
 using Devon4Net.Infrastructure.CyberArk.Dto.Safe;
 using Devon4Net.Infrastructure.CyberArk.Dto.User;
 using Devon4Net.Infrastructure.CyberArk.Exceptions;
+using Devon4Net.Infrastructure.CyberArk.Options;
 using Microsoft.Extensions.Options;
 
 namespace Devon4Net.Infrastructure.CyberArk.Handler

@@ -7,7 +7,7 @@
 		<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
 		<Company>Capgemini S.A.</Company>
 		<Description>Entity framework unit of work implementation</Description>
-		<Version>6.0.2</Version>
+		<Version>6.0.6</Version>
 		<Copyright>Copyright © Capgemini</Copyright>
 		<PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
@@ -37,15 +37,15 @@
       <!--<PackageReference Include="EntityFrameworkCore.Jet" Version="3.1.0" />-->
       <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="6.0.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="6.0.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.2" />      
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.2" />
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.3" />
-      <PackageReference Include="Oracle.EntityFrameworkCore" Version="6.21.5" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.6" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="6.0.6" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="6.0.6" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.6" />      
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.6" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.6" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.6" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.5" />
+      <PackageReference Include="Oracle.EntityFrameworkCore" Version="6.21.61" />
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.1" />
       <PackageReference Include="EntityFrameworkCore.FirebirdSQL" Version="2.1.2.2" />
     </ItemGroup>

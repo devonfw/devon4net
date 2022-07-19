@@ -8,6 +8,8 @@ using Devon4Net.Infrastructure.Common.Handlers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Amazon;
+using Devon4Net.Infrastructure.AWS.SQS.Handlers;
+using Devon4Net.Infrastructure.Logger.Logging;
 
 namespace Devon4Net.Infrastructure.AWS.Serverless
 {
@@ -26,10 +28,37 @@ namespace Devon4Net.Infrastructure.AWS.Serverless
             if (AwsOptions.EnableAws)
             {
                 var credentials = services.LoadAwsCredentials();
-                var awsRegion = services.LoadAwsRegionEndpoint();
-                (configuration as IConfigurationBuilder)?.AddSecretsHandler(credentials, awsRegion);
-                (configuration as IConfigurationBuilder)?.AddParameterStoreHandler(credentials, awsRegion);
+
+                if (credentials != null)
+                {
+                    var awsRegion = services.LoadAwsRegionEndpoint();
+
+                    if (AwsOptions.UseSecrets)
+                    {
+                        (configuration as IConfigurationBuilder)?.AddSecretsHandler(credentials, awsRegion);
+                    }
+
+                    if (AwsOptions.UseParameterStore)
+                    {
+                        (configuration as IConfigurationBuilder)?.AddParameterStoreHandler(credentials, awsRegion);
+                    }
+
+                    if (AwsOptions.UseSqs)
+                    {
+                        services.AddSingleton<ISqsClientHandler, SqsClientHandler>();
+                    }
+                }
+                else
+                {
+                    RaiseCredentialsException();
+                }
             }
+        }
+
+        private static void RaiseCredentialsException()
+        {
+            Devon4NetLogger.Error("The AWS Credentials are null");
+            throw new AWSCommonRuntimeException("The AWS Credentials can not be null. Please check the AWS options in the configuration file");
         }
 
         private static AWSCredentials LoadAwsCredentials(this IServiceCollection services)

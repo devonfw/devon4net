@@ -1,4 +1,5 @@
 ﻿using Devon4Net.Application.WebAPI.Configuration.Common;
+using FluentValidation.AspNetCore;
 using Devon4Net.Infrastructure.Common.Common.IO;
 using Devon4Net.Infrastructure.Common.Handlers;
 using Devon4Net.Infrastructure.Common.Options.Devon;
@@ -56,6 +57,8 @@ namespace Devon4Net.Application.WebAPI.Configuration.Application
             {
                 throw new ArgumentException("Please check the devonfw options node in your configuration file");
             }
+
+            services.AddMvc().AddFluentValidation();
 
             if (DevonfwOptions.UseModelStateValidation)
             {

@@ -1,5 +1,4 @@
-﻿using Devon4Net.Infrastructure.Common.Options.RabbitMq;
-using Devon4Net.Infrastructure.Logger.Logging;
+﻿using Devon4Net.Infrastructure.Logger.Logging;
 using Devon4Net.Application.WebAPI.Implementation.Business.RabbitMqManagement.Commands;
 using Devon4Net.Application.WebAPI.Implementation.Business.RabbitMqManagement.Handlers;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Devon4Net.Infrastructure.RabbitMQ.Options;
 
 namespace Devon4Net.Application.WebAPI.Implementation.Business.RabbitMqManagement.Controllers
 {

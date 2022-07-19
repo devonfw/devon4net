@@ -1,6 +1,6 @@
 ﻿using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Common.Options.CyberArk;
 using Devon4Net.Infrastructure.CyberArk.Handler;
+using Devon4Net.Infrastructure.CyberArk.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

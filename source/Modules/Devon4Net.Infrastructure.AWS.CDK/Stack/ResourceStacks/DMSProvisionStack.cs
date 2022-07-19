@@ -98,7 +98,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             vpcSubnetIds = null;
             if (replicationSubnetGroupOption.ReplicationSubnetIds?.Any() != true) throw new ArgumentException($"The replication subnet group {replicationSubnetGroupOption.Name} must have a replication subnet ids");
 
-            List<string> vpcSubnetIdsList = new List<string>();
+            var vpcSubnetIdsList = new List<string>();
             foreach (var subnetIdOption in replicationSubnetGroupOption.ReplicationSubnetIds)
             {
                 if (!string.IsNullOrWhiteSpace(subnetIdOption))
@@ -151,7 +151,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             vpcSecurityGroupsIds = null;
             if (replicationInstanceOption.SecurityGroupIds?.Any() == true)
             {
-                List<string> vpcSecurityGroupsIdsList = new List<string>();
+                var vpcSecurityGroupsIdsList = new List<string>();
                 foreach (var securityGroupOption in replicationInstanceOption.SecurityGroupIds)
                 {
                     ISecurityGroup securityGroup = LocateSecurityGroup(securityGroupOption,

@@ -2,6 +2,7 @@
 using Amazon.CDK.AWS.AutoScaling;
 using Amazon.CDK.AWS.CodeBuild;
 using Amazon.CDK.AWS.CodePipeline;
+using Amazon.CDK.AWS.Cognito;
 using Amazon.CDK.AWS.DMS;
 using Amazon.CDK.AWS.DynamoDB;
 using Amazon.CDK.AWS.EC2;
@@ -18,8 +19,6 @@ using Amazon.CDK.AWS.SecretsManager;
 using Amazon.CDK.AWS.SNS;
 using Amazon.CDK.AWS.SSM;
 using Amazon.CDK.AWS.WAFv2;
-using System;
-using System.Collections.Generic;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Stack
 {
@@ -53,13 +52,15 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
         public IDictionary<string, IService> EcsServices { get; set; }
         public IDictionary<string, IInstance> Ec2Instances { get; set; }
         public IDictionary<string, INetworkLoadBalancer> NetworkLoadBalancers { get; set; }
-        public IDictionary<string, CfnEndpoint> DmsEndpoints { get; set; }
+        public IDictionary<string, Amazon.CDK.AWS.DMS.CfnEndpoint> DmsEndpoints { get; set; }
         public IDictionary<string, CfnReplicationInstance> DmsReplicationInstances { get; set; }
         public IDictionary<string, CfnReplicationSubnetGroup> DmsReplicationSubnetGroups { get; set; }
         public IDictionary<string, CfnReplicationTask> DmsMigrationTasks { get; set; }
         public IDictionary<string, AsgCapacityProvider> AsgCapacityProviders { get; set; }
         public IDictionary<string, CfnWebACL> WebAcls { get; set; }
+        public IDictionary<string, IUserPool> CognitoUserPools { get; set; }
         public Dictionary<string, ITopic> SnsTopics { get; set; }
+        public IDictionary<string, IManagedPolicy> ManagedPolicies { get; set; }
 
         public StackResources()
         {
@@ -71,7 +72,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             CodeBuildProjects = new Dictionary<string, IProject>();
             DatabaseParameterGroups = new Dictionary<string, IParameterGroup>();
             Databases = new Dictionary<string, IDatabaseInstance>();
-            DmsEndpoints = new Dictionary<string, CfnEndpoint>();
+            DmsEndpoints = new Dictionary<string, Amazon.CDK.AWS.DMS.CfnEndpoint>();
             DmsMigrationTasks = new Dictionary<string, CfnReplicationTask>();
             DmsReplicationInstances = new Dictionary<string, CfnReplicationInstance>();
             DmsReplicationSubnetGroups = new Dictionary<string, CfnReplicationSubnetGroup>();
@@ -97,7 +98,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             Subnets = new Dictionary<string, ISubnet>();
             Vpcs = new Dictionary<string, IVpc>();
             WebAcls = new Dictionary<string, CfnWebACL>();
+            CognitoUserPools = new Dictionary<string, IUserPool>();
             SnsTopics = new Dictionary<string, ITopic>();
+            ManagedPolicies = new Dictionary<string, IManagedPolicy>();
         }
 
         public T Locate<T>(string resourceId, string exceptionMessageIfResourceDoesNotExist, string exceptionMessageIfResourceIsEmpty = null)
@@ -148,7 +151,10 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 AutoScalingGroups,
                 AsgCapacityProviders,
                 PolicyDocuments,
-                NetworkTargetGroups
+                NetworkTargetGroups,
+                SnsTopics,
+                CognitoUserPools,
+                ManagedPolicies
             };
 
             return Array.Find(l, x => x is Dictionary<string, T>) as Dictionary<string, T>;

@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-
-namespace Devon4Net.Infrastructure.AWS.CDK.Options.Resources
+﻿namespace Devon4Net.Infrastructure.AWS.CDK.Options.Resources
 {
-
     public class EcsContainerDefinitionOptions
     {
         public string Id { get; set; }
@@ -16,6 +13,6 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Options.Resources
         public List<EcsPortMappingOptions> UDPPortMapping { get; set; }
         public Dictionary<string, string> EnvironmentVariables { get; set; }
         public List<string> DnsServers { get; set; }
+        public bool? Essential { get; set; }
     }
-
 }

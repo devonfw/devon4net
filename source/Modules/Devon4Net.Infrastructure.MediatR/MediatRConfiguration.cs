@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Common.Options.MediatR;
 using Devon4Net.Infrastructure.Extensions.Helpers;
 using Devon4Net.Infrastructure.LiteDb.LiteDb;
 using Devon4Net.Infrastructure.LiteDb.Repository;
@@ -10,6 +9,7 @@ using Devon4Net.Infrastructure.MediatR.Domain.Database;
 using Devon4Net.Infrastructure.MediatR.Domain.Entities;
 using Devon4Net.Infrastructure.MediatR.Domain.ServiceInterfaces;
 using Devon4Net.Infrastructure.MediatR.Handler;
+using Devon4Net.Infrastructure.MediatR.Options;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,7 +30,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static void ConfigureMediatRGenericDependencyInjection(ref IServiceCollection services)
         {
             services.AddTransient(typeof(IJsonHelper), typeof(JsonHelper));
-            services.AddTransient(typeof(IRepository<MediatRBackup>), typeof(Repository<MediatRBackup>));
+            services.AddTransient(typeof(ILiteDbRepository<MediatRBackup>), typeof(LiteDbRepository<MediatRBackup>));
             services.AddTransient(typeof(IMediatRBackupService), typeof(MediatRBackupService));
             services.AddTransient(typeof(IMediatRHandler), typeof(MediatRHandler));
             services.AddMediatR(Assembly.GetExecutingAssembly());

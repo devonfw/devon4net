@@ -4,8 +4,10 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Devon4Net.Infrastructure.Common.Common.IO;
-using Devon4Net.Infrastructure.Common.Options.JWT;
-using Microsoft.IdentityModel.Logging;
+using Devon4Net.Infrastructure.Common.Helpers;
+using Devon4Net.Infrastructure.JWT.Common.Const;
+using Devon4Net.Infrastructure.JWT.Options;
+using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Devon4Net.Infrastructure.JWT.Handlers
@@ -32,43 +34,60 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
             }
         }
 
-        public string CreateClientToken(List<Claim> clientClaims)
+        public string CreateJwtToken(List<Claim> clientClaims)
         {
-            IdentityModelEventSource.ShowPII = true;
-            var tokenDescriptor = new SecurityTokenDescriptor
+            try
             {
-                Issuer = JwtOptions.Issuer,
-                Audience = JwtOptions.Audience,
-                Subject = new ClaimsIdentity(clientClaims), //NOSONAR false positive
-                Expires = DateTime.UtcNow.AddMinutes(Convert.ToInt16(JwtOptions.ClockSkew)),
-                IssuedAt = DateTime.Now,
-                Claims = clientClaims.Where(c=>c.Type != ClaimTypes.Role).ToDictionary(x => x.Type, x => x.Value as object),
-                SigningCredentials = SigningCredentials
-            };
-            return new JwtSecurityTokenHandler().CreateEncodedJwt(tokenDescriptor);
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Issuer = JwtOptions.Issuer,
+                    Audience = JwtOptions.Audience,
+                    Subject = new ClaimsIdentity(clientClaims), //NOSONAR false positive
+                    Expires = DateTime.UtcNow.AddMinutes(Convert.ToInt16(JwtOptions.ClockSkew)),
+                    IssuedAt = DateTime.UtcNow,
+                    Claims = clientClaims.Where(c => c.Type != ClaimTypes.Role).ToDictionary(x => x.Type, x => x.Value as object),
+                    SigningCredentials = SigningCredentials
+                };
+                return new JwtSecurityTokenHandler(). CreateEncodedJwt(tokenDescriptor);
+            }
+            catch (Exception ex)
+            {
+                Devon4NetLogger.Error(ex);
+                throw;
+            }
+        }
+
+        public string CreateRefreshToken()
+        {
+            try
+            {
+                var dateTicks = DateTime.UtcNow.Ticks;
+                var rd = RandomNumberGenerator.Create();
+                var randomBytes = new byte[4];
+
+                rd.GetBytes(randomBytes);
+
+                var ticks = dateTicks + BitConverter.ToInt64(randomBytes, 0);
+
+                return Convert.ToBase64String(GetHashCodeFromString(ticks.ToString(), JwtOptions.Security.RefreshTokenEncryptionAlgorithm ?? SecurityAlgorithms.RsaSha512));
+            }
+            catch (Exception ex)
+            {
+                Devon4NetLogger.Error(ex);
+                throw;
+            }
         }
 
         public List<Claim> GetUserClaims(string jwtToken)
         {
-            var handler = new JwtSecurityTokenHandler();
-
-            var claimsPrincipal = handler.ValidateToken(jwtToken,
-                new TokenValidationParameters
-                {
-                    ValidAudience = JwtOptions.Audience,
-                    ValidIssuer = JwtOptions.Issuer,
-                    RequireSignedTokens = false,
-                    TokenDecryptionKey = SecurityKey,
-                    IssuerSigningKey = SecurityKey
-                }, out _);
-
+            _ = ValidateToken(jwtToken,  out var claimsPrincipal, out _);
             return claimsPrincipal.Claims.ToList();
         }
 
         public string GetClaimValue(List<Claim> claimList, string claim)
         {
-            if (claimList == null || !claimList.Any()) return string.Empty;
-            return claimList.FirstOrDefault(x => x.Type == claim)?.Value;
+            if (claimList?.Any() != true) return string.Empty;
+            return claimList.Find(x => x.Type == claim)?.Value;
         }
 
         public string GetClaimValue(string token, string claim)
@@ -83,34 +102,81 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
             return IssuerSigningKey;
         }
 
+        public bool ValidateToken(string jwtToken, out ClaimsPrincipal claimsPrincipal, out SecurityToken securityToken)
+        {
+            var handler = new JwtSecurityTokenHandler();
+
+            try
+            {
+                claimsPrincipal = handler.ValidateToken(jwtToken, new TokenValidationParameters
+                {
+                    ValidateIssuer = JwtOptions.ValidateIssuer,
+                    ValidateAudience = JwtOptions.RequireAudience,
+                    ValidateIssuerSigningKey = JwtOptions.ValidateIssuerSigningKey,
+                    ValidateLifetime = JwtOptions.ValidateLifetime,
+                    RequireSignedTokens = JwtOptions.RequireSignedTokens,
+                    RequireExpirationTime = JwtOptions.RequireExpirationTime,
+                    RequireAudience = JwtOptions.RequireAudience,
+                    TokenDecryptionKey = SecurityKey,
+                    IssuerSigningKey = SecurityKey,
+                    ValidAudience = JwtOptions.Audience,
+                    ValidIssuer = JwtOptions.Issuer
+                }, out securityToken);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Devon4NetLogger.Error(ex);
+                throw;
+            }
+        }
+
+        #region private methods
         private void GetSigningCredentialsFromKey(string secretKey)
         {
-            var key = new SymmetricSecurityKey(Encoding.Default.GetBytes(secretKey));
-            SecurityKey = key;
-            IssuerSigningKey = new SymmetricSecurityKey(key.Key);
-            SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            try
+            {
+                var userEncryptionAlgorithm = GetEncryptionAlgorithm(JwtOptions.Security.SecretKeyEncryptionAlgorithm);
+                var key = new SymmetricSecurityKey(GetHashCodeFromString(secretKey, userEncryptionAlgorithm));
+                SecurityKey = key;
+                IssuerSigningKey = new SymmetricSecurityKey(key.Key);
+                SigningCredentials = new SigningCredentials(key, userEncryptionAlgorithm);
+            }
+            catch (Exception ex)
+            {
+                Devon4NetLogger.Error(ex);
+                throw;
+            }
         }
 
         private void GetSigningCredentialsFromCertificate(string certificate, string password)
         {
             try
             {
-                var certificateEncryptionAlgorithm = JwtOptions.Security.CertificateEncryptionAlgorithm ?? SecurityAlgorithms.RsaSha512;
-                Certificate = new X509Certificate2(File.ReadAllBytes(FileOperations.GetFileFullPath(certificate)), password,  X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+                var certificateEncryptionAlgorithm = GetEncryptionAlgorithm(JwtOptions.Security.CertificateEncryptionAlgorithm);
+
+                Certificate = new X509Certificate2(File.ReadAllBytes(FileOperations.GetFileFullPath(certificate)), password, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
                 SecurityKey = new X509SecurityKey(Certificate);
                 IssuerSigningKey = new X509SecurityKey(Certificate);
                 SigningCredentials = new SigningCredentials(IssuerSigningKey, certificateEncryptionAlgorithm);
             }
             catch (CryptographicException ex)
             {
-                Console.WriteLine(ex);
+                Devon4NetLogger.Error(ex);
                 throw;
             }
             catch (ArgumentNullException ex)
             {
-                Console.WriteLine(ex);
+                Devon4NetLogger.Error(ex);
                 throw;
             }
+        }
+
+        private static byte[] GetHashCodeFromString(string key, string algorithm)
+        {
+            var hash = HashAlgorithm.Create(GetHashAlgorithm(algorithm));
+            return hash.ComputeHash(Encoding.Default.GetBytes(key));
         }
 
         private void SetupJwtSecurity()
@@ -131,5 +197,63 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
                 }
             }
         }
+
+        private static string GetEncryptionAlgorithm(string encryptionAlgorithm)
+        {
+            try
+            {
+                var securityAlgorithm = StaticConstsHelper.GetValue(typeof(SecurityAlgorithms), string.IsNullOrWhiteSpace(encryptionAlgorithm) ? AuthConst.DefaultAlgorithm : encryptionAlgorithm);
+                return securityAlgorithm ?? SecurityAlgorithms.RsaSha512;
+            }
+            catch (Exception ex)
+            {
+                Devon4NetLogger.Error(ex);
+                throw;
+            }
+        }
+
+        private static string GetHashAlgorithm(string encryptionAlgorithm)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(encryptionAlgorithm))
+                {
+                    return HashAlgorithmConst.SHA512;
+                }
+
+                if (encryptionAlgorithm.Contains(HashSizeConst.S512))
+                {
+                    return HashAlgorithmConst.SHA512;
+                }
+
+                if (encryptionAlgorithm.Contains(HashSizeConst.S384))
+                {
+                    return HashAlgorithmConst.SHA384;
+                }
+
+                if (encryptionAlgorithm.Contains(HashSizeConst.S256))
+                {
+                    return HashAlgorithmConst.SHA256;
+                }
+
+                if (encryptionAlgorithm.Contains(HashSizeConst.SMD5, StringComparison.OrdinalIgnoreCase))
+                {
+                    return HashAlgorithmConst.MD5;
+                }
+
+                if (encryptionAlgorithm.Contains(HashSizeConst.SSHA, StringComparison.OrdinalIgnoreCase))
+                {
+                    return HashAlgorithmConst.SHA;
+                }
+
+                return HashAlgorithmConst.SHA512;
+            }
+            catch (Exception ex)
+            {
+                Devon4NetLogger.Error(ex);
+                throw;
+            }
+        }
+        #endregion
     }
 }

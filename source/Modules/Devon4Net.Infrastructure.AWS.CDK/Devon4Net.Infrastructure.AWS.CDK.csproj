@@ -7,7 +7,7 @@
 	  <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
 	  <Company>Capgemini S.A.</Company>
 	  <Description>AWS CDK library for devon4net</Description>
-	  <Version>6.0.3</Version>
+	  <Version>6.0.6</Version>
 	  <Copyright>Copyright © Capgemini</Copyright>
 	  <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
 	  <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
@@ -46,8 +46,8 @@
 		</None>
 	</ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Amazon.CDK.Lib" Version="2.13.0" />
-    <PackageReference Include="Constructs" Version="10.0.69" />
+    <PackageReference Include="Amazon.CDK.Lib" Version="2.31.1" />
+    <PackageReference Include="Constructs" Version="10.1.43" />
   </ItemGroup>
 
 </Project>

@@ -1,23 +1,27 @@
 ﻿using Devon4Net.Application.WebAPI.Configuration;
+using Devon4Net.Application.WebAPI.Implementation.Business.EmployeeManagement.Dto;
 using Devon4Net.Application.WebAPI.Implementation.Business.EmployeeManagement.Validators;
 using Devon4Net.Application.WebAPI.Implementation.Business.MediatRManagement.Commands;
 using Devon4Net.Application.WebAPI.Implementation.Business.MediatRManagement.Dto;
 using Devon4Net.Application.WebAPI.Implementation.Business.MediatRManagement.Handlers;
 using Devon4Net.Application.WebAPI.Implementation.Business.MediatRManagement.Queries;
 using Devon4Net.Application.WebAPI.Implementation.Business.RabbitMqManagement.Handlers;
+using Devon4Net.Application.WebAPI.Implementation.Business.TodoManagement.Dto;
 using Devon4Net.Application.WebAPI.Implementation.Business.TodoManagement.Validators;
 using Devon4Net.Application.WebAPI.Implementation.Domain.Database;
 using Devon4Net.Domain.UnitOfWork.Common;
 using Devon4Net.Domain.UnitOfWork.Enums;
 using Devon4Net.Infrastructure.Common.Constants;
-using Devon4Net.Infrastructure.Common.Options.MediatR;
-using Devon4Net.Infrastructure.Common.Options.RabbitMq;
 using Devon4Net.Infrastructure.FluentValidation;
 using Devon4Net.Infrastructure.JWT.Common;
+using Devon4Net.Infrastructure.MediatR.Options;
 using Devon4Net.Infrastructure.MediatR.Samples.Handler;
 using Devon4Net.Infrastructure.MediatR.Samples.Model;
 using Devon4Net.Infrastructure.MediatR.Samples.Query;
+using Devon4Net.Infrastructure.RabbitMQ.Options;
 using Devon4Net.Infrastructure.RabbitMQ.Samples.Handllers;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -77,8 +81,8 @@ namespace Devon4Net.Application.WebAPI.Implementation.Configuration
 
         private static void SetupFluentValidators(IServiceCollection services)
         {
-            services.AddFluentValidation<TodosFluentValidator>(true);
-            services.AddFluentValidation<EmployeeFluentValidator>(true);
+            services.AddFluentValidation< IValidator<TodoDto>, TodosFluentValidator>();
+            services.AddFluentValidation<IValidator<EmployeeDto>, EmployeeFluentValidator>();
         }
 
         /// <summary>

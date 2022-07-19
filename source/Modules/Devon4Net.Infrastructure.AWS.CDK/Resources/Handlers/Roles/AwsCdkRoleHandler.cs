@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Amazon.CDK.AWS.IAM;
+﻿using Amazon.CDK.AWS.IAM;
 using Constructs;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers;
 
@@ -51,6 +48,22 @@ namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
         }
 
         /// <summary>
+        /// Returns a role in AWS by its Name
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="fromRoleArnOptions"></param>
+        /// <returns></returns>
+        public IRole LocateRoleByName(string id, string name, IFromRoleNameOptions fromRoleNameOptions = null)
+        {
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("The identification or name cannot be null");
+            }
+            return Role.FromRoleName(Scope, id, name, fromRoleNameOptions);
+        }
+
+        /// <summary>
         /// Creates the role properties to be used
         /// </summary>
         /// <param name="assumedBy">Example: rds.amazonaws.com</param>
@@ -86,20 +99,18 @@ namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
         {
             var principals = assumedBy.Select(x => new ServicePrincipal(x)).ToArray();
 
-            var result = new RoleProps
+            return new RoleProps
             {
                 AssumedBy = new CompositePrincipal(principals),
                 ManagedPolicies = managedPolicies,
                 InlinePolicies = inlinePolicies ?? new Dictionary<string, PolicyDocument>(),
                 RoleName = roleName
             };
-
-            return result;
         }
 
         public void AddRolePolicyStatement(ref RoleProps roleProperty, string policyName, string[] actions, string[] resources, Effect effect = Effect.ALLOW)
         {
-            if (actions != null && actions.Any())
+            if (actions?.Any() == true)
             {
                 roleProperty.InlinePolicies.Add(policyName, new PolicyDocument(new PolicyDocumentProps
                 {
@@ -136,16 +147,6 @@ namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
                     Resources = resources
                 })
             ).StatementAdded;
-        }
-
-        public IManagedPolicy LocateAwsManagedPolicyByName(string policyName)
-        {
-            return ManagedPolicy.FromAwsManagedPolicyName(policyName);
-        }
-
-        public IManagedPolicy LocateManagedPolicyByName(string policyName)
-        {
-            return ManagedPolicy.FromManagedPolicyName(Scope, policyName, policyName);
         }
     }
 }

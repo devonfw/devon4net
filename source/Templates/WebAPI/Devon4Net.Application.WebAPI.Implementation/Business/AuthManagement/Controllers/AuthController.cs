@@ -50,7 +50,7 @@ namespace Devon4Net.Application.WebAPI.Implementation.Business.AuthManagement.Co
 
             Devon4NetLogger.Debug("Executing Login from controller AuthController");
 
-            var token = JwtHandler.CreateClientToken(new List<Claim>
+            var token = JwtHandler.CreateJwtToken(new List<Claim>
             {
                 new Claim(ClaimTypes.Role, AuthConst.DevonSampleUserRole),
                 new Claim(ClaimTypes.Name,user),

@@ -7,7 +7,7 @@
     <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
     <Company>Capgemini S.A.</Company>
     <Description>Kafka accelerator for stream applications</Description>
-    <Version>6.0.2</Version>
+    <Version>6.0.6</Version>
     <Copyright>Copyright © Capgemini</Copyright>
     <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
@@ -27,11 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Confluent.Kafka" Version="1.8.2" />
-    <PackageReference Include="Confluent.SchemaRegistry" Version="1.8.2" />
-    <PackageReference Include="Confluent.SchemaRegistry.Serdes.Avro" Version="1.8.2" />
-    <PackageReference Include="Confluent.SchemaRegistry.Serdes.Json" Version="1.8.2" />
-    <PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" Version="1.8.2" />
+    <PackageReference Include="Confluent.Kafka" Version="1.9.0" />
+    <PackageReference Include="Confluent.SchemaRegistry" Version="1.9.0" />
+    <PackageReference Include="Confluent.SchemaRegistry.Serdes.Avro" Version="1.9.0" />
+    <PackageReference Include="Confluent.SchemaRegistry.Serdes.Json" Version="1.9.0" />
+    <PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" Version="1.9.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,8 +4,6 @@ using Amazon.CDK.AWS.ECS;
 using Amazon.CDK.AWS.ElasticLoadBalancingV2;
 using Amazon.CDK.AWS.IAM;
 using Devon4Net.Infrastructure.AWS.CDK.Options.Resources;
-using System;
-using System.Collections.Generic;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
 {
@@ -21,9 +19,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
             return HandlerResources.AwsCdkEcsHandler.CreateCapacityProviderStrategy(capacityProvider, capWeigth, capBase);
         }
 
-        public IService AddElasticContainerEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount)
+        public IService AddElasticContainerEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount, bool useDistinctInstances, List<string> placementStrategies) //NOSONAR number of params
         {
-            return HandlerResources.AwsCdkEcsHandler.CreateEc2Service(id, serviceName, cluster, taskDefinition, healthCheckGracePeriod, capacityProviderStrategies, desiredCount);
+            return HandlerResources.AwsCdkEcsHandler.CreateEc2Service(id, serviceName, cluster, taskDefinition, healthCheckGracePeriod, capacityProviderStrategies, desiredCount, useDistinctInstances, placementStrategies);
         }
 
         public ILoadBalancerTargetProps AddEc2ServiceToNetworkTargetGroup(IService service, INetworkTargetGroup targetGroup, string containerName, double containerPort)
@@ -40,7 +38,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
         {
             if (string.IsNullOrEmpty(taskDefinitionId) || string.IsNullOrEmpty(taskDefinitionFamily))
             {
-                throw new ArgumentException("Plase provide a valid taskDefinitionId");
+                throw new ArgumentException("Please provide a valid taskDefinitionId");
             }
             return HandlerResources.AwsCdkEcsHandler.CreateEc2TaskDefinition(taskDefinitionId, taskDefinitionFamily, volumesOptions, taskRole);
         }

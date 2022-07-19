@@ -47,7 +47,7 @@ namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
                 scanOps.PaginationToken = paginationToken;
             }
 
-            QueryOperationConfig config = new QueryOperationConfig()
+            var config = new QueryOperationConfig
             {
                 Filter = queryFilter,
                 Select = SelectValues.SpecificAttributes,

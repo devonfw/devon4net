@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Options.Resources
 {
-
     public class EcsServiceOptions
     {
         public string Id { get; set; }
@@ -15,5 +14,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Options.Resources
         public int? HealthCheckGracePeriod { get; set; }
         public List<CapacityProviderStrategyItemOptions> CapacityProviderStrategy { get; set; }
         public int? DesiredCount { get; set; }
+        public bool UseDistinctInstances { get; set; }
+        public List<string> PlacementStrategies { get; set; }
     }
 }

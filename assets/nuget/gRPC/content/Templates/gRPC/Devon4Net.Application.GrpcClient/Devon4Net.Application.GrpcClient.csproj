@@ -12,19 +12,19 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <PackageReference Include="Grpc.Net.Client" Version="2.41.0" />
-	  <PackageReference Include="Grpc.Tools" Version="2.42.0">
+	  <PackageReference Include="Grpc.Net.Client" Version="2.47.0" />
+	  <PackageReference Include="Grpc.Tools" Version="2.47.0">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-	<PackageReference Include="Devon4Net.Infrastructure.Grpc" Version="6.0.2" />
-    <PackageReference Include="Devon4Net.Infrastructure.Logger" Version="6.0.2" />
-    <PackageReference Include="Devon4Net.Infrastructure.Middleware" Version="6.0.2" />
-    <PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="6.0.2" />
-    <PackageReference Include="Devon4Net.Infrastructure.WebAPI" Version="6.0.2" />
+	<PackageReference Include="Devon4Net.Infrastructure.Grpc" Version="6.0.6" />
+    <PackageReference Include="Devon4Net.Infrastructure.Logger" Version="6.0.6" />
+    <PackageReference Include="Devon4Net.Infrastructure.Middleware" Version="6.0.6" />
+    <PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="6.0.6" />
+    <PackageReference Include="Devon4Net.Infrastructure.WebAPI" Version="6.0.6" />
   </ItemGroup>
 
   <ItemGroup>

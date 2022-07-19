@@ -8,6 +8,7 @@
   "profile": "default",
   "region": "eu-west-1",
   "framework": "net6.0",
+  "function-runtime": "dotnet6",
   "configuration": "Release",
   "s3-prefix": "AWSServerlessTest/",
   "function-memory-size": 256,

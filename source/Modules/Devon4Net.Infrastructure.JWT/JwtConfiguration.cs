@@ -1,7 +1,7 @@
 ﻿using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Common.Options.JWT;
 using Devon4Net.Infrastructure.JWT.Common.Const;
 using Devon4Net.Infrastructure.JWT.Handlers;
+using Devon4Net.Infrastructure.JWT.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -30,11 +30,11 @@ namespace Devon4Net.Application.WebAPI.Configuration
                     options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
+                        ValidateIssuer = jwtOptions.ValidateIssuer,
+                        ValidateAudience = jwtOptions.RequireAudience,
                         ValidateIssuerSigningKey = jwtOptions.ValidateIssuerSigningKey,
                         ValidateLifetime = jwtOptions.ValidateLifetime,
-                        RequireSignedTokens = true,
+                        RequireSignedTokens = jwtOptions.RequireSignedTokens,
                         IssuerSigningKey = jwtHandler.GetIssuerSigningKey(),
                         TokenDecryptionKey = jwtHandler.GetIssuerSigningKey(),
                         ValidAudience = jwtOptions.Audience,

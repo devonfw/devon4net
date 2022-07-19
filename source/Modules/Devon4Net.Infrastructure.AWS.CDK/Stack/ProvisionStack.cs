@@ -16,16 +16,32 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             CdkOptions = cdkOptions;
             App = new App();
             StackResources = new StackResources();
-            AwsCdkHandler = new AwsCdkHandlerManager(App, CdkOptions.ProvisionStack.Id, CdkOptions.ProvisionStack.ApplicationName, CdkOptions.ProvisionStack.EnvironmentName, new StackProps { Env = new Amazon.CDK.Environment { Account = AwsAccount, Region = AwsRegion } });
+            AwsCdkHandler = new AwsCdkHandlerManager(App,
+                CdkOptions.ProvisionStack.Id,
+                CdkOptions.ProvisionStack.ApplicationName,
+                CdkOptions.ProvisionStack.EnvironmentName,
+                new StackProps
+                {
+                    Env = new Amazon.CDK.Environment
+                    {
+                        Account = AwsAccount,
+                        Region = AwsRegion
+                    },
+                    Synthesizer = new DefaultStackSynthesizer(new DefaultStackSynthesizerProps
+                    {
+                        GenerateBootstrapVersionRule = cdkOptions.ProvisionStack.GenerateBootstrapVersionRule
+                    })
+                });
         }
 
         public void Process()
         {
             CreatePolicyDocuments();
+            CreateManagedPolicies();
             CreateOrLocateVpcs();
             LocateSubnetGroups();
             LocateSubnets();
-            CreateSecurityGroups();
+            CreateOrLocateSecurityGroups();
             CreateRoles();
             CreateOrLocateS3Buckets();
             CreateLambdas();
@@ -52,6 +68,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             CreateDynamoDB();
             CreateWaf();
             CreateSns();
+            CreateCognito();
 
             App.Synth();
         }

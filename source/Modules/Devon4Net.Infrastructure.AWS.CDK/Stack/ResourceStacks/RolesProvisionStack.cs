@@ -1,8 +1,5 @@
 ﻿using Amazon.CDK.AWS.IAM;
 using Devon4Net.Infrastructure.AWS.CDK.Options.Resources;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Stack
 {
@@ -11,7 +8,6 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
         private void CreateRoles()
         {
             if (CdkOptions == null || CdkOptions.Roles?.Any() != true) return;
-
 
             foreach (var roleOption in CdkOptions.Roles)
             {
@@ -30,32 +26,44 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
 
         private IRole CreateNewRole(RoleOptions roleOption)
         {
-            IRole role;
             if (roleOption.AwsPolicies?.Any() == true || roleOption.CustomPolicies?.Any() == true || roleOption.InlinePolicies?.Any() == true)
             {
-                var awsPolicies = roleOption.AwsPolicies?.Select(x => AwsCdkHandler.LocateAwsManagedPolicyByName(x)).ToList();
-                var customPolicies = roleOption.CustomPolicies?.Select(x => AwsCdkHandler.LocateManagedPolicyByName(x)).ToList();
-                var inlinePolicies = roleOption.InlinePolicies?.ToDictionary(policyId => policyId, policyId => LocatePolicyDocument(policyId, $"The PolicyDocument {policyId} of the role {roleOption.Name} was not found"));
                 var policies = new List<IManagedPolicy>();
+                var awsPolicies = roleOption.AwsPolicies?.Select(x => AwsCdkHandler.LocateAwsManagedPolicyByName(x)).ToList();
+                var inlinePolicies = roleOption.InlinePolicies?.ToDictionary(policyId => policyId, policyId => LocatePolicyDocument(policyId, $"The PolicyDocument {policyId} of the role {roleOption.Name} was not found"));
+
                 if (awsPolicies?.Any() == true)
                 {
                     policies.AddRange(awsPolicies);
                 }
-                if (customPolicies?.Any() == true)
+
+                if (roleOption.CustomPolicies?.Any() == true)
                 {
-                    policies.AddRange(customPolicies);
+                    IManagedPolicy managedPolicy;
+                    try
+                    {
+                        foreach (var managedPolicyOption in roleOption.CustomPolicies)
+                        {
+                            managedPolicy = LocateManagedPolicy(managedPolicyOption, "Could not locate managed policy");
+                            policies.Add(managedPolicy);
+                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                        throw new ArgumentException("Cannot add the managed policy");
+                    }
                 }
-                role = AwsCdkHandler.AddRole(roleOption.Name, AwsCdkHandler.CreateRoleProperties(roleOption.Name, roleOption.AssumedBy.ToArray(), policies.ToArray(), inlinePolicies));
+
+                return AwsCdkHandler.AddRole(roleOption.Name, AwsCdkHandler.CreateRoleProperties(roleOption.Name, roleOption.AssumedBy.ToArray(), policies.ToArray(), inlinePolicies));
             }
             else if (roleOption.AwsActions?.Any() == true)
             {
-                role = AwsCdkHandler.AddRole(roleOption.Name, AwsCdkHandler.CreateRoleProperties(roleOption.Name, roleOption.AssumedBy.ToArray(), roleOption.Name, roleOption.AwsActions.ToArray(), new string[] { "*" }));
+                return AwsCdkHandler.AddRole(roleOption.Name, AwsCdkHandler.CreateRoleProperties(roleOption.Name, roleOption.AssumedBy.ToArray(), roleOption.Name, roleOption.AwsActions.ToArray(), new string[] { "*" }));
             }
             else
             {
                 throw new ArgumentException($"The role {roleOption.Id} must have either a list of AwsPolicies, a list of CustomPolicies or a list of AwsActions");
             }
-            return role;
         }
 
         private IRole LocateRole(string roleId, string exceptionMessageIfRoleDoesNotExist, string exceptionMessageIfRoleIsEmpty = null)

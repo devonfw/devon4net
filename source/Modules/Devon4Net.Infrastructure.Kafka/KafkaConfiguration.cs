@@ -1,6 +1,6 @@
 ﻿using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Common.Options.Kafka;
 using Devon4Net.Infrastructure.Kafka.Handlers;
+using Devon4Net.Infrastructure.Kafka.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,12 +12,12 @@ namespace Devon4Net.Infrastructure.Kafka
         {
             var kafkaOptions = services.GetTypedOptions<KafkaOptions>(configuration, "Kafka");
 
-            if (kafkaOptions == null || !kafkaOptions.EnableKafka || kafkaOptions.Producers == null || !kafkaOptions.Producers.Any()) return;
+            if (kafkaOptions?.EnableKafka != true || kafkaOptions.Producers?.Any() != true) return;
 
             services.AddTransient(typeof(IKakfkaHandler), typeof(KakfkaHandler));
         }
 
-        public static void AddKafkaConsumer<T>(this IServiceCollection services, string consumerId, bool commit = false, int commitPeriod = 5) where T : class 
+        public static void AddKafkaConsumer<T>(this IServiceCollection services, string consumerId, bool commit = false, int commitPeriod = 5) where T : class
         {
             var memberInfo = typeof(T).BaseType;
             if (memberInfo?.Name.Contains("KafkaConsumerHandler") == false)

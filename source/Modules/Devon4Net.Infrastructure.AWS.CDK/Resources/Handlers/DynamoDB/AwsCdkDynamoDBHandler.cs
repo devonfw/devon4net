@@ -30,7 +30,6 @@ namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
                 TimeToLiveAttribute = timeToLiveAttribute
             });
         }
-
         public ITable Create(string id, string tableName, string partitionKeyName, int partitionKeyType, int? billingModeInt, bool contributorInsights, bool pointInTimeRecovery, int removalPolicyInt, string sortKeyName, int? sortKeyType, string timeToLiveAttribute = null)
         {
             GetPartitionKeyAndSortKey(partitionKeyName, partitionKeyType, sortKeyName, sortKeyType, out var partitionKey, out var sortKey);
@@ -47,7 +46,7 @@ namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
                 TimeToLiveAttribute = timeToLiveAttribute
             });
         }
-        private static void GetPartitionKeyAndSortKey(string partitionKeyName, int partitionKeyType, string sortKeyName, int? sortKeyType, out Attribute partitionKey, out Attribute sortKey)
+        private void GetPartitionKeyAndSortKey(string partitionKeyName, int partitionKeyType, string sortKeyName, int? sortKeyType, out Attribute partitionKey, out Attribute sortKey)
         {
             sortKey = null;
 

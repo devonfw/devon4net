@@ -1,6 +1,5 @@
 ﻿using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
 using Devon4Net.Infrastructure.CircuitBreaker.Handlers;
-using Devon4Net.Infrastructure.Common.Options.SmaxHcm;
 using Devon4Net.Infrastructure.SmaxHcm.Common;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Catalog;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Designer;
@@ -21,6 +20,7 @@ using Devon4Net.Infrastructure.SmaxHcm.Dto.Request.CreateRequest;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Tenants;
 using Devon4Net.Infrastructure.SmaxHcm.Dto.Users;
 using Devon4Net.Infrastructure.SmaxHcm.Exceptions;
+using Devon4Net.Infrastructure.SmaxHcm.Options;
 using Microsoft.Extensions.Options;
 
 namespace Devon4Net.Infrastructure.SMAXHCM.Handler

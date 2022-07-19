@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Amazon.Lambda.Core;
@@ -25,7 +24,7 @@ namespace Devon4Net.Application.Lambda.Business.SqsManagement.Handlers
         {
             var result = new SqsFunctionResult();
 
-            if (!input.Records.Any()) return result;
+            if (input.Records.Count == 0) return result;
 
             foreach (var record in input.Records)
             {
@@ -46,10 +45,7 @@ namespace Devon4Net.Application.Lambda.Business.SqsManagement.Handlers
                 await messageHandler.HandleMessage(message, context).ConfigureAwait(false);
             }
 
-            //Check Async management!! ForEachAsync
-
             result.NumberOfMessages = input.Records.Count;
-            
             return result;
         }
     }

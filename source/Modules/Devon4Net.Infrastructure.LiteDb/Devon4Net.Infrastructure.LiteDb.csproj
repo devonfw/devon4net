@@ -7,7 +7,7 @@
     <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
     <Company>Capgemini S.A.</Company>
     <Description>LiteDB accelerator library</Description>
-    <Version>6.0.2</Version>
+    <Version>6.0.6</Version>
     <Copyright>Copyright © Capgemini</Copyright>
     <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
@@ -22,7 +22,7 @@
   </PropertyGroup>
 	
   <ItemGroup>
-    <PackageReference Include="LiteDB" Version="5.0.11" />
+    <PackageReference Include="LiteDB" Version="5.0.12" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
   </ItemGroup>
 

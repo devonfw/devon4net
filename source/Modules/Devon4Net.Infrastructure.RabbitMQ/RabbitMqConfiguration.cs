@@ -1,7 +1,6 @@
 ﻿using System.Net.Security;
 using Devon4Net.Infrastructure.Common.Common.IO;
 using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Common.Options.RabbitMq;
 using Devon4Net.Infrastructure.Extensions.Helpers;
 using Devon4Net.Infrastructure.LiteDb.LiteDb;
 using Devon4Net.Infrastructure.LiteDb.Repository;
@@ -10,6 +9,7 @@ using Devon4Net.Infrastructure.RabbitMQ.Data.Service;
 using Devon4Net.Infrastructure.RabbitMQ.Domain.Database;
 using Devon4Net.Infrastructure.RabbitMQ.Domain.Entities;
 using Devon4Net.Infrastructure.RabbitMQ.Domain.ServiceInterfaces;
+using Devon4Net.Infrastructure.RabbitMQ.Options;
 using EasyNetQ;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -83,7 +83,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         private static void ConfigureRabbitMqGenericDependencyInjection(IServiceCollection services)
         {
             services.AddTransient(typeof(IJsonHelper), typeof(JsonHelper));
-            services.AddTransient(typeof(IRepository<RabbitBackup>), typeof(Repository<RabbitBackup>));
+            services.AddTransient(typeof(ILiteDbRepository<RabbitBackup>), typeof(LiteDbRepository<RabbitBackup>));
             services.AddTransient(typeof(IRabbitMqBackupService), typeof(RabbitMqBackupService));
         }
 

@@ -3,13 +3,13 @@
   "classifications": ["devonfw", "Devon4Net","Devon4NetAWS"],
   "description": "Devon4Net AWS solution template for .net core 3.1.10",
   "name": "Devon4Net AWS solution template",
-  "identity": "Devon4Net.AWS",
-  "groupIdentity": "Devon4NetAWS",
+  "identity": "Devon4Net.AWS.Lambda",
+  "groupIdentity": "Devon4NetAWSLambda",
   "tags": {
     "language": "C#",
     "type": "solution"
   },
-  "shortName": "Devon4NetAWS",
-  "sourceName": "Devon4NetAWS",
+  "shortName": "Devon4NetAWSLambda",
+  "sourceName": "Devon4NetAWSLambda",
   "guids": []
 }

@@ -2,8 +2,6 @@
 using Amazon.CDK;
 using Amazon.CDK.AWS.RDS;
 using Amazon.CDK.AWS.SecretsManager;
-using System;
-using System.Linq;
 using Devon4Net.Infrastructure.AWS.CDK.Consts;
 using Devon4Net.Infrastructure.AWS.CDK.Options.Resources;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Management.RDS;
@@ -18,7 +16,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
 
             foreach (var databaseOption in CdkOptions.Databases)
             {
-                GetDatabaseResources(databaseOption, out var databasePort, out var vpc, out var securityGroup, out var subnetGroup, out var deletionProtection, out var enchancedMonitoringInterval, out var passwordSecret, out var parameterGroup);
+                GetDatabaseResources(databaseOption, out var databasePort, out var vpc, out var securityGroup, out var subnetGroup, out var deletionProtection, out var enchancedMonitoringInterval, out var passwordSecret, out var parameterGroup, out var securityGroups);
 
                 IDatabaseInstance database;
                 switch (databaseOption.DatabaseType?.ToLower())
@@ -26,7 +24,8 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                     case "sqlserver":
                         var sqlServerTranslation = TranslateSqlServerVersion(databaseOption.DatabaseEngineVersion);
                         var secGroup = LocateSecurityGroup(databaseOption.SecurityGroupId, $"SG ith id {databaseOption.SecurityGroupId} not found in the JSON.");
-                        database = AwsCdkHandler.AddDatabase(sqlServerTranslation, databaseOption.DatabaseName, databaseOption.DatabaseName, databaseOption.UserName, databaseOption.Password, databaseOption.StorageType, InstanceClass.BURSTABLE3, databaseOption.InstanceSize, vpc, secGroup, databaseOption.SecurityGroupId, storageEncrypted: true, allocatedStorageGb: databaseOption.AllocatedStorageGb, licenseOption: databaseOption.LicenseOption, edition: databaseOption.Edition, autoMinorVersionUpgrade: databaseOption.AutoMinorVersionUpgrade, backupRetentionDays: databaseOption.BackupRetentionPeriod, deletionProtection: databaseOption.DeletionProtection);
+                        var monitoringRole = AwsCdkHandler.LocateRoleByName(databaseOption.MonitoringRoleName, databaseOption.MonitoringRoleName);
+                        database = AwsCdkHandler.AddDatabase(sqlServerTranslation, databaseOption.InstanceIdentifier, databaseOption.InstanceIdentifier, databaseOption.UserName, databaseOption.Password, databaseOption.StorageType, databaseOption.InstanceType, databaseOption.InstanceSize, vpc, secGroup, databaseOption.SecurityGroupId, subnetGroup, storageEncrypted: true, allocatedStorageGb: databaseOption.AllocatedStorageGb, licenseOption: databaseOption.LicenseOption, edition: databaseOption.Edition, autoMinorVersionUpgrade: databaseOption.AutoMinorVersionUpgrade, backupRetentionDays: databaseOption.BackupRetentionPeriod, deletionProtection: databaseOption.DeletionProtection, securityGroups: securityGroups, multiAZEnabled: databaseOption.MultiAvailabilityZoneEnabled ?? true, monitoringRole: monitoringRole, monitoringInterval: databaseOption.EnhancedMonitoringIntervalSeconds ?? 0, enablePerformanceInsights: databaseOption.EnablePerformanceInsights ?? false, performanceInsightsRetention: databaseOption.PerformanceInsightsRetentionPeriod ?? 0);
                         break;
                     default:
                         StackResources.DynamicSecrets.Add(databaseOption.Secrets[DatabaseOptionConsts.PasswordAttributeName], passwordSecret);
@@ -37,7 +36,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             }
         }
 
-        private void GetDatabaseResources(DatabaseOptions databaseOption, out double? databasePort, out IVpc vpc, out ISecurityGroup securityGroup, out ISubnetGroup subnetGroup, out bool deletionProtection, out Duration enchancedMonitoringInterval, out ISecret passwordSecret, out IParameterGroup parameterGroup) //NOSONAR number of params
+        private void GetDatabaseResources(DatabaseOptions databaseOption, out double? databasePort, out IVpc vpc, out ISecurityGroup securityGroup, out ISubnetGroup subnetGroup, out bool deletionProtection, out Duration enchancedMonitoringInterval, out ISecret passwordSecret, out IParameterGroup parameterGroup, out List<ISecurityGroup> securityGroups) //NOSONAR number of params
         {
             // Parse database port
             databasePort = ParseDatabasePort(databaseOption);
@@ -59,11 +58,15 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             enchancedMonitoringInterval = databaseOption.EnhancedMonitoringIntervalSeconds.HasValue ? Duration.Seconds(databaseOption.EnhancedMonitoringIntervalSeconds.Value) : null;
 
             passwordSecret = SetDatabasePassword(databaseOption);
+
+            securityGroups = databaseOption.SecurityGroupsIds
+                    .Select(id => LocateSecurityGroup(id, $"Could not find security group with id {id}"))
+                    .ToList();
         }
 
         private ISecret SetDatabasePassword(DatabaseOptions databaseOption)
         {
-            ISecret passwordSecret;
+            ISecret passwordSecret = null;
             if (string.IsNullOrWhiteSpace(databaseOption.Password))
             {
                 if (databaseOption.Secrets.ContainsKey(DatabaseOptionConsts.PasswordAttributeName))
@@ -82,29 +85,16 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                     throw new ArgumentException($"The database {databaseOption.DatabaseName} has no secret to store the password");
                 }
             }
-            else
-            {
-                passwordSecret = null;
-            }
-
             return passwordSecret;
         }
 
         private IParameterGroup LocateParameterGroup(DatabaseOptions databaseOption)
         {
-            IParameterGroup parameterGroup;
-            if (!string.IsNullOrWhiteSpace(databaseOption.ParameterGroupId))
+            IParameterGroup parameterGroup = null;
+            if (!string.IsNullOrWhiteSpace(databaseOption.ParameterGroupId) && !StackResources.DatabaseParameterGroups.TryGetValue(databaseOption.ParameterGroupId, out parameterGroup))
             {
-                if (!StackResources.DatabaseParameterGroups.TryGetValue(databaseOption.ParameterGroupId, out parameterGroup))
-                {
-                    throw new ArgumentException($"The parameter group { databaseOption.ParameterGroupId } of the database { databaseOption.DatabaseName} was not found");
-                }
+                throw new ArgumentException($"The parameter group { databaseOption.ParameterGroupId } of the database { databaseOption.DatabaseName} was not found");
             }
-            else
-            {
-                parameterGroup = null;
-            }
-
             return parameterGroup;
         }
 
@@ -117,6 +107,10 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
 
         private ISecurityGroup LocateSecurityGroup(DatabaseOptions databaseOption)
         {
+            if(databaseOption.SecurityGroupId == null)
+            {
+                return null;
+            }
             return LocateSecurityGroup(databaseOption.SecurityGroupId,
                 $"The security group {databaseOption.SecurityGroupId} of the database {databaseOption.DatabaseName} was not found",
                 $"The database {databaseOption.DatabaseName} must have a security group");

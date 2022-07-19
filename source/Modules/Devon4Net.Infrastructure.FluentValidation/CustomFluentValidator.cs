@@ -1,6 +1,7 @@
 ﻿using Devon4Net.Infrastructure.Logger.Logging;
 using FluentValidation;
 using FluentValidation.Results;
+using System;
 
 namespace Devon4Net.Infrastructure.FluentValidation
 {
@@ -9,7 +10,7 @@ namespace Devon4Net.Infrastructure.FluentValidation
         public abstract void CustomValidate();
         private bool LaunchExceptionWhenError { get; }
 
-        protected CustomFluentValidator(bool launchExceptionWhenError)
+        protected CustomFluentValidator(bool launchExceptionWhenError = false)
         {
             LaunchExceptionWhenError = launchExceptionWhenError;
             try
