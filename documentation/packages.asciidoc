@@ -2846,3 +2846,110 @@ Now you will need to create the following files:
 * https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-creds[Configuration Basics - AWS Docs]
 
 * https://docs.aws.amazon.com/code-samples/latest/catalog/lambda_functions-blank-csharp-src-blank-csharp-aws-lambda-tools-defaults.json.html[aws-lambda-tools-defaults.json Code Sample - AWS Docs]
+
+== Devon4Net.Infrastructure.AWS.Serverless
+
+This component is part of the AWS Stack in Devon4Net. It has the necessary classes to configure the connection with the AWS Cloud.
+
+=== Configuration
+
+The component configuration must be done in the file `appsettings.{environment}.json` as follows: 
+
+[source, json]
+----
+{
+    "AWS": {
+    "EnableAws": true,
+    "UseSecrets": true,
+    "UseParameterStore": true,
+    "Credentials": {
+      "Profile": "default",
+      "Region": "eu-west-1",
+      "AccessKeyId": "",
+      "SecretAccessKey": ""
+    },
+    "Cognito": {
+      "IdentityPools": [
+        {
+          "IdentityPoolId": "",
+          "IdentityPoolName": "",
+          "ClientId": ""
+        }
+      ]
+    },
+    "SqSQueueList": [
+      {
+        "QueueName": "", // Mandatory. Put the name of the queue here
+        "Url": "", //optional. If it is not present, it will be requested to AWS
+        "UseFifo": false,
+        "MaximumMessageSize": 256,
+        "NumberOfThreads": 2,
+        "DelaySeconds": 0,
+        "ReceiveMessageWaitTimeSeconds": 0,
+        "MaxNumberOfMessagesToRetrievePerCall": 1,
+        "RedrivePolicy": {
+          "MaxReceiveCount": 1,
+          "RedrivePolicy": {
+            "MaxReceiveCount": 1,
+            "DeadLetterQueueUrl": ""
+          }
+        }
+      }
+    ]
+  }
+}
+----
+
+* `UseSecrets`: Boolean to indicate if AWS Secrets Manager is being used.
+
+* `UseParameterStore`: Boolean to indicate if AWS Parameter Store is being used.
+
+* `Credentials`: Credentials for connecting the app with your AWS profile.
+
+* `Cognito`: Amazon Cognito identity pools provide temporary AWS credentials for users who are guests (unauthenticated) and for users who have been authenticated and received a token. An identity pool is a store of user identity data specific to your account. In this section you can configure multiple IdentityPools.
+
+* `SqSQueueList`: This section is used to configure the Amazon Simple Queue Service (SQS). You must configure some parameters about the queue:
+
+** `QueueName`: The name of the queue, this field is required.
+
+** `Url`: The queue's url, this parameter is optional.
+
+** `UseFifo`: We have two queue types in Amazon SQS, use *false* for Standard Queues or set this parameter to *true* for FIFO Queues.
+
+** `MaximumMessageSize`: The maximum message size for this queue.
+
+** `NumberOfThreads`: The number of threads of the queue.
+
+** `DelaySeconds`: The amount of time that Amazon SQS will delay before delivering a message that is added to the queue.
+
+** `ReceiveMessageWaitTimeSeconds`: The maximum amount of time that Amazon SQS waits for messages to become available after the queue gets a receive request.
+
+** `MaxNumberOfMessagesToRetrievePerCall`: The maximum number of messages to retrieve per call.
+
+** `RedrivePolicy`: Defines which source queues can use this queue as the dead-letter queue
+
+NOTE: Read the https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-queue-parameters.html[AWS SQS documentation] to learn more about the configuration of this kind of queues.
+
+=== Set up in devon
+
+For using it in a devon project, you can use the `Devon4Net.Application.WebAPI.AwsServerless` template. This template is ready to be used. 
+
+NOTE: Read the template documentation to learn more about it.
+
+Once you create your project using the template, you can configure it following the parameters shown above.
+
+=== Set up in other projects
+
+For setting it up in other projects, you will need first to install the package via NuGet:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.AWS.Serverless
+----
+
+Once installed you will need to add the configuration to your `appsettings.{environment}.json` and then add the following line to your `Program.cs` so that the configuration can be applied:
+
+[source, c#]
+----
+builder.Services.ConfigureDevonfwAWS(builder.Configuration, true);
+----
