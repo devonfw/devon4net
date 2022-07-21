@@ -85,7 +85,7 @@ image::images/api_template_create_project.png[]
 Once you go through all the initial configuration process, choosing a name, location and so on; you will find your project as shown in the next image.
 
 .Default ASP.NET Core Web API template structure
-image::images\api_template_initial_structure.png[]
+image::images/api_template_initial_structure.png[]
 
 You can delete both `WeatherForecastController.cs` and `WeatherForecast.cs` as they are an example in the template but we recommend you keeping them so you can try the API when done with all the steps.
 
@@ -93,7 +93,7 @@ You can delete both `WeatherForecastController.cs` and `WeatherForecast.cs` as t
 To install the NuGet package for the API Configuration we will use the Visual Studio package manager console. To open it, go to `View > Other Windows > Package Manager Console` as shown in the figure below.
 
 .Package Manager Console location in menu
-image::images\api_template_package_manager.png[]
+image::images/api_template_package_manager.png[]
 
 Now you can run the following command. It will take a minute to download and install all the packages:
 [source, console]
