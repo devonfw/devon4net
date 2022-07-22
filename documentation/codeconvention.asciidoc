@@ -20,14 +20,14 @@ In camel case each word or abbreviation in the middle of the phrase begins with 
 
 The `camelCasing` convention, used only for parameter names, capitalizes the first character of each word except the first word, as shown in the following examples. As the example also shows, two-letter acronyms that begin a camel-cased identifier are both lowercase.
 
-image:icons\thumbs-up-solid.png[] Use `camelCasing` for inline variables:
+image:icons/thumbs_up_solid.png[] Use `camelCasing` for inline variables:
 
 [source, c#]
 ----
     var finalPrice = 99.99;
 ----
 
-image:icons\thumbs-down-solid.png[] Do not use simple concatenation:
+image:icons/thumbs_down_solid.png[] Do not use simple concatenation:
 [source, c#]
 ----
     var finalprice = 99.99;
@@ -39,7 +39,7 @@ The first letter of each concatenated word is capitalized. No other characters a
 
 The `PascalCasing` convention, used for all identifiers except parameter names, capitalizes the first character of each word (including acronyms over two letters in length).
 
-image:icons\thumbs-up-solid.png[] Use `PascalCasing` for all public member, type, and names of namespaces consisting of multiple words.
+image:icons/thumbs_up_solid.png[] Use `PascalCasing` for all public member, type, and names of namespaces consisting of multiple words.
 
 [source, c#]
 ----
@@ -48,7 +48,7 @@ image:icons\thumbs-up-solid.png[] Use `PascalCasing` for all public member, type
     }
 ----
 
-image:icons\thumbs-down-solid.png[] Do not use any capital letters
+image:icons/thumbs_down_solid.png[] Do not use any capital letters
 
 [source, c#]
 ----
@@ -62,12 +62,12 @@ Each word is written in lower case and separated by an underscore. Capital lette
 
 The `snake_casing` is used in resources file names, database names and keys.
 
-image:icons\thumbs-up-solid.png[] Use `snake_casing` in file names:
+image:icons/thumbs_up_solid.png[] Use `snake_casing` in file names:
 ----
     thumbs_up.png
 ----
 
-image:icons\thumbs-down-solid.png[] Do not use any other symbol than ( _ , - , . ):
+image:icons/thumbs_down_solid.png[] Do not use any other symbol than ( _ , - , . ):
 ----
     thumbs#up.png
 ----
@@ -76,7 +76,7 @@ image:icons\thumbs-down-solid.png[] Do not use any other symbol than ( _ , - , .
 === Underscore Prefix (`_underscorePrefix`)
 In this type of naming, an underscore is added at the beginning of the word. After it, the name can follow other type of casing, such as camel case 
 
-image:icons\thumbs-up-solid.png[] Use `_underscorePrefix` in private fields:
+image:icons/thumbs_up_solid.png[] Use `_underscorePrefix` in private fields:
 [source, c#]
 ----
     public class MyClass 
@@ -85,7 +85,7 @@ image:icons\thumbs-up-solid.png[] Use `_underscorePrefix` in private fields:
     }
 ----
 
-image:icons\thumbs-down-solid.png[] Do not use underscores in public fields:
+image:icons/thumbs_down_solid.png[] Do not use underscores in public fields:
 [source, c#]
 ----
     public class MyClass 
@@ -95,21 +95,21 @@ image:icons\thumbs-down-solid.png[] Do not use underscores in public fields:
 ----
 
 == General Naming Conventions
-image:icons\thumbs-up-solid.png[] Choose easily readable identifier names.
+image:icons/thumbs_up_solid.png[] Choose easily readable identifier names.
 
-image:icons\thumbs-up-solid.png[] Favor readability over brevity.
+image:icons/thumbs_up_solid.png[] Favor readability over brevity.
 
  * e.g.: `GetLength` is a better name than `GetInt`.
  
  * Aim for the “ubiquitous language” (E. Evans): A language distilled from the domain language, which helps the team clarifying domain concepts and communicating with domain experts.
 
-image:icons\thumbs-up-solid.png[] Prefer adding a suffix rather than a prefix to indicate a new version of an existing `API`.
+image:icons/thumbs_up_solid.png[] Prefer adding a suffix rather than a prefix to indicate a new version of an existing `API`.
 
-image:icons\thumbs-up-solid.png[] Use a numeric suffix to indicate a new version of an existing `API`, particularly if the existing name of the `API` is the only name that makes sense (i.e., if it is an industry standard) and if adding any meaningful suffix (or changing the name) is not an appropriate option.
+image:icons/thumbs_up_solid.png[] Use a numeric suffix to indicate a new version of an existing `API`, particularly if the existing name of the `API` is the only name that makes sense (i.e., if it is an industry standard) and if adding any meaningful suffix (or changing the name) is not an appropriate option.
 
-image:icons\thumbs-down-solid.png[] Do not use underscores, hyphens, or any other non-alphanumeric characters.
+image:icons/thumbs_down_solid.png[] Do not use underscores, hyphens, or any other non-alphanumeric characters.
 
-image:icons\thumbs-down-solid.png[] Do not use Hungarian notation. Hungarian notation is the practice of including a prefix in identifiers to encode some metadata about the parameter, such as the data type of the identifier:
+image:icons/thumbs_down_solid.png[] Do not use Hungarian notation. Hungarian notation is the practice of including a prefix in identifiers to encode some metadata about the parameter, such as the data type of the identifier:
 
 |=======================
 |*Prefix* |*Definition*
@@ -124,15 +124,15 @@ e.g:
     bool bIsActive = true;
 ----
 
-image:icons\thumbs-down-solid.png[] Avoid using identifiers that conflict with keywords of widely used programming languages.
+image:icons/thumbs_down_solid.png[] Avoid using identifiers that conflict with keywords of widely used programming languages.
 
-image:icons\thumbs-down-solid.png[] Do not use abbreviations or contractions as part of identifier names.
+image:icons/thumbs_down_solid.png[] Do not use abbreviations or contractions as part of identifier names.
 
-image:icons\thumbs-down-solid.png[] Do not use any acronyms that are not widely accepted, and even if they are, only when necessary.
+image:icons/thumbs_down_solid.png[] Do not use any acronyms that are not widely accepted, and even if they are, only when necessary.
 
-image:icons\thumbs-down-solid.png[] Do not use the "Ex" (or a similar) suffix for an identifier to distinguish it from an earlier version of the same `API`.
+image:icons/thumbs_down_solid.png[] Do not use the "Ex" (or a similar) suffix for an identifier to distinguish it from an earlier version of the same `API`.
 
-image:icons\thumbs-down-solid.png[] Do not use C# reserved words as names. 
+image:icons/thumbs_down_solid.png[] Do not use C# reserved words as names. 
 
 
 == Names of Assemblies and DLLs
@@ -141,11 +141,11 @@ An assembly is the unit of deployment and identity for managed code programs. Al
 
 This section describes DLL naming conventions, which then can be mapped to assembly naming conventions.
 
-image:icons\thumbs-up-solid.png[] Choose names for your assembly DLLs that suggest large chunks of functionality, such as `System.Data`.
+image:icons/thumbs_up_solid.png[] Choose names for your assembly DLLs that suggest large chunks of functionality, such as `System.Data`.
 
 Assembly and DLL names don’t have to correspond to namespace names, but it is reasonable to follow the namespace name when naming assemblies. A good rule of thumb is to name the `DLL` based on the common prefix of the assemblies contained in the assembly. For example, an assembly with two namespaces, `MyCompany.MyTechnology.FirstFeature` and `MyCompany.MyTechnology.SecondFeature`, could be called `MyCompany.MyTechnology.dll`.
 
-image:icons\thumbs-up-solid.png[] Consider naming DLLs according to the following pattern:
+image:icons/thumbs_up_solid.png[] Consider naming DLLs according to the following pattern:
 
 `<Company>.<ComponentClause1>.<ComponentClauseN>.dll`
 
@@ -167,9 +167,9 @@ image:icons\thumbs-up-solid.png[] Consider naming DLLs according to the followin
 
 * Comments: 
 
-** image:icons\thumbs-up-solid.png[] Use `//` for simple comment or `///` for summaries.
+** image:icons/thumbs_up_solid.png[] Use `//` for simple comment or `///` for summaries.
 
-** image:icons\thumbs-down-solid.png[] Do not use `/* … */` and do not flower box.
+** image:icons/thumbs_down_solid.png[] Do not use `/* … */` and do not flower box.
 
 * Use built-in C# native data types instead of .NET Common Type System (CTS) types (string instead of String)
 
@@ -220,11 +220,11 @@ image:icons\thumbs-up-solid.png[] Consider naming DLLs according to the followin
 Regions can be used to collapse code inside Visual Studio .NET. Regions are ideal candidates to hide boiler plate style code that adds little value to the reader on your code. Regions can then be expanded to provide progressive disclosure of the underlying details of the class or method.
 
 
-image:icons\thumbs-down-solid.png[] Do Not regionalise entire type definitions that are of an important nature. Types such as enums (which tend to be fairly static in their nature) can be regionalised – their permissible values show up in Intellisense anyway.
+image:icons/thumbs_down_solid.png[] Do Not regionalise entire type definitions that are of an important nature. Types such as enums (which tend to be fairly static in their nature) can be regionalised – their permissible values show up in Intellisense anyway.
 
-image:icons\thumbs-down-solid.png[] Do Not regionalise an entire file. When another developer opens the file, all they will see is a single line in the code editor pane.
+image:icons/thumbs_down_solid.png[] Do Not regionalise an entire file. When another developer opens the file, all they will see is a single line in the code editor pane.
 
-image:icons\thumbs-up-solid.png[] Do regionalise boiler plate type code.
+image:icons/thumbs_up_solid.png[] Do regionalise boiler plate type code.
 
 == Use of Comment guideline
 Code is the only completely reliable documentation: write “good code” first!
