@@ -1927,6 +1927,349 @@ image::images/aws_template_test.png[]
 * https://aws.amazon.com/sqs/[Amazon Simple Queue Service (SQS)]
 * https://aws.amazon.com/sns/[Amazon Simple Notification Service (SNS)]
 
+NOTE: Please check the next section if you want to learn how to deploy lambda functions. 
+
+== How to: Deploy AWS Lambda fuctions
+
+In this section, you are going to learn how to deploy AWS Lambda functions using AWS CLI, AWS console portal (web), and with the visual studio plugin. 
+
+NOTE: If you want to know more about developing lambda fuctions, please check the previous section.
+
+=== Install Amazon Lambda Tools
+
+You will need to install the AWS Lambda tools. Run the following command to install the tools:
+
+[source, console]
+----
+dotnet tool install -g Amazon.Lambda.Tools
+----
+
+Or check if a new version is available in case you have already installed it:
+
+[source, console]
+----
+dotnet tool update -g Amazon.Lambda.Tools
+----
+
+WARNING: Working with AWS lambda fuctions requires an AWS account, remember that this type of operations may incur a cost.
+
+=== Deployment with AWS console portal (web)
+
+==== Step 1 - Create publish file
+
+Navigate to the application folder, run a terminal and execute the following command:
+
+[source, console]
+----
+dotnet lambda package
+----
+
+The file will be stored in the following path:
+
+`{Your-Project-Path}\bin\Release\{.Net-Version}\publish`
+
+Here's an example: :
+
+.Lambda AWS publish path example
+image::images/aws_lambda_publish.png[]
+
+==== Step 2 - Create the lambda fuction in the AWS Lambda dashboard
+
+To create the lambda fuction visit the https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1[AWS lambda Dashboard].
+
+WARNING: Remember to choose your desired region, service costs may depend on the selected region
+
+Then, in the upper right corner of the dashboard, click the *Create function* button.  
+
+.AWS Lambda dashboard
+image::images/aws_create_lambda.png[]
+
+In the following page, you must provide a function name (1) and choose the appropriate runtime (2) for your project, which in our case is .Net 6.
+Then click in the *Create function* button (3).
+
+.Create function configuration
+image::images/aws_create_lambda_2.png[]
+
+==== Step 3 - Upload .zip publish file
+
+When we have finished creating our function, we must submit the .zip file that we prepared in step 1:
+
+.Function configuration
+image::images/aws_create_lambda_3.png[]
+
+==== Step 4 - Add the Lambda Handler
+
+To add the lambda handler, click the *Edit* button in the Runtime settings section of the code tab. 
+
+.AWS Lambda dashboard
+image::images/aws_create_lambda_4.png[]
+
+In the next page, ensure that you have selected the right runtime for your project (1), and then add the Handler (2), which must have the following structure: 
+
+`Assembly::Namespace.ClassName::MethodName`
+
+In our example:
+
+`Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.Functions.CalculatorFunction::FunctionHandler`
+
+WARNING: The handler's name cannot exceed 128 characters.
+
+Then click in the *Save* button(3).
+
+.Edit runtime settings
+image::images/aws_create_lambda_5.png[]
+
+==== Step 5 - Test it
+
+You may test your lambda function by selecting the *test tab* (1) and providing the function's input parameters (2) in .JSON format: 
+
+.The AWS Lambda Dashboard's Test tab 
+image::images/aws_create_lambda_6.png[]
+
+Once the information has been provided, click the *Test* button in the upper right corner of the page (3).
+
+The output should look like this: 
+
+.Results of AWS Lambda function execution 
+image::images/aws_create_lambda_7.png[]
+
+=== Deployment with AWS CLI
+
+For deploying the lambda function using the Amazon Web Services CLI (Command Line Interface) first you will need to install the tool. You can check if you already have it by running the following command in your preferred terminal:
+
+[source, console]
+----
+aws --version
+----
+
+If you don't see any output, please refer to the following guide for https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[Installing or updating the latest version of the AWS CLI].
+
+==== Step 1 - Configure your AWS CLI
+
+Before using the CLI, you will need to configure it so that it can be linked to your aws account. For that, run the following command:
+
+[source, console]
+----
+aws configure
+----
+
+You will need to input some security credentials that you will be able to find in your Security Credentials section in your https://us-east-1.console.aws.amazon.com/iam/home?region=eu-west-1#/security_credentials[AWS Dashboard].
+
+
+==== Step 2 - Create Role with basic policy
+
+Create the execution role that gives your function permission to access AWS resources. 
+
+In the following example, `trust-policy.json` is a file in the current directory. This trust policy allows Lambda to use the role's permissions and contains the following data:
+
+[source, json]
+----
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+----
+
+To create an execution role with the AWS CLI and the previous trust policy, use the following command:
+
+[source, console]
+----
+aws iam create-role --role-name lambda-ex --assume-role-policy-document file://trust-policy.json
+----
+
+To add permissions to the role, use the attach-policy-to-role command. Start by adding the AWSLambdaBasicExecutionRole managed policy, which adds permissions to write logs to CloudWatch Logs.
+
+[source, console]
+----
+aws iam attach-role-policy --role-name lambda-ex --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+----
+
+==== Step 3 - Create publish file
+
+Navigate to the application folder, run a terminal and execute the following command:
+
+[source, console]
+----
+dotnet lambda package
+----
+
+
+The file will be stored in the following path:
+
+`{Your-Project-Path}\bin\Release\{.Net-Version}\publish`
+
+Here's an example: :
+
+.Lambda AWS publish path example
+image::images/aws_lambda_publish.png[]
+
+==== Step 4 - Deploy the function
+
+Open a terminal in the path of your lambda `.zip` file (result of the previous step). For the next command you will need the following data:
+
+* *{function-name}*: The name you want for the function. e.g `AWSCalculator`
+* *{zip-name}*: The name of the zip that contains the publish files. e.g `Devon4Net.Application.Lambda.zip`
+* *{handler}*: The handler route of the lambda function folowing the form _Assembly::Namespace.ClassName::MethodName_. e.g `Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.Functions.CalculatorFunction::FunctionHandler`
+* *{runtime}*: The runtime environment for your function to run on. e.g `dotnet6`
+* *{account-id}*: The account id from your https://us-east-1.console.aws.amazon.com/iam/home?region=eu-west-1#/security_credentials[AWS Dashboard].
+
+To deploy the function run the following command replacing the previous parameters with your data.
+
+WARNING: The handler's name cannot exceed 128 characters.
+
+[source, console]
+----
+aws lambda create-function --function-name {function-name} --zip-file fileb://{zip-name} --handler {handler} --runtime {runtime} --role arn:aws:iam::{account-id}:role/lambda-ex
+----
+
+For our example, the command will look like this:
+
+[source, console]
+----
+aws lambda create-function --function-name AWSCalculator --zip-file fileb://Devon4Net.Application.Lambda.zip --handler Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.Functions.CalculatorFunction::FunctionHandler --runtime dotnet6 --role arn:aws:iam::123456789012:role/lambda-ex
+----
+
+You will see a JSON output with the result of the deployment if everything worked properly. You can also check if the deployment was done correctly by listing your lambda functions:
+
+[source, console]
+----
+aws lambda list-functions --max-items 10
+----
+
+==== Step 5 - Test the function
+
+To test the function you can run the `invoke` command that will receive an `input.json` file containing the input data for the lambda function, and will output the result in `output.json`. The input file will look something like this:
+
+[source, json]
+----
+{
+  "Dividend": 22,
+  "Divisor": 3
+}
+----
+
+For our example calculator, run following the command in the same directory than the `input.json`:
+
+[source, console]
+----
+aws lambda invoke --function-name AWSCalculator --cli-binary-format raw-in-base64-out --payload file://input.json output.json
+----
+
+If everything has gone according to plan, your `output.json` file will look like this:
+
+[source, json]
+----
+{
+    "Quotient":7,
+    "Remainder":1
+}
+----
+
+=== Deployment with AWS Toolkit for Visual Studio
+
+For deploying the lambda function using the *AWS Toolkit for Visual Studio* first you will need to install the plugin. 
+
+For installing it, please refer to the following documentation https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/setup.html#install[Install the AWS Toolkit for Visual Studio].
+
+==== Step 1 - Set up your AWS Account in Visual Studio
+
+The first thing that you have to do, is configure your AWS Credentials. For that you must navigate to: 
+
+*View > AWS Explorer*
+
+.Visual Studio AWS toolkit
+image::images/aws_create_lambda_9.png[]
+
+Add a new profile for AWS credentials as showing on the image below:
+
+.Visual Studio AWS toolkit
+image::images/aws_create_lambda_10.png[]
+
+Set the credentials needed:
+
+.Visual Studio AWS toolkit
+image::images/aws_create_lambda_11.png[]
+
+You may find the Access Key ID (2) and the Secret Access Key (3) at https://us-east-1.console.aws.amazon.com/iam/home?region=eu-west-1#/security_credentials[AWS Dashboard].
+
+==== Step 2 - Create publish file
+
+Navigate to the application folder, run a terminal and execute the following command:
+
+[source, console]
+----
+dotnet lambda package
+----
+
+
+The file will be stored in the following path:
+
+`{Your-Project-Path}\bin\Release\{.Net-Version}\publish`
+
+Here's an example: :
+
+.Lambda AWS publish path example
+image::images/aws_lambda_publish.png[]
+
+==== Step 3 - Create a new function
+
+Return to the AWS Explorer, right click in AWS Lambda (1) and select the Create New Function option (2)
+
+.Visual Studio AWS toolkit
+image::images/aws_create_lambda_8.png[]
+
+In the next screen you must provide the details about the function that you want to upload
+
+.Visual Studio AWS toolkit
+image::images/aws_create_lambda_12.png[]
+
+1. Source Code: Refers to the .zip file that you created in the previous step
+
+2. Function Name: The name that you want for your function
+
+3. Handler's name: This parameter must follow the next structure:
+
+`Assembly::Namespace.ClassName::MethodName`
+
+WARNING: The handler's name cannot exceed 128 characters.
+
+Once the information has been provided, click the *Next* button. 
+
+==== Step 4 - Create Role with basic policy
+
+In the next step, we'll set up a Role.
+Choose an existing role or create one if you don't have one already. 
+
+image::images/aws_create_lambda_13.png[]
+
+Then click the *Upload* button.
+
+==== Step 5 - Test the function
+
+Now you can test your lambda function providing the function's input parameters (1) in JSON format: 
+
+.Visual Studio AWS toolkit
+image::images/aws_create_lambda_14.png[]
+
+Once the information has been provided, click the *Invoke* button (2) to run the function.
+
+You can see the Response (3) and the Log output (4)
+
+=== References
+
+* https://aws.amazon.com/lambda/[AWS Lambda]
+* https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html[Lambda runtimes]
+* https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-awscli.html[Using Lambda with the AWS CLI]
+* https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/welcome.html[AWS Toolkit for Visual Studio]
+
 == How to: AWS Serverless
 
 In this section, you will learn how to launch a AWS WebAPI serverless using devon4net.

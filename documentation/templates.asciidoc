@@ -692,7 +692,7 @@ This is the file:
 }
 ----
 
-The `function-handler` option is the function handler location in the form of `{DLL_NAME}::{NAMESPACE}::{FUNCTION_HANDLER_NAME}`. And the `template` option will point to a configuration file for the cloud formation.
+The `function-handler` option is the function handler location in the form of `Assembly::Namespace.ClassName::MethodName`. And the `template` option will point to a configuration file for the cloud formation.
 
 NOTE: Read the AWS documentation to learn more about this configuration.
 
