@@ -1929,7 +1929,7 @@ image::images/aws_template_test.png[]
 
 NOTE: Please check the next section if you want to learn how to deploy lambda functions. 
 
-== How to: Deploy AWS Lambda fuctions
+== How to: Deploy AWS Lambda Functions
 
 In this section, you are going to learn how to deploy AWS Lambda functions using AWS CLI, AWS console portal (web), and with the visual studio plugin. 
 
