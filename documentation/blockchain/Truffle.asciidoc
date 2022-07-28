@@ -1,0 +1,327 @@
+:toc:
+
+= Truffle Suite
+
+== What is Truffle Suite?
+
+Truffle is a bundle that makes it easier to build *DApps* (Decentralized Applications), deploy, test and interact with *Smart Contracts*.
+
+The Truffle Suite includes:
+
+* *Truffle*: A world-class development environment, testing framework, and asset pipeline for blockchains using the Ethereum Virtual Machine (EVM), with the goal of making life simpler for developers.
+
+* *Ganache*: A personal blockchain for Ethereum development you can use to deploy contracts, develop your applications, and run tests.
+
+* *Drizzle*: A collection of front-end libraries that make writing DApp front-ends easier and more predictable.
+
+== Prerequisites
+
+* Last Version of Node.js
+* Last Version of Git
+* Visual Studio Code
+
+NOTE: If you want to prepare the entire environment to work in the blockchain, please visit the *Blockchain Environment documentation*
+
+== Install Truffle
+
+* You can install truffle via *npm* in your system executing the following command:
++
+[source, console]
+----
+npm install -g truffle
+----
++
+You can check the installation typing the following command in a terminal:
++
+[source, console]
+----
+truffle version
+----
++
+.Truffle version command
+image::images/truffle-version-2.png[]
+
+
+* Also you may install *truffle extension for VS code*:
++
+1. Go to the extensions page of Visual Studio Code
+2. Search Truffle suite in the search bar
+3. Install it
+
+NOTE: Please consult the *Blockchain Environment* documentation if you need further information about the environment configuration.
+
+== How to: use Truffle suite
+
+In this section, we will look about how truffle works for building Solidity Smart Contracts.
+
+=== Initializing and preparing the project
+
+==== Step 1 - Create a working directory
+
+Create a working directory wherever you want on your machine and open it with Visual Studio Code
+
+==== Step 2 - Start directory as truffle project
+
+For that you must run the following command inside the working directory from the *step 1* (Yoy may use the integrated terminal in VSCode):
+
+[source, console]
+----
+truffle init
+----
+
+If the command was successfully executed, your project should now look like this:
+
+.Truffle project structure
+image::images/truffle-init-structure.png[]
+
+
+==== Step 3 - Install any required packages in your project.
+
+In our case, two packages must be installed:
+
+* File System (fs): This is used to handle system files.
++
+Run the following command to install it:
++
+[source, console]
+----
+npm install fs
+----
+
+* Hd Wallet Provider: This is used to manage HD Wallets.
++
+Install this library, running the command below:
++
+[source, console]
+----
+npm install @truffle/hdwallet-provider
+----
+
+NOTE: To learn more about HD Wallets, see the *Advanced Blockchain* section.
+
+==== Step 4 - Create a Smart Contract
+
+We will develop a very simple Smart Contract, in this case a Calculator that can perform multiple operations:
+
+[source, Solidity]
+----
+// SPDX-License-Identifier: MIT
+pragma solidity  >=0.4.22 <0.9.0;
+
+contract PureCalculator {
+    
+    function add(uint256 a, uint256 b) public pure returns (uint256 result) {
+        return a + b;
+    }
+
+    function substract(uint256 a, uint256 b) public pure returns (uint256 result) {
+        return a - b;
+    } 
+
+    function multiply(uint256 a, uint256 b) public pure returns (uint256 result) {
+        return a * b;
+    }
+
+    function divide(uint256 a, uint256 b) public pure returns (uint256 result) {
+        return a / b;
+    }
+}
+----
+
+NOTE: If you need more information about Solidity language, please visit the *Solidity* documentation
+
+We need to save this contract as `{ContractName}.sol` in the contracts folder of the project. In this example we are going to call it `PureCalculator.sol`.
+
+The project now should look like this:
+
+.Truffle project structure
+image::images/truffle-project-structure.png[]
+
+=== Smart Contract Compilation and Deployment
+
+==== Local Blockchain using Ganache
+
+===== Step 1 - Run ganache
+
+We are going to initialize a local blockchain using ganache, for that we need to open another terminal and run the following command:
+
+[source, console]
+----
+ganache
+----
+
+You should see something like this in the console after the execution:
+
+.Ganache running
+image::images/ganache.png[]
+
+===== Step 2 - Configure `truffle.config` file
+
+In the `truffle.config` file you must uncomment lines 44 to 48, in order to connect your application with the ganache server. 
+
+.Truffle.config file
+image::images/truffle-config-local.png[]
+
+===== Step 3 - Create a new migrations file
+
+You must create a new migration file in the migrations folder of your project, in order to deploy your smart contract, for that you may use the following code:
+
+[source, js]
+----
+const PureCalculator = artifacts.require("PureCalculator");
+
+module.exports = function (deployer) {
+  deployer.deploy(PureCalculator);
+};
+----
+
+===== Step 4 - Compile and deploy your smart contract
+
+You can compile and deploy your smart contract using the command below:
+
+[source, console]
+----
+truffle migrate --network development
+----
+
+As a result, you should see something similar to:
+
+.Local deployment result
+image::images/deploy-local.png[]
+
+===== Step 5 - Smart Contract interaction
+
+First we must open a truffle console, for that type the following command:
+
+[source, console]
+----
+truffle console --newtwork development
+----
+
+The next step is to record our contract in a variable, for that you must run the following code:
+
+[source, console]
+----
+let calculator = await PureCalculator.deployed()
+----
+
+And then add the input parameters to the variable, that you created in the previous step:
+
+[source, console]
+----
+calculator.add(2,2)
+----
+
+As a result, you must see something like this:
+
+.Result of the add operation of the Smart Contract
+image::images/truffle-local-result.png[]
+
+==== Ropsten (Test Network)
+
+===== Step 1 - Create a secret file
+
+You must provide a .secret file, which contains your seed phrase or your private key.
+
+In this case we use *Metamask* as wallet, to make the transaction to deploy the contract possible.
+
+In Metamask we can change to the Ropsten Testnet like so:
+
+.Metamask Wallet
+image::images/metamask-1.png[]
+
+We can unveil the private key by going to the account details:
+
+image:images/metamask-2.png[]
+image:images/metamask-3.png[]
+
+NOTE: For more information about HDWallets or accounts, please read the *Advanced Blockchain* documentation.
+
+===== Step 2 - Configure `truffle.config` file
+
+1. Uncomment lines 21 to 24. This will allow the read of the file that we created in the previous step, and imports the HDWallet provider.
+
+2. Now we need to uncomment lines 62-69 where we make the configuration of the network.
+
+3. Pay attention to line 63 where we configure the public client for the HDWallet provider, in this case we will use infura, you must provide your project url.
++
+.Truffle.config file
+image::images/truffle-config-ropsten.png[]
++
+For that we will need to go to https://infura.io/[Infura website], and create an account. Once you have your account you will need to add a gate to the network following the next steps:
+
+* Create a new project
++
+.Infura Dashboard
+image::images/Infura-1.png[]
+image::images/Infura-2.png[]
+
+* Copy the link for your desired network. In our case we will be choosing Ropsten.
++
+.Infura project configuration
+image::images/Infura-3.png[] 
++
+NOTE: You will find more information about Infura in the *Blockchain Environment documentation*.
+
+===== Step 3 - Create a new migrations file
+
+You must create a new migration file in the migrations folder of your project, in order to deploy your smart contract, for that you may use the following code:
+
+[source, js]
+----
+const PureCalculator = artifacts.require("PureCalculator");
+
+module.exports = function (deployer) {
+  deployer.deploy(PureCalculator);
+};
+----
+
+===== Step 4 - Compile and deploy your smart contract
+
+You can compile and deploy your smart contract using the command below:
+
+[source, console]
+----
+truffle migrate --network ropsten
+----
+
+As a result, you should see something similar to:
+
+.Ropsten deployment result
+image::images/deploy-ropsten.png[]
+
+You can see on the image the result of the deployment of our contract in the Ropsten test network:
+
+1. The transaction hash: You may use https://ropsten.etherscan.io/[etherscan browser] to see your transaction in the blockchain
+2. The contract address: You can copy this address in https://ropsten.etherscan.io/[etherscan] to see your deployed contract.
+
+.Smart Contract information in etherscan
+image::images/Contract-etherscan.png[]
+
+===== Step 5 - Smart Contract interaction
+
+First we must open a truffle console, for that type the following command:
+
+[source, console]
+----
+truffle console --network ropsten --verbose-rpc
+----
+
+The next step is to record our contract in a variable, for that you must run the following code:
+
+[source, console]
+----
+let calculator = await PureCalculator.deployed()
+----
+
+And then add the input parameters to the variable, that you created in the previous step:
+
+[source, console]
+----
+calculator.add(2,2)
+----
+
+As a result, you must see something like this:
+
+.Result of the add operation of the Smart Contract
+image::images/truffle-ropsten-result.png[]
