@@ -54,7 +54,7 @@ previous block's hash value when generating the next block's hash. Blocks are ch
 through hashes as shown in _Figure 2_.
 
 .Hash connection between blocks
-image::images\inmutable_data.png[]
+image::images/inmutable_data.png[]
 
 This way, if something changes in block 1, the hash of block 1 will also change, and will be different of the stored copy of the hash in block 2. So changing a block requires regenerating all successors and redoing the work (solving to the entire chain ‘hard mathematical problems’) while other blocks are being mined, which is practically impossible. This protects the blockchain from tampering.
 
@@ -101,7 +101,7 @@ ll types of blockchains can be characterized as permissionless, permissioned, or
 On the other hand, permissioned blockchains restrict access to the network to certain nodes and may also restrict the rights of those nodes on that network. The identities of the users of a permissioned blockchain are known to the other users of that permissioned blockchain.
 
 .Blockchain Types
-image::images\blockchain_types.png[]
+image::images/blockchain_types.png[]
 
 * Public blockchains: A public blockchain is decentralized with no single authority on the network. All transactions in
 the blockchain are visible by any node on the network.
