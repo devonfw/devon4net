@@ -11,23 +11,23 @@ MetaMask is the tool that allows users interact and experience with Web3. It is 
 Go to your preferred browser and download the Metamask extension from https://metamask.io/[here]
 
 .Metamask official site
-image::images\metamask-4.png[]
+image::images/metamask-4.png[]
 
 Click the download button, then select your current browser and click on install.
 
 .Metamask official site
-image::images\metamask-5.png[]
+image::images/metamask-5.png[]
 
 You will be taken to your browser's add-ons page; add the extension in order to install it.
 
 .Firefox add-ons store
-image::images\metamask-6.png[]
+image::images/metamask-6.png[]
 
 Once the extension is installed, you may click in the extension icon on the navigation bar on your browser and open it.
 
 
 .Metamask extension
-image::images\metamask-7.png[]
+image::images/metamask-7.png[]
 
 If you click the begin button you can export your wallets with your seed phrase and your password, or you can create a new one
 
@@ -37,10 +37,21 @@ Once you have your wallet imported or created in the extension you may consult t
 
 Infura provides the tools and infrastructure that allow developers to easily take their blockchain application from testing to scaled deployment - with simple, reliable access to Ethereum and IPFS.
 
-The interaction with the Ethereum network must be done through a client node that allows sending requests, We will utilize Infura for this.
+The interaction with the Ethereum network must be done through a client node that allows sending requests, We will use Infura for this.
 
 All you have to do is go to the https://infura.io/[Infura website] and create an account to begin creating new projects. 
 
+
+*Step 1*: Create a new project
+
+.Metamask extension
+image::images/infura_new.png[]
+
+
+*Step 2*: Now you have available a number of end-points for the mainnet and the different testnets. Copy the link for your desired network.
+
+.Infura project configuration
+image::images/Infura-3.png[]
 
 === Etherscan
 
@@ -51,7 +62,7 @@ Etherscan, sometimes known as "Ethplorer," is the most reliable tool for travers
 On the next image you can see all of the important sections of the ether scan home page:
 
 .Etherscan Home Page 
-image::images\etherscan-1.png[]
+image::images/etherscan-1.png[]
 
 Where:
 
@@ -66,7 +77,7 @@ Where:
 If you search by Address you will be redirected to the Address page and you will see something like this:
 
 .Address page
-image::images\etherscan-2.png[]
+image::images/etherscan-2.png[]
 
 Where:
 
@@ -78,7 +89,7 @@ If the address that you are searching is from a contract you will see something 
 
 
 .Contract page
-image::images\etherscan-3.png[]
+image::images/etherscan-3.png[]
 
 . As you can see, the address type is now a Contract.
 
@@ -122,7 +133,7 @@ NOTE: For more information please refer to the https://trufflesuite.com/docs/[of
 
 .. Go to the https://www.python.org/downloads/[python downloads site] and download the installer:
 +
-image::images\python-1.png[]
+image::images/python-1.png[]
 
 .. Launch the installer to begin the installation. 
 
@@ -130,50 +141,50 @@ image::images\python-1.png[]
 
 .. Go to the https://nodejs.org/en/download/[node.js downloads site] and download the installer:
 +
-image::images\nodejs-1.png[]
+image::images/nodejs-1.png[]
 
 .. Run the installer and click the next button.
 +
-image::images\nodejs-2.png[]
+image::images/nodejs-2.png[]
 
 .. Accept terms and conditions and click the next button.
 +
-image::images\nodejs-3.png[]
+image::images/nodejs-3.png[]
 
 .. If necessary, change the installation directory and then click next. 
 +
-image::images\nodejs-4.png[]
+image::images/nodejs-4.png[]
 
 .. Click next for a standard installation.
 +
-image::images\nodejs-5.png[]
+image::images/nodejs-5.png[]
 
 .. Click next in the next window
 +
-image::images\nodejs-6.png[]
+image::images/nodejs-6.png[]
 
 .. Click install to begin the installation process
 +
-image::images\nodejs-7.png[]
+image::images/nodejs-7.png[]
 
 
 . *Git*
 
 .. In order to install git, you can download the installer https://git-scm.com/downloads[here]
 +
-image::images\git-1.png[]
+image::images/git-1.png[]
 
 .. Launch the installer and click Next to begin the setup:
 +
-image::images\git-2.png[]
+image::images/git-2.png[]
 
 .. Select the destination folder and click Next:
 +
-image::images\git-3.png[]
+image::images/git-3.png[]
 
 .. Select the components you want to install, and click next
 +
-image::images\git-4.png[]
+image::images/git-4.png[]
 
 .. Continue to the nexts setup windows for standard installation by clicking next.
 
@@ -188,7 +199,7 @@ git --version
 
 You must have this IDE installed in order to use truffle, and you must change its installation to enable the following options: 
 
-image::images\visualstudio-options.png[]
+image::images/visualstudio-options.png[]
 
 ===== For Linux
 
@@ -272,7 +283,7 @@ truffle version
 
 Your output should look as the following image:
 
-image::images\truffle-version.png[]
+image::images/truffle-version.png[]
 
 ==== Installing Ganache
 
@@ -289,7 +300,7 @@ npm install -g ganache
 
 Go to the extensions market of VSCode and install the Truffle extension for VSCode:
 
-image::images\truffle-extension.png[]
+image::images/truffle-extension.png[]
 
 === Working with Nethereum
 
@@ -307,6 +318,6 @@ image::images\truffle-extension.png[]
 
 You can install it from the visual studio installer, modifying your current installation:
 
-image::images\visualStudio-1.png[]
+image::images/visualStudio-1.png[]
 .Visual Studio Installer
-image::images\VisualStudio-2.png[]
+image::images/VisualStudio-2.png[]
