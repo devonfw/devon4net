@@ -201,7 +201,6 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
         {
             foreach (var strategy in placementStrategies)
             {
-
                 switch (strategy.ToLower())
                 {
                     case "binpackmemory":

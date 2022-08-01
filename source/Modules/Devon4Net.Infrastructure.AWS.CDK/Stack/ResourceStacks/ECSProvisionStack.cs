@@ -166,9 +166,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 throw new ArgumentException("Please add a task definition option properly set up on your json configuration. No task definition could be added.");
             }
 
-            var cluster = StackResources.EcsClusters.FirstOrDefault(c => c.Key == service.EcsClusterId).Value as Cluster;
-
-            if (cluster == null)
+            if (StackResources.EcsClusters.FirstOrDefault(c => c.Key == service.EcsClusterId).Value is not Cluster cluster)
             {
                 throw new ArgumentException("Please add a cluster definition option properly set up on your json configuration. No cluster could be added.");
             }
