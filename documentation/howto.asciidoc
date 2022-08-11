@@ -2371,3 +2371,228 @@ image::images/aws_template_startup.png[]
 ==== Step 3 - Run it
 
 Run the project and now you can start to develop your serverless WebAPI.
+
+== How to: AWS DynamoDB
+
+In this guide, you will learn how to configure and use the Amazon DynamoDB database service using devon4net.
+
+=== What is Amazon DynamoDB?
+
+Amazon DynamoDB is a fully managed NoSQL database service that provides fast and predictable performance with seamless scalability. In DynamoDB, tables, items, and attributes are the core components that you work with. A table is a collection of items, and each item is a collection of attributes. DynamoDB employs primary keys to uniquely identify each item in a table, as well as secondary indexes to provide query flexibility.
+DynamoDB supports two different types of primary keys:
+
+* **Partition key**
+
+* **Partition key and Sort key** 
+
+WARNING: Sort keys and Secondary indexes are not yet available in devon4net; however, we are working on introducing such features in future updates.
+
+In devon4net you may work with two types of repositories: 
+
+* *Table Repository*, which is intended for Complex objects, works with tables and serialization.
+
+* *Entity Repository*, which is designed for Model objects with annotations.
+
+=== Installing the nuget
+
+You need to install the `AWSSDK.DynamoDBV2` nuget, for that you can run the following command in the Package Manager Console:
+
+[source, console]
+----
+Install-Package AWSSDK.DynamoDBv2
+----
+
+=== Working with Table Repository
+
+==== Step 1 - Create the object
+
+Create the object you want to use to interact with the database; in this example, we built a user object:
+
+[source, c#]
+----
+public class User
+    {
+        public string Key { get; set; }
+        public string Name { get; set; }
+        public string Surname {get; set;}
+    }
+----
+
+==== Step 2 - Register the DynamoDbTableRepository service
+
+The code below registers the `IDynamoDbTableRepository` service with the concrete type `DynamoDbTableRepository`. The AddTransient method registers the service with a transient lifetime. These services are created each time they're requested from the service container:
+
+[source, c#]
+----
+protected override void ConfigureServices(IServiceCollection services)
+  {
+    services.AddTransient<IDynamoDbTableRepository, DynamoDbTableRepository>();
+  }
+----
+
+==== Step 3 - Inject the Table Repository
+
+[source, c#]
+----
+private IDynamoDbTableRepository DynamoDbTableRepository { get; set; }
+        public RepositoryService(IDynamoDbTableRepository dynamoDbTableRepository)
+        {
+            DynamoDbTableRepository = dynamoDbTableRepository;
+        }
+----
+
+==== Step 4 - Create a table
+
+In this scenario, we want to create a table called `users`. The code below first checks if the table `users` already exists, and if it doesn't, then uses the `CreateTable` method from the `DynamoDbTableRepository` to create it: 
+
+[source, c#]
+----
+public async void CreateTable()
+        {
+            if (!await DynamoDbTableRepository.TableExists("users").ConfigureAwait(false))
+            {
+                await DynamoDbTableRepository.CreateTable("users",
+                    new List<KeySchemaElement> { new KeySchemaElement { AttributeName = DynamoDbGeneralObjectStorageAttributes.AttributeKey, KeyType = KeyType.HASH } },
+                    new List<AttributeDefinition> { new AttributeDefinition { AttributeName = DynamoDbGeneralObjectStorageAttributes.AttributeKey, AttributeType = ScalarAttributeType.S } }).ConfigureAwait(false);
+            }
+
+        }
+----
+
+==== Step 5 - Insert values into the table
+
+Now let's insert data into the table using the repository's `Put` method. We must specify the table name, partition key, and object to insert.  
+
+[source, c#]
+----
+public async Task<User> InsertUser()
+        {
+            var user = new User {
+                Key = "User-01",
+                Name = "Josh",
+                Surname = "Martin"
+            };
+
+            await DynamoDbTableRepository.Put("users", user.Key, user).ConfigureAwait(false);
+            var criteria = new DynamoSearchCriteria();
+            criteria.AddQueryCriteria(DynamoDbGeneralObjectStorageAttributes.AttributeKey, user.Key, QueryOperator.Equal); // For query method
+            var result = await DynamoDbTableRepository.Get<User>("users", criteria.GetCriteriaScanFilterForSearchCriteria()).ConfigureAwait(false);
+            return result.FirstOrDefault();
+        }
+----
+
+As you can see in the code above, we can obtain the result using `DynamoSearchCriteria()` We will describe query and scan methods later in this guide.
+
+=== Working with Entity Repository
+
+==== Step 1 - Create the Entity
+
+Create the entity you want to use to interact with the database; in this example, we built a Users entity:
+
+[source, c#]
+----
+[DynamoDBTable("users")]
+public class UsersTable
+    {
+        [DynamoDBHashKey]
+        [DynamoDBProperty("key")]
+        public string Key { get; set; }
+
+        [DynamoDBProperty("name")]
+        public string Name { get; set; }
+
+        [DynamoDBProperty("surname")]
+        public string Surname {get; set;}
+
+        [DynamoDBIgnore]
+        public int Age {get; set;}
+    }
+----
+
+In this example, we use some annotations:
+
+* `[DynamoDBTable("tableName")]`: The name of the table that will be created for this entity.
+* `[DynamoDBHashKey]`: Is used to set a property as Partition Key.
+* `[DynamoDBProperty("propertyName")]`: The name of the property that will be shown in the database.
+* `[DynamoDBIgnore]`: For avoiding this property when saving or loading data.
+
+==== Step 2 - Register the DynamoDbEntityRepository service
+
+The code below registers the `IDynamoDbEntityRepository` service with the concrete type `DynamoDbEntityRepository`. The AddTransient method registers the service with a transient lifetime. These services are created each time they're requested from the service container:
+
+[source, c#]
+----
+protected override void ConfigureServices(IServiceCollection services)
+  {
+    services.AddTransient<IDynamoDbEntityRepository<UsersTable>, DynamoDbEntityRepository<UsersTable>>();
+  }
+----
+
+==== Step 3 - Inject the Entity Repository
+
+[source, c#]
+----
+private IDynamoDbEntityRepository<UsersTable> DynamoDbEntityRepository { get; set; }
+        public DynamoDbFunctionEventHandler(IDynamoDbEntityRepository<UsersTable> dynamoDbEntityRepository)
+        {
+            DynamoDbEntityRepository = dynamoDbEntityRepository;
+        }
+----
+
+==== Step 4 - Create a table
+
+In this example, we want to create a table called `users`. The code below first checks if the table `users` already exists, and if it doesn't, then uses the `CreateTable` method from the `DynamoDbEntityRepository` to create it: 
+
+[source, c#]
+----
+public async void CreateTable()
+        {
+            if (!await DynamoDbEntityRepository.TableExists("users").ConfigureAwait(false))
+            {
+                await DynamoDbEntityRepository.CreateTable("users",
+                    new List<KeySchemaElement> { new KeySchemaElement { AttributeName = DynamoDbGeneralObjectStorageAttributes.AttributeKey, KeyType = KeyType.HASH } },
+                    new List<AttributeDefinition> { new AttributeDefinition { AttributeName = DynamoDbGeneralObjectStorageAttributes.AttributeKey, AttributeType = ScalarAttributeType.S } }).ConfigureAwait(false);
+            }
+
+        }
+----
+
+==== Step 5 - Insert values into the table
+
+Now let's insert data into the table using the repository's `Create` method. In this case, we simply need to specify the entity itself as a parameter.  
+
+[source, c#]
+----
+public async Task<User> InsertUser()
+        {
+            await DynamoDbEntityRepository.Create(new UsersTable { Key = "User-01", Name = "Josh", Surname = "Martin"}).ConfigureAwait(false);
+
+            return await DynamoDbEntityRepository.GetById("User-01").ConfigureAwait(false);
+        }
+----
+
+We also use the the repository's `GetById` method to obtain the added user. 
+
+=== Searching methods
+
+Devon4net includes the `DynamoSearchCriteria` class, which makes it easier to use the DynamoDB SDK searching methods.
+
+In DynamoDB SDK, there are two possible operations:
+
+* **Scan:**  Searches the whole table for elements that fit the criteria. Is slower than Query operations.
+* **Query:** Performs a direct lookup to a selected partition based on primary or secondary partition/hash key.
+
+In devon4net you must create a new instance of `DynamoSearchCriteria` class, for accessing those methods:
+
+[source, c#]
+----
+var criteria = new DynamoSearchCriteria();
+
+            criteria.AddSearchCriteria(DynamoDbGeneralObjectStorageAttributes.AttributeKey, user.Name, ScanOperator.Equal);// For scan method
+
+            criteria.AddQueryCriteria(DynamoDbGeneralObjectStorageAttributes.AttributeKey, user.Key, QueryOperator.Equal);// For query method           
+----
+
+The `AddSearchCriteria` and `AddQueryCriteria` methods have fairly similar syntax, as shown in the code above. 
+
+NOTE: For more information about query and scan methods please visit the DynamoDB component documentation
