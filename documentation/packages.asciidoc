@@ -2953,3 +2953,92 @@ Once installed you will need to add the configuration to your `appsettings.{envi
 ----
 builder.Services.ConfigureDevonfwAWS(builder.Configuration, true);
 ----
+
+== Devon4Net.Infrastructure.AWS.DynamoDb
+
+This component is part of the AWS Stack in Devon4Net. It has the necessary classes to configure the connection with the AWS Cloud.
+
+=== Key Classes
+
+This section will provide a brief overview of the component's most important classes. The component has the following structure:
+
+.Structure of the DynamoDb component 
+image::images/aws_dynamodb_structure.png[]
+
+* Common: This folder contains the classes that allow us to use the DynamoDB query and scan methods. 
+
+* Constants: Contains the `DynamoDbGeneralObjectStorageAttributes` class, which defines generic DynamoDb object attributes that we can use in our application.
+
+* Converters: Folder containing a Nullable Date Converter, which is used to convert values to make them compatible with the DynamoDB database. It makes use of the `IPropertyConverter` interface from the `AWSSDK.DynamoDBv2` package.
+
+* Domain: This folder contains the different repositories that we will explain in more detail in the following section. 
+
+* Extensions: It includes a JSON Helper for performing operations like serialization and deserialization. 
+
+==== Entity Repository (`DynamoDbEntityRepository.cs`)
+
+It works with the object persistence programming model.
+This model is specifically designed for storing, loading, and querying `.NET` objects in DynamoDB. You may access this model through the `Amazon.DynamoDBv2.DataModel` namespace.
+Is the easiest to code against whenever you are storing, loading, or querying DynamoDB data.
+It makes use of annotations to define the tables and their properties. 
+
+==== Table Repository (`DynamoDbTableRepository.cs`)
+
+It uses a low-level model to manage objects directly and converts `.Net` data types to their DynamoDB equivalents
+
+It includes methods for searching, updating, and deleting database data. 
+
+==== Dynamo Search Criteria (`DynamoSearchCriteria.cs`)
+
+DynamoDB provides two kinds of read operations: query and scan.
+
+A query operation uses either the primary key or the index key to find information.
+Scan is a read call that, as the name suggests, scans the entire table for a specific result.
+Scan operations are less efficient than Query operations.
+
+NOTE: In the 'How to: AWS DynamoDB' documentation, you can find examples of how to use the repositories and search methods. 
+
+=== Configuration
+
+The following configuration is for AWS in general and can be done in `appsettings.{environment}.json` file as follows:
+
+[source, json]
+----
+"AWS": {
+  "UseSecrets": true,
+  "UseParameterStore": true,
+  "Credentials": {
+    "Profile": "",
+    "Region": "eu-west-1",
+    "AccessKeyId": "",
+    "SecretAccessKey": ""
+  }
+}
+----
+
+* `UseSecrets`: Boolean that indicates if AWS Secrets Manager is being used.
+* `UseParameterStore`: Boolean to indicate if AWS Parameter Store is being used.
+* `Credentials`: Credentials for connecting with AWS.
+** `Profile`: A collection of settings is called a profile. This would be the name for the current settings.
+** `Region`: AWS Region whose servers you want to send your requests to by default. This is typically the Region closest to you.
+** `AccessKeyId`: Access key ID portion of the keypair configured to access your AWS account.
+** `SecretAccessKey`: Secret access key portion of the keypair configured to access your AWS account.
+
+NOTE: Access keys consist of an access key ID and secret access key, which are used to sign programmatic requests that you make to AWS. If you don't have access keys, you can create them from the AWS Management Console.
+
+=== Set up in devon
+
+For using it in a devon4net project, you could very easily do it by using the template. 
+
+NOTE: Read the template documentation to learn more about it.
+
+=== Set up in other projects
+
+Install the package on your solution using the Package Manager Console:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.AWS.DynamoDb
+----
+
+NOTE: Please see the 'How to: AWS DynamoDB' documentation for more information and examples of how to use the component. 

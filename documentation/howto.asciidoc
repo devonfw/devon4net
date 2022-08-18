@@ -71,7 +71,7 @@ You can do it also choosing the template when creating a new project in Visual S
 image::images/api_template_configure.png[]
 
 ==== Step 3 - Run it
-After running it with Kestrel you will be able to access to the swagger `index.html` and try the API in the following link: https://localhost.8085/swagger/index.html[https://localhost.8085/swagger/index.html]
+After running it with Kestrel you will be able to access to the swagger `index.html` and try the API in the following link: https://localhost:8085/swagger/index.html[https://localhost:8085/swagger/index.html]
 
 === Create it from scratch in Visual Studio 2022
 This method is a little more time consuming, but it allows for a more customized configuration and project structure. You will be using Visual Studio 2022 to create the project and add everything you need by hand. 
