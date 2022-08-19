@@ -1589,6 +1589,80 @@ Similar to the producer, the Consumer also needs to be related to a configuratio
 builder.Services.AddKafkaConsumer<MessageConsumerHandler>("Consumer1");
 ----
 
+== How to: Use Nexus
+
+In this section we will show a practical example of how to create a raw hosted repository, to which a file will be uploaded and then retrieved and downloaded.
+
+1. Create new Raw Hosted Repository:
++
+To create a new repository of this type, we must first create a new instance of the `RawHostedRepository` class. This class will be created with its pertinent attributes. The following code snippet shows the example:
++
+[source, C#]
+----
+var rawHostedRepository new RawHostedRepository
+    {
+        Name = "SampleRepository",
+        Online = true,
+        Storage = CreateDefaultStorage(),
+        Raw = new Raw
+        {
+            ContentDisposition = "ATTACHMENT"
+        }
+    };
+----
++ 
+Once this object is created, a call to the nexus handler will be performed, specifically the `Task CreateRepository<T>(T repositoryDto)` method. The example is shown below:
++
+[source, C#]
+----
+await _nexusHandler.CreateRepository(rawHostedRepository).ConfigureAwait(false);
+----
+
+2. Upload new component:
++
+To create a component
+similarly to the previous step, in order to upload a new repository, an instance of the type of component to be uploaded must be created, in this case it will be of type raw. The class to be created will be:
+
++
+[source, C#]
+----
+var rawComponent = new RawUploadComponent()
+    {
+        RepositoryName = "SampleRepository",
+        Filename = {file path},
+        Directory = "SampleDirectory",
+        AssetPath = SampleAssetPath,
+    };
+----
++
+Once this object is created, a call to the nexus handler will be performed, specifically the `Task UploadComponent<T>(T uploadComponent)` method. The example is shown below:
+
++
+[source, C#]
+----
+await _nexusHandler.UploadComponent(rawComponent);
+----
+
+3. Retrieve metadata from component
++
+To retrieve the component metadata, the `Task<Component> GetComponent(string repositoryName, string componentName)` method of the nexus handler will be used. The example is shown below:
+
++
+[source, C#]
+----
+var component = await _nexusHandler.GetComponent("SampleRepository", "SampleDirectory/SampleAssetPath");
+----
+
+4. Download uploaded file
++
+To download the file, the `Task<string> DownloadAsset(string repositoryName, string assetName)` method of the nexus handler will be used. The example is shown below:
+
++
+[source, C#]
+----
+var downloadedFile = await _nexusHandler.DownloadAsset("SampleRepository", "SampleDirectory/SampleAssetPath");
+----
+
 == How to: Protocol buffers
 
 Protocol buffers are Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data. You can see it as a JSON or a XML file, but smaller, faster and with an easier syntax. 

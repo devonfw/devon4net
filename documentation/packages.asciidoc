@@ -330,6 +330,203 @@ Where:
 |`MediaType.ApplicationJson`| The media type flag for the call
 |=======================
 
+== Devon4Net.Infrastructure.Nexus
+
+This section of the wiki explains how to use the Nexus module, which internally uses the CircuitBreaker module to make requests to Nexus.
+
+=== Key Classes
+
+The `INexusHandler` interface contains the methods needed to use the component, we can divide them into the following sections:
+
+==== Component Management
+|===
+|*Method*|*Description*
+| Task<IList<Component>> GetComponents(string repositoryName) | Returns the list of existing components based on the repository name.
+| Task<IList<Component>> GetComponents(string repositoryName, string componentGroup) | Returns the list of existing components based on the repository name and component group name.
+| Task<Component> GetComponent(string repositoryName, string componentName) | Returns a component based on the repository name and the component name.
+| Task<Component> GetComponent(string componentId) | Returns a component based on the component's unique identifier. 
+| Task UploadComponent<T>(T uploadComponent) a| Uploads a new component. The types of components supported to be uploaded are:
+
+* Apt, Docker, Helm, Maven, Npm, Nuget, Pypi, Raw, R, Rubygems, Yum.
+
+Thus, in order to upload a new component, a new class must first be created, whose name must follow the following structure
+
+_{ComponentType}UploadComponent_
+
+As an example the name of the class that will be needed to upload a new Nuget Component will be:
+
+_NugetUploadComponent_
+
+Remark: It is important that the type of repository to which you want to upload the component is of the same type and format.
+
+| Task DeleteComponent(string componentId) | A component will be deleted based on its unique identifier.
+|===
+
+
+==== Asset Management
+|===
+|*Method*|*Description*
+| Task<IList<Asset>> GetAssets(string repositoryName) | Returns the list of existing assets based on the repository name.
+| Task<IList<Asset>> GetAssets(string repositoryName, string assetGroup) | Returns the list of existing assets based on the repository name and asset group name.
+| Task<Asset> GetAsset(string repositoryName, string assetName) | Returns an asset based on the repository name and the asset name.
+| Task<Asset> GetAsset(string assetId) | Returns an asset based on the asset's unique identifier. 
+| Task<string> DownloadAsset(string repositoryName, string assetName) | The content of the asset will be obtained in string format. Content will be obtained based on the repository name and asset name provided.
+| Task DeleteAsset(string assetId) | An asset will be deleted based on its unique identifier.
+|===
+
+==== Repository Management
+
+|===
+|*Method*|*Description*
+| Task CreateRepository<T>(T repositoryDto) a| A repository of defined type will be created. In order to create a repository, it will first be necessary to create this repository format class. Nexus allows to work with three different types of repositories which are "Proxy", "Group" and "Hosted". For each of these types, the following repositories formats can be created:
+
+* Proxy:
+** Apt, Bower, Cocoapods, Conan, Conda, Docker, Go, Helm, Maven, Npm, Nuget, Pypi, Raw, R, Rubygems, Yum.
+* Group:
+** Bower, Docker, Go, Maven, Npm, Nuget, Pypi, Raw, R, Rubygems, Yum.
+* Hosted:
+** Apt, Bower, Docker, Gitlfs, Helm, Maven, Npm, Nuget, Pypi, Raw, R, Rubygems, Yum.
+
+The name of the class to be created shall follow the following structure:
+
+_{RepositoryFormat}{RepositoryType}Repository_
+
+As an example the name of the class that will need to be created to create a Hosted repository for the Apt format will be: 
+
+_AptHostedRepository_
+
+| Task DeleteRepository(string repositoryName) | A repository will be deleted based on repository name provided.
+|===
+
+=== Configuration
+
+In order to configure the Nexus module, the following steps are necessary:
+
+1. Add to the application options (`appsettings.{environment}.json`) the object that will host the nexus access credentials. This object is:
+
++
+[source,json]
+----
+"Nexus": 
+ {
+    "Username": "username",
+    "Password": "password"
+ }
+----
+
++
+[options="header"]
+|=======================
+|*Property*|*Description*
+|Username| nexus user username
+|Password| nexus user password
+|=======================
+
+2. Finally it will be necessary to configure the Circuitbreaker module options with the host where the Nexus service is hosted. The following example shows an example configuration:
+
++
+[source,json]
+----
+"CircuitBreaker": {
+    "CheckCertificate": false,
+    "Endpoints": [
+      {
+        "Name": "Nexus",
+        "BaseAddress": "{http_protocol}://{hostname}:{port}/",
+        "WaitAndRetrySeconds": [
+          0.0001,
+          0.0005,
+          0.001
+        ],
+        "DurationOfBreak": 0.0005
+      }
+    ]
+}
+----
+
+NOTE: Extra information about CircuitBreaker component configuration can be found https://github.com/devonfw/devon4net/wiki/packages#devon4net-infrastructure-circuitbreaker[here].
+
+=== Setting up in Devon
+
+To set this component up in devon4net template will be necessary to call the `SetUpNexus` method from program class in region "devon services". An example of this step is shown below:
+
+[source, C#]
+----
+#region devon services
+builder.Services.SetupDevonfw(builder.Configuration);
+builder.Services.SetupMiddleware(builder.Configuration);
+builder.Services.SetupLog(builder.Configuration);
+builder.Services.SetupSwagger(builder.Configuration);
+builder.Services.SetupNexus(builder.Configuration);
+#endregion
+----
+
+Add it using Dependency Injection on this case we instanciate Nexus Handler in a Service Sample Class
+
+[source, C#]
+----
+public class SampleService: Service<SampleContext>, ISampleService
+    {
+        private readonly ISampleRepository _sampleRepository;
+        private readonly INexusHandler _nexusHandler;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="uoW"></param>
+        /// <param name="nexusHandler"></param>
+        public SampleService(IUnitOfWork<SampleContext> uoW, INexusHandler nexusHandler) : base(uoW)
+        {
+            _nexusHandler = nexusHandler;
+            _sampleRepository = uoW.Repository<ISampleRepository>();
+        }
+    }    
+----
+
+Add the necessary references. 
+
+[source, C#]
+----
+using Devon4Net.Infrastructure.Nexus.Handler;
+----
+
+=== Setting up in other projects
+
+Install the package on your solution using the Package Manager Console:
+
+[source, console]
+----
+Install-Package Devon4Net.Infrastructure.Nexus
+----
+
+First it is needed to configure Nexus component in `Program.cs` adding the following lines:
+
+[source, C#]
+----
+using Devon4Net.Infrastructure.Nexus;
+.
+.
+.
+builder.Services.SetupNexus(builder.Configuration);
+----
+
+In order to start using it in a service class, it will be needed to add via Dependency Injection the nexus instance.
+
+[source, C#]
+----
+public class SampleService : ISampleService
+ {
+   private readonly INexusHandler _nexusHandler;
+
+    public SampleService(INexusHandler nexusHandler)
+      {
+        _nexusHandler = nexusHandler;
+      }
+ }
+----
+
+
+
 == Devon4Net.Infrastructure.Swagger
 
 Swagger is a set of open source software tools for designing, building, documenting, and using RESTful web services. This component provides a full externalized configuration for the Swagger tool. 
