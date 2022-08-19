@@ -3239,3 +3239,46 @@ install-package Devon4Net.Infrastructure.AWS.DynamoDb
 ----
 
 NOTE: Please see the 'How to: AWS DynamoDB' documentation for more information and examples of how to use the component. 
+
+== Devon4Net.Infrastructure.AWS.S3
+
+This component is part of the AWS Stack in Devon4Net. It has the necessary classes to manage Amazon Simple Storage Service (S3). 
+
+Providing durability, availability, scalability and optimal performance, amazon simple storage service gives you the oportunity to store any type of object, which allows you to use it for any purpose you want, it being backups, storage for internet applications, data lakes for analytics. Amazon S3 provides management features so that you can optimize, organize, and configure access to your data to meet your specific business, organizational, and compliance requirements.
+
+In S3 objects consist of data, a unique key and some information in the form of metadata. This objects are stored in buckets. A bucket is a container for objects stored in Amazon S3. You can store any number of objects in a bucket and have many buckets in your account.
+
+In the NuGet package you have a handler available with a number of different methods that will help you manage your buckets and store and retrieve objects from them. The `IAwsS3Handler` interface  and `AwsS3Handler` implementation provides you with some syncrhonous and asynchronous operations like the following:
+
+|====
+|*Returns* |*Method* | *Description*
+|Task<Stream> |GetObject(string bucketName, string objectKey) | Retreives an object from an S3 bucket by its key.
+|Task<bool> |UploadObject(Stream streamFile, string keyName, string bucketName, string contentType, bool autoCloseStream = false, List<Tag> tagList = null) | Uploads an object to a bucket.
+|====
+
+=== Set up in devon
+
+For using it in a devon project you only need to inject the class `AwsS3Handler` provided with the package or create an instance. The handler instance will need the *region*, the *secret key id* and the *secret key* to be linked to your account.
+
+There is no configuration class for the component so you will need to do something similar to the following in your startup project if you want to use it via depencency injection:
+
+[source, c#]
+----
+AwsS3Handler awsS3Handler = new AwsS3Handler(myRegion, myKeyId, mySecretKey);
+services.AddSingleton<IAwsS3Handler>(awsS3Handler);
+----
+
+=== Set up in other projects  
+
+For setting it up in other projects you will need to install the package:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.AWS.S3
+----
+
+And then you can start using via dependency injection or by creating instances as shown in the previous section.
+
+=== References
+
+* https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html[What is Amazon S3? - AWS Docs]
