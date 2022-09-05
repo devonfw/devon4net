@@ -38,7 +38,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Options.Resources
         public string DatabaseEngineVersion { get; set; }
         public InstanceClass InstanceType { get; set; }
         public int? EnhancedMonitoringIntervalSeconds { get; set; }
-        public string MonitoringRoleName { get; set; }
+        public string MonitoringRoleId { get; set; }
         public bool? EnablePerformanceInsights { get; set; }
         public int? PerformanceInsightsRetentionPeriod { get; set; }
     }
