@@ -16,10 +16,10 @@ namespace Devon4Net.Application.DynamoDb.business.DynamoDbManagement.Handlers
 {
     public class ComplexObjectFunctionEventHandler : ILambdaEventHandler<string, ObjectTest>
     {
-        private IDynamoDbTableRepository DynamoDbEntityRepository { get; set; }
-        public ComplexObjectFunctionEventHandler(IDynamoDbTableRepository dynamoDbRepository)
+        private IDynamoDbTableRepository DynamoDbTableRepository { get; set; }
+        public ComplexObjectFunctionEventHandler(IDynamoDbTableRepository dynamoDbTableRepository)
         {
-            DynamoDbEntityRepository = dynamoDbRepository;
+            DynamoDbTableRepository = dynamoDbTableRepository;
         }
 
         public async Task<ObjectTest> FunctionHandler(string input, ILambdaContext context)
@@ -32,17 +32,17 @@ namespace Devon4Net.Application.DynamoDb.business.DynamoDbManagement.Handlers
                 UseParameterStore = true
             };
 
-            if (!await DynamoDbEntityRepository.TableExists("dynamic_object_storage").ConfigureAwait(false))
+            if (!await DynamoDbTableRepository.TableExists("dynamic_object_storage").ConfigureAwait(false))
             {
-                await DynamoDbEntityRepository.CreateTable("dynamic_object_storage",
+                await DynamoDbTableRepository.CreateTable("dynamic_object_storage",
                     new List<KeySchemaElement> { new KeySchemaElement { AttributeName = DynamoDbGeneralObjectStorageAttributes.AttributeKey, KeyType = KeyType.HASH } },
                     new List<AttributeDefinition> { new AttributeDefinition { AttributeName = DynamoDbGeneralObjectStorageAttributes.AttributeKey, AttributeType = ScalarAttributeType.S } }).ConfigureAwait(false);
             }
 
-            await DynamoDbEntityRepository.Put("dynamic_object_storage", input, objectTest).ConfigureAwait(false);
+            await DynamoDbTableRepository.Put("dynamic_object_storage", input, objectTest).ConfigureAwait(false);
             var criteria = new DynamoSearchCriteria();
             criteria.AddQueryCriteria(DynamoDbGeneralObjectStorageAttributes.AttributeKey, input, QueryOperator.Equal); // For query method
-            var result = await DynamoDbEntityRepository.Get<ObjectTest>("dynamic_object_storage", criteria.GetCriteriaScanFilterForSearchCriteria()).ConfigureAwait(false);
+            var result = await DynamoDbTableRepository.Get<ObjectTest>("dynamic_object_storage", criteria.GetCriteriaScanFilterForSearchCriteria()).ConfigureAwait(false);
             return result.FirstOrDefault();
         }
     }
