@@ -3282,3 +3282,94 @@ And then you can start using via dependency injection or by creating instances a
 === References
 
 * https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html[What is Amazon S3? - AWS Docs]
+
+== Devon4Net.Infrastructure.AWS.Secrets
+
+*Secrets Manager* allows you to replace hardcoded credentials, such as passwords, in your code with an API call to Secrets Manager to retrieve the secret programmatically.
+Because the secret no longer exists in the code, it cannot be compromised by someone examining your code.
+You can also set Secrets Manager to automatically rotate the secret for you on a predefined schedule.
+This allows you to replace long-term secrets with short-term ones, lowering the risk of compromise significantly. 
+
+=== Configuration
+
+The following configuration is for AWS in general and can be done in `appsettings.{environment}.json` file as follows:
+
+[source, json]
+----
+"AWS": {
+  "UseSecrets": true,
+  "UseParameterStore": true,
+  "Credentials": {
+    "Profile": "",
+    "Region": "eu-west-1",
+    "AccessKeyId": "",
+    "SecretAccessKey": ""
+  }
+}
+----
+
+* `UseSecrets`: Boolean that indicates if AWS Secrets Manager is being used.
+* `UseParameterStore`: Boolean to indicate if AWS Parameter Store is being used.
+* `Credentials`: Credentials for connecting with AWS.
+** `Profile`: A collection of settings is called a profile. This would be the name for the current settings.
+** `Region`: AWS Region whose servers you want to send your requests to by default. This is typically the Region closest to you.
+** `AccessKeyId`: Access key ID portion of the keypair configured to access your AWS account.
+** `SecretAccessKey`: Secret access key portion of the keypair configured to access your AWS account.
+
+=== Key Classes
+
+We have to ways to work with this component. One of them is to inject the `AwsSecretsHandler` and use its methods, and the other way to use the component is using the Configuration Builder.
+
+==== Handler
+
+The `IAwsSecretsHandler` interface  and `AwsSecretsHandler` implementation provides you with some asynchronous operations like the following:
+
+|====
+|*Returns* |*Method* | *Description*
+|Task<IReadOnlyList<SecretListEntry>> |GetAllSecrets(CancellationToken cancellationToken)| Retreives all secrets list.
+|Task<T> |GetSecretString<T>(string secretId) | Retrieves a string secret from Secrets Manager by its Id.
+|Task<byte[]> |GetSecretBinary(string secretId) | Retrieves a binary secret from Secrets Manager by its Id.
+|Task<GetSecretValueResponse> |GetSecretValue(GetSecretValueRequest request, CancellationToken cancellationToken = default) | Retrieves the contents of the encrypted fields SecretString or SecretBinary from the specified version of a secret, whichever contains content.
+|====
+
+
+To use it inject the class `AwsSecretsHandler` provided with the package or create an instance. The handler instance will need the `awsCredentials` and the `regionEndpoint`.
+
+There is no configuration class for the component so you will need to do something similar to the following in your startup project if you want to use it via depencency injection:
+
+[source, c#]
+----
+AwsSecretsHandler awsSecretsHandler = new AwsSecretsHandler(awsCredentials, regionEndpoint);
+services.AddSingleton<IAwsSecretsHandler>(awsSecretsHandler);
+----
+
+==== Configuration Builder
+
+The `AwsSecretsConfigurationBuilder` allows you to configure the component in a different way, by including all the paremeters in the configuration builder, you can do it as follows:
+
+[source, c#]
+----
+ConfigurationBuilder.AddSecretsHandler(awsCredentials, regionEndpoint);
+----
+
+=== Set up in devon
+
+Some templates have already all he packages referenced so you won't need to install anything. If that is not the case, you can install it as explained in the next section.
+
+NOTE: Read the template documentation to learn more about it.
+
+=== Set up in other projects  
+
+For setting it up in other projects you will need to install the package:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.AWS.Secrets
+----
+
+And then you can start using via dependency injection or by creating instances as shown in the Configuration section.
+
+=== References
+
+* https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html[Secrets Manager User Guide]
+* https://docs.aws.amazon.com/secretsmanager/latest/apireference/Welcome.html[Secrets Manager API Reference]
