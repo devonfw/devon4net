@@ -3283,6 +3283,96 @@ And then you can start using via dependency injection or by creating instances a
 
 * https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html[What is Amazon S3? - AWS Docs]
 
+== Devon4Net.Infrastructure.AWS.ParameterStore
+
+AWS Systems Manager's Parameter Store offers safe, hierarchical storage for the administration of configuration data and secrets.
+
+You can store any type of data in the form of text by using a key-value form where you choose a name for the parameter (key) and store a value for it. It can be any type of configuration value such as connections, api keys, encrypted credentials...
+
+You can use tags to organize and restrict access to your parameter creating policies.
+
+Parameter Store is also integrated with Secrets Manager. You can retrieve Secrets Manager secrets when using other AWS services that already support references to Parameter Store parameters.
+
+The main difference with *Secrets Manager* is that it was designed specifically for storing confidential information (like database credentials, API keys) that needs to be encrypted. It also gives additional functionality like rotation of keys.
+
+=== Configuration
+
+The following configuration is for AWS in general and can be done in `appsettings.{environment}.json` file as follows:
+
+[source, json]
+----
+"AWS": {
+  "UseSecrets": true,
+  "UseParameterStore": true,
+  "Credentials": {
+    "Profile": "",
+    "Region": "eu-west-1",
+    "AccessKeyId": "",
+    "SecretAccessKey": ""
+  }
+}
+----
+
+* `UseSecrets`: Boolean that indicates if AWS Secrets Manager is being used.
+* `UseParameterStore`: Boolean to indicate if AWS Parameter Store is being used.
+* `Credentials`: Credentials for connecting with AWS.
+** `Profile`: A collection of settings is called a profile. This would be the name for the current settings.
+** `Region`: AWS Region whose servers you want to send your requests to by default. This is typically the Region closest to you.
+** `AccessKeyId`: Access key ID portion of the keypair configured to access your AWS account.
+** `SecretAccessKey`: Secret access key portion of the keypair configured to access your AWS account.
+
+NOTE: Access keys consist of an access key ID and secret access key, which are used to sign programmatic requests that you make to AWS. If you don't have access keys, you can create them from the AWS Management Console.
+
+=== Key Classes 
+
+There are two ways of using the parameters from your Parameter Store. One is by using the available `AwsParameterStoreHandler` and the other one, is by including the parameters in your `ConfigurationBuilder`.
+
+==== Handler
+
+You have available the handler `AwsParameterStoreHandler` and its interface `IAwsParameterStoreHandler` with the following methods:
+
+|====
+|*Returns* |*Method* | *Description*
+|Task<List<ParameterMetadata>> |GetAllParameters(CancellationToken cancellationToken = default) | Retreives a list with all the parameters metadata.
+|Task<string> |GetParameterValue(string parameterName, CancellationToken cancellationToken = default) | Gets the parameter value given its name.
+|====
+
+You can create an instance of the Handler by using its constructor. You can also inject it in your Services Collection as follows:
+
+[source, c#]
+----
+AwsParameterStoreHandler awsParameterStoreHandler = new AwsParameterStoreHandler(awsCredentials, regionEndpoint);
+services.AddSingleton<IAwsParameterStoreHandler>(awsParameterStoreHandler);
+----
+
+==== Configuration Builder
+
+Thanks to the `AwsParameterStoreConfigurationBuilder` you can include all the parameters very easily by adding them to the configuration builder as follows:
+
+[source, c#]
+----
+ConfigurationBuilder.AddParameterStoreHandler(awsCredentials, regionEndpoint);
+----
+
+=== Set up in devon
+
+Some templates have already all he packages referenced so you won't need to install anything. If that is not the case, you can install it as explained in `Set up in other projects`.
+
+NOTE: Read the template documentation to learn more about it.
+
+=== Set up in other projects
+
+Install the package in your solution using the Package Manager or by running the following command in the Console:
+
+[source, console]
+----
+install-package Devon4Net.Infrastructure.AWS.ParameterStore
+----
+
+=== References
+
+* https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html[AWS Systems Manager Parameter Store - AWS Docs]
+
 == Devon4Net.Infrastructure.AWS.Secrets
 
 *Secrets Manager* allows you to replace hardcoded credentials, such as passwords, in your code with an API call to Secrets Manager to retrieve the secret programmatically.
@@ -3354,7 +3444,7 @@ ConfigurationBuilder.AddSecretsHandler(awsCredentials, regionEndpoint);
 
 === Set up in devon
 
-Some templates have already all he packages referenced so you won't need to install anything. If that is not the case, you can install it as explained in the next section.
+Some templates have already all he packages referenced so you won't need to install anything. If that is not the case, you can install it as explained in Set up in other projects.
 
 NOTE: Read the template documentation to learn more about it.
 
