@@ -841,6 +841,10 @@ If the information you provided matches, the system considers you a valid user a
 
 * *Authorization*: Is the security process that determines a user or service's level of access. In technology, we use authorization to give users or services permission to access some data or perform a particular action. Authentication verifies the user (Lucia) before allowing them access, and authorization determines what they can do once the system has granted them access (view sales information, for example).
 
+In the `Download` section you will find a sample that you can use as a template for integrating Keycloak in your application.
+
+NOTE: Please download the template so you can follow the guide successfully.
+
 The template shows an example of a School with two types of entities, `Student` and `Teacher`, the teachers also have the Administrator role, that allows to access to their `Student list`.
 
 In the application you will be able to authenticate yourself through a username and password, and this will give you an authorization token that will allow you to use the application with a certain role.
@@ -1004,6 +1008,10 @@ services.AddAuthorization(options =>
 * Services: This directory contains all the services. There is only one service, which access keycloak through the end-points available.
 + 
 In this example we only need the token, so there is a method accessing the token end-point from keycloak. You can see the end-points available in keycloak in its dashboard.
+
+=== Downloads
+
+* link:resources/samples/keycloak/Keycloak.zip[Keycloak Sample]
 
 === References
 
