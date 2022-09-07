@@ -631,8 +631,10 @@ To start the Keycloak Server run the following command:
 
 [source, console]
 ----
-docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:19.0.1 start-dev
+docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:18.0.1 start-dev
 ----
+
+WARNING: This whole guide is meant to be used with the Keycloak Server version `18.0.1`. It may not work in the same way in future versions.
 
 This will start the keycloak server in a docker image. It will be availabe in your localhost port 8080. As you can also see by the command, it will create an initial admin user with username `admin` and password `admin`. You can sign in navigating to the address http://localhost:8080/admin/[localhost:8080] and using this initial credentials.
 
