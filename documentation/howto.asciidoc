@@ -2670,3 +2670,92 @@ var criteria = new DynamoSearchCriteria();
 The `AddSearchCriteria` and `AddQueryCriteria` methods have fairly similar syntax, as shown in the code above. 
 
 NOTE: For more information about query and scan methods please visit the DynamoDB component documentation
+
+== How to: Use AWS CDK
+
+=== What is AWS CDK?
+
+AWS Cloud Development Kit (CDK) is an open-source software development framework to define your cloud application resources using familiar programming languages. This framework allows you to define all your AWS infrastructure as readable code. This process is known as Infrastructure as Code (IaC) and consists in provisioning and managing infrastructure for your software solutions through code, instead of doing so manually.
+
+This means that you can easily modify, distribute and reproduce configurations. In addition, by including infrastructure as code:
+
+* facilitates the integration of infrastructure into version control systems for tracking changes and audit modifications.
+
+* enables the introduction of significant automation for infrastructure management. All of these factors contribute to the SDLC's IaC being fully integrated into CI/CD pipelines.
+
+* Eliminates the unnecessary manual management.
+
+=== Why CDK support in devon4net?
+
+In a real project, we will use AWS services such as DynamoDB databases, S3 buckets, multiple lambdas, and so on.
+Similarly, we will be working in a variety of work environments.
+
+Devon4Net, with the help of the CDK, allows us to treat these services as code (IaC), which allows us to take all of this service structure and replicate it in another environment that interests us, saving development time and treating this copy of your AWS services as a backup. 
+
+In Devon4Net, we can use a standarized `json` file to configure the AWS CDK service, this `json` will be translated into readable code for the CDK framework.
+
+=== How to use
+
+==== Installing the NuGet
+
+You need to install the `Devon4net.Infrastructure.AWS.CDK` NuGet, for that you can run the following command in the Package Manager Console:
+
+[source, console]
+----
+Install-Package Devon4net.Infrastructure.AWS.CDK
+----
+
+==== Configure your `ProvisionStack`
+
+In the *Startup* class of your application, follow the nexts steps:
+
+1. Load your `appsettings.{environment}.json` configuration file. As an example, consider the Options Pattern:
++
+[source, c#]
+----
+private static List<CdkOptions> LoadConfigurationFiles()
+{
+    var file = FileOperationsHelper.GetFilesFromPath("appsettings.json")?.FirstOrDefault();
+    if (file == null) throw new ArgumentException("No appsettings.json was provided");
+
+    var configuration = new ConfigurationBuilder().AddJsonFile(file, true, true).Build();
+
+    var environmentFileName = Configuration.GetSection("Environment").Value;
+
+    var environmentFile = FileOperationsHelper.GetFilesFromPath($"appsettings.{environmentFileName}.json")?.FirstOrDefault();
+    configuration = new ConfigurationBuilder().AddConfiguration(configuration).AddJsonFile(environmentFile, true, true).Build();
+
+    return Configuration.GetSection("CdkOptions").Get<List<CdkOptions>>();
+}
+----
+
+2. Once your setup has been charged, you may create an instance of the `ProvisionStack` class and then call the `Process()` method:
++
+[source, c#]
+----
+var cdkOptions = LoadConfigurationFiles();
+
+foreach (var stack in cdkOptions)
+{
+    if (string.IsNullOrWhiteSpace(AwsAccount))
+    {
+        AwsAccount = stack.ProvisionStack.AwsAccount;
+    }
+
+    if (string.IsNullOrWhiteSpace(AwsRegion))
+    {
+        AwsRegion = stack.ProvisionStack.AwsRegion;
+    }
+
+    var defaultPsrovisionStack = new ProvisionStack(AwsAccount, AwsRegion, stack);
+    defaultPsrovisionStack.Process();
+}
+----
++
+The `Process()` method is responsible for building the infrastructure that you specified in your configuration file.
+
+NOTE: For more information about the configuration of the component itself, please, visit the component documentation.
+
+=== References
+
+https://docs.aws.amazon.com/cdk/v2/guide/home.html[AWS CDK official documentation]
