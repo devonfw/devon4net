@@ -609,6 +609,416 @@ Here are some interesting references to continue learning about this topic:
 
 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS[HTTP OPTIONS - MDN Web Docs]
 
+== How to: Configure and use Keycloak server
+
+=== What is Keycloak?
+
+Keycloak is an open-source tool that provides identity and access management providing highly secure properties to your application.  It supports multiple protocols such as OAuth and OpenID. It has full support for SSO (Single Sign-On and Single Sign-Out) and third party Social Identity Providers such as Google, Twitter, Facebook...
+
+You can also connect it to some type of user database if you already have one for your client. This allows you to interconnect multiple applications through same users and data.
+
+One of the most interesting features is the GUI available through and end-point that allows you to configure and manage your Keycloak settings and properties.
+
+Long story short, Keycloak is a server that manages all your user related interactions, such as roles, groups, access tokens... so you can focus in developing your application and don't have to reinvent the wheel.
+
+=== Docker Image
+
+For this example we will be running the Keycloak docker image and exposing it in a local port.
+
+NOTE: Please make sure you have Docker installed in your machine before running the command.
+
+To start the Keycloak Server run the following command:
+
+[source, console]
+----
+docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:18.0.1 start-dev
+----
+
+WARNING: This whole guide is meant to be used with the Keycloak Server version `18.0.1`. It may not work in the same way in future versions.
+
+This will start the keycloak server in a docker image. It will be availabe in your localhost port 8080. As you can also see by the command, it will create an initial admin user with username `admin` and password `admin`. You can sign in navigating to the address http://localhost:8080/admin/[localhost:8080] and using this initial credentials.
+
+.Keycloak Sign In
+image::images/keycloak_sign_in.png[]
+
+=== Realms
+
+In Keycloak, a realm is the same as an environment.  It enables the creation of exclusive groups of users and applications. In Keycloak, there is just one realm by default, named master. This is for managing Keycloak only, therefore don't use it for your own programs.
+
+To create a realm you can hover the small arrow where it says `Master` in the dashboard and click on `Add realm`.
+
+.Create a realm in keycloak
+image::images/keycloak_create_realm.png[]
+
+Choose a name, for this example we will name it `MyRealm`, and then click `Create`. 
+
+Now when your realm is selected, you will be able to configure it through the `Realm Settings` tab in the left side menu. 
+
+NOTE: Please visit the Keycloak documentation to learn more about how you can configure it and what options do you have.
+
+=== Clients
+
+A client, in Keycloak is equivalent to an application. You can add multiple applications and all can use the same users, groups, roles... 
+
+.Create a client in keycloak
+image::images/keycloak_create_client.png[]
+
+Now fill the form choosing at least a required client id. You can also select the protocol you will be using:
+
+* `OpenID connect` allows Clients to verify the identity of the End-User based on the authentication performed by an Authorization Server. 
+* `SAML` enables web-based authentication and authorization scenarios including cross-domain single sign-on (SSO) and uses security tokens containing assertions to pass information.
+
+.Create a client in keycloak
+image::images/keycloak_set_client.png[]
+
+=== Users
+
+To create a new user follow the next steps: 
+
+1. Log into the http://localhost:8080/admin/master/console/#/realms[Keycloak admin console]
+
+2. Select the Realm in which you want to create users:
++
+.Keycloak administrator console
+image::images/keycloak_user_1.png[]
+
+3. Navigate to the *Users* section (1) in the left-side bar, then the *Add user* button (2): 
++
+.Add a user in Keycloak
+image::images/keycloak_user_2.png[]
+
+4. Complete the fields (1) and click the *Save* button (2):
++
+.Add a user in Keycloak
+image::images/keycloak_user_3.png[]
++
+- The only required field is the username.
+- The required user actions field refers to some action that the user must perform upon first logging in.
+
+5. Set a password for the user:
++
+.Set credentials to a user in Keycloak
+image::images/keycloak_user_4.png[]
++
+- Navigate to the *Credentials* tab (1).
+- Enter a password (2).
+- Confirm the password (3).
+- (*Optional*)
+Change the switch to on if you want the user to change their password after the first login (4).
+- Click the *Set Password* button to confirm the changes (5). 
+
+=== Groups
+
+Groups in Keycloak allow you to manage a common set of attributes and role mappings for a set of users. Let's create a new group and add some users inside:
+
+1. Click the *Groups* section (1) in the left-side bar, then the *New* button (2):
++
+.Create a group in Keycloak
+image::images/keycloak_group_1.png[]
+
+2. Insert the name of the group and then click the *Save* button:
++
+.Create a group in Keycloak
+image::images/keycloak_group_2.png[]
+
+3. Groups are hierarchical. A group can have many subgroups, but a group can only have one parent. Subgroups inherit the attributes and role mappings from the parent. This applies to the user as well. By clicking in a group (1) and then clicking the *New* button (2), you can create a subgroup. 
++
+.Create a subgroup in Keycloak
+image::images/keycloak_group_3.png[]
++
+For example, you could have something like this:
++
+.Create a group in Keycloak 
+image::images/keycloak_group_4.png[]
+
+4. Add users to the groups:
+
+- Navigate to the *Users* section (1) in the left-side bar, then select the user you want to add to a group and click on the *Edit* button (2): 
++
+.Add users to a group in Keycloak
+image::images/keycloak_group_5.png[]
+
+- Click the *Groups* tab (1), select the group in which the user should be added (2), and then click the *Join* button (3):
++
+.Add users to a group in Keycloak
+image::images/keycloak_group_6.png[]
+
+- You will see something like this:
++
+.Add users to a group in Keycloak
+image::images/keycloak_group_7.png[]
+
+=== Roles
+
+==== Realm Roles
+
+Realm-level roles are a global namespace to define your roles. To add a new Real Role you have to:
+
+1. Navigate to the *Roles* section in the left-side bar (1), and click the *Add Roles* button (2):
++
+.Create a new Realm Role in Keycloak
+image::images/keycloak_role_1.png[]
+
+2. Input a role name and click the *Save* button:
++
+.Create a new Realm Role in Keycloak
+image::images/keycloak_role_2.png[]
+
+- The description field is not required
+
+3. Now you may add users to that role as follows:
+- Navigate to the *Users* section (1) and select the *Edit* button (2) for the user to whom you want to assign the role:
++
+.adding a Realm Role to a user in Keycloak
+image::images/keycloak_role_3.png[]
+
+- Select the *Role Mappings* tab (1), select the Role you want to assign (2) and then click the *Add selected* button (3):
++
+.adding a Realm Role to a user in Keycloak
+image::images/keycloak_role_4.png[]
+
+==== Client Roles
+
+Client roles are basically a namespace dedicated to a client. Each client gets its own namespace. Client roles are managed under the Roles tab under each individual client:
+
+.Creating a Client Role in Keycloak
+image::images/keycloak_role_5.png[]
+
+Input a role name and click the *Save* button:
+
+.Creating a Client Role in Keycloak
+image::images/keycloak_role_6.png[]
+
+For adding the Client Role to an user:
+
+Navigate to the *Users* section (1) and select the correct user to asign the role, select the *Role Mappings* tab (2), in the *Client Roles* section select the Client (3), select the desired Role to assign (4) and click the *Add selected* button (5)
+
+.adding a Client Role to a user in Keycloak
+image::images/keycloak_role_7.png[]
+
+=== Hardcoded audience
+
+When your service relies on realm roles or does not rely on the token's roles at all, a hardcoded audience can be useful.
+A hardcoded audience is a protocol mapper that adds the client ID of the specified service client to the token as an audience.
+If you want to use a different audience than the client ID, you can use any custom value, such as a URL. 
+
+The protocol mapper can be added directly to the frontend client.
+When the protocol mapper is directly added, the audience is always added as well. 
+
+For better control over the protocol mapper, you can create the protocol mapper on the dedicated client scope:
+
+1. Go to the *Client Scopes* section in the left-side bar.
+2. Enter the name for the client scope.
+3. Click the *Save* button.
++
+.adding a Client Scope in Keycloak
+image::images/keycloak_client_scope_1.png[]
+
+For create the mapper itself follow the nexts steps:
+
+1. Go to the Mappers tab.
+2. Click the Create button.
++
+.adding a mapper to a Client Scope in Keycloak
+image::images/keycloak_client_scope_2.png[]
+
+In the next screen configure the Mapper as follows:
+
+1. Enter the name of the mapper.
+2. In the Mapper type select `Audience`
+3. Click the *Save* button.
++
+.adding a mapper to a Client Scope in Keycloak
+image::images/keycloak_client_scope_3.png[]
+
+=== Keycloak Sample
+
+This template allows you to understand the *authentication* and *authorization* process using Keycloak:
+
+* *Authentication*: Is the process of confirming that someone or something is who they claim to be.
+To secure access to an application or its data, most technology systems employ some form of authentication.
+When you need to access an online site or service, for example, you usually have to enter your username and password.
+Then, in the background, it compares the username and password you entered to a record in its database.
+If the information you provided matches, the system considers you a valid user and grants you access.
+
+* *Authorization*: Is the security process that determines a user or service's level of access. In technology, we use authorization to give users or services permission to access some data or perform a particular action. Authentication verifies the user (Lucia) before allowing them access, and authorization determines what they can do once the system has granted them access (view sales information, for example).
+
+In the `Download` section you will find a sample that you can use as a template for integrating Keycloak in your application.
+
+NOTE: Please download the template so you can follow the guide successfully.
+
+The template shows an example of a School with two types of entities, `Student` and `Teacher`, the teachers also have the Administrator role, that allows to access to their `Student list`.
+
+In the application you will be able to authenticate yourself through a username and password, and this will give you an authorization token that will allow you to use the application with a certain role.
+
+==== Keycloak Setup
+
+To setup the keycloak server we provide the `realm_export.json` file that is the configuration of the server that we need to use the template.
+
+For import the Realm follow the steps below:
+
+image:images/keycloak_import_realm.png[]
+
+.Import a realm in keycloak
+image::images/keycloak_import_realm_2.png[]
+
+1. Create a new Realm (1)
+2. Click in the *Select file* button and choose the `realm_export.json` file (2)
+3. Enter a name for your Realm and click the *Create* button.
+
+The next step is to create users in your realm for that follow the next steps:
+
+1. Navigate to the *Users* section (1) in the left-side bar, then the *Add user* button (2): 
++
+.Add a user in Keycloak
+image::images/keycloak_user_5.png[]
+
+2. Complete the fields (1) and click the *Save* button (2):
++
+.Add a user in Keycloak
+image::images/keycloak_user_6.png[]
+
+3. Set a password for the user:
++
+.Set credentials to a user in Keycloak
+image::images/keycloak_user_7.png[]
++
+- Navigate to the *Credentials* tab (1).
+- Enter a password (2).
+- Confirm the password (3).
+- (*Optional*)
+Change the switch to on if you want the user to change their password after the first login (4).
+- Click the *Set Password* button to confirm the changes (5).
+
+For this example, we created two user types,`student` and `teacher`: 
+
+.Users for the template
+image::images/keycloak_user_8.png[]
+
+Now we are going to assign to the user teacher, the `Administrator` Role, for that follow the nexts steps:
+
+Navigate to the *Users* section (1) and select the correct user to asign the role, select the *Role Mappings* tab (2), in the *Client Roles* section select the `SchoolApplication` Client (3), select the Administrator Role (4) and click the *Add selected* button (5)
+
+.adding a Client Role to a user in Keycloak
+image::images/keycloak_role_7.png[]
+
+NOTE: If you need more information about how to configure the Keycloak server please refer to the `How to: Configure Keycloak server` section.
+
+
+==== Devon4net.Application.Keycloak
+
+This is the startup project of the template. Its main purpose is to launch the api and configure it using the settings files. The following figure shows the directory tree of the application:
+
+.Devon4net.Application.Keycloak Directory tree
+image::images/keycloak_application_directory.png[]
+
+* *Controllers*: This template, has two controllers: the `KeycloakController` for obtaining the access token and the `SchoolController` for testing that token and the user roles. 
+
+* *Model*: The model objects of the application. This template is about a School so we have Persons that are also Students or Teachers. The Teachers will have the `Administrator` role aswell.
+
+===== Configuration
+
+The configuration is done in the `appsettings.json` file. It can contain subversions following the structure `appsettings.{environment}.json`. For the keycloak sample, the configuration is done as follows:
+
+[source, json]
+----
+{
+  "Keycloak": {
+    "Realm": "MyRealm",
+    "Url": "http://localhost:8080/",
+    "ClientId": "SchoolApplication",
+    "GrantType": "password"
+  }
+}
+----
+
+* `Realm`: Your Keycloak realm's name.
+* `Url`: The direction of your Keycloak server.
+* `ClientId`: The Id of the Client that you created in the Keykloak server administrator console.
+* `GrantType`: The grant type used to obtain the token.
+
+===== Controllers
+
+====== `KeycloakController`
+
+It only has one method with the `AllowAnonymous` annotation, that means that this method doesn't need authorization.
+
+[source, c#]
+----
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> Login(string username, string password)
+        {
+            return Ok(await _keycloakService.GetToken(username, password).ConfigureAwait(false));
+        }
+----
+
+The `Login` method calls the Keycloak Service to retrieve the token, it has two parameters, the username and the password.
+
+.Keycloak Controller
+image::images/keycloak_access_token.png[]
+
+====== `SchoolController`
+
+Once we have the access token we can use the methods of this controller, for that we have to authorize ourselves:
+
+image:images/keycloak_authorize_1.png[]
+
+.Authorization with the access token
+image::images/keycloak_authorize_2.png[]
+
+There are two methods available for this controller:
+
+* `GetStudentSubjects()`: For this method, the user should be authorized; either students or teachers can use it. 
+
+* `GetTeacherStudents()`: This method access is restricted to teachers only, as indicated by the following policy: 
++
+[source, c#]
+----
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "SchoolPolicy")]
+----
++
+This policy specifies that only teachers with the `Administrator` role are permitted to use this method.
+
+==== Devon4Net.Application.Keycloak.Implementation
+
+This package contains all the implementation classes. You will find the following directory tree:
+
+.Package directory tree 
+image::images/keycloak_implementation_tree.png[]
+
+We have organized the files as if it was a Devon4Net module package:
+
+* Configuration: Contains all the files necesary for configuration. You can use realm-export.json to import the keycloak configuration for this specific example.
++
+You will find in the KeycloakConfiguration class how you can add the different policies and the authorization and authentication configuration.
++
+For example you can use the following code to add a policy that requires the claim user_roles as Administrator:
++
+[source, c#]
+----
+services.AddAuthorization(options =>
+    {
+        options.AddPolicy("SchoolPolicy", policy => policy.RequireClaim("user_roles", "Administrator"));
+    });
+----
+
+* Model: Contains the model objects. In this case we only need the token, which is the response of keycloak but we could put here also the user, for example, if we were to retrieve the information from keycloak.
+
+* Options: This directory contains the model for all the options used to configure.
+
+* Services: This directory contains all the services. There is only one service, which access keycloak through the end-points available.
++ 
+In this example we only need the token, so there is a method accessing the token end-point from keycloak. You can see the end-points available in keycloak in its dashboard.
+
+=== Downloads
+
+* link:resources/samples/keycloak/Keycloak.zip[Keycloak Sample]
+
+=== References
+
+* https://www.keycloak.org/getting-started/getting-started-docker[Getting Started (Docker) - Keycloak Docs]
+
 == How to: Avoid cross-site request forgery (XSRF or CSRF) attacks
 Every time you authenticate into a web app, your browser becomes trusted for an amount of time to that specific site. This way you can use the application without having to authenticate yourself each time you want to do an operation that requires authorization. This is achieved normally by providing authentication tokens that last a determinate amount of time. 
 
