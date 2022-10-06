@@ -71,7 +71,7 @@ You can do it also choosing the template when creating a new project in Visual S
 image::images/api_template_configure.png[]
 
 ==== Step 3 - Run it
-After running it with Kestrel you will be able to access to the swagger `index.html` and try the API in the following link: https://localhost.8085/swagger/index.html[https://localhost.8085/swagger/index.html]
+After running it with Kestrel you will be able to access to the swagger `index.html` and try the API in the following link: https://localhost:8085/swagger/index.html[https://localhost:8085/swagger/index.html]
 
 === Create it from scratch in Visual Studio 2022
 This method is a little more time consuming, but it allows for a more customized configuration and project structure. You will be using Visual Studio 2022 to create the project and add everything you need by hand. 
@@ -85,7 +85,7 @@ image::images/api_template_create_project.png[]
 Once you go through all the initial configuration process, choosing a name, location and so on; you will find your project as shown in the next image.
 
 .Default ASP.NET Core Web API template structure
-image::images\api_template_initial_structure.png[]
+image::images/api_template_initial_structure.png[]
 
 You can delete both `WeatherForecastController.cs` and `WeatherForecast.cs` as they are an example in the template but we recommend you keeping them so you can try the API when done with all the steps.
 
@@ -93,7 +93,7 @@ You can delete both `WeatherForecastController.cs` and `WeatherForecast.cs` as t
 To install the NuGet package for the API Configuration we will use the Visual Studio package manager console. To open it, go to `View > Other Windows > Package Manager Console` as shown in the figure below.
 
 .Package Manager Console location in menu
-image::images\api_template_package_manager.png[]
+image::images/api_template_package_manager.png[]
 
 Now you can run the following command. It will take a minute to download and install all the packages:
 [source, console]
@@ -608,6 +608,416 @@ Here are some interesting references to continue learning about this topic:
 * https://docs.microsoft.com/es-ES/dotnet/api/microsoft.aspnetcore.authorization?view=aspnetcore-6.0[Authorization Namespace - Microsoft Docs]
 
 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS[HTTP OPTIONS - MDN Web Docs]
+
+== How to: Configure and use Keycloak server
+
+=== What is Keycloak?
+
+Keycloak is an open-source tool that provides identity and access management providing highly secure properties to your application.  It supports multiple protocols such as OAuth and OpenID. It has full support for SSO (Single Sign-On and Single Sign-Out) and third party Social Identity Providers such as Google, Twitter, Facebook...
+
+You can also connect it to some type of user database if you already have one for your client. This allows you to interconnect multiple applications through same users and data.
+
+One of the most interesting features is the GUI available through and end-point that allows you to configure and manage your Keycloak settings and properties.
+
+Long story short, Keycloak is a server that manages all your user related interactions, such as roles, groups, access tokens... so you can focus in developing your application and don't have to reinvent the wheel.
+
+=== Docker Image
+
+For this example we will be running the Keycloak docker image and exposing it in a local port.
+
+NOTE: Please make sure you have Docker installed in your machine before running the command.
+
+To start the Keycloak Server run the following command:
+
+[source, console]
+----
+docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:18.0.1 start-dev
+----
+
+WARNING: This whole guide is meant to be used with the Keycloak Server version `18.0.1`. It may not work in the same way in future versions.
+
+This will start the keycloak server in a docker image. It will be availabe in your localhost port 8080. As you can also see by the command, it will create an initial admin user with username `admin` and password `admin`. You can sign in navigating to the address http://localhost:8080/admin/[localhost:8080] and using this initial credentials.
+
+.Keycloak Sign In
+image::images/keycloak_sign_in.png[]
+
+=== Realms
+
+In Keycloak, a realm is the same as an environment.  It enables the creation of exclusive groups of users and applications. In Keycloak, there is just one realm by default, named master. This is for managing Keycloak only, therefore don't use it for your own programs.
+
+To create a realm you can hover the small arrow where it says `Master` in the dashboard and click on `Add realm`.
+
+.Create a realm in keycloak
+image::images/keycloak_create_realm.png[]
+
+Choose a name, for this example we will name it `MyRealm`, and then click `Create`. 
+
+Now when your realm is selected, you will be able to configure it through the `Realm Settings` tab in the left side menu. 
+
+NOTE: Please visit the Keycloak documentation to learn more about how you can configure it and what options do you have.
+
+=== Clients
+
+A client, in Keycloak is equivalent to an application. You can add multiple applications and all can use the same users, groups, roles... 
+
+.Create a client in keycloak
+image::images/keycloak_create_client.png[]
+
+Now fill the form choosing at least a required client id. You can also select the protocol you will be using:
+
+* `OpenID connect` allows Clients to verify the identity of the End-User based on the authentication performed by an Authorization Server. 
+* `SAML` enables web-based authentication and authorization scenarios including cross-domain single sign-on (SSO) and uses security tokens containing assertions to pass information.
+
+.Create a client in keycloak
+image::images/keycloak_set_client.png[]
+
+=== Users
+
+To create a new user follow the next steps: 
+
+1. Log into the http://localhost:8080/admin/master/console/#/realms[Keycloak admin console]
+
+2. Select the Realm in which you want to create users:
++
+.Keycloak administrator console
+image::images/keycloak_user_1.png[]
+
+3. Navigate to the *Users* section (1) in the left-side bar, then the *Add user* button (2): 
++
+.Add a user in Keycloak
+image::images/keycloak_user_2.png[]
+
+4. Complete the fields (1) and click the *Save* button (2):
++
+.Add a user in Keycloak
+image::images/keycloak_user_3.png[]
++
+- The only required field is the username.
+- The required user actions field refers to some action that the user must perform upon first logging in.
+
+5. Set a password for the user:
++
+.Set credentials to a user in Keycloak
+image::images/keycloak_user_4.png[]
++
+- Navigate to the *Credentials* tab (1).
+- Enter a password (2).
+- Confirm the password (3).
+- (*Optional*)
+Change the switch to on if you want the user to change their password after the first login (4).
+- Click the *Set Password* button to confirm the changes (5). 
+
+=== Groups
+
+Groups in Keycloak allow you to manage a common set of attributes and role mappings for a set of users. Let's create a new group and add some users inside:
+
+1. Click the *Groups* section (1) in the left-side bar, then the *New* button (2):
++
+.Create a group in Keycloak
+image::images/keycloak_group_1.png[]
+
+2. Insert the name of the group and then click the *Save* button:
++
+.Create a group in Keycloak
+image::images/keycloak_group_2.png[]
+
+3. Groups are hierarchical. A group can have many subgroups, but a group can only have one parent. Subgroups inherit the attributes and role mappings from the parent. This applies to the user as well. By clicking in a group (1) and then clicking the *New* button (2), you can create a subgroup. 
++
+.Create a subgroup in Keycloak
+image::images/keycloak_group_3.png[]
++
+For example, you could have something like this:
++
+.Create a group in Keycloak 
+image::images/keycloak_group_4.png[]
+
+4. Add users to the groups:
+
+- Navigate to the *Users* section (1) in the left-side bar, then select the user you want to add to a group and click on the *Edit* button (2): 
++
+.Add users to a group in Keycloak
+image::images/keycloak_group_5.png[]
+
+- Click the *Groups* tab (1), select the group in which the user should be added (2), and then click the *Join* button (3):
++
+.Add users to a group in Keycloak
+image::images/keycloak_group_6.png[]
+
+- You will see something like this:
++
+.Add users to a group in Keycloak
+image::images/keycloak_group_7.png[]
+
+=== Roles
+
+==== Realm Roles
+
+Realm-level roles are a global namespace to define your roles. To add a new Real Role you have to:
+
+1. Navigate to the *Roles* section in the left-side bar (1), and click the *Add Roles* button (2):
++
+.Create a new Realm Role in Keycloak
+image::images/keycloak_role_1.png[]
+
+2. Input a role name and click the *Save* button:
++
+.Create a new Realm Role in Keycloak
+image::images/keycloak_role_2.png[]
+
+- The description field is not required
+
+3. Now you may add users to that role as follows:
+- Navigate to the *Users* section (1) and select the *Edit* button (2) for the user to whom you want to assign the role:
++
+.adding a Realm Role to a user in Keycloak
+image::images/keycloak_role_3.png[]
+
+- Select the *Role Mappings* tab (1), select the Role you want to assign (2) and then click the *Add selected* button (3):
++
+.adding a Realm Role to a user in Keycloak
+image::images/keycloak_role_4.png[]
+
+==== Client Roles
+
+Client roles are basically a namespace dedicated to a client. Each client gets its own namespace. Client roles are managed under the Roles tab under each individual client:
+
+.Creating a Client Role in Keycloak
+image::images/keycloak_role_5.png[]
+
+Input a role name and click the *Save* button:
+
+.Creating a Client Role in Keycloak
+image::images/keycloak_role_6.png[]
+
+For adding the Client Role to an user:
+
+Navigate to the *Users* section (1) and select the correct user to asign the role, select the *Role Mappings* tab (2), in the *Client Roles* section select the Client (3), select the desired Role to assign (4) and click the *Add selected* button (5)
+
+.adding a Client Role to a user in Keycloak
+image::images/keycloak_role_7.png[]
+
+=== Hardcoded audience
+
+When your service relies on realm roles or does not rely on the token's roles at all, a hardcoded audience can be useful.
+A hardcoded audience is a protocol mapper that adds the client ID of the specified service client to the token as an audience.
+If you want to use a different audience than the client ID, you can use any custom value, such as a URL. 
+
+The protocol mapper can be added directly to the frontend client.
+When the protocol mapper is directly added, the audience is always added as well. 
+
+For better control over the protocol mapper, you can create the protocol mapper on the dedicated client scope:
+
+1. Go to the *Client Scopes* section in the left-side bar.
+2. Enter the name for the client scope.
+3. Click the *Save* button.
++
+.adding a Client Scope in Keycloak
+image::images/keycloak_client_scope_1.png[]
+
+For create the mapper itself follow the nexts steps:
+
+1. Go to the Mappers tab.
+2. Click the Create button.
++
+.adding a mapper to a Client Scope in Keycloak
+image::images/keycloak_client_scope_2.png[]
+
+In the next screen configure the Mapper as follows:
+
+1. Enter the name of the mapper.
+2. In the Mapper type select `Audience`
+3. Click the *Save* button.
++
+.adding a mapper to a Client Scope in Keycloak
+image::images/keycloak_client_scope_3.png[]
+
+=== Keycloak Sample
+
+This template allows you to understand the *authentication* and *authorization* process using Keycloak:
+
+* *Authentication*: Is the process of confirming that someone or something is who they claim to be.
+To secure access to an application or its data, most technology systems employ some form of authentication.
+When you need to access an online site or service, for example, you usually have to enter your username and password.
+Then, in the background, it compares the username and password you entered to a record in its database.
+If the information you provided matches, the system considers you a valid user and grants you access.
+
+* *Authorization*: Is the security process that determines a user or service's level of access. In technology, we use authorization to give users or services permission to access some data or perform a particular action. Authentication verifies the user (Lucia) before allowing them access, and authorization determines what they can do once the system has granted them access (view sales information, for example).
+
+In the `Download` section you will find a sample that you can use as a template for integrating Keycloak in your application.
+
+NOTE: Please download the template so you can follow the guide successfully.
+
+The template shows an example of a School with two types of entities, `Student` and `Teacher`, the teachers also have the Administrator role, that allows to access to their `Student list`.
+
+In the application you will be able to authenticate yourself through a username and password, and this will give you an authorization token that will allow you to use the application with a certain role.
+
+==== Keycloak Setup
+
+To setup the keycloak server we provide the `realm_export.json` file that is the configuration of the server that we need to use the template.
+
+For import the Realm follow the steps below:
+
+image:images/keycloak_import_realm.png[]
+
+.Import a realm in keycloak
+image::images/keycloak_import_realm_2.png[]
+
+1. Create a new Realm (1)
+2. Click in the *Select file* button and choose the `realm_export.json` file (2)
+3. Enter a name for your Realm and click the *Create* button.
+
+The next step is to create users in your realm for that follow the next steps:
+
+1. Navigate to the *Users* section (1) in the left-side bar, then the *Add user* button (2): 
++
+.Add a user in Keycloak
+image::images/keycloak_user_5.png[]
+
+2. Complete the fields (1) and click the *Save* button (2):
++
+.Add a user in Keycloak
+image::images/keycloak_user_6.png[]
+
+3. Set a password for the user:
++
+.Set credentials to a user in Keycloak
+image::images/keycloak_user_7.png[]
++
+- Navigate to the *Credentials* tab (1).
+- Enter a password (2).
+- Confirm the password (3).
+- (*Optional*)
+Change the switch to on if you want the user to change their password after the first login (4).
+- Click the *Set Password* button to confirm the changes (5).
+
+For this example, we created two user types,`student` and `teacher`: 
+
+.Users for the template
+image::images/keycloak_user_8.png[]
+
+Now we are going to assign to the user teacher, the `Administrator` Role, for that follow the nexts steps:
+
+Navigate to the *Users* section (1) and select the correct user to asign the role, select the *Role Mappings* tab (2), in the *Client Roles* section select the `SchoolApplication` Client (3), select the Administrator Role (4) and click the *Add selected* button (5)
+
+.adding a Client Role to a user in Keycloak
+image::images/keycloak_role_7.png[]
+
+NOTE: If you need more information about how to configure the Keycloak server please refer to the `How to: Configure Keycloak server` section.
+
+
+==== Devon4net.Application.Keycloak
+
+This is the startup project of the template. Its main purpose is to launch the api and configure it using the settings files. The following figure shows the directory tree of the application:
+
+.Devon4net.Application.Keycloak Directory tree
+image::images/keycloak_application_directory.png[]
+
+* *Controllers*: This template, has two controllers: the `KeycloakController` for obtaining the access token and the `SchoolController` for testing that token and the user roles. 
+
+* *Model*: The model objects of the application. This template is about a School so we have Persons that are also Students or Teachers. The Teachers will have the `Administrator` role aswell.
+
+===== Configuration
+
+The configuration is done in the `appsettings.json` file. It can contain subversions following the structure `appsettings.{environment}.json`. For the keycloak sample, the configuration is done as follows:
+
+[source, json]
+----
+{
+  "Keycloak": {
+    "Realm": "MyRealm",
+    "Url": "http://localhost:8080/",
+    "ClientId": "SchoolApplication",
+    "GrantType": "password"
+  }
+}
+----
+
+* `Realm`: Your Keycloak realm's name.
+* `Url`: The direction of your Keycloak server.
+* `ClientId`: The Id of the Client that you created in the Keykloak server administrator console.
+* `GrantType`: The grant type used to obtain the token.
+
+===== Controllers
+
+====== `KeycloakController`
+
+It only has one method with the `AllowAnonymous` annotation, that means that this method doesn't need authorization.
+
+[source, c#]
+----
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> Login(string username, string password)
+        {
+            return Ok(await _keycloakService.GetToken(username, password).ConfigureAwait(false));
+        }
+----
+
+The `Login` method calls the Keycloak Service to retrieve the token, it has two parameters, the username and the password.
+
+.Keycloak Controller
+image::images/keycloak_access_token.png[]
+
+====== `SchoolController`
+
+Once we have the access token we can use the methods of this controller, for that we have to authorize ourselves:
+
+image:images/keycloak_authorize_1.png[]
+
+.Authorization with the access token
+image::images/keycloak_authorize_2.png[]
+
+There are two methods available for this controller:
+
+* `GetStudentSubjects()`: For this method, the user should be authorized; either students or teachers can use it. 
+
+* `GetTeacherStudents()`: This method access is restricted to teachers only, as indicated by the following policy: 
++
+[source, c#]
+----
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "SchoolPolicy")]
+----
++
+This policy specifies that only teachers with the `Administrator` role are permitted to use this method.
+
+==== Devon4Net.Application.Keycloak.Implementation
+
+This package contains all the implementation classes. You will find the following directory tree:
+
+.Package directory tree 
+image::images/keycloak_implementation_tree.png[]
+
+We have organized the files as if it was a Devon4Net module package:
+
+* Configuration: Contains all the files necesary for configuration. You can use realm-export.json to import the keycloak configuration for this specific example.
++
+You will find in the KeycloakConfiguration class how you can add the different policies and the authorization and authentication configuration.
++
+For example you can use the following code to add a policy that requires the claim user_roles as Administrator:
++
+[source, c#]
+----
+services.AddAuthorization(options =>
+    {
+        options.AddPolicy("SchoolPolicy", policy => policy.RequireClaim("user_roles", "Administrator"));
+    });
+----
+
+* Model: Contains the model objects. In this case we only need the token, which is the response of keycloak but we could put here also the user, for example, if we were to retrieve the information from keycloak.
+
+* Options: This directory contains the model for all the options used to configure.
+
+* Services: This directory contains all the services. There is only one service, which access keycloak through the end-points available.
++ 
+In this example we only need the token, so there is a method accessing the token end-point from keycloak. You can see the end-points available in keycloak in its dashboard.
+
+=== Downloads
+
+* link:resources/samples/keycloak/Keycloak.zip[Keycloak Sample]
+
+=== References
+
+* https://www.keycloak.org/getting-started/getting-started-docker[Getting Started (Docker) - Keycloak Docs]
 
 == How to: Avoid cross-site request forgery (XSRF or CSRF) attacks
 Every time you authenticate into a web app, your browser becomes trusted for an amount of time to that specific site. This way you can use the application without having to authenticate yourself each time you want to do an operation that requires authorization. This is achieved normally by providing authentication tokens that last a determinate amount of time. 
@@ -1589,6 +1999,80 @@ Similar to the producer, the Consumer also needs to be related to a configuratio
 builder.Services.AddKafkaConsumer<MessageConsumerHandler>("Consumer1");
 ----
 
+== How to: Use Nexus
+
+In this section we will show a practical example of how to create a raw hosted repository, to which a file will be uploaded and then retrieved and downloaded.
+
+1. Create new Raw Hosted Repository:
++
+To create a new repository of this type, we must first create a new instance of the `RawHostedRepository` class. This class will be created with its pertinent attributes. The following code snippet shows the example:
++
+[source, C#]
+----
+var rawHostedRepository new RawHostedRepository
+    {
+        Name = "SampleRepository",
+        Online = true,
+        Storage = CreateDefaultStorage(),
+        Raw = new Raw
+        {
+            ContentDisposition = "ATTACHMENT"
+        }
+    };
+----
++ 
+Once this object is created, a call to the nexus handler will be performed, specifically the `Task CreateRepository<T>(T repositoryDto)` method. The example is shown below:
++
+[source, C#]
+----
+await _nexusHandler.CreateRepository(rawHostedRepository).ConfigureAwait(false);
+----
+
+2. Upload new component:
++
+To create a component
+similarly to the previous step, in order to upload a new repository, an instance of the type of component to be uploaded must be created, in this case it will be of type raw. The class to be created will be:
+
++
+[source, C#]
+----
+var rawComponent = new RawUploadComponent()
+    {
+        RepositoryName = "SampleRepository",
+        Filename = {file path},
+        Directory = "SampleDirectory",
+        AssetPath = SampleAssetPath,
+    };
+----
++
+Once this object is created, a call to the nexus handler will be performed, specifically the `Task UploadComponent<T>(T uploadComponent)` method. The example is shown below:
+
++
+[source, C#]
+----
+await _nexusHandler.UploadComponent(rawComponent);
+----
+
+3. Retrieve metadata from component
++
+To retrieve the component metadata, the `Task<Component> GetComponent(string repositoryName, string componentName)` method of the nexus handler will be used. The example is shown below:
+
++
+[source, C#]
+----
+var component = await _nexusHandler.GetComponent("SampleRepository", "SampleDirectory/SampleAssetPath");
+----
+
+4. Download uploaded file
++
+To download the file, the `Task<string> DownloadAsset(string repositoryName, string assetName)` method of the nexus handler will be used. The example is shown below:
+
++
+[source, C#]
+----
+var downloadedFile = await _nexusHandler.DownloadAsset("SampleRepository", "SampleDirectory/SampleAssetPath");
+----
+
 == How to: Protocol buffers
 
 Protocol buffers are Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data. You can see it as a JSON or a XML file, but smaller, faster and with an easier syntax. 
@@ -1927,6 +2411,349 @@ image::images/aws_template_test.png[]
 * https://aws.amazon.com/sqs/[Amazon Simple Queue Service (SQS)]
 * https://aws.amazon.com/sns/[Amazon Simple Notification Service (SNS)]
 
+NOTE: Please check the next section if you want to learn how to deploy lambda functions. 
+
+== How to: Deploy AWS Lambda Functions
+
+In this section, you are going to learn how to deploy AWS Lambda functions using AWS CLI, AWS console portal (web), and with the visual studio plugin. 
+
+NOTE: If you want to know more about developing lambda fuctions, please check the previous section.
+
+=== Install Amazon Lambda Tools
+
+You will need to install the AWS Lambda tools. Run the following command to install the tools:
+
+[source, console]
+----
+dotnet tool install -g Amazon.Lambda.Tools
+----
+
+Or check if a new version is available in case you have already installed it:
+
+[source, console]
+----
+dotnet tool update -g Amazon.Lambda.Tools
+----
+
+WARNING: Working with AWS lambda fuctions requires an AWS account, remember that this type of operations may incur a cost.
+
+=== Deployment with AWS console portal (web)
+
+==== Step 1 - Create publish file
+
+Navigate to the application folder, run a terminal and execute the following command:
+
+[source, console]
+----
+dotnet lambda package
+----
+
+The file will be stored in the following path:
+
+`{Your-Project-Path}\bin\Release\{.Net-Version}\publish`
+
+Here's an example: :
+
+.Lambda AWS publish path example
+image::images/aws_lambda_publish.png[]
+
+==== Step 2 - Create the lambda fuction in the AWS Lambda dashboard
+
+To create the lambda fuction visit the https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1[AWS lambda Dashboard].
+
+WARNING: Remember to choose your desired region, service costs may depend on the selected region
+
+Then, in the upper right corner of the dashboard, click the *Create function* button.  
+
+.AWS Lambda dashboard
+image::images/aws_create_lambda.png[]
+
+In the following page, you must provide a function name (1) and choose the appropriate runtime (2) for your project, which in our case is .Net 6.
+Then click in the *Create function* button (3).
+
+.Create function configuration
+image::images/aws_create_lambda_2.png[]
+
+==== Step 3 - Upload .zip publish file
+
+When we have finished creating our function, we must submit the .zip file that we prepared in step 1:
+
+.Function configuration
+image::images/aws_create_lambda_3.png[]
+
+==== Step 4 - Add the Lambda Handler
+
+To add the lambda handler, click the *Edit* button in the Runtime settings section of the code tab. 
+
+.AWS Lambda dashboard
+image::images/aws_create_lambda_4.png[]
+
+In the next page, ensure that you have selected the right runtime for your project (1), and then add the Handler (2), which must have the following structure: 
+
+`Assembly::Namespace.ClassName::MethodName`
+
+In our example:
+
+`Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.Functions.CalculatorFunction::FunctionHandler`
+
+WARNING: The handler's name cannot exceed 128 characters.
+
+Then click in the *Save* button(3).
+
+.Edit runtime settings
+image::images/aws_create_lambda_5.png[]
+
+==== Step 5 - Test it
+
+You may test your lambda function by selecting the *test tab* (1) and providing the function's input parameters (2) in .JSON format: 
+
+.The AWS Lambda Dashboard's Test tab 
+image::images/aws_create_lambda_6.png[]
+
+Once the information has been provided, click the *Test* button in the upper right corner of the page (3).
+
+The output should look like this: 
+
+.Results of AWS Lambda function execution 
+image::images/aws_create_lambda_7.png[]
+
+=== Deployment with AWS CLI
+
+For deploying the lambda function using the Amazon Web Services CLI (Command Line Interface) first you will need to install the tool. You can check if you already have it by running the following command in your preferred terminal:
+
+[source, console]
+----
+aws --version
+----
+
+If you don't see any output, please refer to the following guide for https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[Installing or updating the latest version of the AWS CLI].
+
+==== Step 1 - Configure your AWS CLI
+
+Before using the CLI, you will need to configure it so that it can be linked to your aws account. For that, run the following command:
+
+[source, console]
+----
+aws configure
+----
+
+You will need to input some security credentials that you will be able to find in your Security Credentials section in your https://us-east-1.console.aws.amazon.com/iam/home?region=eu-west-1#/security_credentials[AWS Dashboard].
+
+
+==== Step 2 - Create Role with basic policy
+
+Create the execution role that gives your function permission to access AWS resources. 
+
+In the following example, `trust-policy.json` is a file in the current directory. This trust policy allows Lambda to use the role's permissions and contains the following data:
+
+[source, json]
+----
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+----
+
+To create an execution role with the AWS CLI and the previous trust policy, use the following command:
+
+[source, console]
+----
+aws iam create-role --role-name lambda-ex --assume-role-policy-document file://trust-policy.json
+----
+
+To add permissions to the role, use the attach-policy-to-role command. Start by adding the AWSLambdaBasicExecutionRole managed policy, which adds permissions to write logs to CloudWatch Logs.
+
+[source, console]
+----
+aws iam attach-role-policy --role-name lambda-ex --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+----
+
+==== Step 3 - Create publish file
+
+Navigate to the application folder, run a terminal and execute the following command:
+
+[source, console]
+----
+dotnet lambda package
+----
+
+
+The file will be stored in the following path:
+
+`{Your-Project-Path}\bin\Release\{.Net-Version}\publish`
+
+Here's an example: :
+
+.Lambda AWS publish path example
+image::images/aws_lambda_publish.png[]
+
+==== Step 4 - Deploy the function
+
+Open a terminal in the path of your lambda `.zip` file (result of the previous step). For the next command you will need the following data:
+
+* *{function-name}*: The name you want for the function. e.g `AWSCalculator`
+* *{zip-name}*: The name of the zip that contains the publish files. e.g `Devon4Net.Application.Lambda.zip`
+* *{handler}*: The handler route of the lambda function folowing the form _Assembly::Namespace.ClassName::MethodName_. e.g `Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.Functions.CalculatorFunction::FunctionHandler`
+* *{runtime}*: The runtime environment for your function to run on. e.g `dotnet6`
+* *{account-id}*: The account id from your https://us-east-1.console.aws.amazon.com/iam/home?region=eu-west-1#/security_credentials[AWS Dashboard].
+
+To deploy the function run the following command replacing the previous parameters with your data.
+
+WARNING: The handler's name cannot exceed 128 characters.
+
+[source, console]
+----
+aws lambda create-function --function-name {function-name} --zip-file fileb://{zip-name} --handler {handler} --runtime {runtime} --role arn:aws:iam::{account-id}:role/lambda-ex
+----
+
+For our example, the command will look like this:
+
+[source, console]
+----
+aws lambda create-function --function-name AWSCalculator --zip-file fileb://Devon4Net.Application.Lambda.zip --handler Devon4Net.Application.Lambda::Devon4Net.Application.Lambda.Functions.CalculatorFunction::FunctionHandler --runtime dotnet6 --role arn:aws:iam::123456789012:role/lambda-ex
+----
+
+You will see a JSON output with the result of the deployment if everything worked properly. You can also check if the deployment was done correctly by listing your lambda functions:
+
+[source, console]
+----
+aws lambda list-functions --max-items 10
+----
+
+==== Step 5 - Test the function
+
+To test the function you can run the `invoke` command that will receive an `input.json` file containing the input data for the lambda function, and will output the result in `output.json`. The input file will look something like this:
+
+[source, json]
+----
+{
+  "Dividend": 22,
+  "Divisor": 3
+}
+----
+
+For our example calculator, run following the command in the same directory than the `input.json`:
+
+[source, console]
+----
+aws lambda invoke --function-name AWSCalculator --cli-binary-format raw-in-base64-out --payload file://input.json output.json
+----
+
+If everything has gone according to plan, your `output.json` file will look like this:
+
+[source, json]
+----
+{
+    "Quotient":7,
+    "Remainder":1
+}
+----
+
+=== Deployment with AWS Toolkit for Visual Studio
+
+For deploying the lambda function using the *AWS Toolkit for Visual Studio* first you will need to install the plugin. 
+
+For installing it, please refer to the following documentation https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/setup.html#install[Install the AWS Toolkit for Visual Studio].
+
+==== Step 1 - Set up your AWS Account in Visual Studio
+
+The first thing that you have to do, is configure your AWS Credentials. For that you must navigate to: 
+
+*View > AWS Explorer*
+
+.Visual Studio AWS toolkit
+image::images/aws_create_lambda_9.png[]
+
+Add a new profile for AWS credentials as showing on the image below:
+
+.Visual Studio AWS toolkit
+image::images/aws_create_lambda_10.png[]
+
+Set the credentials needed:
+
+.Visual Studio AWS toolkit
+image::images/aws_create_lambda_11.png[]
+
+You may find the Access Key ID (2) and the Secret Access Key (3) at https://us-east-1.console.aws.amazon.com/iam/home?region=eu-west-1#/security_credentials[AWS Dashboard].
+
+==== Step 2 - Create publish file
+
+Navigate to the application folder, run a terminal and execute the following command:
+
+[source, console]
+----
+dotnet lambda package
+----
+
+
+The file will be stored in the following path:
+
+`{Your-Project-Path}\bin\Release\{.Net-Version}\publish`
+
+Here's an example: :
+
+.Lambda AWS publish path example
+image::images/aws_lambda_publish.png[]
+
+==== Step 3 - Create a new function
+
+Return to the AWS Explorer, right click in AWS Lambda (1) and select the Create New Function option (2)
+
+.Visual Studio AWS toolkit
+image::images/aws_create_lambda_8.png[]
+
+In the next screen you must provide the details about the function that you want to upload
+
+.Visual Studio AWS toolkit
+image::images/aws_create_lambda_12.png[]
+
+1. Source Code: Refers to the .zip file that you created in the previous step
+
+2. Function Name: The name that you want for your function
+
+3. Handler's name: This parameter must follow the next structure:
+
+`Assembly::Namespace.ClassName::MethodName`
+
+WARNING: The handler's name cannot exceed 128 characters.
+
+Once the information has been provided, click the *Next* button. 
+
+==== Step 4 - Create Role with basic policy
+
+In the next step, we'll set up a Role.
+Choose an existing role or create one if you don't have one already. 
+
+image::images/aws_create_lambda_13.png[]
+
+Then click the *Upload* button.
+
+==== Step 5 - Test the function
+
+Now you can test your lambda function providing the function's input parameters (1) in JSON format: 
+
+.Visual Studio AWS toolkit
+image::images/aws_create_lambda_14.png[]
+
+Once the information has been provided, click the *Invoke* button (2) to run the function.
+
+You can see the Response (3) and the Log output (4)
+
+=== References
+
+* https://aws.amazon.com/lambda/[AWS Lambda]
+* https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html[Lambda runtimes]
+* https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-awscli.html[Using Lambda with the AWS CLI]
+* https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/welcome.html[AWS Toolkit for Visual Studio]
+
 == How to: AWS Serverless
 
 In this section, you will learn how to launch a AWS WebAPI serverless using devon4net.
@@ -2028,3 +2855,317 @@ image::images/aws_template_startup.png[]
 ==== Step 3 - Run it
 
 Run the project and now you can start to develop your serverless WebAPI.
+
+== How to: AWS DynamoDB
+
+In this guide, you will learn how to configure and use the Amazon DynamoDB database service using devon4net.
+
+=== What is Amazon DynamoDB?
+
+Amazon DynamoDB is a fully managed NoSQL database service that provides fast and predictable performance with seamless scalability. In DynamoDB, tables, items, and attributes are the core components that you work with. A table is a collection of items, and each item is a collection of attributes. DynamoDB employs primary keys to uniquely identify each item in a table, as well as secondary indexes to provide query flexibility.
+DynamoDB supports two different types of primary keys:
+
+* **Partition key**
+
+* **Partition key and Sort key** 
+
+WARNING: Sort keys and Secondary indexes are not yet available in devon4net; however, we are working on introducing such features in future updates.
+
+In devon4net you may work with two types of repositories: 
+
+* *Table Repository*, which is intended for Complex objects, works with tables and serialization.
+
+* *Entity Repository*, which is designed for Model objects with annotations.
+
+=== Installing the nuget
+
+You need to install the `AWSSDK.DynamoDBV2` nuget, for that you can run the following command in the Package Manager Console:
+
+[source, console]
+----
+Install-Package AWSSDK.DynamoDBv2
+----
+
+=== Working with Table Repository
+
+==== Step 1 - Create the object
+
+Create the object you want to use to interact with the database; in this example, we built a user object:
+
+[source, c#]
+----
+public class User
+    {
+        public string Key { get; set; }
+        public string Name { get; set; }
+        public string Surname {get; set;}
+    }
+----
+
+==== Step 2 - Register the DynamoDbTableRepository service
+
+The code below registers the `IDynamoDbTableRepository` service with the concrete type `DynamoDbTableRepository`. The AddTransient method registers the service with a transient lifetime. These services are created each time they're requested from the service container:
+
+[source, c#]
+----
+protected override void ConfigureServices(IServiceCollection services)
+  {
+    services.AddTransient<IDynamoDbTableRepository, DynamoDbTableRepository>();
+  }
+----
+
+==== Step 3 - Inject the Table Repository
+
+[source, c#]
+----
+private IDynamoDbTableRepository DynamoDbTableRepository { get; set; }
+        public RepositoryService(IDynamoDbTableRepository dynamoDbTableRepository)
+        {
+            DynamoDbTableRepository = dynamoDbTableRepository;
+        }
+----
+
+==== Step 4 - Create a table
+
+In this scenario, we want to create a table called `users`. The code below first checks if the table `users` already exists, and if it doesn't, then uses the `CreateTable` method from the `DynamoDbTableRepository` to create it: 
+
+[source, c#]
+----
+public async void CreateTable()
+        {
+            if (!await DynamoDbTableRepository.TableExists("users").ConfigureAwait(false))
+            {
+                await DynamoDbTableRepository.CreateTable("users",
+                    new List<KeySchemaElement> { new KeySchemaElement { AttributeName = DynamoDbGeneralObjectStorageAttributes.AttributeKey, KeyType = KeyType.HASH } },
+                    new List<AttributeDefinition> { new AttributeDefinition { AttributeName = DynamoDbGeneralObjectStorageAttributes.AttributeKey, AttributeType = ScalarAttributeType.S } }).ConfigureAwait(false);
+            }
+
+        }
+----
+
+==== Step 5 - Insert values into the table
+
+Now let's insert data into the table using the repository's `Put` method. We must specify the table name, partition key, and object to insert.  
+
+[source, c#]
+----
+public async Task<User> InsertUser()
+        {
+            var user = new User {
+                Key = "User-01",
+                Name = "Josh",
+                Surname = "Martin"
+            };
+
+            await DynamoDbTableRepository.Put("users", user.Key, user).ConfigureAwait(false);
+            var criteria = new DynamoSearchCriteria();
+            criteria.AddQueryCriteria(DynamoDbGeneralObjectStorageAttributes.AttributeKey, user.Key, QueryOperator.Equal); // For query method
+            var result = await DynamoDbTableRepository.Get<User>("users", criteria.GetCriteriaScanFilterForSearchCriteria()).ConfigureAwait(false);
+            return result.FirstOrDefault();
+        }
+----
+
+As you can see in the code above, we can obtain the result using `DynamoSearchCriteria()` We will describe query and scan methods later in this guide.
+
+=== Working with Entity Repository
+
+==== Step 1 - Create the Entity
+
+Create the entity you want to use to interact with the database; in this example, we built a Users entity:
+
+[source, c#]
+----
+[DynamoDBTable("users")]
+public class UsersTable
+    {
+        [DynamoDBHashKey]
+        [DynamoDBProperty("key")]
+        public string Key { get; set; }
+
+        [DynamoDBProperty("name")]
+        public string Name { get; set; }
+
+        [DynamoDBProperty("surname")]
+        public string Surname {get; set;}
+
+        [DynamoDBIgnore]
+        public int Age {get; set;}
+    }
+----
+
+In this example, we use some annotations:
+
+* `[DynamoDBTable("tableName")]`: The name of the table that will be created for this entity.
+* `[DynamoDBHashKey]`: Is used to set a property as Partition Key.
+* `[DynamoDBProperty("propertyName")]`: The name of the property that will be shown in the database.
+* `[DynamoDBIgnore]`: For avoiding this property when saving or loading data.
+
+==== Step 2 - Register the DynamoDbEntityRepository service
+
+The code below registers the `IDynamoDbEntityRepository` service with the concrete type `DynamoDbEntityRepository`. The AddTransient method registers the service with a transient lifetime. These services are created each time they're requested from the service container:
+
+[source, c#]
+----
+protected override void ConfigureServices(IServiceCollection services)
+  {
+    services.AddTransient<IDynamoDbEntityRepository<UsersTable>, DynamoDbEntityRepository<UsersTable>>();
+  }
+----
+
+==== Step 3 - Inject the Entity Repository
+
+[source, c#]
+----
+private IDynamoDbEntityRepository<UsersTable> DynamoDbEntityRepository { get; set; }
+        public DynamoDbFunctionEventHandler(IDynamoDbEntityRepository<UsersTable> dynamoDbEntityRepository)
+        {
+            DynamoDbEntityRepository = dynamoDbEntityRepository;
+        }
+----
+
+==== Step 4 - Create a table
+
+In this example, we want to create a table called `users`. The code below first checks if the table `users` already exists, and if it doesn't, then uses the `CreateTable` method from the `DynamoDbEntityRepository` to create it: 
+
+[source, c#]
+----
+public async void CreateTable()
+        {
+            if (!await DynamoDbEntityRepository.TableExists("users").ConfigureAwait(false))
+            {
+                await DynamoDbEntityRepository.CreateTable("users",
+                    new List<KeySchemaElement> { new KeySchemaElement { AttributeName = DynamoDbGeneralObjectStorageAttributes.AttributeKey, KeyType = KeyType.HASH } },
+                    new List<AttributeDefinition> { new AttributeDefinition { AttributeName = DynamoDbGeneralObjectStorageAttributes.AttributeKey, AttributeType = ScalarAttributeType.S } }).ConfigureAwait(false);
+            }
+
+        }
+----
+
+==== Step 5 - Insert values into the table
+
+Now let's insert data into the table using the repository's `Create` method. In this case, we simply need to specify the entity itself as a parameter.  
+
+[source, c#]
+----
+public async Task<User> InsertUser()
+        {
+            await DynamoDbEntityRepository.Create(new UsersTable { Key = "User-01", Name = "Josh", Surname = "Martin"}).ConfigureAwait(false);
+
+            return await DynamoDbEntityRepository.GetById("User-01").ConfigureAwait(false);
+        }
+----
+
+We also use the the repository's `GetById` method to obtain the added user. 
+
+=== Searching methods
+
+Devon4net includes the `DynamoSearchCriteria` class, which makes it easier to use the DynamoDB SDK searching methods.
+
+In DynamoDB SDK, there are two possible operations:
+
+* **Scan:**  Searches the whole table for elements that fit the criteria. Is slower than Query operations.
+* **Query:** Performs a direct lookup to a selected partition based on primary or secondary partition/hash key.
+
+In devon4net you must create a new instance of `DynamoSearchCriteria` class, for accessing those methods:
+
+[source, c#]
+----
+var criteria = new DynamoSearchCriteria();
+
+            criteria.AddSearchCriteria(DynamoDbGeneralObjectStorageAttributes.AttributeKey, user.Name, ScanOperator.Equal);// For scan method
+
+            criteria.AddQueryCriteria(DynamoDbGeneralObjectStorageAttributes.AttributeKey, user.Key, QueryOperator.Equal);// For query method           
+----
+
+The `AddSearchCriteria` and `AddQueryCriteria` methods have fairly similar syntax, as shown in the code above. 
+
+NOTE: For more information about query and scan methods please visit the DynamoDB component documentation
+
+== How to: Use AWS CDK
+
+=== What is AWS CDK?
+
+AWS Cloud Development Kit (CDK) is an open-source software development framework to define your cloud application resources using familiar programming languages. This framework allows you to define all your AWS infrastructure as readable code. This process is known as Infrastructure as Code (IaC) and consists in provisioning and managing infrastructure for your software solutions through code, instead of doing so manually.
+
+This means that you can easily modify, distribute and reproduce configurations. In addition, by including infrastructure as code:
+
+* facilitates the integration of infrastructure into version control systems for tracking changes and audit modifications.
+
+* enables the introduction of significant automation for infrastructure management. All of these factors contribute to the SDLC's IaC being fully integrated into CI/CD pipelines.
+
+* Eliminates the unnecessary manual management.
+
+=== Why CDK support in devon4net?
+
+In a real project, we will use AWS services such as DynamoDB databases, S3 buckets, multiple lambdas, and so on.
+Similarly, we will be working in a variety of work environments.
+
+Devon4Net, with the help of the CDK, allows us to treat these services as code (IaC), which allows us to take all of this service structure and replicate it in another environment that interests us, saving development time and treating this copy of your AWS services as a backup. 
+
+In Devon4Net, we can use a standarized `json` file to configure the AWS CDK service, this `json` will be translated into readable code for the CDK framework.
+
+=== How to use
+
+==== Installing the NuGet
+
+You need to install the `Devon4net.Infrastructure.AWS.CDK` NuGet, for that you can run the following command in the Package Manager Console:
+
+[source, console]
+----
+Install-Package Devon4net.Infrastructure.AWS.CDK
+----
+
+==== Configure your `ProvisionStack`
+
+In the *Startup* class of your application, follow the nexts steps:
+
+1. Load your `appsettings.{environment}.json` configuration file. As an example, consider the Options Pattern:
++
+[source, c#]
+----
+private static List<CdkOptions> LoadConfigurationFiles()
+{
+    var file = FileOperationsHelper.GetFilesFromPath("appsettings.json")?.FirstOrDefault();
+    if (file == null) throw new ArgumentException("No appsettings.json was provided");
+
+    var configuration = new ConfigurationBuilder().AddJsonFile(file, true, true).Build();
+
+    var environmentFileName = Configuration.GetSection("Environment").Value;
+
+    var environmentFile = FileOperationsHelper.GetFilesFromPath($"appsettings.{environmentFileName}.json")?.FirstOrDefault();
+    configuration = new ConfigurationBuilder().AddConfiguration(configuration).AddJsonFile(environmentFile, true, true).Build();
+
+    return Configuration.GetSection("CdkOptions").Get<List<CdkOptions>>();
+}
+----
+
+2. Once your setup has been charged, you may create an instance of the `ProvisionStack` class and then call the `Process()` method:
++
+[source, c#]
+----
+var cdkOptions = LoadConfigurationFiles();
+
+foreach (var stack in cdkOptions)
+{
+    if (string.IsNullOrWhiteSpace(AwsAccount))
+    {
+        AwsAccount = stack.ProvisionStack.AwsAccount;
+    }
+
+    if (string.IsNullOrWhiteSpace(AwsRegion))
+    {
+        AwsRegion = stack.ProvisionStack.AwsRegion;
+    }
+
+    var defaultPsrovisionStack = new ProvisionStack(AwsAccount, AwsRegion, stack);
+    defaultPsrovisionStack.Process();
+}
+----
++
+The `Process()` method is responsible for building the infrastructure that you specified in your configuration file.
+
+NOTE: For more information about the configuration of the component itself, please, visit the component documentation.
+
+=== References
+
+https://docs.aws.amazon.com/cdk/v2/guide/home.html[AWS CDK official documentation]

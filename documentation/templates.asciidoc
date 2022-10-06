@@ -692,7 +692,7 @@ This is the file:
 }
 ----
 
-The `function-handler` option is the function handler location in the form of `{DLL_NAME}::{NAMESPACE}::{FUNCTION_HANDLER_NAME}`. And the `template` option will point to a configuration file for the cloud formation.
+The `function-handler` option is the function handler location in the form of `Assembly::Namespace.ClassName::MethodName`. And the `template` option will point to a configuration file for the cloud formation.
 
 NOTE: Read the AWS documentation to learn more about this configuration.
 
@@ -912,3 +912,178 @@ NOTE: Read the https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDevel
 * https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-delay-queues.html[Amazon SQS delay queues]
 
 * https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html[Amazon SQS dead-letter queues]
+
+=== Devon4Net.Application.DynamoDb
+
+This package contains a template for building a DynamoDb database.
+It makes use of the `Devon4Net.Infrastructure.DynamoDb` component, therefore please read the documentation about it before using the template.
+You also have a 'How to: DynamoDb' section that explains how to use the component with some examples.
+
+WARNING: This template uses Lambda functions to get and set data into the DynamoDb database. if you don't know about lambda functions, please read the 'How to: AWS Lambda Function' documentation.
+
+.DynamoDb Template File structure
+image::images/aws_dynamo_template_structure.png[]
+
+In the previous figure you can see the whole structure of the package:
+
+* `Domain`: Here are placed the necessary classes of the custom objects that are used to input and output the data in the lambda functions. The `Entity Repository` is used to manage these objects. 
+* `Dto`: Here are placed the necessary classes of the custom objects that are used to input and output the data in the lambda functions. These objects are managed with the `Table Repository`.
+* `Functions`: This folder will contain the function definition for the lambda functions.
+* `Handlers`: In this directory the classes that implement the `FunctionHandler` method that will define the lambda function behaviour. 
++
+In this case, we have a function that creates a DynamoDb table if it does not already exist and inserts data into it, it returns the value that was entered into the database. 
++
+This has been achieved in two ways: by making use of the *Table repository* (low-level model) or through the use of the *Entity repository* (persistence programming model)
+
+NOTE: If you need more information about Table or Entity Repository please check the documentation about the DynamoDb component.
+
+==== Configuration
+
+The configuration files are the following:
+
+===== appsettings.json
+
+This file contains the configuration for all of the components and the project in general. It can contain subversions following the structure `appsettings.{environment}.json` and it contains the following:
+
+[source, json]
+----
+{
+  "AWS": {
+    "UseSecrets": true,
+    "UseParameterStore": true,
+    "Credentials": {
+      "Profile": "",
+      "Region": "eu-west-1",
+      "AccessKeyId": "",
+      "SecretAccessKey": ""
+    }
+  }
+}
+----
+
+* `UseSecrets`: Boolean to indicate if AWS Secrets Manager is being used.
+
+* `UseParameterStore`: Boolean to indicate if AWS Parameter Store is being used.
+
+* `Credentials`: Credentials for connecting the app with your AWS profile.
+
+===== aws-lambda-tools-defaults.json
+
+This file provides default values to the AWS CLI for configuring and deploy with Visual Studio. 
+
+You can run this command to learn more:
+
+[source, console]
+----
+dotnet lambda deploy-serverless --help
+----
+
+This is the file:
+
+[source, json]
+----
+{
+  "Information": [
+    "This file provides default values for the deployment wizard inside Visual Studio and the AWS Lambda commands added to the .NET Core CLI.",
+    "To learn more about the Lambda commands with the .NET Core CLI execute the following command at the command line in the project root directory.",
+    "dotnet lambda help",
+    "All the command line options for the Lambda command can be specified in this file."
+  ],
+  "profile": "default",
+  "region": "eu-west-1",
+  "framework": "net6.0",
+  "function-runtime": "dotnet6",
+  "configuration": "Release",
+  "s3-prefix": "AWSServerlessTest/",
+  "function-memory-size": 256,
+  "function-timeout": 30,
+  "function-handler": "Devon4Net.Application.DynamoDb::Devon4Net.Application.DynamoDb.business.DynamoDbManagement.Functions.DynamoDbManagementFunction::FunctionHandler",
+  "template": "serverless.template"
+}
+----
+
+The `function-handler` option is the function handler location in the form of `Assembly::Namespace.ClassName::MethodName`. And the `template` option will point to a configuration file for the cloud formation.
+
+NOTE: Read the AWS documentation to learn more about this configuration.
+
+===== serverless.template
+
+This configuration sends all of the information to the Cloud System, so you don't have to change anything when deploying the functions.
+
+[source, json]
+----
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Transform": "AWS::Serverless-2016-10-31",
+  "Description": "An AWS Serverless Application that uses the ASP.NET Core framework running in Amazon Lambda.",
+  "Parameters": {},
+  "Conditions": {},
+  "Resources": {
+    "DynamoDbFunction": {...},
+    "DynamoDbComplesObjectFunctionEventHandler": {...},
+  },
+  "Outputs": {
+    "ApiURL": {
+      "Description": "API endpoint URL for Prod environment",
+      "Value": {
+        "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+      }
+    }
+  }
+}
+----
+
+As you can see, the `Resources` section includes the configuration for each function.
+
+This configuration will appear as follows: 
+
+[source, json]
+----
+"DynamoDbFunction": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "Devon4Net.Application.DynamoDb::Devon4Net.Application.DynamoDb.business.DynamoDbManagement.Functions.DynamoDbManagementFunction::FunctionHandler",
+        "Runtime": "dotnet6",
+        "CodeUri": "",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [
+          "AWSLambdaFullAccess",
+          "AmazonSSMReadOnlyAccess",
+          "AWSLambdaVPCAccessExecutionRole"
+        ],
+        "Environment": {
+          "Variables": {}
+        },
+        "Events": {
+          "ProxyResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/{proxy+}",
+              "Method": "ANY"
+            }
+          },
+          "RootResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/",
+              "Method": "ANY"
+            }
+          }
+        }
+      }
+    },
+----
+
+The `Properties` section will contain the value of the location, as seen in the `aws-lambda-tools-defaults.json` file in the form of `Assembly::Namespace.ClassName::MethodName`.
+
+==== References
+
+* https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.html[Getting started with DynamoDB and AWS SDKs]
+
+* https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/dynamodb-intro.html[Using Amazon DynamoDB NoSQL databases]
+
+* https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/WorkingWithTables.Basics.html[Basic operations on DynamoDB tables]
+
+* https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SettingUp.DynamoWebService.html[Setting up DynamoDB (web service)]
