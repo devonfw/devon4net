@@ -1,23 +1,27 @@
 ﻿using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Kafka.Handlers;
+using Devon4Net.Infrastructure.Kafka.Handlers.Administration;
 using Devon4Net.Infrastructure.Kafka.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace Devon4Net.Infrastructure.Kafka
 {
     public static class KafkaConfiguration
     {
+        private static KafkaOptions KafkaOptions { get; set; }
+
         public static void SetupKafka(this IServiceCollection services, IConfiguration configuration)
         {
-            var kafkaOptions = services.GetTypedOptions<KafkaOptions>(configuration, "Kafka");
+            KafkaOptions = services.GetTypedOptions<KafkaOptions>(configuration, "Kafka");
 
-            if (kafkaOptions?.EnableKafka != true || kafkaOptions.Producers?.Any() != true) return;
+            if (KafkaOptions?.EnableKafka != true || KafkaOptions.Administration?.Any() != true) return;
 
-            services.AddTransient(typeof(IKakfkaHandler), typeof(KakfkaHandler));
+            services.AddTransient(typeof(IKafkaAdministrationHandler), typeof(KafkaAdministrationHandler));
         }
 
-        public static void AddKafkaConsumer<T>(this IServiceCollection services, string consumerId, bool commit = false, int commitPeriod = 5) where T : class
+        public static void AddKafkaConsumer<T>(this IServiceCollection services, IConfiguration configuration, string consumerId, bool commit = false, int commitPeriod = 5, bool enableConsumerFlag = true) where T : class
         {
             var memberInfo = typeof(T).BaseType;
             if (memberInfo?.Name.Contains("KafkaConsumerHandler") == false)
@@ -25,15 +29,14 @@ namespace Devon4Net.Infrastructure.Kafka
                 throw new ArgumentException($"The provided type {typeof(T).FullName} does not inherit from KafkaConsumerHandler");
             }
 
-            using var sp = services.BuildServiceProvider();
-            var kafHandler = sp.GetService<IKakfkaHandler>();
+            //var kafkaOptions = services.GetKafkaOptions();
 
-            var obj = (T)Activator.CreateInstance(typeof(T), services, kafHandler, consumerId, commit, commitPeriod);
+            var instance = (T) Activator.CreateInstance(typeof(T), services, KafkaOptions, consumerId, commit, commitPeriod, enableConsumerFlag);
 
-            services.AddSingleton(obj);
+            services.AddSingleton(instance);
         }
 
-        public static void AddKafkaProducer<T>(this IServiceCollection services, string producerId) where T : class
+        public static void AddKafkaProducer<T>(this IServiceCollection services, IConfiguration configuration, string producerId) where T : class
         {
             var memberInfo = typeof(T).BaseType;
             if (memberInfo?.Name.Contains("KafkaProducerHandler") == false)
@@ -41,12 +44,29 @@ namespace Devon4Net.Infrastructure.Kafka
                 throw new ArgumentException($"The provided type {typeof(T).FullName} does not inherit from KafkaProducerHandler");
             }
 
-            using var sp = services.BuildServiceProvider();
-            var kafHandler = sp.GetService<IKakfkaHandler>();
+            //var kafkaOptions = services.GetKafkaOptions();
+            var instance = (T) Activator.CreateInstance(typeof(T), services, KafkaOptions, producerId);
+            services.AddSingleton(instance);
+        }
 
-            var obj = (T)Activator.CreateInstance(typeof(T), services, kafHandler, producerId);
+        public static void AddKafkaStreamService<T>(this IServiceCollection services, IConfiguration configuration, string applicationId) where T : BackgroundService
+        {
+            var memberInfo = typeof(T).BaseType;
 
-            services.AddSingleton(obj);
+            if (memberInfo?.Name.Contains("KafkaStreamService") == false)
+            {
+                throw new ArgumentException($"The provided type {typeof(T).FullName} does not inherit from KafkaStreamService");
+            }
+
+            //var kafkaOptions = services.GetKafkaOptions();
+            var instance = (T)Activator.CreateInstance(typeof(T), services, KafkaOptions, applicationId);
+            services.AddHostedService(_ => instance);
+        }
+
+        private static KafkaOptions GetKafkaOptions(this IServiceCollection services)
+        {
+            using var serviceProvider = services.BuildServiceProvider();
+            return serviceProvider.GetService<IOptions<KafkaOptions>>()?.Value;
         }
     }
 }

@@ -1,6 +1,8 @@
-using Devon4Net.Application.Kafka.Business.KafkaManagement.Services;
+using Devon4Net.Application.Kafka.Consumer.Business.KafkaManagement.Handlers;
+using Devon4Net.Application.Kafka.Consumer.Configuration;
 using Devon4Net.Application.WebAPI.Configuration;
 using Devon4Net.Application.WebAPI.Configuration.Application;
+using Devon4Net.Domain.UnitOfWork;
 using Devon4Net.Infrastructure.Kafka;
 using Devon4Net.Infrastructure.Logger;
 using Devon4Net.Infrastructure.Middleware.Middleware;
@@ -18,9 +20,13 @@ builder.Services.SetupMiddleware(builder.Configuration);
 builder.Services.SetupLog(builder.Configuration);
 builder.Services.SetupSwagger(builder.Configuration);
 
+//UoW CONFIGURATION
+builder.Services.SetupDependencyInjection(builder.Configuration);
+builder.Services.SetupUnitOfWork(typeof(DIConfiguration));
+
 //KAFKA CONFIGURATION
 builder.Services.SetupKafka(builder.Configuration);
-builder.Services.AddKafkaStreamService<FileTransferStreamService>(builder.Configuration, "file_transfer");
+builder.Services.AddKafkaConsumer<MessageConsumerHandler>(builder.Configuration, "MyOutputConsumer");
 #endregion
 
 var app = builder.Build();
@@ -39,4 +45,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-

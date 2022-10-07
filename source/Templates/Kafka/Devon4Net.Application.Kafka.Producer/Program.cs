@@ -1,4 +1,4 @@
-using Devon4Net.Application.Kafka.Business.KafkaManagement.Services;
+using Devon4Net.Application.Kafka.Producer.Business.KafkaManagement.Handlers;
 using Devon4Net.Application.WebAPI.Configuration;
 using Devon4Net.Application.WebAPI.Configuration.Application;
 using Devon4Net.Infrastructure.Kafka;
@@ -20,7 +20,7 @@ builder.Services.SetupSwagger(builder.Configuration);
 
 //KAFKA CONFIGURATION
 builder.Services.SetupKafka(builder.Configuration);
-builder.Services.AddKafkaStreamService<FileTransferStreamService>(builder.Configuration, "file_transfer");
+builder.Services.AddKafkaProducer<MessageProducerHandler>(builder.Configuration, "FileInput");
 #endregion
 
 var app = builder.Build();
@@ -39,4 +39,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
