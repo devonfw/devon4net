@@ -1,7 +1,4 @@
-﻿using Confluent.Kafka;
-using System.Text.Json;
-
-namespace Devon4Net.Application.Kafka.Business.Messages
+﻿namespace Devon4Net.Application.Kafka.Business.Messages
 {
     public class DataPieceDto<T> where T : class
     {
@@ -13,6 +10,5 @@ namespace Devon4Net.Application.Kafka.Business.Messages
         public int PieceOffset { get; set; }
         public int Position { get; set; }
         public T Data { get; set; }
-
     }
 }

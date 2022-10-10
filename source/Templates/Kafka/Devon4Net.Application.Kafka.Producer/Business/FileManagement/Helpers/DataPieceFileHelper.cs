@@ -4,6 +4,12 @@ namespace Devon4Net.Application.Kafka.Producer.Business.FileManagement.Helpers
 {
     public static class DataPieceFileHelper
     {
+        /// <summary>
+        /// Creates a list of data pieces from a given file
+        /// </summary>
+        /// <param name="file">File to get the pieces from.</param>
+        /// <param name="byteChunks">Size of the pieces in bytes.</param>
+        /// <returns></returns>
         public static List<DataPieceDto<byte[]>> GetDataPieces(IFormFile file, int byteChunks = 2048)
         {
             var totalParts = (int) Math.Ceiling((double) file.Length / byteChunks);

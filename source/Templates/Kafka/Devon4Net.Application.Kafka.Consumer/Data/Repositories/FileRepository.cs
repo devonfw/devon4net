@@ -2,13 +2,11 @@
 using Devon4Net.Application.Kafka.Consumer.Domain.Entities;
 using Devon4Net.Application.Kafka.Consumer.Domain.RepositoryInterfaces;
 using Devon4Net.Domain.UnitOfWork.Repository;
-using Microsoft.EntityFrameworkCore;
 
 namespace Devon4Net.Application.Kafka.Consumer.Data.Repositories
 {
     public class FileRepository : Repository<DataPiece<byte[]>>, IFileRepository
     {
-
         public FileRepository(FileContext context, bool dbContextBehaviour = false) : base(context, dbContextBehaviour)
         {
         }

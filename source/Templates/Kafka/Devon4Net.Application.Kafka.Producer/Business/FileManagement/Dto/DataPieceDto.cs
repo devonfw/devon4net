@@ -1,7 +1,4 @@
-﻿using Confluent.Kafka;
-using System.Text.Json;
-
-namespace Devon4Net.Application.Kafka.Producer.Business.FileManagement.Dto
+﻿namespace Devon4Net.Application.Kafka.Producer.Business.FileManagement.Dto
 {
     public class DataPieceDto<T> where T : class
     {

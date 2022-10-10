@@ -1,7 +1,4 @@
-﻿using Confluent.Kafka;
-using System.Text.Json;
-
-namespace Devon4Net.Application.Kafka.Consumer.Domain.Entities
+﻿namespace Devon4Net.Application.Kafka.Consumer.Domain.Entities
 {
     public class DataPiece<T> where T : class
     {
@@ -13,6 +10,5 @@ namespace Devon4Net.Application.Kafka.Consumer.Domain.Entities
         public int PieceOffset { get; set; }
         public int Position { get; set; }
         public T Data { get; set; }
-
     }
 }

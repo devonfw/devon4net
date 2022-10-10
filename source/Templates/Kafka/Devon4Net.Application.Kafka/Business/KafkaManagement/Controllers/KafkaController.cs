@@ -17,18 +17,16 @@ namespace Devon4Net.Application.Kafka.Business.KafkaManagement.Controllers
         /// <summary>
         /// KafkaController constructor
         /// </summary>
-        /// <param name="messageProducer"></param>
-        /// <param name="messageProducer2"></param>
-        /// <param name="kafkaHandler"></param>
+        /// <param name="kafkaHandler">Administration handler injection</param>
         public KafkaController(IKafkaAdministrationHandler kafkaHandler)
         {
             KafkaHandler = kafkaHandler;
         }
 
         /// <summary>
-        /// Delivers a Kafka message
+        /// Creates a topic
         /// </summary>
-        /// <param name="topicName"></param>
+        /// <param name="topicName">Name of the topic to create</param>
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
@@ -44,9 +42,9 @@ namespace Devon4Net.Application.Kafka.Business.KafkaManagement.Controllers
         }
 
         /// <summary>
-        /// Delivers a Kafka message
+        /// Deletes a topic given its name
         /// </summary>
-        /// <param name="topicName"></param>
+        /// <param name="topicName">Name of the topic to delete</param>
         /// <returns></returns>
         [HttpDelete]
         [AllowAnonymous]

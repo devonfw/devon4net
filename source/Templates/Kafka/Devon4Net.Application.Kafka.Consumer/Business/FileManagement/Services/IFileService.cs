@@ -1,7 +1,4 @@
-﻿
-using Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Dto;
-using System.Linq.Expressions;
-
+﻿using Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Dto;
 
 namespace Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Services
 {
@@ -12,6 +9,5 @@ namespace Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Services
         public bool IsFileComplete(string guid);
         public DataPieceDto<byte[]> CreateFile(DataPieceDto<byte[]> dataPiece);
         public bool DeleteFileByGuid(string guid);
-
     }
 }

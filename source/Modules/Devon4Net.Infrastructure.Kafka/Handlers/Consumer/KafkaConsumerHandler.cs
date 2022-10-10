@@ -12,16 +12,20 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers.Consumer
 {
     public abstract class KafkaConsumerHandler<TKey, TValue> : KafkaHandler, IKafkaConsumerHandler<TKey, TValue> where TKey : class where TValue : class
     {
+        private readonly IDeserializer<TKey> KeyDeserializer;
+        private readonly IDeserializer<TValue> ValueDeserializer;
         private bool EnableConsumerFlag { get; set; }
         private bool Commit { get; }
         private int CommitPeriod { get; }
         public abstract void HandleCommand(TKey key, TValue value);
 
-        protected KafkaConsumerHandler(IServiceCollection services, KafkaOptions kafkaOptions, string consumerId, bool commit = false, int commitPeriod = 5, bool enableConsumerFlag = true) : base(services, kafkaOptions, consumerId)
+        protected KafkaConsumerHandler(IServiceCollection services, KafkaOptions kafkaOptions, string consumerId, IDeserializer<TKey> keyDeserializer = null, IDeserializer<TValue> valueDeserializer = null, bool commit = false, int commitPeriod = 5, bool enableConsumerFlag = true) : base(services, kafkaOptions, consumerId)
         {
             Commit = commit;
             CommitPeriod = commitPeriod;
             EnableConsumerFlag = enableConsumerFlag;
+            KeyDeserializer = keyDeserializer;
+            ValueDeserializer = valueDeserializer;
             if(EnableConsumerFlag) Consume(Commit, CommitPeriod);
         }
 
@@ -101,17 +105,20 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers.Consumer
 
             var configuration = GetDefaultKafkaConsumerConfiguration(consumerOptions);
             var consumer = new ConsumerBuilder<TKey, TValue>(configuration);
-            consumer.SetValueDeserializer(new DefaultKafkaDeserializer<TValue>());
+
+           
 
             IConsumer<TKey, TValue> result = null;
 
             try
             {
+                consumer.SetKeyDeserializer(KeyDeserializer ?? GetDeserializerForType<TKey>());
+                consumer.SetValueDeserializer(ValueDeserializer ?? GetDeserializerForType<TValue>());
+
                 consumer.SetErrorHandler((_, e) => Devon4NetLogger.Error(new ConsumerException($"Error code {e.Code} : {e.Reason}")));
                 consumer.SetStatisticsHandler((_, json) => Devon4NetLogger.Information($"Statistics: {json}"));
                 consumer.SetPartitionsAssignedHandler((_, partitions) => Devon4NetLogger.Information($"Assigned partitions: [{string.Join(", ", partitions)}]"));
                 consumer.SetPartitionsRevokedHandler((_, partitions) => Devon4NetLogger.Information($"Revoking assignment: [{string.Join(", ", partitions)}]"));
-
 
                 result = consumer.Build();
                 if (!string.IsNullOrEmpty(consumerOptions.Topics)) result.Subscribe(consumerOptions.GetTopics());
@@ -122,6 +129,17 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers.Consumer
             }
 
             return result;
+        }
+
+        private IDeserializer<T> GetDeserializerForType<T>()
+        {
+            if (typeof(T) == typeof(string)) return (IDeserializer<T>) Deserializers.Utf8;
+            else if (typeof(T) == typeof(byte[])) return (IDeserializer<T>) Deserializers.ByteArray;
+            else if (typeof(T) == typeof(double)) return (IDeserializer<T>) Deserializers.Double;
+            else if (typeof(T) == typeof(float)) return (IDeserializer<T>) Deserializers.Single;
+            else if (typeof(T) == typeof(int)) return (IDeserializer<T>) Deserializers.Int32;
+            else if (typeof(T) == typeof(long)) return (IDeserializer<T>) Deserializers.Int64;
+            return new DefaultKafkaDeserializer<T>();
         }
 
         private static ConsumerConfig GetDefaultKafkaConsumerConfiguration(ConsumerOptions consumer)

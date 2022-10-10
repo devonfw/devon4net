@@ -1,9 +1,11 @@
+using Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Dto;
 using Devon4Net.Application.Kafka.Consumer.Business.KafkaManagement.Handlers;
 using Devon4Net.Application.Kafka.Consumer.Configuration;
 using Devon4Net.Application.WebAPI.Configuration;
 using Devon4Net.Application.WebAPI.Configuration.Application;
 using Devon4Net.Domain.UnitOfWork;
 using Devon4Net.Infrastructure.Kafka;
+using Devon4Net.Infrastructure.Kafka.Serialization;
 using Devon4Net.Infrastructure.Logger;
 using Devon4Net.Infrastructure.Middleware.Middleware;
 using Devon4Net.Infrastructure.Swagger;
@@ -26,7 +28,8 @@ builder.Services.SetupUnitOfWork(typeof(DIConfiguration));
 
 //KAFKA CONFIGURATION
 builder.Services.SetupKafka(builder.Configuration);
-builder.Services.AddKafkaConsumer<MessageConsumerHandler>(builder.Configuration, "MyOutputConsumer");
+builder.Services.AddKafkaConsumer<FileConsumerHandler, string, DataPieceDto<byte[]>>("FileConsumer", valueDeserializer: new DefaultKafkaDeserializer<DataPieceDto<byte[]>>());
+builder.Services.AddKafkaConsumer<MessageConsumerHandler, string, string>("MessageConsumer");
 #endregion
 
 var app = builder.Build();

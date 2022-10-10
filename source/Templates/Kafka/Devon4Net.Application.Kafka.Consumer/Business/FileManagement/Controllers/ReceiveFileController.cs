@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Controllers
 {
+    /// <summary>
+    /// Controller for downloading the files received from Kafka
+    /// </summary>
     public class ReceiveFileController : Controller
     {
         private readonly IFileService _fileService;
@@ -16,6 +19,10 @@ namespace Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Controlle
             _downloadOptions = configuration.GetSection("Downloads");
         }
 
+        /// <summary>
+        /// Gets all the files Guids available in the database. 
+        /// </summary>
+        /// <returns>List of guids from completed and incompleted files</returns>
         [HttpGet]
         [AllowAnonymous]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
@@ -28,6 +35,12 @@ namespace Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Controlle
             return _fileService.GetDistinctFileGuids();
         }
 
+        /// <summary>
+        /// Downloads a file to the directory specified in the appsettings and removes it from the database.
+        /// If the file is incomplete, it shows a message and does nothing.
+        /// </summary>
+        /// <param name="guid">Guid of the file to download.</param>
+        /// <returns>A message specifying what happened.</returns>
         [HttpGet]
         [AllowAnonymous]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
@@ -39,15 +52,17 @@ namespace Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Controlle
         {
             if (_fileService.IsFileComplete(guid))
             {
+                var targetDirectory = _downloadOptions.GetValue<string>("TargetDirectory");
+
                 await ReaderHelper.ReadPiecesAndWriteToFile
                 (
-                    _fileService.GetPiecesByFileGuid(guid).OrderBy(o => o.Position), 
-                    _downloadOptions.GetValue<string>("TargetDirectory"), 
+                    _fileService.GetPiecesByFileGuid(guid), 
+                   targetDirectory, 
                     _downloadOptions.GetValue<string>("DefaultFileName")
                 );
 
                 _fileService.DeleteFileByGuid(guid);
-                return Ok();
+                return Ok($"The file was downloaded correctly in the specified directory ({targetDirectory}).");
             }
             return Ok("Not downloaded, file is not completed.");
         }

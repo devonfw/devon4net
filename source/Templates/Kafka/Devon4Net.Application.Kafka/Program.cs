@@ -1,7 +1,9 @@
 using Devon4Net.Application.Kafka.Business.KafkaManagement.Services;
+using Devon4Net.Application.Kafka.Business.Messages;
 using Devon4Net.Application.WebAPI.Configuration;
 using Devon4Net.Application.WebAPI.Configuration.Application;
 using Devon4Net.Infrastructure.Kafka;
+using Devon4Net.Infrastructure.Kafka.Serialization;
 using Devon4Net.Infrastructure.Logger;
 using Devon4Net.Infrastructure.Middleware.Middleware;
 using Devon4Net.Infrastructure.Swagger;
@@ -20,7 +22,8 @@ builder.Services.SetupSwagger(builder.Configuration);
 
 //KAFKA CONFIGURATION
 builder.Services.SetupKafka(builder.Configuration);
-builder.Services.AddKafkaStreamService<FileTransferStreamService>(builder.Configuration, "file_transfer");
+builder.Services.AddKafkaStreamService<FileTransferStreamService, string, DataPieceDto<byte[]>>("file_transfer");
+builder.Services.AddKafkaStreamService<MessageStreamService, string, string>("message_stream");
 #endregion
 
 var app = builder.Build();

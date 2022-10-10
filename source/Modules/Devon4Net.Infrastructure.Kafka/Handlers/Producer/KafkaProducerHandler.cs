@@ -6,14 +6,18 @@ using Devon4Net.Infrastructure.Kafka.Options;
 using Devon4Net.Infrastructure.Kafka.Serialization;
 using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace Devon4Net.Infrastructure.Kafka.Handlers.Producer
 {
     public class KafkaProducerHandler<TKey, TValue> : KafkaHandler, IKafkaProducerHandler<TKey, TValue> where TKey : class where TValue : class
     {
-        public KafkaProducerHandler(IServiceCollection services, KafkaOptions kafkaOptions, string producerId) : base(services, kafkaOptions, producerId)
+        private readonly ISerializer<TKey> KeySerializer;
+        private readonly ISerializer<TValue> ValueSerializer;
+
+        public KafkaProducerHandler(IServiceCollection services, KafkaOptions kafkaOptions, string producerId, ISerializer<TKey> keySerializer = null, ISerializer<TValue> valueSerializer = null) : base(services, kafkaOptions, producerId)
         {
+            KeySerializer = keySerializer;
+            ValueSerializer = valueSerializer;
         }
 
         public Task<DeliveryResult<TKey, TValue>> SendMessage(TKey key, TValue value)
@@ -48,14 +52,16 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers.Producer
         }
 
         #region ProcucerConfiguration
-        // TODO serializer as parameters
         public IProducer<TKey, TValue> GetProducerBuilder(string producerId) 
         {
             var producerOptions = GetProducerOptions(producerId);
 
             var configuration = GetDefaultKafkaProducerConfiguration(producerOptions);
             var producer = GetProducerBuilderInstance(configuration);
-            producer.SetValueSerializer(new DefaultKafkaSerializer<TValue>());
+
+            producer.SetKeySerializer(KeySerializer ?? GetSerializerForType<TKey>());
+            producer.SetValueSerializer(ValueSerializer ?? GetSerializerForType<TValue>());
+
             var result = producer.Build();
 
             return result;
@@ -64,11 +70,22 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers.Producer
         private static ProducerBuilder<TKey, TValue> GetProducerBuilderInstance(ProducerConfig configuration) 
         {
             var producer = new ProducerBuilder<TKey, TValue>(configuration);
-
+            
             producer = producer.SetErrorHandler((_, e) => Devon4NetLogger.Error(new ConsumerException($"Error code {e.Code} : {e.Reason}")));
             producer = producer.SetStatisticsHandler((_, json) => Devon4NetLogger.Information($"Statistics: {json}"));
             producer = producer.SetLogHandler((_, partitions) => Devon4NetLogger.Information($"Kafka log handler: [{string.Join(", ", partitions)}]"));
             return producer;
+        }
+
+        private static ISerializer<T> GetSerializerForType<T>()
+        {
+            if (typeof(T) == typeof(string)) return (ISerializer <T>) Serializers.Utf8;
+            else if (typeof(T) == typeof(byte[])) return (ISerializer<T>) Serializers.ByteArray;
+            else if (typeof(T) == typeof(double)) return (ISerializer<T>) Serializers.Double;
+            else if (typeof(T) == typeof(float)) return (ISerializer<T>) Serializers.Single;
+            else if (typeof(T) == typeof(int)) return (ISerializer<T>) Serializers.Int32;
+            else if (typeof(T) == typeof(long)) return (ISerializer<T>) Serializers.Int64;
+            return new DefaultKafkaSerializer<T>();
         }
 
         private ProducerOptions GetProducerOptions(string producerId)

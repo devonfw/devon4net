@@ -1,5 +1,4 @@
-﻿using Confluent.Kafka;
-using Devon4Net.Infrastructure.Kafka.Common.Const;
+﻿using Devon4Net.Infrastructure.Kafka.Common.Const;
 using Devon4Net.Infrastructure.Kafka.Common.Converters;
 using Devon4Net.Infrastructure.Kafka.Options;
 using Devon4Net.Infrastructure.Kafka.Serialization;
@@ -17,14 +16,14 @@ namespace Devon4Net.Infrastructure.Kafka.Streams.Services
         private StreamOptions StreamOptions { get; set; }
         private KafkaStream Stream { get; set; }
         protected StreamBuilder StreamBuilder { get; set; }
-        public IServiceCollection Services { get; }
+        protected IServiceCollection Services { get; }
         public abstract void CreateStreamBuilder();
 
-        public KafkaStreamService(IServiceCollection services, KafkaOptions kafkaOptions, string applicationId)
+        public KafkaStreamService(IServiceCollection services, KafkaOptions kafkaOptions, string applicationId, ISerDes<TKey> keySerDes = null, ISerDes<TValue> valueSerDes = null)
         {
             Services = services;
             StreamOptions = kafkaOptions.Streams.Find(s => s.ApplicationId == applicationId);
-            GenerateStreamBuilder();
+            GenerateStreamBuilder(keySerDes, valueSerDes);
         }
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -44,20 +43,19 @@ namespace Devon4Net.Infrastructure.Kafka.Streams.Services
 
         #region StreamConfiguration
 
-        private void GenerateStreamBuilder()
+        private void GenerateStreamBuilder(ISerDes<TKey> keySerDes, ISerDes<TValue> valueSerDes)
         {
             StreamBuilder = new StreamBuilder();
             CreateStreamBuilder();
-            Stream = new KafkaStream(StreamBuilder.Build(), GetConfigFromOptions());
+            Stream = new KafkaStream(StreamBuilder.Build(), GetConfigFromOptions(keySerDes, valueSerDes));
         }
 
-        // 
-        private IStreamConfig GetConfigFromOptions()
+        private IStreamConfig GetConfigFromOptions(ISerDes<TKey> keySerDes, ISerDes<TValue> valueSerDes)
         {
             var config = new StreamConfig();
             
-            config.DefaultValueSerDes = new DefaultKafkaSerDes<TValue>();
-            config.DefaultKeySerDes = new StringSerDes();
+            config.DefaultKeySerDes = keySerDes ?? GetSerDesForType<TKey>();
+            config.DefaultValueSerDes = valueSerDes ?? GetSerDesForType<TValue>();
 
             config.ApplicationId = StreamOptions.ApplicationId;
             config.BootstrapServers = StreamOptions.Servers;
@@ -74,6 +72,18 @@ namespace Devon4Net.Infrastructure.Kafka.Streams.Services
         {
             var sp = Services.BuildServiceProvider();
             return sp.GetService<TS>();
+        }
+
+        private ISerDes<T> GetSerDesForType<T>()
+        {
+            if (typeof(T) == typeof(string)) return (ISerDes<T>) new StringSerDes();
+            else if (typeof(T) == typeof(byte[])) return (ISerDes<T>) new ByteArraySerDes();
+            else if (typeof(T) == typeof(char)) return (ISerDes<T>) new CharSerDes();
+            else if (typeof(T) == typeof(double)) return (ISerDes<T>) new DoubleSerDes();
+            else if (typeof(T) == typeof(float)) return (ISerDes<T>) new FloatSerDes();
+            else if (typeof(T) == typeof(int)) return (ISerDes<T>) new Int32SerDes();
+            else if (typeof(T) == typeof(long)) return (ISerDes<T>) new Int64SerDes();
+            return new DefaultKafkaSerDes<T>();
         }
         #endregion
     }

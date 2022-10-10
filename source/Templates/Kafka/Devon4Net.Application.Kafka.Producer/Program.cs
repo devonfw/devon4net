@@ -1,3 +1,4 @@
+using Devon4Net.Application.Kafka.Producer.Business.FileManagement.Dto;
 using Devon4Net.Application.Kafka.Producer.Business.KafkaManagement.Handlers;
 using Devon4Net.Application.WebAPI.Configuration;
 using Devon4Net.Application.WebAPI.Configuration.Application;
@@ -20,7 +21,8 @@ builder.Services.SetupSwagger(builder.Configuration);
 
 //KAFKA CONFIGURATION
 builder.Services.SetupKafka(builder.Configuration);
-builder.Services.AddKafkaProducer<MessageProducerHandler>(builder.Configuration, "FileInput");
+builder.Services.AddKafkaProducer<FileProducerHandler, string, DataPieceDto<byte[]>>("FileProducer");
+builder.Services.AddKafkaProducer<MessageProducerHandler, string, string>("MessageProducer");
 #endregion
 
 var app = builder.Build();

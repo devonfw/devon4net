@@ -11,6 +11,5 @@ namespace Devon4Net.Application.Kafka.Consumer.Domain.Database
             : base(options)
         {
         }
-
     }
 }

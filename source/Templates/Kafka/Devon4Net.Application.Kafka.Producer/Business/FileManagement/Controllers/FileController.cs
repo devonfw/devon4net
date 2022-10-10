@@ -1,5 +1,4 @@
-﻿using Devon4Net.Application.Kafka.Producer.Business.FileManagement.Dto;
-using Devon4Net.Application.Kafka.Producer.Business.FileManagement.Helpers;
+﻿using Devon4Net.Application.Kafka.Producer.Business.FileManagement.Helpers;
 using Devon4Net.Application.Kafka.Producer.Business.KafkaManagement.Handlers;
 using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.AspNetCore.Authorization;
@@ -7,18 +6,25 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Devon4Net.Application.Kafka.Producer.Business.FileManagement.Controllers
 {
-
+    /// <summary>
+    /// File uploading controller
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class FileController : ControllerBase
-    {
-        public MessageProducerHandler Producer { get; set; }
+    { 
+        public FileProducerHandler Producer { get; set; }
 
-        public FileController(MessageProducerHandler messageProducer)
+        public FileController(FileProducerHandler messageProducer)
         {
             Producer = messageProducer;
         }
 
+        /// <summary>
+        /// Posts the file to the kafka by pieces
+        /// </summary>
+        /// <param name="file">File selected from the system</param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
@@ -35,7 +41,6 @@ namespace Devon4Net.Application.Kafka.Producer.Business.FileManagement.Controlle
                 {
                     await Producer.SendMessage("jsonKey", piece);
                 }
-                
             }
             catch (Exception e)
             {
