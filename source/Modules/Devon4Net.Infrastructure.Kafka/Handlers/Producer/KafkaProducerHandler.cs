@@ -79,13 +79,27 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers.Producer
 
         private static ISerializer<T> GetSerializerForType<T>()
         {
-            if (typeof(T) == typeof(string)) return (ISerializer <T>) Serializers.Utf8;
-            else if (typeof(T) == typeof(byte[])) return (ISerializer<T>) Serializers.ByteArray;
-            else if (typeof(T) == typeof(double)) return (ISerializer<T>) Serializers.Double;
-            else if (typeof(T) == typeof(float)) return (ISerializer<T>) Serializers.Single;
-            else if (typeof(T) == typeof(int)) return (ISerializer<T>) Serializers.Int32;
-            else if (typeof(T) == typeof(long)) return (ISerializer<T>) Serializers.Int64;
-            return new DefaultKafkaSerializer<T>();
+            var type = typeof(T);
+
+            switch (Type.GetTypeCode(type))
+            {
+                case TypeCode.String:
+                    return (ISerializer<T>) Serializers.Utf8;
+                case TypeCode.Double:
+                    return (ISerializer<T>) Serializers.Double;
+                case TypeCode.Single:
+                    return (ISerializer<T>) Serializers.Single;
+                case TypeCode.Int32:
+                    return (ISerializer<T>) Serializers.Int32;
+                case TypeCode.Int64:
+                    return (ISerializer<T>) Serializers.Int64;
+                case TypeCode.Object:
+                    return type == typeof(byte[])
+                        ? (ISerializer<T>)Serializers.ByteArray
+                        : new DefaultKafkaSerializer<T>();
+                default:
+                    return new DefaultKafkaSerializer<T>();
+            }
         }
 
         private ProducerOptions GetProducerOptions(string producerId)

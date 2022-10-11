@@ -11,7 +11,7 @@ namespace Devon4Net.Infrastructure.Kafka
 {
     public static class KafkaConfiguration
     {
-        private static KafkaOptions KafkaOptions { get; set; }
+        private static KafkaOptions KafkaOptions;
 
         public static void SetupKafka(this IServiceCollection services, IConfiguration configuration)
         {

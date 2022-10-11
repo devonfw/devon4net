@@ -6,7 +6,6 @@ using Devon4Net.Infrastructure.Kafka.Options;
 using Devon4Net.Infrastructure.Kafka.Serialization;
 using Devon4Net.Infrastructure.Logger.Logging;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace Devon4Net.Infrastructure.Kafka.Handlers.Consumer
 {
@@ -131,15 +130,29 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers.Consumer
             return result;
         }
 
-        private IDeserializer<T> GetDeserializerForType<T>()
+        private static IDeserializer<T> GetDeserializerForType<T>()
         {
-            if (typeof(T) == typeof(string)) return (IDeserializer<T>) Deserializers.Utf8;
-            else if (typeof(T) == typeof(byte[])) return (IDeserializer<T>) Deserializers.ByteArray;
-            else if (typeof(T) == typeof(double)) return (IDeserializer<T>) Deserializers.Double;
-            else if (typeof(T) == typeof(float)) return (IDeserializer<T>) Deserializers.Single;
-            else if (typeof(T) == typeof(int)) return (IDeserializer<T>) Deserializers.Int32;
-            else if (typeof(T) == typeof(long)) return (IDeserializer<T>) Deserializers.Int64;
-            return new DefaultKafkaDeserializer<T>();
+            var type = typeof(T);
+
+            switch (Type.GetTypeCode(type))
+            {
+                case TypeCode.String: 
+                    return (IDeserializer<T>) Deserializers.Utf8;
+                case TypeCode.Double:
+                    return (IDeserializer<T>) Deserializers.Double;
+                case TypeCode.Single:
+                    return (IDeserializer<T>) Deserializers.Single;
+                case TypeCode.Int32:
+                    return (IDeserializer<T>) Deserializers.Int32;
+                case TypeCode.Int64:
+                    return (IDeserializer<T>) Deserializers.Int64;
+                case TypeCode.Object:
+                    return type == typeof(byte[]) 
+                        ? (IDeserializer<T>) Deserializers.ByteArray
+                        : new DefaultKafkaDeserializer<T>();
+                default:
+                    return new DefaultKafkaDeserializer<T>();
+            }
         }
 
         private static ConsumerConfig GetDefaultKafkaConsumerConfiguration(ConsumerOptions consumer)

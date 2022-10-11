@@ -10,7 +10,7 @@ namespace Devon4Net.Infrastructure.Kafka.Handlers.Administration
 {
     public class KafkaAdministrationHandler : IKafkaAdministrationHandler
     {
-        public KafkaOptions KafkaOptions;
+        private readonly KafkaOptions KafkaOptions;
 
         public KafkaAdministrationHandler(IOptions<KafkaOptions> kafkaOptions) 
         {

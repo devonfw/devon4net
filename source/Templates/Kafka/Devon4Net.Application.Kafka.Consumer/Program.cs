@@ -28,7 +28,7 @@ builder.Services.SetupUnitOfWork(typeof(DIConfiguration));
 
 //KAFKA CONFIGURATION
 builder.Services.SetupKafka(builder.Configuration);
-builder.Services.AddKafkaConsumer<FileConsumerHandler, string, DataPieceDto<byte[]>>("FileConsumer", valueDeserializer: new DefaultKafkaDeserializer<DataPieceDto<byte[]>>());
+builder.Services.AddKafkaConsumer<FileConsumerHandler, string, DataPieceDto<byte[]>>("FileConsumer");
 builder.Services.AddKafkaConsumer<MessageConsumerHandler, string, string>("MessageConsumer");
 #endregion
 

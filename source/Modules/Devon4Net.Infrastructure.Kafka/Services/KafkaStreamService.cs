@@ -12,14 +12,15 @@ namespace Devon4Net.Infrastructure.Kafka.Streams.Services
 {
     public abstract class KafkaStreamService<TKey, TValue> : BackgroundService where TValue : class where TKey : class
     {
-       
+        private bool _disposed;
+
         private StreamOptions StreamOptions { get; set; }
         private KafkaStream Stream { get; set; }
         protected StreamBuilder StreamBuilder { get; set; }
         protected IServiceCollection Services { get; }
         public abstract void CreateStreamBuilder();
 
-        public KafkaStreamService(IServiceCollection services, KafkaOptions kafkaOptions, string applicationId, ISerDes<TKey> keySerDes = null, ISerDes<TValue> valueSerDes = null)
+        protected KafkaStreamService(IServiceCollection services, KafkaOptions kafkaOptions, string applicationId, ISerDes<TKey> keySerDes = null, ISerDes<TValue> valueSerDes = null)
         {
             Services = services;
             StreamOptions = kafkaOptions.Streams.Find(s => s.ApplicationId == applicationId);
@@ -32,8 +33,23 @@ namespace Devon4Net.Infrastructure.Kafka.Streams.Services
 
         public override void Dispose()
         {
-            Stream.Dispose();
-            base.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                Stream.Dispose();
+                base.Dispose();
+            }
+
+            _disposed = true;
         }
 
         public async override Task StopAsync(CancellationToken cancellationToken)
@@ -74,16 +90,31 @@ namespace Devon4Net.Infrastructure.Kafka.Streams.Services
             return sp.GetService<TS>();
         }
 
-        private ISerDes<T> GetSerDesForType<T>()
+        private static ISerDes<T> GetSerDesForType<T>()
         {
-            if (typeof(T) == typeof(string)) return (ISerDes<T>) new StringSerDes();
-            else if (typeof(T) == typeof(byte[])) return (ISerDes<T>) new ByteArraySerDes();
-            else if (typeof(T) == typeof(char)) return (ISerDes<T>) new CharSerDes();
-            else if (typeof(T) == typeof(double)) return (ISerDes<T>) new DoubleSerDes();
-            else if (typeof(T) == typeof(float)) return (ISerDes<T>) new FloatSerDes();
-            else if (typeof(T) == typeof(int)) return (ISerDes<T>) new Int32SerDes();
-            else if (typeof(T) == typeof(long)) return (ISerDes<T>) new Int64SerDes();
-            return new DefaultKafkaSerDes<T>();
+            var type = typeof(T);
+
+            switch (Type.GetTypeCode(type))
+            {
+                case TypeCode.String:
+                    return (ISerDes<T>)new StringSerDes();
+                case TypeCode.Double:
+                    return (ISerDes<T>)new DoubleSerDes();
+                case TypeCode.Single:
+                    return (ISerDes<T>)new FloatSerDes();
+                case TypeCode.Char:
+                    return (ISerDes<T>)new CharSerDes();
+                case TypeCode.Int32:
+                    return (ISerDes<T>)new Int32SerDes();
+                case TypeCode.Int64:
+                    return (ISerDes<T>)new Int64SerDes();
+                case TypeCode.Object:
+                    return type == typeof(byte[])
+                        ? (ISerDes<T>)new ByteArraySerDes()
+                        : new DefaultKafkaSerDes<T>();
+                default:
+                    return new DefaultKafkaSerDes<T>();
+            }
         }
         #endregion
     }

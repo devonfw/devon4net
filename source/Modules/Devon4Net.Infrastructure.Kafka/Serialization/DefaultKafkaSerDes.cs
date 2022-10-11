@@ -6,8 +6,10 @@ namespace Devon4Net.Infrastructure.Kafka.Serialization
 {
     public class DefaultKafkaSerDes<T> : ISerDes<T>
     {
+        
         public void Initialize(SerDesContext context)
         {
+            // Purposely empty, necessary to implement the interface but nothing needs to be initialized at the moment
         }
 
         public byte[] Serialize(T data, SerializationContext context)

@@ -9,7 +9,7 @@ namespace Devon4Net.Application.Kafka.Producer.Business.KafkaManagement.Controll
     /// </summary>
     public class MessageController : Controller
     {
-        public MessageProducerHandler MessageProducer;
+        private readonly MessageProducerHandler MessageProducer;
 
         public MessageController(MessageProducerHandler messageProducer)
         {

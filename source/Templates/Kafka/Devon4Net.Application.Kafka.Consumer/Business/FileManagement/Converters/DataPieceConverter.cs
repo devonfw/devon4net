@@ -3,7 +3,7 @@ using Devon4Net.Application.Kafka.Consumer.Domain.Entities;
 
 namespace Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Converters
 {
-    public class DataPieceConverter
+    public static class DataPieceConverter
     {
         public static DataPieceDto<byte[]> ModelToDto(DataPiece<byte[]> item)
         {

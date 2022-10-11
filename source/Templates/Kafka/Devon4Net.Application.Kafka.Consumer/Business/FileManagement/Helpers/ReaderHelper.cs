@@ -14,12 +14,13 @@ namespace Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Helpers
         public static async Task ReadPiecesAndWriteToFile(IEnumerable<DataPieceDto<byte[]>> pieces, string directoryPath, string fileName = "output")
         {
             pieces = pieces.OrderBy(o => o.Position);
-            using (var fileStream = new FileStream(@$"{directoryPath}\{fileName}{pieces.First().FileExtension}", FileMode.Create))
+
+            using var fileStream = new FileStream(@$"{directoryPath}\{fileName}{pieces.First().FileExtension}", FileMode.Create);
+
+            foreach (var data in pieces.Select(p => p.Data))
             {
-                foreach (var piece in pieces)
-                {
-                    await fileStream.WriteAsync(piece.Data, 0, piece.Data.Length);
-                }
+                var readOnlyMemory = new ReadOnlyMemory<byte>(data);
+                await fileStream.WriteAsync(readOnlyMemory).ConfigureAwait(false);
             }
         }
     }
