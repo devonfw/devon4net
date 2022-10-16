@@ -1912,6 +1912,17 @@ Now is the time to configure all the producers and consumers you will be using i
         "EnableSslCertificateVerification": false,
         "Debug": "" 
       }
+    ],
+    "Streams": [
+      {
+        "ApplicationId": "Stream1",
+        "Servers": "127.0.0.1:9092",
+        "AutoOffsetReset": "earliest",
+        "StateDir": "./MyStream",
+        "CommitIntervalMs": "5000",
+        "Guarantee": "at_least_once",
+        "MetricsRecording": "debug"
+      }
     ]
   }
 ----
@@ -1928,7 +1939,7 @@ For the producer you can do something as the following:
 ----
 public class MessageProducerHandler : KafkaProducerHandler<string,string>
 {
-    public MessageProducerHandler(IServiceCollection services, IKakfkaHandler kafkaHandler, string producerId) : base(services, kafkaHandler, producerId)
+    public MessageProducerHandler(IServiceCollection services, KafkaOptions kafkaOptions, string producerId, ISerializer<string> keySerializer = null, ISerializer<string> valueSerializer = null) : base(services, kafkaOptions, producerId, keySerializer, valueSerializer)
     {
     }
 }
@@ -1938,7 +1949,7 @@ You will need to add this handler to your dependencies. For that you can use the
 
 [source, c#]
 ----
-builder.Services.AddKafkaProducer<MessageProducerHandler>("Producer1");
+builder.Services.AddKafkaProducer<MessageProducerHandler, string, string>("Producer1");
 ----
 
 
@@ -1981,7 +1992,7 @@ The consumer is a little different, as you can see in the following piece of cod
 ----
 public class MessageConsumerHandler : KafkaConsumerHandler<string, string>
 {
-    public MessageConsumerHandler(IServiceCollection services, IKakfkaHandler kafkaHandler, string consumerId, bool commit = false, int commitPeriod = 5) : base(services, kafkaHandler, consumerId, commit, commitPeriod)
+    public MessageConsumerHandler(IServiceCollection services, KafkaOptions kafkaOptions, string consumerId, IDeserializer<string> keyDeserializer = null, IDeserializer<string> valueDeserializer = null, bool commit = false, int commitPeriod = 5, bool enableConsumerFlag = true) : base(services, kafkaOptions, consumerId, keyDeserializer, valueDeserializer, commit, commitPeriod, enableConsumerFlag)
     {
     }
 
@@ -1996,8 +2007,135 @@ Similar to the producer, the Consumer also needs to be related to a configuratio
 
 [source, c#]
 ----
-builder.Services.AddKafkaConsumer<MessageConsumerHandler>("Consumer1");
+builder.Services.AddKafkaConsumer<MessageConsumerHandler, string, string>("Consumer1");
 ----
+
+=== Stream
+
+To create a stream with some logic on it you will need to create a service that extends the class `KafkaStreamService<KeyType, ValueType>` and override its method `CreateStreamBuilder` with something as follows:
+
+[source, c#]
+----
+public class MessageStreamService : KafkaStreamService<string, string>
+{
+    public MessageStreamService(IServiceCollection services, KafkaOptions kafkaOptions, string applicationId, ISerDes<string> keySerDes = null, ISerDes<string> valueSerDes = null) : base(services, kafkaOptions, applicationId, keySerDes, valueSerDes)
+    {
+    }
+
+    public override void CreateStreamBuilder()
+    {
+        StreamBuilder.Stream<string, string>("message_producer")
+            .Peek((k, v) => Console.WriteLine($"MessageStream says -> Key: {k} | Value: {v}"))
+            .To("message_consumer");
+    }
+}
+----
+
+The StreamBuilder will allow you to add all the logic to the stream. You can check https://lgouellec.github.io/kafka-streams-dotnet/[Streamiz Docs] to learn about the Stateless and Statefull Processors available on Kafka Streams.
+
+In the example, the `Stream<>()` method will create a Stream for the topic "message_producer". Inside this stream, the method `Peek` will do some operations based on the input data and return the input stream as-is, allowing to add more logic to it. In this case we use it to take a look to what is happening inside the stream.
+
+Then the method `To` will output the messages processed to another Stream, in this case "message_consumer".
+
+[source, c#]
+----
+builder.Services.AddKafkaStreamService<MessageStreamService, string, string>("message_stream");
+----
+
+=== Serialization
+
+Kafka works with byte arrays so we need to serialize the data before sending it and deserializing after receiving.
+
+The process of turning objects into bytes is called serialization. The opposite procedure, known as deserialization, transforms a stream of bytes into an object.
+
+In devon4net, we provide default serializers for basic types and a default one for serializing custom objects. However, you can specify your own custom ones.
+
+==== Producer
+
+The Producer will need to know how to serialize both, the *key* and the *value* data into bytes. So you will need to create a class that implements the interface `ISerializer<T>` from the package `Confluent.Kafka`. For example:
+
+[source, c#]
+----
+public class CustomSerializer<T> : ISerializer<T>
+{
+    public byte[] Serialize(T data, SerializationContext context)
+    {
+        return JsonSerializer.SerializeToUtf8Bytes(data, typeof(T));
+    }
+}
+----
+
+Then you can indicate the use of this serializer for the value in your `Program.cs`, as follows:
+
+[source, c#]
+----
+builder.Services.AddKafkaProducer<MessageProducerHandler, string, string>("message_stream", valueSerializer: new CustomSerializer());
+----
+
+==== Consumer
+
+The Producer will need to know how to deserialize both, the *key* and the *value* bytes to readable data. So you will need to create a class that implements the interface `IDeserializer<T>` from the package `Confluent.Kafka`. For example:
+
+[source, c#]
+----
+public class CustomDeserializer<T> : IDeserializer<T>
+{
+    public T Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context)
+    {
+        return (T) JsonSerializer.Deserialize(new MemoryStream(data.ToArray()), typeof(T));
+    }
+}
+----
+
+Then you can indicate the use of this deserializer for the key in your `Program.cs`, as follows:
+
+[source, c#]
+----
+builder.Services.AddKafkaConsumer<MessageConsumerHandler, string, string>("Consumer1", keyDeserializer: new CustomDeserializer());
+----
+
+==== Stream
+
+On the other hand, as the stream is located between the producer and the consumer, it will need both to serialize and deserialize, also the *key* and the *value*. For the stream, you will need to create a class that implements the interface `ISerDes<T>` from the package `Streamiz.Kafka.Net.SerDes`. For example:
+
+[source, c#]
+----
+public class CustomKafkaSerDes<T> : ISerDes<T>
+{
+    public void Initialize(SerDesContext context)
+    {
+        // Purposely empty, necessary to implement the interface but nothing needs to be initialized at the moment
+    }
+
+    public byte[] Serialize(T data, SerializationContext context)
+    {
+        return JsonSerializer.SerializeToUtf8Bytes(data, typeof(T));
+    }
+
+    public byte[] SerializeObject(object data, SerializationContext context)
+    {
+        return JsonSerializer.SerializeToUtf8Bytes(data, typeof(T));
+    }
+
+    public T Deserialize(byte[] data, SerializationContext context)
+    {
+        return (T) JsonSerializer.Deserialize(new MemoryStream(data), typeof(T));
+    }
+
+    object ISerDes.DeserializeObject(byte[] data, SerializationContext context)
+    {
+        return (T) JsonSerializer.Deserialize(new MemoryStream(data), typeof(T));
+    }
+}
+----
+
+Then you can indicate the use of this "SerDes" in your `Program.cs`, as follows:
+
+[source, c#]
+----
+builder.Services.AddKafkaStreamService<MessageStreamService, string, string>("message_stream", keySerDes: new CustomKafkaSerDes(), valueSerDes: new CustomKafkaSerDes());
+----
+
 
 == How to: Use Nexus
 
@@ -2010,15 +2148,15 @@ To create a new repository of this type, we must first create a new instance of 
 [source, C#]
 ----
 var rawHostedRepository new RawHostedRepository
+{
+    Name = "SampleRepository",
+    Online = true,
+    Storage = CreateDefaultStorage(),
+    Raw = new Raw
     {
-        Name = "SampleRepository",
-        Online = true,
-        Storage = CreateDefaultStorage(),
-        Raw = new Raw
-        {
-            ContentDisposition = "ATTACHMENT"
-        }
-    };
+        ContentDisposition = "ATTACHMENT"
+    }
+};
 ----
 + 
 Once this object is created, a call to the nexus handler will be performed, specifically the `Task CreateRepository<T>(T repositoryDto)` method. The example is shown below:
