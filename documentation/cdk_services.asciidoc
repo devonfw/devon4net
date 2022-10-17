@@ -1,0 +1,1942 @@
+:toc:
+
+= Devon4Net.Infrastructure.AWS.CDK
+
+toc::[]
+
+This component is part of the AWS Stack in Devon4Net. It has the necessary classes to configure your whole AWS infrastructure by using a json configuration file.
+
+== Key classes
+
+In this section you will find an overview of the code structure and the most important classes that intervene in the CDK component.
+
+=== CdkOptions
+
+This is the class that maps the JSON file into an object with all of the required parameters. This class its used as a parameter for the `ProvisionStack` object that we will explain in the next section.
+
+[source, c#]
+----
+public class CdkOptions
+{
+    public ProvisionStackOptions ProvisionStack { get; set; }
+    public List<RoleOptions> Roles { get; set; }
+    .  
+    .
+    .
+    public List<ManagedPolicyOptions> ManagedPolicies { get; set; }
+    public CognitoOptions Cognito { get; set; }
+}
+----
+
+In your application you will need to create an instance of the object and read the configuration via Options Pattern.
+
+NOTE: You can follow a guide on how to set up and use the package in the How To documentation.
+
+=== ProvisionStack
+
+This partial class is classified according to the type of service they define (`{TypeOfService}ProvisionStack.cs`). Together, this pieces make up the `ProvisionStack` class, which is found in the component's `Stack` directory and its Process() method lets you create infrastructure:
+
+[source, c#]
+----
+public void Process()
+{
+    CreatePolicyDocuments();
+    CreateManagedPolicies();
+    CreateOrLocateVpcs();
+    LocateSubnetGroups();
+    LocateSubnets();
+    CreateOrLocateSecurityGroups();
+    CreateRoles();
+    CreateOrLocateS3Buckets();
+    CreateLambdas();
+    CreateS3Events();
+    CreateLogGroups();
+    AddLambdaPolicies();
+    CreateEcrRepositories();
+    CreateRules();
+    CreateApiGateways();
+    CreateCodeBuildProjects();
+    CreateDatabaseParameterGroups();
+    CreateDatabases();
+    CreateSecrets();
+    CreateSsmParameters();
+    CreateNetworkTargetGroup();
+    CreateEcsAutoScalingGroups();
+    CreateEcsTaskDefinitions();
+    CreateEcsClusters();
+    CreateAsgCapacityProviders();
+    CreateEcsService();
+    CreatePipelines();
+    CreateNetworkLoadBalancers();
+    CreateDms();
+    CreateDynamoDB();
+    CreateWaf();
+    CreateSns();
+    CreateCognito();
+
+    App.Synth();
+}
+----
+
+As you can see this function calls all of the services that we wish to configure in a specific order sequence since they may have dependencies between them.
+
+=== AwsCdkHandlerManager
+
+This is another partial class, also classified by service:
+
+.Folder structure of the AwsCdkHandlerManager partial class
+image::images/AWS-CDK-resources.png[]
+
+As you can see on the image generally each service has two classes the `I{TypeOfRecource}HandlerManager` interface and its implementation, and is in charge of controlling the handler for each service.
+
+=== AwsCdk{TypeOfService}Handler
+
+This Handler allows you to connect with the AWS CDK NuGet. every service has its own handler. For example, in case of the Lambda service (`AwsCdkLambdaHandler`):
+
+[source, c#]
+----
+public IFunctionProps CreateLambdaProperties(IBucket codeBucket, string codeFileName...)
+{
+    return new FunctionProps
+    {
+        Code = Code.FromBucket(codeBucket, codeFileName),
+        Handler = lambdaHandler,
+        Runtime = runtime,
+        MemorySize = memorySize,
+        Timeout = Duration.Seconds(timeOutSeconds),
+        FunctionName = lambdaName,
+        Role = lambdaRole,
+        Vpc = vpc,
+        SecurityGroups = new ISecurityGroup[]
+        {
+            securityGroup
+        },
+        VpcSubnets = new SubnetSelection
+        {
+            Subnets = subnets
+        },
+        Environment = environmentVariables
+    };
+}
+----
+
+In This case the `CreateLambdaProperties` creates an instance of the `FunctionProp` class with all the parameters needed to create the Lambda function.
+
+== Configuration
+
+You can configure and define your infrastructure through the `appsettings.{environment}.json` file. This configuration is divided into sections by resource type, with all services configuration being defined in each of the sections. 
+
+From all the fields in this file, the only one that is mandatory is the `ProvisionStack` section, which will contain the credentials, stack name, etc. of the environment that is going to be deployed. The rest are optional, you will need to define the configuration for the ones you will be adding to your infrastructure.
+
+All resource types have a field `Id` that is used as an internal identifier, so if one resource needs to reference another, that reference is made using the value in the `Id` field.
+
+The whole file will look as follows:
+
+[source, json]
+----
+{
+    "CdkOptions": [
+        {
+            "ProvisionStack": {...},
+            "Vpcs": [...],
+            "Subnets": [...],
+            "SecurityGroups": [...],
+            "S3Buckets": [...],
+            "Roles": [...],
+            "Lambdas": [...],
+            "ApiGateways": [...],
+            "LambdaRules": [...],
+            "Databases": [...],
+            "Secrets": [...],
+            "CodeBuildProjects": [...],
+            "Pipelines": [...]
+        }
+    ]
+}
+----
+
+The following sections describe the configuration for each of the services that you can set up with the CDK. Before reading it take into account that the json samples provided have been filled with sample values:
+
+* The *string* fields have been established to `string`.
+* The *boolean* fields have been established to `true`.
+* The *int* fields have been established to `0`.
+* The *double* fields have been established to `0.0`.
+
+Also *[required fields]* have been marked with brackets in the property list of each of the services.
+
+=== Provision Stack
+
+A stack is a grouping of AWS resources that can be managed as a single entity.
+In other words, by creating, updating, or deleting stacks, you can create, update, or delete a collection of resources. 
+
+This is the information related to configure the **Provision Stack** section.
+
+[source, json]
+----
+"ProvisionStack":
+{
+    "Id": "string",                        // Internal Id to identify the provisioned stack
+    "ApplicationName": "string",           // Name of the stack
+    "EnvironmentName": "string",           // Name of the environment
+    "AwsAccount": "string",                // Id of the AWS account
+    "AwsRegion": "string",                 // AWS Region
+    "GenerateBootstrapVersionRule": true   // Add a Rule verifying the bootstrap version.
+}
+----
+
+* *[Id]*: Internal identifier to identify the provisioned stack.
+* *[ApplicationName]*: Name of the configuration stack.
+* *[EnvironmentName]*: Name of the environment.
+* *[AwsAccount]*: Identifier of the AWS account.
+* *[AwsRegion]*: Region code for the AWS deployment.
+* *[GenerateBootstrapVersionRule]*: Boolean that indicates Whether to add a Rule to the stack template verifying the bootstrap stack version. Generally should be left set to true, unless you explicitly want to be able to deploy to an unbootstrapped environment.
+
+=== ApiGateways
+
+Amazon API Gateway is a fully managed service that enables developers to easily create, publish, maintain, monitor, and secure APIs of any size. 
+
+This is the information related to configure the **Api Gateways** section.
+
+[source, json]
+----
+"ApiGateways": 
+[
+  {
+    "Id": "string",                     // Internal Id to identify the Api Gateway
+    "RestApiName": "string",            // Name of the Api Gateway
+    "LambdaName": "string",             // Name of the lambda to which the Api Gateway will be applied
+    "EnableAccessLogging": true,        // Enable / Disable Api-Gateway access logging (true by default)
+    "TracingEnabled": true,             // Enable / Disable Api-Gateway tracing
+    "CloudWatchLoggingLevel": "string", // Log level of the Api-Gateway to CloudWatch, the allowed values are INFO, ERROR and OFF (OFF if not specified)
+    "BinaryMediaTypes": [               // List of binary types accepted in the Api Gateway
+      "string"
+    ],
+    "Resources":[                       
+      {
+        "ResourceName":"string",
+        "IsProxy":true,
+        "Resources":[                   
+        ],
+        "Method":[
+          {
+            "HttpMethod":"string",
+            "ApiLambdaName":"string",
+            "IntegrationLambdaOptions":{
+              "AllowTestInvoke": true,
+              "Proxy": true
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
+----
+
+* *[Id]*: Internal Id to identify the Api Gateway.
+* *[RestApiName]*: Name of the Api Gateway.
+* *[LambdaName]*: Name of the lambda to which the Api Gateway will be applied.
+* *EnableAccessLogging*: Enable / Disable Api-Gateway access logging (true by default).
+* *TracingEnabled*: Enable / Disable Api-Gateway tracing.
+* *CloudWatchLoggingLevel*: Log level of the Api-Gateway to CloudWatch, the allowed values are INFO, ERROR and OFF (OFF if not specified)
+* *[BinaryMediaTypes]*: List of binary types accepted in the Api Gateway.
+* *Resources*: This resources also can contain other resources which are also the same type:
+** *ResourceName*: TODO
+** *IsProxy*: TODO
+** *Resources*: TODO
+** *Method*: TODO
+*** *HttpMethod*: TODO
+*** *ApiLambdaName*: TODO
+*** *IntegrationLambdaOptions*: TODO
+**** *AllowTestInvoke*: TODO
+**** *Proxy*: TODO 
+
+=== AutoScalingGroups
+
+An Auto Scaling group is a collection of EC2 instances that are treated as a logical grouping for automatic scaling and management purposes.
+You can also use Amazon EC2 Auto Scaling features like health check replacements and scaling policies with an Auto Scaling group. 
+
+This is the information related to configure the **Auto Scaling Groups** section:
+
+[source, json]
+----
+"AutoScalingGroups": 
+[
+    {
+        "Id": "string",                                           // Internal identification for the AutoScalingGroup
+        "AutoScalingGroupName": "string",                         // Name of the AutoScalingGroup
+        "InstanceTypeId": "string",                               // Identification of the machine that will be instantiated
+        "MachineImageRegion": "string",                           // AWS region of the AutoScalingGroup
+        "MachineImage": "string",                                 // Machine image type, expects genericLinux or genericWindows. 
+        "VpcId": "string",                                        // Internal Id of the VPC the AutoScalingGroup belongs to
+        "AmiId": "string",                                        // AMI identification of the machine image to be used
+        "AllowAllOutbound" : "bool",                              // Allows all outbound traffic
+        "MinCapacity": 0,                                         // Minimum number of machine instances the AutoScalingGroup will run
+        "MaxCapacity": 0,                                         // Maximum number of machine instances the AutoScalingGroup will run
+        "DesiredCapacity": 0,                                     // Number of machine instances required to reach an stable status
+        "SecurityGroupId": "string",                              // Internal Id of the Security Group atached to the EC2 instances for the AutoScalingGroup
+        "Region": "string",                                       // TODO-> 0 references, future update or deprecated?
+        "CreationTimeOut": 0,                                     // Creation timeout time in minutes
+        "RoleId": "string",                                       // Role attached to the AutoScalingGroup
+        "KeyPairName": "string",                                  // KeyPair associated to the instantiated machines to cypher the access credentials
+        "BlockDevices":                                           // List of block devices used by the instantiated machines
+        [
+            {
+                "BlockDeviceName": "string",                      // Name of the block device
+                "BlockDeviceVolume":           // Describes a block device mapping for an EC2 instance or Auto Scaling group
+                {   
+                   "EbsDevice":                // Creates a new Elastic Block Storage device from an existing snapshot
+                        {
+                            "DeleteOnTermination": true,          // Remove the volume when the instance is terminated
+                            "Encrypted": true,                    // Specifies if the volume is encrypted or not
+                            "Iops": 0,                            // The number of I/O operations per second (IOPS) to provision for the volume.
+                            "SnapshotId": "string",               // The snapshot ID of the volume to use.
+                            "VolumeSize": 0,                      // Size of the volume defined in GB 
+                            "VolumeIndex": 0,                     // Index of the volume
+                            "EbsDeviceVolumeType": "string"       // Type of the volume, the default value is GP2, expects STANDARD, IO1, GP2, GP3, ST1 or SC1.
+                        },
+                    "CreationOption": "string"                    // Type of creation, expects EBS, EBS_FROM_SNAPSHOT_ID, EPHEMERAL, NO_DEVICE.
+                }
+            }
+        ],
+        "EnableProtectionFromScaleIn" : true,                      // True to control whether an Auto Scaling group can terminate a particular instance when scaling in
+        "SubnetsId": 
+        [
+          "string", "string"
+        ],                                                         // Internal Id of the Subnet the AutoScalingGroup belongs to
+        "UserData":
+        [
+          "string","string"
+        ]                                                          // User data to configure an instance during launch
+    }
+]
+----
+
+* *[Id]*: Internal identification for the AutoScalingGroup.
+* *[AutoScalingGroupName]*: Name of the AutoScalingGroup.
+* ($$*$) *[InstanceTypeId]*: Identification of the machine that will be instantiated.
+* *[MachineImageRegion]*: AWS region of the AutoScalingGroup.
+* *[MachineImage]*: Machine image type, expects:
+** `genericLinux`: Linux machine.
+** `genericWindows`: Windows machine.
+* *[VpcId]*: Internal Id of the VPC the AutoScalingGroup belongs to.
+* *[AmiId]*: AMI identification of the machine image to be used.
+* *[AllowAllOutbound]*: Allows all outbound traffic.
+* *[MinCapacity]*: Minimum number of machine instances the AutoScalingGroup will run.
+* *[MaxCapacity]*: Maximum number of machine instances the AutoScalingGroup will run.
+* *[DesiredCapacity]*: Number of machine instances required to reach an stable status.
+* *[SecurityGroupId]*: Internal Id of the Security Group atached to the EC2 instances for the AutoScalingGroup.
+* *[Region]*: TODO-> 0 references, future update or deprecated?
+* *[CreationTimeOut]*: Creation timeout time in minutes.
+* *[RoleId]*: Role attached to the AutoScalingGroup.
+* *[KeyPairName]*: KeyPair associated to the instantiated machines to cypher the access credentials.
+* *[BlockDevices]*: List of block devices used by the instantiated machines:
+** ($**$) *[BlockDeviceName]*: Name of the block device.
+** *[BlockDeviceVolume]*: Describes a block device mapping for an EC2 instance or Auto Scaling group.
+*** *[EbsDevice]*: Creates a new Elastic Block Storage device from an existing snapshot.
+**** *[DeleteOnTermination]*: Remove the volume when the instance is terminated
+**** *[Encrypted]*: Specifies if the volume is encrypted or not.
+**** *[Iops]*: The number of I/O operations per second (IOPS) to provision for the volume.
+**** *[SnapshotId]*: The snapshot ID of the volume to use.
+**** *[VolumeSize]*: Size of the volume defined in GB.
+**** *[VolumeIndex]*: Index of the volume.
+**** *[EbsDeviceVolumeType]*: Type of the volume, the default value is GP2,string value that expects:
+***** `STANDARD`: Magnetic
+***** `IO1`: Provisioned IOPS SSD - IO1.
+***** `GP2`: General Purpose SSD - GP2.
+***** `GP3`: General Purpose SSD - GP3.
+***** `ST1`: Throughput Optimized HDD.
+***** `SC1`: Cold HDD.
+*** *[CreationOption]*: Type of creation, string value that expects:
+**** `EBS`: Creates a new Elastic Block Storage device
+**** `EBS_FROM_SNAPSHOT_ID`: Creates a new Elastic Block Storage device from an existing snapshot
+**** `EPHEMERAL`: Creates a virtual, ephemeral device
+**** `NO_DEVICE`: Supresses a volume mapping
+* *[EnableProtectionFromScaleIn]*: True to control whether an Auto Scaling group can terminate a particular instance when scaling in.
+* *[SubnetsId]*: Internal Id of the Subnet the AutoScalingGroup belongs to.
+* *UserData*: User data to configure an instance during launch.
+
+NOTE: $$*$$ For more info about InstanceTypeId check https://aws.amazon.com/es/ec2/instance-types/[Aws instance types]. +
+$$**$$ For more info about BlockDevice naming check: +
+    https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/device_naming.html[Aws block devices Linux] or
+     https://docs.aws.amazon.com/en_en/AWSEC2/latest/WindowsGuide/device_naming.html[Aws block devices windows]
+
+=== CapacityProviders
+
+Amazon ECS capacity providers are used to manage the infrastructure that your cluster's tasks depend on.
+Each cluster can have one or more capacity providers, as well as a default capacity provider strategy if desired.
+The capacity provider strategy controls how tasks are distributed among the cluster's capacity providers. 
+
+This is the information related to configure the **CapacityProviders** section:
+
+[source, json]
+----
+"CapacityProviders": 
+[
+  {
+    "Id": "string",                                 // Internal identification for the Capacity Provider
+    "Name": "string",                               // Name of the Capacity Provider
+    "TargetCapacityPercent": 0,                     // Specify an integer between 1 and 100 (100 by default)
+    "AutoScalingGroupId": "string",                 // Internal identification for the Auto Scaling group
+    "EnableScaleInTerminationProtection": true,     // True to enable managed termination protection (true by default)
+    "ClusterId": "string"                           // Internal identification for the Cluster
+  }
+]
+----
+
+* *[Id]*: Internal identification for the Capacity Provider. 
+* *[Name]*: Name of the Capacity Provider.
+* *TargetCapacityPercent*: The target capacity value is used as the target value for the CloudWatch metric used in the Amazon ECS-managed target tracking scaling policy. This target capacity value is matched on a best effort basis. If managed scaling is enabled, specify an integer between 1 and 100 (100 by default). 
+* *[AutoScalingGroupId]*: Internal identification for the Auto Scaling group.
+* *[EnableScaleInTerminationProtection]*: To control whether an Auto Scaling group can terminate a particular instance when scaling in, use instance scale-in protection. True to enable scale in termination protection (true by default).  
+* *[ClusterId]*: Internal identification for the Cluster.
+
+==== CodeBuildProjects
+
+AWS CodeBuild is a fully managed cloud build service.
+CodeBuild compiles your source code, runs unit tests, and generates deployable artifacts.
+CodeBuild relieves you of the burden of provisioning, managing, and scaling your own build servers. 
+
+This is the information related to configure the **CodeBuild Projects** section:
+
+[source, json]
+----
+"CodeBuildProjects": 
+[
+  {
+    "Id": "string",                   // Internal Id to identify the CodeBuild Project
+    "ProjectName": "string",          // Name of the CodeBuild Project
+    "Role": "string",                 // Role to use on the CodeBuild exection
+    "BuildSpecPath": "string",        // Path to the buildSpec file, if not specified, buildspec.yml will be used as default
+    "EnableIndependentTrigger": true  // Set to true to create a codebuild project without a pipeline (false by default)
+  }
+]
+----
+
+* *[Id]*: Internal Id to identify the CodeBuild Project.
+* *[ProjectName]*: Name of the CodeBuild Project.
+* *Role*: Role to use on the CodeBuild execution.
+* *BuildSpecPath*: Path to the buildSpec file, if not specified, buildspec.yml will be used as default.
+* *EnableIndependentTrigger*: Set to true to create a codebuild project without a pipeline (false by default).
+
+=== Cognito
+
+Amazon Cognito provides authentication, authorization, and user management for your web and mobile apps.
+
+This is the information related to configure the **Cognito** section:
+
+[source, json]
+----
+"Cognito": 
+[
+  {
+    "UserPools": [  
+      {
+          "Id": "string",                          // Internal identifier to identify the User pool
+          "UserPoolName": "string",                // The name of the User pool
+          "UserPoolClients": [                     // List of the User pool clients
+            {
+              "Id": "string",                      // Identifier ofthe User pool client
+              "AccessTokenValidityMinutes": 0.0,   // Validity of the access token in minutes
+              "AuthFlows": {                       // Types of authentication flow
+                "AdminUserPassword": true,         // Enable admin based user password authentication flow
+                "Custom": true,                    // Enable custom authentication flow
+                "UserPassword": true,              // Enable auth using username & password
+                "UserSrp": true,                   // Enable SRP based authentication
+              },
+              "DisableOAuth": true,                // True to turn off all Oauth interactions for the client
+              "EnableTokenRevocation": true,       // True to enable Token revocation for the client
+              "GenerateSecret": true,              // True to generate a client Secret
+              "IdTokenValidityMinutes": 0.0,       // Validity of the ID token in minutes
+              "OAuthSettings":{                    // OAuth settings for this client to interact with the app
+                "CallBackUrls":[                   // List of allowed redirect URLs for the identity providers
+                  "string","string"
+                ],
+                "Flows":{                          // OAuth flows that are allowed with this client.
+                  "AuthorizationCodeGrant": true,  // True to initiate an authorization code grant flow, which provides an authorization code as the response (false by default)
+                  "ClientCredentials": true,       // If true the client should get the access token and ID token from the token endpoint using a combination of client and client_secret (false by default)
+                  "ImplicitCodeGrant": true,       // If true the client should get the access token and ID token directly (false by default)
+                },
+                "LogoutUrls":[                     // List of allowed logout URLs for the identity providers
+                  "string","string"
+                ],
+                "OAuthScopes":[                    // OAuth scopes that are allowed with this client
+                  "string","string"
+                ],
+              },
+              "RefreshTokenValidityDays": 0.0,     // Validity of the refresh token expressed in days
+              "SupportedIdentityProviders":[       // The list of identity providers that users should be able to use to sign in using this client
+                "string","string"
+              ],
+              "UserPoolClientName": "string",      // Name of the application client
+              "ResourceServersIds":[               // List of resource servers identifiers
+                "string","string"
+              ] 
+            }
+          ],
+          "UserPoolResourceServers": [             // List of Cognito user pool resource servers
+            {
+              "Id": "string",                      // CDK ID
+              "Identifier": "string",              // Inside Cognito ID
+              "Name": "string",                    // TODO -> 0 references, future update or deprecated?
+              "Scopes":[                           // List of scopes
+                {
+                  "ScopeName": "string",           // The name of the scope
+                  "ScopeDescription": "string"     // Scope's description
+                }
+              ]
+            }
+          ]
+        }
+      ]                    
+  }
+]
+----
+
+* *[Id]*: Internal identifier to identify the User pool.
+* *[UserPoolName]*: The name of the User pool.
+* *[UserPoolClients]*: List of the User pool clients:
+** *[Id]*: Identifier ofthe User pool client.
+** *AccessTokenValidityMinutes*: Validity of the access token in minutes.
+** *AuthFlows*: Types of authentication flow:
+*** *AdminUserPassword*: Enable admin based user password authentication flow.
+*** *Custom*: Enable custom authentication flow.
+*** *UserPassword*: Enable auth using username and password.
+*** *UserSrp*: Enable SRP based authentication.
+** *DisableOAuth*: True to turn off all Oauth interactions for the client.
+** *EnableTokenRevocation*: True to enable Token revocation for the client.
+** *GenerateSecret*: True to generate a client Secret.
+** *IdTokenValidityMinutes*: Validity of the ID token in minutes
+** *OAuthSettings*: OAuth settings for this client to interact with the app:
+*** *CallBackUrls*: List of allowed redirect URLs for the identity providers.
+*** *Flows*: OAuth flows that are allowed with this client:
+**** *AuthorizationCodeGrant*: True to initiate an authorization code grant flow, which provides an authorization code as the response (false by default).
+**** *ClientCredentials*: If true the client should get the access token and ID token from the token endpoint using a combination of client and client_secret (false by default).
+**** *ImplicitCodeGrant*: If true the client should get the access token and ID token directly (false by default).
+*** *LogoutUrls*: List of allowed logout URLs for the identity providers.
+*** *OAuthScopes*: OAuth scopes that are allowed with this client.
+** *RefreshTokenValidityDays*: Validity of the refresh token expressed in days.
+** *[SupportedIdentityProviders]*: The list of identity providers that users should be able to use to sign in using this client. Supports all identity providers that are registered with the user pool.
+** *[UserPoolClientName]*: Name of the application client.
+** *[ResourceServersIds]*: List of resource servers identifiers.
+* *[UserPoolResourceServers]*: List of Cognito user pool resource servers:
+** *[Id]*: CDK ID.
+** *[Identifier]*: Inside Cognito ID.
+** *[Name]*: TODO -> 0 references, future update or deprecated?
+** *[Scopes]*: List of scopes:
+*** *[ScopeName]*: The name of the scope.
+*** *[ScopeDescription]*: Scope's description.
+
+=== DynamoDB
+
+Amazon DynamoDB is a fully managed NoSQL database service with seamless scalability and fast and predictable performance. 
+
+This is the information related to configure the **DynamoDB** section.
+
+[source, json]
+----
+"DynamoDB": 
+[
+  {
+    "Id": "string",                       // Internal Id to identify the DynamoDB
+    "TableName": "string",                // Name of the DynamoDb Table
+    "PartitionKeyName": "string",         // Name of the partition key
+    "PartitionKeyType": 0,                // Type of the partition key
+    "BillingMode": 0,                     // Billing mode of the database (Provisioned/Pay-Per-Use)
+    "ContributorInsights": true,          // Wheter CloudWatch contributor insights are enabled
+    "PointInTimeRecovery": true,          // Whether point-in-time recovery is enabled.
+    "ReadCapacity": 0,                    // Read capacity
+    "WriteCapacity": 0,                   // Write capacity
+    "RemovalPolicy": 0,                   // The removal policy applied to the DynamoDB
+    "SortKeyName": "string",              // Name of the sort key
+    "SortKeyType": 0,                     // Type of the sort key
+    "TimeToLiveAttribute": "string",      // Name of the TTL attibutte          
+  }
+]
+----
+* *[Id]*: Internal identifier to identify the Dynamo Database.
+* *[TableName]*: Name of the DynamoDb Table.
+* *[PartitionKeyName]*: Name of the partition key.
+* *[PartitionKeyType]*: Type of the partition key.
+* ($$*$$) *BillingMode*: Integer that specifies the database billing mode. By default is `Provisioned`.
++
+Expects: `1` for `Provisioned`, `other` for `Pay-Per-Use`.
+* *[ContributorInsights]*: Boolean that activates CloudWatch contributor insights.
+* *[PointInTimeRecovery]*: Boolean that activates DynamoDb point-in-time recovery.
+* ($$*$$) *ReadCapacity*: Read capacity for the table. Default is `5`.
+* ($$*$$) *WriteCapacity*: Write capacity for the table. Default is `5`.
+* *[RemovalPolicy]*: The removal policy applied to the DynamoDB. Expects:
+** `0`: `DESTROY` (It means that when the resource is removed from the app, it will be physically destroyed.) 
+**  `1`: `RETAIN` (This uses the 'Retain' DeletionPolicy, which will cause the resource to be retained in the account, but orphaned from the stack.)
+**  `2`: `SNAPSHOT` (This retention policy deletes the resource, but saves a snapshot of its data before deleting, so that it can be re-created later.)
+* *[SortKeyName]*: Name of the sort key.
+* *SortKeyType*: Type of the sort key used on the Table. Expects:
+** `0`: `BINARY` Up to 400KiB of binary data (which must be encoded as base64 before sending to DynamoDB).
+**  `1`: `NUMBER` Numeric values made of up to 38 digits (positive, negative or zero).
+**  `2`: `STRING` Up to 400KiB of UTF-8 encoded text.
+* *[TimeToLiveAttribute]*: Name of the attribute that contains a timestamp used as Time To Live q  for the item. Shortly after the date and time of the specified timestamp, DynamoDB deletes the item from your table.
+
+($$*$$) Careful if you add Global Secondary Indexes, as those will share the table's provisioned throughput. Can only be provided if billingMode is Provisioned.
+
+=== Databases
+
+The Amazon Relational Database Service (Amazon RDS) is a set of managed services that makes it easy to set up, run, and scale databases in the cloud.
+Select from seven popular engines: Amazon Aurora with MySQL support, Amazon Aurora with PostgreSQL support, MySQL, MariaDB, PostgreSQL, Oracle, and SQL Server. 
+
+This is the information related to configure the **Databases** section:
+
+[source, json]
+----
+"Databases": 
+[
+  {
+    "Id": "string",                              // Internal Id to identify the secret
+    "DatabaseName": "string",                    // Name of the database
+    "InstanceIdentifier": "string",              // Instance identifier of the database
+    "Port": "string",                            // Port of the database
+    "UserName": "string",                        // UserName of the database
+    "Secrets": {"key": "value"},                 // Secrets of AWS Secrets Manager database credentials
+    "SsmParameters": {"key": "value"},           // TODO?
+    "VpcId": "string",                           // Internal Vpc Id to which the database will belong
+    "SecurityGroupsIds": ["string", "string"],   // Internal Security Group Id to which the database will belong
+    "SubnetGroupId": "string",                   // Internal Subnet Group Id to which the database will belong
+    "LogTypes": ["string","string"],             // The database logs' type 
+    "StorageEncrypted": true,                    // True to encrypt the database instance 
+    "EnableIamAuthentication": true,             // True to enable the IAM database authentication
+    "DeletionProtection": true,                  // True to enable the Database Deletion Protection (false by default)
+    "MultiAvailabilityZoneEnabled": true,        // Enable / Disable Multi Availability Zones (true by default)
+    "PasswordRotationDaysPeriod": 0,             // Password rotation time expressed in days 
+    "RotationLambdaId": "string",                // TODO?
+    "AutoMinorVersionUpgrade": true,             // True for enabling the upgrade of the DB engine version of a database automatically (false by default)
+    "ParameterGroupId": "string",                // Internal Parameter Group Id to which the database will belong
+    "DmsEndpoints":                              // List of source and target endpoints
+    [
+      {
+        "Id": "string",                          // Endpoint identifier
+        "Name": "string",                        // The name used to identify the endpoint.
+        "Type": "string"                         // Endpoint type : source or target endpoint.
+      }
+    ],
+    "DatabaseType": "string",                    // Type of the database
+    "Edition": "string",                         // Edition of the database instance
+    "AllocatedStorageGb": 0.0,                   // Allocated storage of the database in GB (5.0 GB by default)
+    "LicensesOption": "string",                  // Amazon RDS for SQL Server and Oracle supports the “LICENSE_INCLUDED” licensing model. TODO?
+    "InstanceSize": "string",                    // Size of the instance, expects micro, small, medium or large.
+    "Password": "string",                        // Password of the database instance
+    "BackupRetentionPeriod": 0,                  // Backup retention period expressed in days (1 day by default, max 35 days)
+    "StorageType":[                              // Type of storage, expects:
+    "STANDARD",                                  // Magnetic
+    "GP2",                                       // General Purpose SSD
+    "IO1"                                        // Provisioned IOPS SSD
+    ],
+    "DatabaseEngineVersion": "string",           // The engine version of the SQL Server instance
+    "InstanceType":[                             // The type of the instance, e.g `"M3"` or `"STANDARD5_NVME_DRIVE_HIGH_PERFORMANCE"`.
+    "string"
+    ],
+    "EnhancedMonitoringIntervalSeconds": 0,      // Specifies the interval, in seconds. Expects 0, 1, 5, 10, 15, 30, and 60. (0 by default).
+    "MonitoringRoleId": "string",                // Internal Id to identify the IAM role
+    "EnablePerformanceInsights": true,           // True for enabling Performance Insights (false by default)
+    "PerformanceInsightsRetentionPeriod": 0,     // The amount of time to retain Performance Insights data, expressed in days (0 by default)
+  }
+]
+----
+
+* *[Id]*: Internal Id to identify the database.
+* *[DatabaseName]*: Name of the database. 
+* *[InstanceIdentifier]*: Instance identifier of the database.
+* *[Port]*: Port of the database.
+* *[UserName]*: Database user name.
+* ($$*$$) *[Secrets]*: Secrets of AWS Secrets Manager database credentials.
+* *[SsmParameters]*: TODO?
+* *[VpcId]*: Internal Vpc Id to which the database will belong.
+* *[SecurityGroupsIds]*: List of internal Security Group Id to which the database will belong.
+* *[SubnetGroupId]*: Internal Subnet Group Id to which the database will belong.
+* *[LogTypes]*: The database logs' type.
+* *StorageEncrypted*: Set to true to encrypt the database instance. 
+* *EnableIamAuthentication*: Set to true to enable the IAM database authentication. IAM database authentication works with MariaDB, MySQL, and PostgreSQL.
+* *DeletionProtection*: Set to true to enable the Database Deletion Protection. This prevents any user from deleting the database. Deletion protection is available for Amazon Aurora and Amazon RDS for MySQL, MariaDB, Oracle, PostgreSQL, and SQL Server database instances in all AWS Regions (false by default).
+* *MultiAvailabilityZoneEnabled*: Enable / Disable Multi Availability Zones (true by default).
+* *PasswordRotationDaysPeriod*: Password rotation time expressed in days.
+* *[RotationLambdaId]*: TODO?
+* *AutoMinorVersionUpgrade*: True for enabling the upgrade of the DB engine version of a database automatically (false by default)
+* *[ParameterGroupId]*: Internal Parameter Group Id to which the database will belong
+* *[DmsEndPoint]*: An endpoint provides connection, data store type, and location information about your data store. AWS Database Migration Service uses this information to connect to a data store and migrate data from a source endpoint to a target endpoint, you can configure the following parameters:
+** *[Id]*: Endpoint identifier.
+** *[Name]*: The name you want to use to identify the endpoint.
+** *[Type]*: Endpoint type : source or target endpoint.
+* *[DatabaseType]*: Type of the database.
+* *[Edition]*: Edition of the database instance.
+* *AllocatedStorageGb*: Allocated storage of the database in GB (5.0 GB by default).
+* *[LicensesOption]*: Amazon RDS for SQL Server  and Oracle supports the “License Included” licensing model. TODO?
+* *[InstanceSize]*: Size of the instance, expects micro, small, medium or large.
+* *[Password]*: Password of the database instance.
+* *[BackupRetentionPeriod]*: Backup retention period expressed in days (1 day by default, max 35 days).
+* *[StorageType]*: Type of storage, expects:
+** `STANDARD`: Magnetic.
+** `GP2`: General Purpose SSD.
+** `IO1`: Provisioned IOPS SSD.
+* *DatabaseEngineVersion*: The engine version of the SQL Server instance.
+* ($$**$$) *[InstanceType]*: The type of the instance, e.g `"M3"` or `"STANDARD5_NVME_DRIVE_HIGH_PERFORMANCE"`.
+* *EnhancedMonitoringIntervalSeconds*: Specifies the interval, in seconds, between points when Enhanced Monitoring metrics are collected. Valid values are 0, 1, 5, 10, 15, 30, and 60. (0 by default, which means that Enhanced Monitoring is off).
+* *[MonitoringRoleId]*: Internal Id to identify the IAM role.
+* *EnablePerformanceInsights*: True for enabling Performance Insights (false by default).
+* *PerformanceInsightsRetentionPeriod*: The amount of time to retain Performance Insights data, expressed in days (0 by default).
+
+NOTE: ($$*$$) For more information about *AWS Secrets Manager database credential secrets* visit https://docs.aws.amazon.com/secretsmanager/latest/userguide/reference_secret_json_structure.html[JSON structure of AWS Secrets Manager database credential secrets] documentation. +
+($$**$$) For more information about *Instance Types* visit https://aws.amazon.com/ec2/instance-types/?nc1=h_ls[Amazon EC2 Instance Types] documentation.
+
+=== DatabaseMigrationService
+
+AWS Database Migration Service (AWS DMS) helps you migrate databases to AWS quickly and securely. During the migration, the source database remains fully operational, minimizing downtime for applications that rely on it.
+
+This is the information related to configure the **DatabaseMigrationService** section.
+
+[source, json]
+----
+"DatabaseMigrationService": 
+[
+  {
+    "DmsReplicationSubnetGroups": [
+      {
+        "Id": "string",                       // Internal Id to identify the DmsReplicationSubnetGroups
+        "LocateInsteadOfCreate": true,        // True if you want to locate, false if you want to create
+        "Name": "string",                     // Name of the subnet group
+        "Description": "string",              // Description of the subnet group
+        "ReplicationSubnetIds": [             // Identifiers of the subnets in the group
+          "string"
+        ]                               
+      }
+    ],                       
+    "DmsReplicationInstances": [
+      {
+        "Id": "string",                       // Internal Id to identify the DmsReplicationInstances
+        "Name": "string",                     // Name of the instance
+        "ReplicationInstanceClass": "string", // The compute and memory capacity of the replication instance as defined for the specified replication instance class
+        "SubnetGroupId": "string",            // Identifier of the subnet group linked to this instance
+        "SecurityGroupIds": [                 // Internal identifier of the security group
+          "string"
+        ],
+        "PubliclyAccessible": true,           // True for a public IP address, false for a private IP address
+               
+      }
+    ],           
+    "DmsMigrationTasks": [
+      {
+        "Id": "string",                       // Internal Id to identify the DmsMigrationTasks
+        "Name": "string",                     // Name of the task
+        "SourceEndpointId": "string",         // Internal Identifier of the Source Endopint
+        "TargetEndpointId": "string",         // Internal Identifier of the Target Endopint
+        "ReplicationInstanceId": "string",    // Internal Identifier of the Replication Instance
+        "MigrationType": "string",            // The migration type
+        "TableMappings": "string",            // The table mappings for the task, in JSON format.
+      }
+    ],             
+  }
+]
+----
+* *DmsReplicationSubnetGroups*:  
+** *Id*: Internal identifier to identify the `DmsReplicationSubnetGroup`.
+** *LocateInsteadOfCreate*: True if you want to locate, false if you want to create.
+** *Name*: Name of the subnet group.
+** *Description*: Description of the subnet group.
+** *ReplicationSubnetIds*: Identifiers of the subnets in the group.
+* *DmsReplicationInstances*: Internal identifier to identify the `DmsReplicationInstances`.
+** *Id*: Internal Id to identify the DmsReplicationInstances.
+** *Name*: Name of the instance
+** ($$*$$) *ReplicationInstanceClass*: The compute and memory capacity of the replication instance as defined for the specified replication instance class
+** *SubnetGroupId*: Internal identifier of the security group
+** *PubliclyAccessible*: Specifies the accessibility options for the replication instance. A value of true represents an instance with a public IP address. A value of false represents an instance with a private IP address.
+* *DmsMigrationTasks*: Internal identifier to identify the `DmsMigrationTasks`.
+** *Id*: Internal Id to identify the DmsMigrationTasks.
+** *Name*: Name of the task.
+** *SourceEndpointId*: Internal Identifier of the Source Endopint.
+** *TargetEndpointId*: Internal Identifier of the Target Endopint.
+** *ReplicationInstanceId*: Internal Identifier of the Replication Instance.
+** *MigrationType*: The migration type.
+** *TableMappings*: The table mappings for the task, in JSON format.
+
+NOTE: ($$*$$) For example, to specify the instance class dms.c4.large, set this parameter to "dms.c4.large" . For more information on the settings and capacities for the available replication instance classes, see Selecting the right AWS DMS replication instance for your migration in the AWS Database Migration Service User Guide. Link: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dms-replicationinstance.html#cfn-dms-replicationinstance-replicationinstanceclass
+
+=== DatabaseParameterGroups
+
+Database parameters specify how the database is configured. For example, database parameters can specify the amount of resources, such as memory, to allocate to a database.
+
+This is the information related to configure the **Database Parameter Group** section.
+
+[source, json]
+----
+"DatabaseParameterGroups": 
+[
+  {
+    "Id": "string",                       // Internal Id to identify the Database Parameter Group
+    "LocateInsteadOfCreate": true,        // true if you want to locate, false if you want to create
+    "Name": "string",                     // Name of the parameter group
+    "Descritpion": "string",              // Description of the parameter group
+    "Parameters": {                       // Dictionary of key-value parameters in this parameter group
+      "key": "value"
+    },               
+  }
+]
+----
+* *[Id]*: Internal identifier to identify the Database Parameter Group.
+* *[LocateInsteadOfCreate]*: Boolean to indicate if you want to locate an existing Database Parameter Group.
+* *[Name]*: Name of the parameter group.
+* *[Descritpion]*: Description of the parameter group.
+* *[Parameters]*: Parameters in this parameter group in the form of key-value pairs.    
+
+=== Ec2Instances
+
+Amazon EC2 offers a diverse set of instance types that are designed for specific use cases.
+Instance types are different combinations of CPU, memory, storage, and networking capacity that allow you to choose the best mix of resources for your applications.
+Each instance type comes with one or more instance sizes, allowing you to scale your resources to meet the needs of your target workload. 
+
+This is the information related to configure the **Ec2Instances** section:
+
+[source, json]
+----
+"Ec2Instances": 
+[
+  {
+    "Id": "string",                   // TODO-> 0 references, future update or deprecated?
+    "InstanceName": "string",         // TODO-> 0 references, future update or deprecated?
+    "VpcId": "string",                // TODO-> 0 references, future update or deprecated?
+    "InstanceTypeId": "string",       // TODO-> 0 references, future update or deprecated?
+    "MachineImageRegion": "string",   // TODO-> 0 references, future update or deprecated?
+    "AmiId": "string",                // TODO-> 0 references, future update or deprecated?
+    "SecurityGroupId": "string"       // TODO-> 0 references, future update or deprecated?
+  }
+]
+----
+
+* *[Id]*: 
+* *[InstanceName]*: 
+* *[VpcId]*: 
+* *[InstanceTypeId]*: 
+* *[MachineImageRegion]*: 
+* *[AmiId]*: 
+* *[SecurityGroupId]*: 
+
+=== EcrRepositories
+
+Amazon Elastic Container Registry (Amazon ECR) offers API operations for creating, monitoring, and deleting image repositories, as well as setting permissions for who can access them.
+
+This is de information related to configure the **ECR** section:
+
+[source, json]
+----
+"EcrRepositories": 
+[
+  {
+    "Id": "string",                   // Internal Id to identify the repository
+    "LocateInsteadOfCreate*": true,   // true if you want to locate a ECR, false if you want to create a new one
+    "RepositoryName": "string",       // Name of the repository
+    "IsMutableImage": true,           // true if you want to allow image overwrite, false otherwise
+    "ExpireImageRules":               // List of expiration riles for images with a specific tag name
+    [
+      {
+        "Description": "string",      // Describes the purpose of the rule.
+        "MaxImageAgeDays": 0,         // The maximum age of images to retain. The value must represent a number of days.
+        "MaxImageNumber": 0,          // The maximum number of images to retain.
+        "PriorityOrder": 0,           // Controls the order in which rules are evaluated (low to high).
+        "TagPrefixList": [            // Select images that have ALL the given prefixes in their tag.
+          "string",
+          "string"
+        ],
+        "TagStatus": "string"         // Select images based on tags, expects ANY, TAGGED or UNTAGGED.                 
+      }
+    ],
+    "ImageScanOnPush": true           // True in order to enable image scanning 
+  }
+]
+----
+
+* *[Id]*: Internal Id to identify the repository.
+* *[LocateInsteadOfCreate]*: True if you want to locate a ECR, false if you want to create a new one.
+* *[RepositoryName]*: Name of the repository.
+* *[IsMutableImage]*: True if you want to allow image overwrite, false otherwise.
+* *[ExpireImageRules]*: List of expiration riles for images with a specific tag name:
+** *[Description]*: Describes the purpose of the rule.
+** *[MaxImageAgeDays]*: The maximum age of images to retain. The value must represent a number of days.
+** *[MaxImageNumber]*: The maximum number of images to retain.
+** *[PriorityOrder]*: Controls the order in which rules are evaluated (low to high).
+** *[TagPrefixList]*: Select images that have ALL the given prefixes in their tag.
+** *[TagStatus]*: Select images based on tags, string value that expects:
+*** `ANY`: Rule applies to all images.
+*** `TAGGED`: Rule applies to tagged images.
+*** `UNTAGGED`: Rule applies to untagged images.
+* *[ImageScanOnPush]*: True in order to enable image scanning.
+
+=== EcsServices
+
+You can use an Amazon ECS service to run and maintain a specified number of instances of a task definition in an Amazon ECS cluster at the same time.
+If one of your tasks fails or terminates, the Amazon ECS service scheduler launches a new instance of your task definition to take its place.
+This helps to maintain the desired number of tasks in the service. 
+
+This is de information related to configure the **EcsServices** section:
+
+[source,json]
+----
+"EcsServices": 
+[
+  {
+    "Id": "string",                                // Internal Id to identify the service
+    "LocateInsteadOfCreate": true,                 // True if you want to locate a ECS, false if you want to create a new one
+    "ServiceName": "string",                       // Name of the Service
+    "EcsClusterId": "string",                      // Internal Id to identify the Cluster
+    "EcsTaskDefinitionId": "string",               // Internal Id to identify the Task Definition
+    "TargetGroups": [                              // List of target groups
+        {
+            "ContainerName": "string",             // Container name to foward the request
+            "Port": 0.0,                           // Container port to foward the request
+            "NetworkTargetGroupId": "string",      // Id of the target group
+            "LoadBalancerType": "string"           // Type of load balancer: Network, Application, Gateway
+        }
+    ],
+    "HealthCheckGracePeriod": 0,                   // Number of seconds to wait until the service is ready for the target group healthChecks
+    "CapacityProviderStrategy": [                  // List of Capacity providers strategies
+        {
+            "ProviderId": "string",                // Internal Id to identify the Provider
+            "Base": 0,                             // Designates how many tasks, at a minimum, to run on the specified capacity provider.
+            "Weigth": 0                            // Designates the relative percentage of the total number of tasks launched that should use the specified capacity provider
+        }
+    ],
+    "DesiredCount": 0,                             // Your service's desired count
+    "UseDistinctInstances": true,                  // Use distinctInstance to ensure that each task in a particular group is running on a different container instance.
+    "PlacementStrategies":                         // Supports the following task placement strategies binpackmemory, binpackcpu, random, spread_instance or spread_az
+    [
+      "string","string"
+    ],
+  }
+]
+----
+
+* *[Id]*: Internal Id to identify the repository.
+* ($$*$$) *[LocateInsteadOfCreate]*: True if you want to locate a ECS, false if you want to create a new one.
+* *[ServiceName]*: Name of the Service.
+* *[EcsClusterId]*: Internal Id to identify the Cluster.
+* *[TargetGroups]*: List of target groups.
+** *[ContainerName]*: Container name to foward the request.
+** *[Port]*: Container port to foward the request.
+** *[NetworkTargetGroupId]*: Id of the target group.
+** *[LoadBalancerType]*: Type of load balancer: Network, Application, Gateway.
+* *HealthCheckGracePeriod*: Number of seconds to wait until the service is ready for the target group healthChecks
+* *[CapacityProviderStrategy]*: List of Capacity providers strategies.
+** *[ProviderId]*: Internal Id to identify the Provider.
+** *[Base]*: Designates how many tasks, at a minimum, to run on the specified
+capacity provider. Only one capacity provider in a capacity provider strategy can have a base defined. If no value is specified, the default value of 0 is used.
+** *[Weigth]*: The weight value designates the relative percentage of the total number of tasks launched that should use the specified capacity provider.
+* *DesiredCount*: Your service's desired count.
+* *[UseDistinctInstances]*: Use distinctInstance to ensure that each task in a particular group is running on a different container instance.
+* *[PlacementStrategies]*: Supports the following task placement strategies:
+** `binpackmemory`
+** `binpackcpu`
+** `random`
+** `spread_instance`
+** `spread_az`
+
+NOTE: ($$*$$) If the LocateInsteadOfCreate field is set to true, only the Id and RepositoryName fields will be used, the others will be ignored.
+
+=== EcsClusters
+
+An Amazon ECS cluster is a logical grouping of tasks or services. Your tasks and services are executed on infrastructure that is part of a cluster. 
+
+This is the information related to configure the **EcsClusters** section:
+
+[source, json]
+----
+"EcsClusters": 
+[
+  {
+    "Id": "string",                    // Identificator of the Ecs Cluster                     
+    "LocateInsteadOfCreate": true,     // TODO-> 0 references, future update or deprecated?                 
+    "ClusterName": "string",           // Name of the Ecs Cluster
+    "VpcId": "string",                 // Identifier for the VPC
+    "AutoScalingGroupIds":             // TODO deprecated???
+    [                                 
+      "string","string"
+    ]                                    
+  }
+]
+----
+
+* *[Id]*: Identificator of the Ecs Cluster.
+* *[LocateInsteadOfCreate]*: TODO-> 0 references, future update or deprecated?
+* *[ClusterName]*: Name of the Ecs Cluster.
+* *[VpcId]*: Identifier for the VPC.
+* *[AutoScalingGroupIds]*: TODO deprecated???
+
+=== EcsTaskDefinitions
+
+A task definition is required to run Docker containers in Amazon ECS.
+
+This is the information related to configure the **EcsTaskDefinitions** section:
+
+[source, json]
+----
+"EcsTaskDefinitions": 
+[
+  {
+    "Id": "string",                    // Internal Id to identify the Ecs Task Definition
+    "Arn": "string",                   // TODO -> 0 references, future update or deprecated?
+    "Family": "string",                // The name of a family that this Task Definition is registered to
+    "RoleId": "string",                // Role identifier
+    "Compatibility": "string",         // Task launch compatibility requirement
+    "LocateInsteadCreate": true,       // TODO -> 0 references, future update or deprecated?
+    "Containers":                      // List of containers in your task definition
+    [
+      {
+        "Id": "string",                // Internal Id to identify the container
+        "ImageTag": "string",          // The image used to start the container
+        "RepositoryId": "string",      // Internal identifier of the repository
+        "MemoryReservationMiB": 0.0,   // TODO -> 0 references, future update or deprecated?
+        "MemoryLimitMiB": 0.0,         // The amount (in MiB) of memory to present to the container
+        "CpuUnits": 0.0,               // The minimum number of CPU units to reserve for the container
+        "StartTimeOutMinutes": 0,      // Time duration (in minutes) to wait before giving up on resolving dependencies for a container
+        "TCPPortMapping":              // The port mappings to add to the container definition
+        [
+          {
+            "ContainerPort": 0,        // Port of the container
+            "HostPort": 0              // Port of the host
+          }
+        ],
+        "UDPPortMapping":              // TODO -> 0 references, future update or deprecated?
+        [
+          {
+            "ContainerPort": 0,        // TODO -> 0 references, future update or deprecated?
+            "HostPort": 0              // TODO -> 0 references, future update or deprecated?
+          }
+        ],
+        "EnvironmentVariables":        // The environment variables to pass to the container
+        {
+          "string": "string"
+        },
+        "DnsServers":                  // A list of DNS servers that are presented to the container
+        [
+          "string","string"
+        ],
+        "Essential": true              // True to specify the container is marked as essential
+      }
+    ],
+    "Volumes":                         // List of docker volumes
+    [
+      {
+        "Name": "string",              // The name of the volume
+        "AutoProvision": true,         // True for enable the creation of the volume if the volume doesn't already exists (false by default)
+        "Driver": "string",            // The docker volume driver to use
+        "Scope": "string",             // The scope for the Docker volume that determines its lifecycle
+      }
+    ],
+    "MountPoints":                     // The details of data volume mount points for a container
+    [
+      {
+        "SourceVolume": "string",      // The name of the volume to mount.
+        "ContainerPath": "string"      // The path on the container to mount the host volume at.
+      }
+    ]  
+  }
+]
+----
+
+* *[Id]*: Internal identifier to identify the Ecs Task Definition.
+* *[Arn]*: TODO -> 0 references, future update or deprecated?
+* *[Family]*: The name of a family that this Task Definition is registered to
+* *[RoleId]*: The Id of the role that grants containers in the task permission to call AWS APIs on your behalf.
+* *[Compatibility]*: The task launch compatibility requirement. Expects:
++ 
+NOTE: At the moment the module only supports EC2 compatibility.
++
+** `EC2`: The task should specify the EC2 launch type.
+** `FARGATE`: The task should specify the Fargate launch type.
+** `EC2_AND_FARGATE`: The task can specify either the EC2 or Fargate launch types.
+** `EXTERNAL`: The task should specify the External launch type.
+* *[LocateInsteadCreate]*: TODO -> 0 references, future update or deprecated?  
+* *[Containers]*: List of containers in your task definition:
+** *[Id]*: Internal identifier to identify the container.
+** *[ImageTag]*: The image used to start the container. This string is passed directly to the Docker daemon. Images in the Docker Hub registry are available by default.
+** *[RepositoryId]*: Internal identifier of the repository.
+** *MemoryReservationMiB*: TODO -> 0 references, future update or deprecated?
+** *MemoryLimitMiB*: The amount (in MiB) of memory to present to the container.
+** *CpuUnits*: The minimum number of CPU units to reserve for the container.
+** *[StartTimeOutMinutes]*: Time duration (in minutes) to wait before giving up on resolving dependencies for a container.
+** *[TCPPortMapping]*: The port mappings to add to the container definition:
+*** *[ContainerPort]*: Port of the container.
+*** *[HostPort]*: Port of the host.
+** *[UDPPortMapping]*: TODO -> 0 references, future update or deprecated?:
+*** *[ContainerPort]*: TODO -> 0 references, future update or deprecated?
+*** *[HostPort]*: TODO -> 0 references, future update or deprecated?
+** *[EnvironmentVariables]*: The environment variables to pass to the container.
+** *[DnsServers]*: A list of DNS servers that are presented to the container.
+** *Essential*: True to specify the container is marked as essential.
+* *[Volumes]*: List of Docker volumes:
+** *[Name]*: The name of the volume
+** *[AutoProvision]*: True for enable the creation of the volume if the volume doesn't already exists (false by default).
+** *[Driver]*: The docker volume driver to use.
+** *[Scope]*: The scope for the Docker volume that determines its lifecycle.
+* *[MountPoints]*: The details of data volume mount points for a container:
+** *[SourceVolume]*: The name of the volume to mount.
+** *[ContainerPath]*: The path on the container to mount the host volume at.
+
+=== Lambdas
+
+Lambda is a compute service that allows you to run code without having to provision or manage servers.
+Lambda runs your code on a high-availability compute infrastructure and handles all compute resource administration, such as server and operating system maintenance, capacity provisioning and automatic scaling, and logging. 
+
+This is the information related to configure the **Lambdas** section.
+
+[source, json]
+----
+"Lambdas": 
+[
+  {
+    "Id": "string",                               // Id nternal Id to identify the Lambda
+    "FunctionName": "string",                     // Name of the Lambda
+    "Role": "string",                             // Name of the Role that will use the Lambda
+    "SecurityGroupId": "string",                  // Internal Security Group Id to which the Lambda will belong
+    "FunctionHandler": "string",                  // Location of the function handler
+    "Runtime": "string",                          // Technology used to run Lambda
+    "VpcId": "string",                            // Internal Vpc Id to which the Lambda will belong
+    "SubnetIds": [                                // List of Subnets to which the Lambda will belong
+      "string"
+    ],
+    "SourceCode": {
+      "CodeZipFilePath": "string",                // Local path where the zip of the Lambda function is located
+      "CodeBucket": {
+        "BucketName": "string",                   // Name of the S3 bucket where the Lambda function zip is located.
+        "FilePath": "string"                      // Path inside of the S3 bucket where the zip of the Lambda function is located
+      }
+    },
+    "LambdaEnvironmentVariables": [               // List of environment variables
+      {
+        "EnvironmentVariableName": "string",      // Environment variable key
+        "EnvironmentVariableValue": "string"      // Environment variable value
+      }
+    ]
+  },
+]
+----
+
+* *[Id]*: Id nternal Id to identify the Lambda.
+* *[FunctionName]*: Name of the Lambda.
+* *[Role]*: Name of the Role that will use the Lambda.
+* *[SecurityGroupId]*: Internal Security Group Id to which the Lambda will belong.
+* *[FunctionHandler]*: Lambda function handler in the form of `Assembly::Namespace.ClassName::MethodName`.
+* *[Runtime]*: Technology used to run Lambda.
+* *VpcId*: Internal Vpc Id to which the Lambda will belong.
+* *SubnetIds*: List of Subnets to which the Lambda will belong.
+* *SourceCode*: Source code options of the lambda function:
+** ($$*$$) *CodeZipFilePath*: Local path where the zip of the Lambda function is located.
+** ($$*$$) *CodeBucket*: Code Bucket options of the lambda function:
+*** *BucketName*: Name of the S3 bucket where the Lambda function zip is located.
+*** *FilePath*: Path inside of the S3 bucket where the zip of the Lambda function is located.
+* *LambdaEnvironmentVariables*: Environment variables as key value pairs for the lambda functions:
+** *EnvironmentVariableName*: Name of the value (key).
+** *EnvironmentVariableValue*: Value of the variable (value).
+
+($$*$$) The fields CodeZipFilePath and CodeBucket are mutually exclusive.
+
+=== LambdaPolicies
+
+Lambda functions and layers can use resource-based permissions policies.
+You can grant usage permission to other AWS accounts or organizations on a per-resource basis with resource-based policies.
+A resource-based policy is also used to allow an AWS service to invoke your function on your behalf. 
+
+This is the information related to configure the **LambdaPolicies** section.
+
+[source, json]
+----
+"LambdaPolicies": 
+[                                   
+  {
+    "Id": "string",                 // Internal Id to identify the Lambda Policy
+    "FunctionId": "string",         // Id of the function it is related to
+    "PolicyStatements": [           // List of policy statements this Lambda function may need (e.g: allow the Lambda function to be invoked from the Secrets Manager to perform a rotation)
+      {
+        "Principal": "string",      // Principal which will be allowed to perform the action
+        "Action": "string"          // Action that will be allowed
+      }
+    ]
+  },
+]
+----
+
+* *[Id]*: Internal identifier to identify the Lambda Policy.
+* *[FunctionId]*: Identifier of the Lambda Function to which this policy is related.
+* *PolicyStatements*: List of policy statements this Lambda function may need (e.g: allow the Lambda function to be invoked from the Secrets Manager to perform a rotation):
+** *Principal*: Principal which will be allowed to perform the action
+** *Action*: Action that will be allowed
+
+=== LambdaRules
+
+Custom rules can be created and added to AWS Config using AWS Lambda functions.
+Each custom rule is associated with a Lambda function, which contains the logic that determines whether your AWS resources comply with the rule. 
+
+This is the information related to configure the **Lambda Rules** section.
+
+[source, json]
+----
+"LambdaRules": 
+[
+  {
+    "Id": "string",             // Internal Id to identify the secret
+    "Name": "string",           // Name of Lambda
+    "LambdaName": "string",     // Name of the lambda that will be launched
+    "Description": "string",    // Description of the rule
+    "TriggerHour": "string",    // Hour of day the lambda will be launched
+    "TriggerMinute": "string",  // Minute of day the lambda will be launched
+    "S3": {                     // TODO
+      "Operations":[            // TODO
+        "string"
+      ],
+      "BucketIds":[             // TODO
+        "string"
+      ]
+    }
+  }
+]
+----
+
+* *[Id]*: Internal identifier to identify the secret.
+* *[Name]*: Name of Lambda.
+* *[LambdaName]*: Name of the lambda that will be launched.
+* *Description*: Description of the rule.
+* *[TriggerHour]*: Hour of day the lambda will be launched.
+* *[TriggerMinute]*: Minute of day the lambda will be launched.
+* *S3*: TODO
+** *Operations*: TODO
+** *BucketIds*: TODO                        
+
+=== LogGroups
+
+A log group is a collection of log streams with similar retention, monitoring, and access control settings.
+You can create log groups and specify which streams go in each one. 
+
+This is the information related to configure the **LogGroups** section.
+
+[source, json]
+----
+"LogGroups": 
+[                                   
+  {
+    "Id": "string",                 // Internal Id to identify the Log Group
+    "FunctionId": "string",         // Id of the lambda function it is related to
+    "LogRetentionTime": "string",   // Log retention in CloudWatch
+    "SubscribedLambdaIds": [        // Internal identifier for the lambdas in the log group
+    ]
+  },
+]
+----
+
+* *[Id]*: Internal identifier to identify the Log Group
+* *FunctionId*: Id of the lambda function it is related to
+* *LogRetentionTime*: Log retention in CloudWatch
+* *SuscribedLambdaIds*: Internal identifier for the lambdas in the log group.
+
+=== ManagedPolicies
+
+AWS managed policies are standalone policies that are created and managed by AWS. 
+
+This is the information related to configure the **ManagedPolicies** section:
+
+[source, json]
+----
+"ManagedPolicies": 
+[
+  {
+    "Id": "string",                     // Internal identification for the Managed Policy
+    "LocateInsteadOfCreate": true,      // True for Import a managed policy from one of the policies that AWS manages
+    "PolicyDocumentId": "string",       // Identification of the policy document
+    "Name": "string",                   // The name of the managed policy
+    "Description": "string",            // TODO-> 0 references, future update or deprecated?
+    "Path": "string",                   // TODO-> 0 references, future update or deprecated?
+  }
+]
+----
+
+* *[Id]*: Internal identification for the managed policy.
+* *LocateInsteadOfCreate*: True for import a managed policy from one of the policies that AWS manages.
+* *[PolicyDocumentId]*: Identification of the policy document.
+* *[Name]*: The name of the managed policy.
+* *[Description]*: TODO -> 0 references, future update or deprecated?
+* *[Path]*: TODO -> 0 references, future update or deprecated?
+
+=== NetworkLoadBalancers
+
+Elastic Load Balancing automatically distributes your incoming traffic across multiple targets in one or more Availability Zones, such as EC2 instances, containers, and IP addresses.
+It monitors the health of its registered targets and routes traffic only to those that are in good condition. 
+
+This is the information related to configure the **Network Load Balancers** section:
+
+[source, json]
+----
+"NetworkLoadBalancers": 
+[
+  {
+      "Id": "string",                       // Identificator of the NetworkLoadBalancer
+      "LoadBalancerName": "string",         // Aws name of the NetworkLoadBalancer
+      "CrossZoneEnabled": true,             // Indicates whether cross-zone load balancing is enabled.
+      "DeletionProtection": true,           // Indicates whether deletion protection is enabled.
+      "InternetFacing": true,               // Whether the load balancer has an internet-routable address.
+      "VpcId": "string",                    // Internal Id of the network to place the load balancer in.
+      "Subnets":                            // List of subnets in the Network Load Balancer
+    [
+        "string",
+        "string"
+    ],            
+      "SubnetMappings":                   
+    [                                     
+      {
+          "AllocationId": "string",       // Elastic allocation ip id to associate the NetworkLoadBalancer
+          "IPv6Address": "string",        // TODO-> 0 references, future update or deprecated?
+          "PrivateIPv4Address": "string", // TODO-> 0 references, future update or deprecated?
+          "SubnetId": "string"            // Aws Id of the subnet to be associated
+      }
+    ],
+    "Listeners":                          // List of the listeners associated to the NetworkLoadBalancer
+    [
+      {
+        "Id": "string",                   // Identificator of the Network Listener
+        "DefaultAction":                  //  Default action to take for requests to this listener.
+        {
+          "Type": "string"                // The type of action
+        },
+        "DefaultTargetGroups":            // Default target groups to load balance to.
+        [
+            "string",
+            "string"
+        ],
+        "Port": 0,                        // The port on which the listener listens for requests.
+        "Protocol": "string"              // Protocol for listener, expects TCP, TLS, UDP, or TCP_UDP.
+      }
+    ]
+  }
+]
+----
+
+* *[Id]*: Identificator of the NetworkLoadBalancer.
+* *[LoadBalancerName]*: Aws name of the NetworkLoadBalancer.
+* *[CrossZoneEnabled]*: Indicates whether cross-zone load balancing is enabled.
+* *[DeletionProtection]*: Indicates whether deletion protection is enabled.
+* *[InternetFacing]*: Whether the load balancer has an internet-routable address.
+* *[VpcId]*: Internal Id of the network to place the load balancer in.
+* *[Subnets]*: List of subnets in the Network Load Balancer
+* *[SubnetMappings]*: Indicates whether cross-zone load balancing is enabled:
+** *[AllocationId]*: Elastic allocation ip id to associate the NetworkLoadBalancer
+** *[IPv6Address]*: TODO-> 0 references, future update or deprecated?
+** *[PrivateIPv4Address]*: TODO-> 0 references, future update or deprecated?
+** *[SubnetId]*: Aws Id of the subnet to be associated.
+* *[Listeners]*: List of the listeners associated to the NetworkLoadBalancer:
+** *[Id]*: Identificator of the Network Listener.
+** *DefaultAction* :  Default action to take for requests to this listener:
+*** *Type*: The type of action.
+** *[DefaultTargetGroups]*: Default target groups to load balance to.
+** *[Port]*: The port on which the listener listens for requests.
+** *[Protocol]*: String value that can be the following:
+*** `HTTP`: ALB health checks and NLB health checks.
+*** `HTTPS`: ALB health checks and NLB health checks.
+*** `TCP`: NLB, NLB health checks.
+*** `TLS`: NLB.
+*** `UDP`: NLB.
+*** `TCP_UDP`: Listen to both TCP and UDP on the same port (NLB).
+
+=== NetworkTargetGroups
+
+Requests are routed to one or more registered targets via each target group.
+When you create a listener, you specify a default action group.
+The listener rule directs traffic to the specified target group.
+You can designate different target groups for various types of requests. 
+
+This is the information related to configure the **Network Target Groups** section:
+
+[source, json]
+----
+"NetworkTargetGroups": [
+  {
+    "Id": "string",               // Identificator of the target group
+    "Name": "string",             // Name of the target group
+    "Port": 0.0,                  // Port in which the target group listens to
+    "VpcId": "string",            // VPC in which the target group will be running
+    "HealthCheckCount": 0         // number health checks, between 2 and 10 
+  }
+]
+----
+
+* *[Id]*: Identificator of the target group.
+* *[Name]*: Name of the target group.
+* *[Port]*: Port in which the target group listens to.
+* *[VpcId]*: PC in which the target group will be running.
+* *[HealthCheckCount]*: Number health checks, between 2 and 10 .
+
+=== Pipelines
+
+AWS CodePipeline is a continuous delivery service you can use to model, visualize, and automate the steps required to release your software.
+
+This is the information related to configure the **Pipelines** section:
+
+[source, json]
+----
+"Pipelines":
+[
+  {
+    "Id": "string",                             // Internal Id to identify the Pipeline
+    "Name": "string",                           // Name of the Pipeline
+    "ArtifactBucket": "string",                 // Name of the Artifact Bucket
+    "Role": "string",                           // Name of the Role
+    "Stages":                                   // List of stages of the pipeline
+    [
+      {
+        "Name": "string",                       // Name of the stage of the pipeline
+        "Actions":                              // List of pipeline stage actions
+        [
+          {
+            "Type": "string",                   // Type of the action expects s3Source, codebuild, cloudformation, ecrsource or ecsdeploy
+            "argumentsType": {"...":}
+          }
+        ]
+      }
+    ]
+  }
+]
+----
+
+* *[Id]*: Internal Id to identify the Pipeline.
+* *[Name]*: Name of the Pipeline.
+* *ArtifactBucket*: Name of the Artifact Bucket of the pipeline.
+* *Role*: Name of the Role.
+* *Stages*: List of stages of the pipeline:
+** *[Name]*: Name of the stage of the pipeline.
+** *Actions*: List of pipeline stage actions:
+*** *[Type]*: Type of the action expects:
+**** `s3Source`
+**** `codebuild`
+**** `cloudformation`
+**** `ecrsource`
+**** `ecsdeploy`
+*** ($$*$$) *[`argumentsType`]*: 
++
+There are currently 3 supported types of actions, each one will require an {`argumentsType`}, whose structure will be defined further below:
+
+- If the S3Source is used, the {`argumentsType`} will be `ArgumentsS3`.
+
+- If the CodeBuild is used, the {`argumentsType`} will be `ArgumentsCodeBuild`.
+
+- If the CloudFormation is used, the {`argumentsType`} will be `ArgumentsCloudFormation`.
+
+- If the EcsRepository is used, the {`argumentsType`} will be `ArgumentsEcrRepository`.
+
+- If the EcsDeploy is used, the {`argumentsType`} will be `ArgumentsEcsDeploy`.
+
+=== ArgumentsS3
+
+[source, json]
+----
+{
+  "Name": "string",              // Name of the pipeline action
+  "BucketName": "string",        // Name of the S3 bucket where the Lambda function zip is located
+  "BucketKey": "string",         // Path inside of the S3 bucket where the zip of the Lambda function is located
+  "OutputArtifact": "string",    // Artifact which will contain the code
+  "Role": "string"               // Role to allow access to the S3 bucket, if necessary
+}
+----
+
+* *[Name]*: Name of the pipeline action.
+* *[BucketName]*: Name of the S3 bucket where the Lambda function zip is located.
+* *[BucketKey]*: Path inside of the S3 bucket where the zip of the Lambda function is located.
+* *[OutputArtifact]*: Artifact which will contain the code.
+* *Role*: Role to allow access to the S3 bucket, if necessary.
+
+==== ArgumentsCodeBuild
+
+[source, json]
+----
+{
+  "Name": "string",                               // Name of the pipeline action
+  "InputArtifact": "string",                      // Artifact that will be extracted inside the CodeBuild machine
+  "CodeBuildProject": "string",                   // Id of the CodeBuild project that will be used
+  "EnvironmentVariables": {"string":"string"}     // Environment variables to set in the CodeBuild before its execution
+}
+----
+
+===== ArgumentsCloudFormation
+
+[source, json]
+----
+{
+  "Name": "string",                 // Name of the pipeline action
+  "InputArtifact": "string",        // Artifact that will contain the file with new structure of the Stack
+  "TemplatePath": "string",         // Path of the json inside the input artifact that will specify the new structure of the Stack
+  "StackName": "string",            // Name of the stack that will be created/updated
+  "DeploymentRole": "string",       // Role of the action during its execution
+  "Role": "string",                 // Role of the action before its execution
+  "CfnCapabilities": "string"       // Permissions given to the action to execute changes in the IAM service, at least one is mandatory, expects "ANONYMOUS_IAM","NAMED_IAM", or"AUTO_EXPAND"
+}
+----
+
+* *[Name]*: Name of the pipeline action.
+* *[InputArtifact]*: Artifact that will contain the file with new structure of the Stack.
+* *[TemplatePath]*: Path of the json inside the input artifact that will specify the new structure of the Stack.
+* *[StackName]*: Name of the stack that will be created/updated
+* *[DeploymentRole]*: Role of the action during its execution
+* *[Role]*: Role of the action before its execution
+* *[CfnCapabilities]*: Permissions given to the action to execute changes in the IAM service, at least one is mandatory, expects:
+** `ANONYMOUS_IAM`
+** `NAMED_IAM`
+** `AUTO_EXPAND`
+
+===== ArgumentsEcrRepository
+
+[source, json]
+----
+{
+  "Name": "string",                 // Name of the pipeline action
+  "ImageTag": "string",             // Tag for the image we want to retrieve from ECR
+  "EcrRepositoryName": "string",    // The name of the ECR to retrieve the image
+  "OutputArtifact": "string",       // Artifact which will contain the code
+  "Role": "string"                  // Role of the action
+}
+----
+
+* *[Name]*: Name of the pipeline action.
+* *[ImageTag]*: Tag for the image we want to retrieve from ECR.
+* *[EcrRepositoryName]*: The name of the ECR to retrieve the image.
+* *[OutputArtifact]*: Artifact which will contain the code.
+* *[Role]*: Role of the action.
+
+===== ArgumentsEcsDeploy
+
+[source, json]
+----
+{
+  "Name": "string",                 // Name of the pipeline action
+  "ServiceName": "string",          // Name of the service
+  "ClusterId": "string",            // The cluster's Id
+  "DeploymentTimeoutMinutes": 0,    // Deployment timeout in minutes
+  "ImageName": "string",            // Tag for the image we want to retrieve from ECS.
+  "InputArtifact": "string" ,       // Artifact that will contain the file with new structure of the Stack.
+  "Role": "string"                  // Role of the action
+}
+----
+
+* *[Name]*: Name of the pipeline action.
+* *[ServiceName]*: Name of the service.
+* *[ClusterId]*: The cluster's Id.
+* *[DeploymentTimeoutMinutes]*:  Deployment timeout in minutes.
+* *[ImageName]*: Tag for the image we want to retrieve from ECS.
+* *[InputArtifact]*: Artifact that will contain the file with new structure of the Stack.
+* *[Role]*: Role of the action.
+
+=== PolicyDocuments
+
+This is the information related to configure the **Policy Documents** section:
+
+[source, json]
+----
+"PolicyDocuments": 
+[
+  {
+    "Id": "string",                 // Identificator of the policy
+    "PolicyStatements":             // List of the statements the policy will include
+        [
+          {
+            "Effect":               // Whether to allow or deny the actions in this statement.
+              [
+                "ALLOW or DENY"
+              ],
+            "Action":               // List of actions to add to the statement
+              [
+                "string",
+                "string"
+              ],
+            "Resource":             // Resource ARNs to add to the statement. The wildcard * is accepted.
+              [ 
+                "string",
+                "string"
+              ]
+          }
+        ]
+  }
+]
+----
+
+* *[Id]*: Identifier of the policy.
+* *[PolicyStatements]*: Aws name of the NetworkLoadBalancer
+** *[Effect]*: Whether to allow or deny the actions in this statement. The values must be the following:
+*** ALLOW
+*** DENY
+** *[Action]*: List of actions to add to the statement.
+** *[Resource]*: Resource ARNs to add to the statement. The wildcard * is accepted.
+
+=== Roles
+
+AWS Identity and Access Management (IAM) is a web service that helps you securely control access to AWS resources. You use IAM to control who is authenticated (signed in) and authorized (has permissions) to use resources.
+
+This is the information related to configure the **Roles** section.
+
+[source, json]
+----
+"Roles":
+[
+  {
+    "Id": "string",                  // Internal Id to identify the Role
+    "Name": "string",                // Name of the role
+    "RoleArn": "string",             // Amazon Resource Name format of the role
+    "LocateInsteadOfCreate": true,   // true if you want to locate an existing role, false if you want to create a new one
+
+    "AssumedBy": [                   // List of authorized services to use this role
+      "string"
+    ],
+    "AwsPolicies": [                 // List of AWS managed policies used by this role
+      "string"
+    ],
+    "CustomPolicies": [              // List of user managed policies used by this role
+      "string"
+    ],
+    "InlinePolicies": [              // List of IDs of the PolicyDocuments used by this role**.
+      "string"
+    ],
+    "AwsActions": [                  // List of AWS actions that this role will allow
+      "string"
+    ]
+  }
+]
+----
+
+* *[Id]*: Internal identifier to identify the Role.
+* *[Name]*: Name of the role.
+* *RoleArn*: Amazon Resource Name format of the role (`arn:partition:service:region:account:resource`).
+* *LocateInsteadOfCreate*: Boolean to indicate if the role needs to be located instead of created.
+* *AssumedBy*: List of authorized services to use this role.
+* ($$*$$) *AwsPolicies*: List of AWS managed policies used by this role.
+* ($$*$$) *CustomPolicies*: List of user managed policies used by this role.
+* ($$*$$) *InlinePolicies*: List of IDs of the PolicyDocuments used by this role.
+* ($$*$$) *AwsActions*: List of AWS actions that this role will allow.
+
+($$*$$) The allowed combinations of fields are:
+
+* AwsPolicies, CustomPolicies, InlinePolicies or any combination of them
+* AwsActions
+
+=== S3Buckets
+
+Amazon S3 is an object storage service that provides industry-leading scalability, data availability, security, and performance.
+Amazon S3 can be used to store and retrieve any amount of data at any time and from any location. 
+
+This is the information related to configure the **S3 Bucket** section.
+
+[source, json]
+----
+"S3Buckets": 
+[
+  {
+    "Id": "string",                 // Internal Id to identify the S3 bucket
+    "LocateInsteadOfCreate": true,  // true if you want to locate a s3 bucket, false if you want to create a new one
+    "BucketName": "string",         // Name of the bucket
+    "Versioned": true,              // true if you want to enable versioning, false otherwise
+    "ExpirationDays": 0,            // Number of days that an object will remain in the S3 Bucket
+    "ExpireDocumentRules":          // List of expiration rules for objects with a specific tag name and tag value
+    [
+      {
+        "RuleName": "string",       // Name of the rule
+        "Expiration": 0,            // Number of days the affected objects will remain in the S3 bucket
+        "TagName": "string",        // Tag name that an object must have if it has to be affected by this rule
+        "TagValue": "string"        // Tag value that an object must have if it has to be affected by this rule
+      }
+    ],
+    "EnforceSSL": true,             // Enforces SSL for requests.
+    "BlockPublicAccess" : true,     // Blocks all the public access if set to true.
+    "Events": [                     // List of Notification events 
+        {
+            "EventType": "string",  // TODO 
+            "LambdaId": "string"    // TODO
+        }
+    ]
+  } 
+]
+----
+
+* *[Id]*: Internal identifier to identify the S3 bucket.
+* ($$*$$) *[LocateInsteadOfCreate]*: Boolean to locate a existing S3Bucket. `true` if you want to locate a vpc, `false` if you want to create a new one.
+* *[BucketName]*: Name of the bucket.
+* *[Versioned]*: Boolean that indicates if the S3Bucket needs to have versioning. `true` if you want to enable versioning, `false` otherwise.
+* *ExpirationDays*: Number of days that an object will remain in the S3 Bucket.
+* *ExpireDocumentRules*: List of expiration rules for objects with a specific tag name and tag value:
+** *[RuleName]*: Name of the rule.
+** *[Expiration]*: Number of days the affected objects will remain in the S3 bucket.
+** ($$**$$) *[TagName]*: Tag name that an object must have if it has to be affected by this rule.
+** *[TagValue]* : Tag value that an object must have if it has to be affected by this rule.
+* *[EnforceSSL]*: Boolean that forces the use of SSL protocol. See: https://docs.aws.amazon.com/config/latest/developerguide/s3-bucket-ssl-requests-only.html[S3 Bucket SSL Requests].
+* *BlockPublicAccess*: Boolean  Blocks all the public access if set to true.
+* *Events*: TODO Preguntar si son eventos que lanzan lambdas:
+** *EventType* : TODO
+** *LambdaId* : TODO
+
+($$*$$) If the LocateInsteadOfCreate field is set to true, only the Id and BucketName fields will be used, the others will be ignored.
+
+($$**$$) If the TagName and the TagValue are not specified, the expiration rule will be applied to all the objects of the bucket.
+
+=== SecurityGroups
+
+A security group manages the traffic that is allowed to enter and exit the resources with which it is associated.
+For example, after you associate a security group with an EC2 instance, it controls the instance's inbound and outbound traffic. 
+
+This is the information related to configure the **Security Groups** section
+
+[source, json]
+----
+"SecurityGroups": 
+[
+  {
+    "Id": "string",                      // Internal Id to identify the security group
+    "SecurityGroupName": "string",       // Name of the security group
+    "VpcId": "string",                   // Internal Id of the VPC 
+    "AllowAllOutbound": true,            // Boolean to indicate if this security group should allow all outcoming traffic
+    "DisableInlineRules": true,          // Disable inline ingress and egress rule optimization.
+    "LocateInsteadOfCreate": true,       // true if you want to locate a SecurityGroup, false if you want to create a new one
+    "IngressRules":                      // List of rules to all incoming traffic
+    [
+      {
+        "SecurityGroupId": "string",     // Internal Id of the Security Group 
+        "IpAddress": "string",           // IP address which will be allowed
+        "Port": 0,                       // Port which will be allowed
+        "PortRangeStart": 0.0,           // TCP Port range start
+        "PortRangeEnd": 0.0,             // TCP port range end
+        "Description": "string"          
+      }
+    ],
+    "EgressRules":                       // List of rules to all outcoming traffic
+    [
+      {
+        "SecurityGroupId": "string",     
+        "IpAddress": "string",           
+        "Port": 0,                      
+        "PortRangeStart": 0.0,          
+        "PortRangeEnd": 0.0,             
+        "Description": "string"          
+      }
+    ]
+  }
+]
+----
+
+* *[Id]*: Internal identifier to identify the security group.
+* *[SecurityGroupName]*: Name of the security group.
+* *[VpcId]*: Internal identifier of the VPC to which the security group will belong.
+* ($$*$$) *[AllowAllOutbound]*: Boolean `true` if this security group should allow all outcoming traffic, `false` otherwise. 
+* *[DisableInlineRules]*: Boolean that indicates whether to disable inline ingress and egress rule optimization. If this is set to true, ingress and egress rules will not be declared under the SecurityGroup in cloudformation.
+* *LocateInsteadOfCreate*: Boolean to locate a existing SecurityGroup. `true` if you want to locate or `false` if you want to create a new one.
+* *IngressRules*: List of rules to all incoming traffic:
+** *[SecurityGroupId]*: Internal Id of the Security Group which will be allowed to contact the current Security Group.
+** *[IpAddress]*: IP address which will be allowed to contact the current Security Group.
+** *[Port]*: Port which will be allowed to contact the current Security Group.
+** *[PortRangeStart]*: TCP Port range start.
+** *[PortRangeEnd]*: TCP port range end.
+** *Description*: Description of the rule.
+* ($$*$$) *EgressRules*: List of rules to all outcoming traffic:
+** ($$**$$) *[SecurityGroupId]*: Internal Id of the Security Group which will be allowed to be contacted from the current Security Group.
+** ($$**$$) *[IpAddress]*: IP address which will be allowed to be contacted from the current Security Group.
+** *[Port]*: Port which will be allowed to be contacted from the current Security Group.
+** *[PortRangeStart]*: TCP Port range start.
+** *[PortRangeEnd]*: TCP port range end.
+** *Description*: Description of the rule.
+
+($$*$$) If the AllowAllOutbound field is set to true, it is strongly recommended to leave the EgressRules field empty.
+
+($$**$$) The SecurityGroupId and the IpAddress are mutually exclusive.
+
+=== Secrets
+
+Secrets Manager allows you to replace hardcoded credentials, such as passwords, in your code with an API call to Secrets Manager to retrieve the secret programmatically.
+Because the secret no longer exists in the code, it cannot be compromised by someone examining your code.
+You can also set Secrets Manager to automatically rotate the secret for you on a predefined schedule.
+This allows you to replace long-term secrets with short-term ones, lowering the risk of compromise significantly. 
+
+This is the information related to configure the **Secrets** section:
+
+[source, json]
+----
+"Secrets": 
+[
+  {
+    "Id": "string",       // Internal Id to identify the secret
+    "Key": "string",      // Key name of the secret
+    "Value": "string"     // Value of the secret
+  }
+]
+----
+
+* *[Id]*: Internal Id to identify the secret.
+* *[Key]*: Key name of the secret.
+* *[Value]*: Value of the secret.
+
+=== SnsTopics
+
+This is the information related to configure the **SnsTopics** section:
+
+[source, json]
+----
+"SnsTopics": 
+[
+  {
+    "Id": "string",                       // Internal identification for the Sns topic
+    "Name": "string",                     // Name of the sns topic
+    "DisplayName": "string",              // A developer-defined string that can be used to identify this SNS topic
+    "Fifo": true,                         // Set to true to create a FIFO topic
+    "ContentBasedDeduplication": true     // True to Enable content-based deduplication for FIFO topics
+  }
+]
+----
+
+* *[Id]*: Internal identification for the Sns topic.
+* *[Name]*: Name of the sns topic.
+* *[DisplayName]*: A developer-defined string that can be used to identify this SNS topic.
+* *Fifo*: Set to true to create a FIFO topic.
+* *ContentBasedDeduplication*: True to Enable content-based deduplication for FIFO topics.
+
+==== SnsEmailSubscriptions
+
+Amazon SNS (Amazon Simple Notification Service) is a managed service that delivers messages from publishers to subscribers (also known as producers and consumers).
+Publishers communicate with subscribers asynchronously by sending messages to a topic, which serves as a logical access point and communication channel.
+
+This is the information related to configure the **SnsEmailSubscriptions** section:
+
+[source, json]
+----
+"SnsEmailSubscriptions": 
+[
+  {
+    "Email": "string",      // Email adress for the subscriptions
+    "Json": true,           // Indicates if the full notification JSON should be sent to the email address or just the message text
+    "TopicIds":             // Topics list to suscribe
+        [
+          "string",
+          "string"
+        ]               
+  }
+]
+----
+
+* *[Email]*: Email adress for the subscriptions.
+* *Json*: Indicates if the full notification JSON should be sent to the email address or just the message text.
+* *[TopicIds]*: Topics list to suscribe.
+
+=== SsmParameters (SSM Parameter Store)
+
+AWS Systems Manager's Parameter Store feature provides secure, hierarchical storage for configuration data management and secrets management.
+Passwords, database strings, Amazon Machine Image (AMI) IDs, and license codes can all be stored as parameter values.
+Values can be stored as plain text or encrypted data. 
+
+This is the information related to configure the **Parameter Store** section.
+
+[source, json]
+----
+"SsmParameters": [
+  {
+    "Id": "string",                   // Internal Id to identify the parameter
+    "Name": "string",                 // Name of the parameter e.g: /parameters/parameter-1
+    "Value": "string",                // Value of the parameter
+    "LocateInsteadOfCreate": true,    // True if you just want to locate the parameter (default false)
+    "Description": "string",          // Optional description of the parameter
+    "IsAdvancedTier": true,           // Optional tier definition (default false)
+    "IsStringList": true              // Optional type of parameter (default false)
+  }
+]
+----
+
+* *[Id]*: Internal Id to identify the repository.
+* *[Name]*: Name of the parameter e.g: /parameters/parameter-1.
+* *[Value]*: Value of the parameter.
+* *LocateInsteadOfCreate*: True if you just want to locate the parameter default false.
+* *Description*: Optional description of the parameter.
+* *IsAdvancedTier*: Optional tier definition, default false.
+* *IsStringList*: Optional type of parameter, default false.
+
+=== Subnets
+
+In your VPC, a subnet is a range of IP addresses.
+AWS resources can be launched into a specific subnet.
+A public subnet should be used for resources that must be connected to the internet, and a private subnet should be used for resources that will not be connected to the internet.
+
+This is the information related to configure the **Subnets** section.
+
+[source, json]
+----
+"Subnets": 
+[
+  {
+    "SubnetGroups":                     // List of subnet groups
+    [
+      {
+        "Id": "string",                 // Internal Id to identify the subnet group
+        "SubnetGroupName": "string"     // Name of the subnet group
+      }
+    ],
+    "Subnets":                          // List of subnets
+    [
+      {
+        "Id": "string",                 // Internal Id to identify the subnet
+        "AwsSubnetId": "string"         // AWS Subnet Id
+      }
+    ]
+  }
+],
+----
+
+* *SubnetGroups*: List of subnet groups, if any:
+** *[Id]*: Internal identifier to identify the subnet group.
+** *[SubnetGroupName]*: Name of the subnet group.
+* *Subnets*: List of subnets:
+** *[Id]*: Internal identifier to identify the subnet .
+** *[AwsSubnetId]*: Internal identifier to identify the subnet.
+
+=== VPCs
+
+Amazon Virtual Private Cloud (Amazon VPC) enables you to launch AWS resources into a virtual network that you've defined.
+
+This is the information related to configure the **VPCs** section.
+
+[source, json]
+----
+"Vpcs": 
+[
+  {
+    "Id": "string",                 // Internal Id to identify the VPC
+    "AwsVpcId": "string",           // AWS VPC Id
+    "LocateInsteadCreate": true,    // boolean to locate a existing VPC
+    "IsDefault": true               // boolean to mark this one as default
+  }
+],
+----
+
+* *[Id]*: Internal identifier to identify the VPC.
+* *[AwsVpcId]*: Name of the configuration stack.
+* *[LocateInsteadCreate]*: Boolean to locate a existing VPC. `true` if you want to locate a vpc or `false` if you want to create a new one (currently creating a VPC is not supported, so this field should be always false).
+* *[IsDefault]*: Identifier of the AWS account.
+
+=== Wafs (Web Application Firewall)
+
+AWS WAF is a web application firewall that allows you to monitor HTTP and HTTPS requests forwarded to your protected web application resources. AWS WAF also lets you control access to your content.
+
+This is the information related to configure the **Wafs** section:
+
+[source, json]
+----
+"Wafs": 
+[
+  {
+    "Id": "string",                       // Internal identification for the Waf 
+    "Name": "string",                     // Name of the waf                 
+    "AssociatedApiGatewayId": "string",   // Internal identification for the associated Api Gateway
+    "Description": "string",              // A description of the web ACL that helps with identification.
+    "Scope": "string",                    // Specifies whether this is for an Amazon CloudFront distribution or for a regional application (REGIONAL by default)
+    "CloudWatchMetricsEnabled": true,     //  A boolean indicating whether the associated resource sends metrics to Amazon CloudWatch (true by default)
+    "SampledRequestsEnabled": true,       // A boolean indicating whether AWS WAF should store a sampling of the web requests that match the rules (true by default)
+  }
+]
+----
+
+* *[Id]*: Internal identification for the Web application firewall.
+* *[Name]*: Name of the Web application firewall.
+* *[AssociatedApiGatewayId]*: Internal identification for the associated Api Gateway
+* *Description*: A description of the web ACL that helps with identification.
+* *Scope*: Specifies whether this is for an Amazon CloudFront distribution or for a regional application (REGIONAL by default). Valid Values are CLOUDFRONT and REGIONAL. For CLOUDFRONT , you must create your WAFv2 resources in the US East (N. Virginia) Region, us-east-1.
+* *CloudWatchMetricsEnabled*: A boolean indicating whether the associated resource sends metrics to Amazon CloudWatch (true by default).
+* *SampledRequestsEnabled*: A boolean indicating whether AWS WAF should store a sampling of the web requests that match the rules (true by default).
