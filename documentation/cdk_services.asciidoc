@@ -283,9 +283,9 @@ This is the information related to configure the **Auto Scaling Groups** section
         [
             {
                 "BlockDeviceName": "string",                      // Name of the block device
-                "BlockDeviceVolume":           // Describes a block device mapping for an EC2 instance or Auto Scaling group
+                "BlockDeviceVolume":                              // Describes a block device mapping for an EC2 instance or Auto Scaling group
                 {   
-                   "EbsDevice":                // Creates a new Elastic Block Storage device from an existing snapshot
+                   "EbsDevice":                                   // Creates a new Elastic Block Storage device from an existing snapshot
                         {
                             "DeleteOnTermination": true,          // Remove the volume when the instance is terminated
                             "Encrypted": true,                    // Specifies if the volume is encrypted or not
