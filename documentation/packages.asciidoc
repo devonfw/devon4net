@@ -1475,6 +1475,17 @@ The component configuration can be done in `appsettings.{environment}.json` with
         "EnableSslCertificateVerification": false,
         "Debug": "" 
       }
+    ],
+    "Streams": [
+      {
+        "ApplicationId": "file_transfer",
+        "Servers": "localhost:9092",
+        "AutoOffsetReset": "earliest",
+        "StateDir": "./FileStream",
+        "CommitIntervalMs": "5000",
+        "Guarantee": "at_least_once",
+        "MetricsRecording": "debug"
+      }
     ]
   }
 ----
@@ -1531,6 +1542,14 @@ A comma-separated list of debug contexts to enable. Detailed Producer debugging:
 ** `IsolationLevel`: Controls how to read messages written transactionally: `ReadCommitted` - only return transactional messages which have been committed. `ReadUncommitted` - return all messages, even transactional messages which have been aborted.
 ** `EnableSslCertificateVerification`: Enable OpenSSL's builtin broker (server) certificate verification. Default is `true`.
 ** `Debug`: A comma-separated list of debug contexts to enable. Detailed Producer debugging: broker,topic,msg. Consumer: consumer,cgrp,topic,fetch
+* `Streams`:List of consumers configuration.
+** `ApplicationId`: Stream application identifier
+** `Servers`: Host address and port number in the form of `host:port`.
+** `AutoOffsetReset`: Action to take when there is no initial offset in offset store or the desired offset is out of range: 'smallest','earliest' - automatically reset the offset to the smallest offset, 'largest','latest' - automatically reset the offset to the largest offset, 'error' - trigger an error which is retrieved by consuming messages and checking 'message-&gt;err'
+** `StateDir`:  Directory location for state store.
+** `CommitIntervalMs`: The frequency with which to save the position of the processor.
+** `Guarantee`: The processing guarantee that should be used. Values: ( `at_least_one`, `exactly_one`)
+** `MetricsRecording`: The highest recording level for metrics. Values: (`info`, `debug`)
 
 === Setting up in Devon
 
@@ -1594,6 +1613,17 @@ This will install all the packages the component needs to work properly. Now set
         "IsolationLevel": "ReadCommitted", 
         "EnableSslCertificateVerification": false,
         "Debug": "" 
+      }
+    ],
+    "Streams": [
+      {
+        "ApplicationId": "file_transfer",
+        "Servers": "localhost:9092",
+        "AutoOffsetReset": "earliest",
+        "StateDir": "./FileStream",
+        "CommitIntervalMs": "5000",
+        "Guarantee": "at_least_once",
+        "MetricsRecording": "debug"
       }
     ]
   }

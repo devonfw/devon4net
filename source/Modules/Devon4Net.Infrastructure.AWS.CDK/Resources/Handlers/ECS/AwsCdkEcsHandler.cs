@@ -26,7 +26,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
             }));
         }
 
-        public IService CreateEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount, bool useDistinctInstances, List<string> placementStrategies)
+        public IService CreateEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount, bool useDistinctInstances, List<string> placementStrategies) //NOSONAR number of params
         {
             var result = CreateEc2Service(new Ec2ServiceEntity
             {

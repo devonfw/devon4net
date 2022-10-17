@@ -8,7 +8,7 @@ namespace Devon4Net.Infrastructure.Kafka.Common.Const
         public const CompressionType CompressionType = Confluent.Kafka.CompressionType.Gzip;
         public const int CompressionLevel = -1;
         public const int ReceiveMessageMaxBytes = 100000000;
-        public const bool EnableSslCertificateVerification = false ;
+        public const bool EnableSslCertificateVerification = false;
         public const int CancellationDelayMaxMs = 100;
         public const Acks Ack = Acks.None;
         public const string Debug = "";
@@ -20,5 +20,6 @@ namespace Devon4Net.Infrastructure.Kafka.Common.Const
         public const int BatchSize = 1000000;
         public const int StatisticsIntervalMs = 0;
         public const int SessionTimeoutMs = 3000;
+        public const long StreamsCommitIntervalMs = 5000;
     }
 }

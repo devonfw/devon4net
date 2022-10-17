@@ -1087,3 +1087,100 @@ The `Properties` section will contain the value of the location, as seen in the 
 * https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/WorkingWithTables.Basics.html[Basic operations on DynamoDB tables]
 
 * https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SettingUp.DynamoWebService.html[Setting up DynamoDB (web service)]
+
+== Kafka Template
+
+The devon4net stack includes a Kafka template with some samples of how to use `Producers`, `Consumers` and `Streams` in your .Net projects. The Kafka server is running in docker in local, further in the document you will find everything you need to know to configure the template and run it.
+
+There are two main examples in the template. 
+
+* *File Transfer*: You can transfer files in pieces from the Producer to the Consumer project, going through a Stream inside Kafka. An "In-Memory" database stores the pieces until all of them have arrived and the file is ready to be downloaded.
+
+* *Message Service*: You can send kafka messages through a topic in kafka, from the Producer project to the Consumer. 
+
+The template is made up of three projects:
+
+* `Devon4Net.Application.Kafka`: This project holds the Stream and deploys it to the server. It also helps managing the Kafka server through an API in http://localhost:9093/swagger/index.html[localhost:9093], allowing you to create and delete Kafka topics.
+* `Devon4Net.Application.Kafka.Producer`: This project contains two producers. You will be able to use the producers through an availble API in http://localhost:9091/swagger/index.html[localhost:9091].
+* `Devon4Net.Application.Kafka.Consumer`: This project consumes both from the file topic and the message topic. You have also an API available in http://localhost:9094/swagger/index.html[localhost:9094]
+
+.Diagram of the Template
+image::images/kafka_template.png[]
+
+As you can see in the diagram, all of the projects communicate with and through the kafka image running on docker.
+
+=== Sample of use
+
+In this part of the document, you will learn how to launch the projects and use them.
+
+==== Docker
+
+In devon4net you have a kafka docker file available for running in the directory `source\Docker\Kafka`. 
+
+1. For running it first make sure that your Docker Daemon is running in your system. 
+
+2. Then you can navigate to the directory using a console and execute the following command:
+
+[source, console]
+----
+docker compose up
+----
+
+==== Configuration
+
+The only necessary configuration is the directory you want to download the files that will be transferred. For that go to the `Devon4Net.Application.Kafka.Consumer` project and fill the Downloads section in the `appsettings.Development.json`.
+
+[source, json]
+----
+"Downloads": {
+  "TargetDirectory": "C:\\KafkaTest", // Specify a directory  for downloading the files
+  "DefaultFileName": "output"         // Name of the file downloaded
+},
+----
+
+NOTE: You can also change other configuration as you wish. To learn more about the configuration go to the component documentation.
+
+==== Project initialization
+
+To start all three projects you will need to select them. For that right click on the solution and select `Set Startup projects...`
+
+.Set multiple startup projects
+image::images/multiple_startup.png[]
+
+Then select the three projects and run it.
+
+
+==== Create the topics
+
+The consumers and the streams use the topics before they are created, so you will need to define them before starting the application.
+
+For that you can use the API available in http://localhost:9093/swagger/index.html[localhost:9093] and create the following topics:
+
+* `message_producer`
+* `message_consumer`
+* `file_producer`
+* `file_consumer`
+
+Now you can re-run the application and use it.
+
+==== Use it
+
+In this sample of use we are going to send a file and receive it in our desired directory using the Consumer API.
+
+1. Go to the http://localhost:9091/swagger/index.html[Producer API] and upload a file:
++
+.Upload a file to the API
+image::images/upload_file_kafka.png[]
+
+2. Navigate to the http://localhost:9094/swagger/index.html[Producer API] and copy the file Guid using the `getFilesGuids` end-point.
++
+.Get the files Guids
+image::images/get_files_guids.png[]
+
+
+3. Put the file guid in the `downloadFile` end-point and wait for it downloading in the directory you chose.
++
+.Download the file by its Guid
+image::images/download_file.png[]
+
+NOTE: You can follow the process of sending (`Producer`), processing (`Stream`) and downloading (`Consumer`) the file by pieces through the projects consoles, where you will see some interesting logs.

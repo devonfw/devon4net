@@ -18,7 +18,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ECS
         CapacityProviderStrategy CreateCapacityProviderStrategy(AsgCapacityProvider capacityProvider, int capWeigth, int capBase);
         ContainerDefinition CreateContainerDefinition(string containerId, IContainerDefinitionProps containerDefinitionProps);
         ICluster CreateEC2Cluster(string id, string clusterName, IVpc vpc);
-        IService CreateEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount, bool useDistinctInstances, List<string> placementStrategies);
+        IService CreateEc2Service(string id, string serviceName, ICluster cluster, TaskDefinition taskDefinition, int? healthCheckGracePeriod, List<CapacityProviderStrategy> capacityProviderStrategies, int? desiredCount, bool useDistinctInstances, List<string> placementStrategies); //NOSONAR number of params
         TaskDefinition CreateEc2TaskDefinition(string taskDefinitionId, string taskDefinitionFamily, List<EcsDockerVolumeOptions> volumesOptions, IRole taskRole = null);
         IEc2TaskDefinition LocateEc2TaskDefinitionByArn(string id, string arn);
         IService LocateEcsServiceByArn(string identification, string arn);
