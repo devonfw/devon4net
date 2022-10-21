@@ -202,28 +202,27 @@ This is the information related to configure the **Api Gateways** section.
 "ApiGateways": 
 [
   {
-    "Id": "string",                     // Internal Id to identify the Api Gateway
-    "RestApiName": "string",            // Name of the Api Gateway
-    "LambdaName": "string",             // Name of the lambda to which the Api Gateway will be applied
-    "EnableAccessLogging": true,        // Enable / Disable Api-Gateway access logging (true by default)
-    "TracingEnabled": true,             // Enable / Disable Api-Gateway tracing
-    "CloudWatchLoggingLevel": "string", // Log level of the Api-Gateway to CloudWatch, the allowed values are INFO, ERROR and OFF (OFF if not specified)
-    "BinaryMediaTypes": [               // List of binary types accepted in the Api Gateway
+    "Id": "string",                      // Internal Id to identify the Api Gateway
+    "RestApiName": "string",             // Name of the Api Gateway
+    "EnableAccessLogging": true,         // Enable / Disable Api-Gateway access logging (true by default)
+    "TracingEnabled": true,              // Enable / Disable Api-Gateway tracing
+    "CloudWatchLoggingLevel": "string",  // Log level of the Api-Gateway to CloudWatch, the allowed values are INFO, ERROR and OFF (OFF if not specified)
+    "BinaryMediaTypes": [                // List of binary types accepted in the Api Gateway
       "string"
     ],
-    "Resources":[                       
+    "Resources":[                        // List of resources
       {
-        "ResourceName":"string",
-        "IsProxy":true,
-        "Resources":[                   
+        "ResourceName":"string",         // Resource's name
+        "IsProxy":true,                  // Boolean that indicates if it is a proxy resource
+        "Resources":[                    // List of child resources
         ],
-        "Method":[
+        "Method":[                       // List of api methods from the resource
           {
-            "HttpMethod":"string",
-            "ApiLambdaName":"string",
-            "IntegrationLambdaOptions":{
-              "AllowTestInvoke": true,
-              "Proxy": true
+            "HttpMethod":"string",       // Type of Http method
+            "ApiLambdaName":"string",    // Name of the lambda which manages the method
+            "IntegrationLambdaOptions":{ // Lambda options
+              "AllowTestInvoke": true,   // Allow invoking method from AWS console UI for testing
+              "Proxy": true              // Use proxy integration or normal integration (request response)
             }
           }
         ]
@@ -235,21 +234,20 @@ This is the information related to configure the **Api Gateways** section.
 
 * *[Id]*: Internal Id to identify the Api Gateway.
 * *[RestApiName]*: Name of the Api Gateway.
-* *[LambdaName]*: Name of the lambda to which the Api Gateway will be applied.
 * *EnableAccessLogging*: Enable / Disable Api-Gateway access logging (true by default).
 * *TracingEnabled*: Enable / Disable Api-Gateway tracing.
 * *CloudWatchLoggingLevel*: Log level of the Api-Gateway to CloudWatch, the allowed values are INFO, ERROR and OFF (OFF if not specified)
 * *[BinaryMediaTypes]*: List of binary types accepted in the Api Gateway.
 * *Resources*: This resources also can contain other resources which are also the same type:
-** *ResourceName*: TODO
-** *IsProxy*: TODO
-** *Resources*: TODO
-** *Method*: TODO
-*** *HttpMethod*: TODO
-*** *ApiLambdaName*: TODO
-*** *IntegrationLambdaOptions*: TODO
-**** *AllowTestInvoke*: TODO
-**** *Proxy*: TODO 
+** *ResourceName*: Resource's name.
+** *IsProxy*: Boolean that indicates if it is a proxy resource.
+** *Resources*: List of child resources.
+** *Method*: List of api methods from the resource:
+*** *HttpMethod*: Type of Http method
+*** *ApiLambdaName*: Name of the lambda which manages the method.
+*** *IntegrationLambdaOptions*: Lambda options.
+**** *AllowTestInvoke*: Allow invoking method from AWS console UI for testing.
+**** *Proxy*: Use proxy integration or normal integration (request response). 
 
 === AutoScalingGroups
 
@@ -275,7 +273,6 @@ This is the information related to configure the **Auto Scaling Groups** section
         "MaxCapacity": 0,                                         // Maximum number of machine instances the AutoScalingGroup will run
         "DesiredCapacity": 0,                                     // Number of machine instances required to reach an stable status
         "SecurityGroupId": "string",                              // Internal Id of the Security Group atached to the EC2 instances for the AutoScalingGroup
-        "Region": "string",                                       // TODO-> 0 references, future update or deprecated?
         "CreationTimeOut": 0,                                     // Creation timeout time in minutes
         "RoleId": "string",                                       // Role attached to the AutoScalingGroup
         "KeyPairName": "string",                                  // KeyPair associated to the instantiated machines to cypher the access credentials
@@ -326,7 +323,6 @@ This is the information related to configure the **Auto Scaling Groups** section
 * *[MaxCapacity]*: Maximum number of machine instances the AutoScalingGroup will run.
 * *[DesiredCapacity]*: Number of machine instances required to reach an stable status.
 * *[SecurityGroupId]*: Internal Id of the Security Group atached to the EC2 instances for the AutoScalingGroup.
-* *[Region]*: TODO-> 0 references, future update or deprecated?
 * *[CreationTimeOut]*: Creation timeout time in minutes.
 * *[RoleId]*: Role attached to the AutoScalingGroup.
 * *[KeyPairName]*: KeyPair associated to the instantiated machines to cypher the access credentials.
@@ -478,7 +474,7 @@ This is the information related to configure the **Cognito** section:
             {
               "Id": "string",                      // CDK ID
               "Identifier": "string",              // Inside Cognito ID
-              "Name": "string",                    // TODO -> 0 references, future update or deprecated?
+              "Name": "string",                    // Name of the resource server.
               "Scopes":[                           // List of scopes
                 {
                   "ScopeName": "string",           // The name of the scope
@@ -522,7 +518,7 @@ This is the information related to configure the **Cognito** section:
 * *[UserPoolResourceServers]*: List of Cognito user pool resource servers:
 ** *[Id]*: CDK ID.
 ** *[Identifier]*: Inside Cognito ID.
-** *[Name]*: TODO -> 0 references, future update or deprecated?
+** *[Name]*: Name of the resource server.
 ** *[Scopes]*: List of scopes:
 *** *[ScopeName]*: The name of the scope.
 *** *[ScopeDescription]*: Scope's description.
@@ -596,7 +592,7 @@ This is the information related to configure the **Databases** section:
     "Port": "string",                            // Port of the database
     "UserName": "string",                        // UserName of the database
     "Secrets": {"key": "value"},                 // Secrets of AWS Secrets Manager database credentials
-    "SsmParameters": {"key": "value"},           // TODO?
+    "SsmParameters": {"key": "value"},           // SsmParameters of AWS Systems Manager database credentials
     "VpcId": "string",                           // Internal Vpc Id to which the database will belong
     "SecurityGroupsIds": ["string", "string"],   // Internal Security Group Id to which the database will belong
     "SubnetGroupId": "string",                   // Internal Subnet Group Id to which the database will belong
@@ -606,7 +602,7 @@ This is the information related to configure the **Databases** section:
     "DeletionProtection": true,                  // True to enable the Database Deletion Protection (false by default)
     "MultiAvailabilityZoneEnabled": true,        // Enable / Disable Multi Availability Zones (true by default)
     "PasswordRotationDaysPeriod": 0,             // Password rotation time expressed in days 
-    "RotationLambdaId": "string",                // TODO?
+    "RotationLambdaId": "string",                // Id of the lambda that applies a rotation to the Database credentials
     "AutoMinorVersionUpgrade": true,             // True for enabling the upgrade of the DB engine version of a database automatically (false by default)
     "ParameterGroupId": "string",                // Internal Parameter Group Id to which the database will belong
     "DmsEndpoints":                              // List of source and target endpoints
@@ -620,7 +616,7 @@ This is the information related to configure the **Databases** section:
     "DatabaseType": "string",                    // Type of the database
     "Edition": "string",                         // Edition of the database instance
     "AllocatedStorageGb": 0.0,                   // Allocated storage of the database in GB (5.0 GB by default)
-    "LicensesOption": "string",                  // Amazon RDS for SQL Server and Oracle supports the “LICENSE_INCLUDED” licensing model. TODO?
+    "LicensesOption": "string",                  // Amazon RDS for SQL Server and Oracle supports the “LICENSE_INCLUDED” licensing model
     "InstanceSize": "string",                    // Size of the instance, expects micro, small, medium or large.
     "Password": "string",                        // Password of the database instance
     "BackupRetentionPeriod": 0,                  // Backup retention period expressed in days (1 day by default, max 35 days)
@@ -646,8 +642,8 @@ This is the information related to configure the **Databases** section:
 * *[InstanceIdentifier]*: Instance identifier of the database.
 * *[Port]*: Port of the database.
 * *[UserName]*: Database user name.
-* ($$*$$) *[Secrets]*: Secrets of AWS Secrets Manager database credentials.
-* *[SsmParameters]*: TODO?
+* ($$*$$) *[Secrets]*: Secrets of AWS Secrets Manager database credentials. All the secrets listed here will be added to your AWS Secrets Manager.
+* *[SsmParameters]*: SsmParameters of AWS Systems Manager database credentials. All the SsmParameters listed here will be added to your AWS Systems Manager Parameter Store.
 * *[VpcId]*: Internal Vpc Id to which the database will belong.
 * *[SecurityGroupsIds]*: List of internal Security Group Id to which the database will belong.
 * *[SubnetGroupId]*: Internal Subnet Group Id to which the database will belong.
@@ -657,7 +653,7 @@ This is the information related to configure the **Databases** section:
 * *DeletionProtection*: Set to true to enable the Database Deletion Protection. This prevents any user from deleting the database. Deletion protection is available for Amazon Aurora and Amazon RDS for MySQL, MariaDB, Oracle, PostgreSQL, and SQL Server database instances in all AWS Regions (false by default).
 * *MultiAvailabilityZoneEnabled*: Enable / Disable Multi Availability Zones (true by default).
 * *PasswordRotationDaysPeriod*: Password rotation time expressed in days.
-* *[RotationLambdaId]*: TODO?
+* *[RotationLambdaId]*: Id of the lambda that applies a rotation to the Database credentials.
 * *AutoMinorVersionUpgrade*: True for enabling the upgrade of the DB engine version of a database automatically (false by default)
 * *[ParameterGroupId]*: Internal Parameter Group Id to which the database will belong
 * *[DmsEndPoint]*: An endpoint provides connection, data store type, and location information about your data store. AWS Database Migration Service uses this information to connect to a data store and migrate data from a source endpoint to a target endpoint, you can configure the following parameters:
@@ -667,7 +663,7 @@ This is the information related to configure the **Databases** section:
 * *[DatabaseType]*: Type of the database.
 * *[Edition]*: Edition of the database instance.
 * *AllocatedStorageGb*: Allocated storage of the database in GB (5.0 GB by default).
-* *[LicensesOption]*: Amazon RDS for SQL Server  and Oracle supports the “License Included” licensing model. TODO?
+* *[LicensesOption]*: Amazon RDS for SQL Server  and Oracle supports the “License Included” licensing model.
 * *[InstanceSize]*: Size of the instance, expects micro, small, medium or large.
 * *[Password]*: Password of the database instance.
 * *[BackupRetentionPeriod]*: Backup retention period expressed in days (1 day by default, max 35 days).
@@ -783,38 +779,6 @@ This is the information related to configure the **Database Parameter Group** se
 * *[Name]*: Name of the parameter group.
 * *[Descritpion]*: Description of the parameter group.
 * *[Parameters]*: Parameters in this parameter group in the form of key-value pairs.    
-
-=== Ec2Instances
-
-Amazon EC2 offers a diverse set of instance types that are designed for specific use cases.
-Instance types are different combinations of CPU, memory, storage, and networking capacity that allow you to choose the best mix of resources for your applications.
-Each instance type comes with one or more instance sizes, allowing you to scale your resources to meet the needs of your target workload. 
-
-This is the information related to configure the **Ec2Instances** section:
-
-[source, json]
-----
-"Ec2Instances": 
-[
-  {
-    "Id": "string",                   // TODO-> 0 references, future update or deprecated?
-    "InstanceName": "string",         // TODO-> 0 references, future update or deprecated?
-    "VpcId": "string",                // TODO-> 0 references, future update or deprecated?
-    "InstanceTypeId": "string",       // TODO-> 0 references, future update or deprecated?
-    "MachineImageRegion": "string",   // TODO-> 0 references, future update or deprecated?
-    "AmiId": "string",                // TODO-> 0 references, future update or deprecated?
-    "SecurityGroupId": "string"       // TODO-> 0 references, future update or deprecated?
-  }
-]
-----
-
-* *[Id]*: 
-* *[InstanceName]*: 
-* *[VpcId]*: 
-* *[InstanceTypeId]*: 
-* *[MachineImageRegion]*: 
-* *[AmiId]*: 
-* *[SecurityGroupId]*: 
 
 === EcrRepositories
 
@@ -947,23 +911,16 @@ This is the information related to configure the **EcsClusters** section:
 "EcsClusters": 
 [
   {
-    "Id": "string",                    // Identificator of the Ecs Cluster                     
-    "LocateInsteadOfCreate": true,     // TODO-> 0 references, future update or deprecated?                 
+    "Id": "string",                    // Identificator of the Ecs Cluster                                      
     "ClusterName": "string",           // Name of the Ecs Cluster
-    "VpcId": "string",                 // Identifier for the VPC
-    "AutoScalingGroupIds":             // TODO deprecated???
-    [                                 
-      "string","string"
-    ]                                    
+    "VpcId": "string",                 // Identifier for the VPC                                   
   }
 ]
 ----
 
 * *[Id]*: Identificator of the Ecs Cluster.
-* *[LocateInsteadOfCreate]*: TODO-> 0 references, future update or deprecated?
 * *[ClusterName]*: Name of the Ecs Cluster.
 * *[VpcId]*: Identifier for the VPC.
-* *[AutoScalingGroupIds]*: TODO deprecated???
 
 === EcsTaskDefinitions
 
@@ -977,18 +934,16 @@ This is the information related to configure the **EcsTaskDefinitions** section:
 [
   {
     "Id": "string",                    // Internal Id to identify the Ecs Task Definition
-    "Arn": "string",                   // TODO -> 0 references, future update or deprecated?
     "Family": "string",                // The name of a family that this Task Definition is registered to
     "RoleId": "string",                // Role identifier
     "Compatibility": "string",         // Task launch compatibility requirement
-    "LocateInsteadCreate": true,       // TODO -> 0 references, future update or deprecated?
     "Containers":                      // List of containers in your task definition
     [
       {
         "Id": "string",                // Internal Id to identify the container
         "ImageTag": "string",          // The image used to start the container
         "RepositoryId": "string",      // Internal identifier of the repository
-        "MemoryReservationMiB": 0.0,   // TODO -> 0 references, future update or deprecated?
+        "MemoryReservationMiB": 0.0,   // Future update
         "MemoryLimitMiB": 0.0,         // The amount (in MiB) of memory to present to the container
         "CpuUnits": 0.0,               // The minimum number of CPU units to reserve for the container
         "StartTimeOutMinutes": 0,      // Time duration (in minutes) to wait before giving up on resolving dependencies for a container
@@ -997,13 +952,6 @@ This is the information related to configure the **EcsTaskDefinitions** section:
           {
             "ContainerPort": 0,        // Port of the container
             "HostPort": 0              // Port of the host
-          }
-        ],
-        "UDPPortMapping":              // TODO -> 0 references, future update or deprecated?
-        [
-          {
-            "ContainerPort": 0,        // TODO -> 0 references, future update or deprecated?
-            "HostPort": 0              // TODO -> 0 references, future update or deprecated?
           }
         ],
         "EnvironmentVariables":        // The environment variables to pass to the container
@@ -1038,7 +986,6 @@ This is the information related to configure the **EcsTaskDefinitions** section:
 ----
 
 * *[Id]*: Internal identifier to identify the Ecs Task Definition.
-* *[Arn]*: TODO -> 0 references, future update or deprecated?
 * *[Family]*: The name of a family that this Task Definition is registered to
 * *[RoleId]*: The Id of the role that grants containers in the task permission to call AWS APIs on your behalf.
 * *[Compatibility]*: The task launch compatibility requirement. Expects:
@@ -1049,21 +996,17 @@ NOTE: At the moment the module only supports EC2 compatibility.
 ** `FARGATE`: The task should specify the Fargate launch type.
 ** `EC2_AND_FARGATE`: The task can specify either the EC2 or Fargate launch types.
 ** `EXTERNAL`: The task should specify the External launch type.
-* *[LocateInsteadCreate]*: TODO -> 0 references, future update or deprecated?  
 * *[Containers]*: List of containers in your task definition:
 ** *[Id]*: Internal identifier to identify the container.
 ** *[ImageTag]*: The image used to start the container. This string is passed directly to the Docker daemon. Images in the Docker Hub registry are available by default.
 ** *[RepositoryId]*: Internal identifier of the repository.
-** *MemoryReservationMiB*: TODO -> 0 references, future update or deprecated?
+** *MemoryReservationMiB*: Future update.
 ** *MemoryLimitMiB*: The amount (in MiB) of memory to present to the container.
 ** *CpuUnits*: The minimum number of CPU units to reserve for the container.
 ** *[StartTimeOutMinutes]*: Time duration (in minutes) to wait before giving up on resolving dependencies for a container.
 ** *[TCPPortMapping]*: The port mappings to add to the container definition:
 *** *[ContainerPort]*: Port of the container.
 *** *[HostPort]*: Port of the host.
-** *[UDPPortMapping]*: TODO -> 0 references, future update or deprecated?:
-*** *[ContainerPort]*: TODO -> 0 references, future update or deprecated?
-*** *[HostPort]*: TODO -> 0 references, future update or deprecated?
 ** *[EnvironmentVariables]*: The environment variables to pass to the container.
 ** *[DnsServers]*: A list of DNS servers that are presented to the container.
 ** *Essential*: True to specify the container is marked as essential.
@@ -1163,47 +1106,7 @@ This is the information related to configure the **LambdaPolicies** section.
 * *[FunctionId]*: Identifier of the Lambda Function to which this policy is related.
 * *PolicyStatements*: List of policy statements this Lambda function may need (e.g: allow the Lambda function to be invoked from the Secrets Manager to perform a rotation):
 ** *Principal*: Principal which will be allowed to perform the action
-** *Action*: Action that will be allowed
-
-=== LambdaRules
-
-Custom rules can be created and added to AWS Config using AWS Lambda functions.
-Each custom rule is associated with a Lambda function, which contains the logic that determines whether your AWS resources comply with the rule. 
-
-This is the information related to configure the **Lambda Rules** section.
-
-[source, json]
-----
-"LambdaRules": 
-[
-  {
-    "Id": "string",             // Internal Id to identify the secret
-    "Name": "string",           // Name of Lambda
-    "LambdaName": "string",     // Name of the lambda that will be launched
-    "Description": "string",    // Description of the rule
-    "TriggerHour": "string",    // Hour of day the lambda will be launched
-    "TriggerMinute": "string",  // Minute of day the lambda will be launched
-    "S3": {                     // TODO
-      "Operations":[            // TODO
-        "string"
-      ],
-      "BucketIds":[             // TODO
-        "string"
-      ]
-    }
-  }
-]
-----
-
-* *[Id]*: Internal identifier to identify the secret.
-* *[Name]*: Name of Lambda.
-* *[LambdaName]*: Name of the lambda that will be launched.
-* *Description*: Description of the rule.
-* *[TriggerHour]*: Hour of day the lambda will be launched.
-* *[TriggerMinute]*: Minute of day the lambda will be launched.
-* *S3*: TODO
-** *Operations*: TODO
-** *BucketIds*: TODO                        
+** *Action*: Action that will be allowed                     
 
 === LogGroups
 
@@ -1246,8 +1149,8 @@ This is the information related to configure the **ManagedPolicies** section:
     "LocateInsteadOfCreate": true,      // True for Import a managed policy from one of the policies that AWS manages
     "PolicyDocumentId": "string",       // Identification of the policy document
     "Name": "string",                   // The name of the managed policy
-    "Description": "string",            // TODO-> 0 references, future update or deprecated?
-    "Path": "string",                   // TODO-> 0 references, future update or deprecated?
+    "Description": "string",            // Description of the managed policy
+    "Path": "string",                   // Path of the policy
   }
 ]
 ----
@@ -1256,8 +1159,8 @@ This is the information related to configure the **ManagedPolicies** section:
 * *LocateInsteadOfCreate*: True for import a managed policy from one of the policies that AWS manages.
 * *[PolicyDocumentId]*: Identification of the policy document.
 * *[Name]*: The name of the managed policy.
-* *[Description]*: TODO -> 0 references, future update or deprecated?
-* *[Path]*: TODO -> 0 references, future update or deprecated?
+* *Description*: Description of the managed policy.
+* *Path*: The path for the policy. This parameter allows (through its regex pattern) a string of characters consisting of either a forward slash (/) by itself or a string that must begin and end with forward slashes. In addition, it can contain any ASCII character from the ! (\u0021) through the DEL character (\u007F), including most punctuation characters, digits, and upper and lowercased letters. Default: - "/"
 
 === NetworkLoadBalancers
 
@@ -1286,8 +1189,6 @@ This is the information related to configure the **Network Load Balancers** sect
     [                                     
       {
           "AllocationId": "string",       // Elastic allocation ip id to associate the NetworkLoadBalancer
-          "IPv6Address": "string",        // TODO-> 0 references, future update or deprecated?
-          "PrivateIPv4Address": "string", // TODO-> 0 references, future update or deprecated?
           "SubnetId": "string"            // Aws Id of the subnet to be associated
       }
     ],
@@ -1321,8 +1222,6 @@ This is the information related to configure the **Network Load Balancers** sect
 * *[Subnets]*: List of subnets in the Network Load Balancer
 * *[SubnetMappings]*: Indicates whether cross-zone load balancing is enabled:
 ** *[AllocationId]*: Elastic allocation ip id to associate the NetworkLoadBalancer
-** *[IPv6Address]*: TODO-> 0 references, future update or deprecated?
-** *[PrivateIPv4Address]*: TODO-> 0 references, future update or deprecated?
 ** *[SubnetId]*: Aws Id of the subnet to be associated.
 * *[Listeners]*: List of the listeners associated to the NetworkLoadBalancer:
 ** *[Id]*: Identificator of the Network Listener.
@@ -1643,10 +1542,10 @@ This is the information related to configure the **S3 Bucket** section.
     ],
     "EnforceSSL": true,             // Enforces SSL for requests.
     "BlockPublicAccess" : true,     // Blocks all the public access if set to true.
-    "Events": [                     // List of Notification events 
+    "Events": [                     // List of trigger events 
         {
-            "EventType": "string",  // TODO 
-            "LambdaId": "string"    // TODO
+            "EventType": "string",  // Type of the event
+            "LambdaId": "string"    // Id of the lambda
         }
     ]
   } 
@@ -1665,13 +1564,15 @@ This is the information related to configure the **S3 Bucket** section.
 ** *[TagValue]* : Tag value that an object must have if it has to be affected by this rule.
 * *[EnforceSSL]*: Boolean that forces the use of SSL protocol. See: https://docs.aws.amazon.com/config/latest/developerguide/s3-bucket-ssl-requests-only.html[S3 Bucket SSL Requests].
 * *BlockPublicAccess*: Boolean  Blocks all the public access if set to true.
-* *Events*: TODO Preguntar si son eventos que lanzan lambdas:
-** *EventType* : TODO
-** *LambdaId* : TODO
+* *Events*: List of trigger events:
+** ($$***$$) *EventType* : Type of the event.
+** *LambdaId* : Id of the lambda that manages the event.
 
 ($$*$$) If the LocateInsteadOfCreate field is set to true, only the Id and BucketName fields will be used, the others will be ignored.
 
 ($$**$$) If the TagName and the TagValue are not specified, the expiration rule will be applied to all the objects of the bucket.
+
+($$***$$) For more information about type of events in S3 buckets, please check the https://docs.aws.amazon.com/AmazonS3/latest/userguide/notification-how-to-event-types-and-destinations.html#supported-notification-event-types[Supported event types documentation]
 
 === SecurityGroups
 
