@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
@@ -37,7 +37,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-    <PackageReference Include="AWSSDK.S3" Version="3.7.9.21" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.101.14" />
   </ItemGroup>
 
   <ItemGroup>

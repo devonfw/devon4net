@@ -1,5 +1,5 @@
 ﻿using Devon4Net.Domain.UnitOfWork.Enums;
-using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

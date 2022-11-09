@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
@@ -23,9 +23,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="Amazon.Lambda.Core" Version="2.1.0" />
-		<PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.3.53" />
+		<PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.100.14" />
 		<PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.2" />
-		<PackageReference Include="System.Text.Json" Version="6.0.5" />
+		<PackageReference Include="System.Text.Json" Version="7.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -41,6 +41,10 @@
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Devon4Net.Infrastructure.Common\Devon4Net.Infrastructure.Common.csproj" />
 	</ItemGroup>	
 	
 </Project>

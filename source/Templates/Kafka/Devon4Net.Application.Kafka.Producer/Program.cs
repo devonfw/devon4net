@@ -1,15 +1,15 @@
 using Devon4Net.Application.Kafka.Producer.Business.FileManagement.Dto;
 using Devon4Net.Application.Kafka.Producer.Business.KafkaManagement.Handlers;
-using Devon4Net.Application.WebAPI.Configuration;
-using Devon4Net.Application.WebAPI.Configuration.Application;
+using Devon4Net.Infrastructure.Cors;
 using Devon4Net.Infrastructure.Kafka;
-using Devon4Net.Infrastructure.Logger;
-using Devon4Net.Infrastructure.Middleware.Middleware;
 using Devon4Net.Infrastructure.Swagger;
+using Devon4Net.Infrastructure.Logger;
+using Devon4Net.Infrastructure.Common.Application.ApplicationTypes.API;
+using Devon4Net.Infrastructure.Common.Application.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.InitializeDevonFw(builder.Host);
+builder.WebHost.InitializeDevonfwApi(builder.Host);
 
 #region services
 builder.Services.AddControllers();

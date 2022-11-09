@@ -1,4 +1,5 @@
-﻿using Devon4Net.Infrastructure.Common.Handlers;
+﻿using Devon4Net.Infrastructure.Common.Constants;
+using Devon4Net.Infrastructure.Common.Handlers;
 using Devon4Net.Infrastructure.LiteDb.LiteDb;
 using Devon4Net.Infrastructure.LiteDb.Options;
 using Devon4Net.Infrastructure.LiteDb.Repository;
@@ -11,7 +12,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
     {
         public static void SetupLiteDb(this IServiceCollection services, IConfiguration configuration)
         {
-            var liteDbOptions = services.GetTypedOptions<LiteDbOptions>(configuration, "LiteDb");
+            var liteDbOptions = services.GetTypedOptions<LiteDbOptions>(configuration, OptionsDefinition.LiteDb);
             if (liteDbOptions == null || string.IsNullOrEmpty(liteDbOptions?.DatabaseLocation) || !liteDbOptions.EnableLiteDb) return;
 
             services.AddSingleton<ILiteDbContext, LiteDbContext>();

@@ -1,4 +1,4 @@
-﻿using Devon4Net.Infrastructure.Logger.Logging;
+﻿using Devon4Net.Infrastructure.Common;
 using Devon4Net.Infrastructure.MediatR.Common;
 using Devon4Net.Infrastructure.MediatR.Domain.ServiceInterfaces;
 using MediatR;

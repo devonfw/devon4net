@@ -1,49 +1,39 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
-    <Company>Capgemini S.A.</Company>
-    <Description>Common classes to manage the web api template configuration</Description>
-    <Version>6.0.6</Version>
-    <Copyright>Copyright © Capgemini</Copyright>
-    <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
-    <license>https://github.com/devonfw/ide/blob/master/LICENSE/</license>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>devonfw;devon4net;Capgemini</PackageTags>
-    <PackageReleaseNotes>NET 6.0+ compatibility version</PackageReleaseNotes>
-    <PackageIcon>devonfw.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>	  
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>	 	  
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Core" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
+	  <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
+	  <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Core" Version="2.2.0" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
+	  <PackageReference Include="Serilog" Version="2.12.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\..\assets\images\devonfw.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-	  <None Include="..\..\..\LICENSE">
-		  <Pack>True</Pack>
-		  <PackagePath>\</PackagePath>
-	  </None>	  
-  </ItemGroup>	
+	<ItemGroup>
+		<None Include="..\..\..\assets\images\devonfw.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 </Project>

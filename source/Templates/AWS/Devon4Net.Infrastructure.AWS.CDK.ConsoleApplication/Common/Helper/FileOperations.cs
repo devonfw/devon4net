@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace ADC.PostNL.BuildingBlocks.AWSInitCDK.Operations
+namespace Devon4Net.Infrastructure.AWS.CDK.Console.Common.Helper
 {
     public static class FileOperationsHelper
     {

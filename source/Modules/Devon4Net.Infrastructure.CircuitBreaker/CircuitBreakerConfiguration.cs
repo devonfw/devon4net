@@ -1,8 +1,6 @@
 ﻿using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using Devon4Net.Infrastructure.CircuitBreaker.Common;
-using Devon4Net.Infrastructure.Common.Common.Http;
-using Devon4Net.Infrastructure.Common.Common.IO;
 using Devon4Net.Infrastructure.Common.Handlers;
 using Devon4Net.Infrastructure.CircuitBreaker.Options;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +8,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using HttpClientHandler = Devon4Net.Infrastructure.CircuitBreaker.Handlers.HttpClientHandler;
 using Devon4Net.Infrastructure.CircuitBreaker.Handlers;
+using Devon4Net.Infrastructure.Common.IO;
+using Devon4Net.Infrastructure.Common.Helpers;
+using Devon4Net.Infrastructure.Common.Constants;
+using Devon4Net.Infrastructure.CircuitBreaker.Interfaces;
 
 namespace Devon4Net.Infrastructure.CircuitBreaker
 {
@@ -19,7 +21,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker
 
         public static void SetupCircuitBreaker(this IServiceCollection services, IConfiguration configuration)
         {
-            var circuitBreakerOptions = services.GetTypedOptions<CircuitBreakerOptions>(configuration, "CircuitBreaker");
+            var circuitBreakerOptions = services.GetTypedOptions<CircuitBreakerOptions>(configuration, OptionsDefinition.CircuitBreaker);
 
             if (circuitBreakerOptions?.Endpoints == null || circuitBreakerOptions.Endpoints.Count == 0)
             {
@@ -64,7 +66,7 @@ namespace Devon4Net.Infrastructure.CircuitBreaker
                 }
 
                 var certificate = new X509Certificate2(FileOperations.GetFileFullPath(endPointEntity.Certificate), endPointEntity.CertificatePassword);
-                handler.SslProtocols = string.IsNullOrEmpty(endPointEntity.SslProtocol) ? SslProtocols.Tls13 : ProtocolOperations.GetTlsProtocol(endPointEntity.SslProtocol);
+                handler.SslProtocols = string.IsNullOrEmpty(endPointEntity.SslProtocol) ? SslProtocols.Tls13 : ProtocolOperationsHelper.GetTlsProtocol(endPointEntity.SslProtocol);
                 handler.ClientCertificates.Add(certificate);
                 handler.ClientCertificateOptions = ClientCertificateOption.Manual;
                 return handler;

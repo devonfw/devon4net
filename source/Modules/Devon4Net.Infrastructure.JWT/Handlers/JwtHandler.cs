@@ -3,11 +3,12 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using Devon4Net.Infrastructure.Common.Common.IO;
+using Devon4Net.Infrastructure.Common.Constants;
 using Devon4Net.Infrastructure.Common.Helpers;
+using Devon4Net.Infrastructure.Common.IO;
 using Devon4Net.Infrastructure.JWT.Common.Const;
 using Devon4Net.Infrastructure.JWT.Options;
-using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.Common;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Devon4Net.Infrastructure.JWT.Handlers
@@ -175,8 +176,7 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
 
         private static byte[] GetHashCodeFromString(string key, string algorithm)
         {
-            var hash = HashAlgorithm.Create(GetHashAlgorithm(algorithm));
-            return hash.ComputeHash(Encoding.Default.GetBytes(key));
+            return GetHashAlgorithm(algorithm).ComputeHash(Encoding.UTF8.GetBytes(key));
         }
 
         private void SetupJwtSecurity()
@@ -212,41 +212,31 @@ namespace Devon4Net.Infrastructure.JWT.Handlers
             }
         }
 
-        private static string GetHashAlgorithm(string encryptionAlgorithm)
-        {
+        private static HashAlgorithm GetHashAlgorithm(string encryptionAlgorithm)
+        {            
             try
             {
                 if (string.IsNullOrWhiteSpace(encryptionAlgorithm))
                 {
-                    return HashAlgorithmConst.SHA512;
+                    return SHA512.Create();
                 }
 
                 if (encryptionAlgorithm.Contains(HashSizeConst.S512))
                 {
-                    return HashAlgorithmConst.SHA512;
+                    return SHA512.Create();
                 }
 
                 if (encryptionAlgorithm.Contains(HashSizeConst.S384))
                 {
-                    return HashAlgorithmConst.SHA384;
+                    return SHA384.Create();
                 }
 
                 if (encryptionAlgorithm.Contains(HashSizeConst.S256))
                 {
-                    return HashAlgorithmConst.SHA256;
+                    return SHA256.Create();
                 }
 
-                if (encryptionAlgorithm.Contains(HashSizeConst.SMD5, StringComparison.OrdinalIgnoreCase))
-                {
-                    return HashAlgorithmConst.MD5;
-                }
-
-                if (encryptionAlgorithm.Contains(HashSizeConst.SSHA, StringComparison.OrdinalIgnoreCase))
-                {
-                    return HashAlgorithmConst.SHA;
-                }
-
-                return HashAlgorithmConst.SHA512;
+                return SHA512.Create();
             }
             catch (Exception ex)
             {

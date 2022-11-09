@@ -1,9 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
 	<Company>Capgemini S.A.</Company>
 	<Description>Kafka Producer template project. This project is in charge of producing messages to the Kafka topics. </Description>
@@ -22,11 +21,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Cors\Devon4Net.Infrastructure.Cors.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Kafka\Devon4Net.Infrastructure.Kafka.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
-    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Middleware\Devon4Net.Infrastructure.Middleware.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Swagger\Devon4Net.Infrastructure.Swagger.csproj" />
-    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.WebAPI\Devon4Net.Infrastructure.WebAPI.csproj" />
   </ItemGroup>
 
 	<ItemGroup>

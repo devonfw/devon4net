@@ -1,14 +1,15 @@
-using Devon4Net.Application.WebAPI.Configuration;
-using Devon4Net.Application.WebAPI.Configuration.Application;
-using Devon4Net.Infrastructure.Common.Options.Devon;
 using Devon4Net.Infrastructure.Grpc;
-using Devon4Net.Infrastructure.Logger;
-using Devon4Net.Infrastructure.Middleware.Middleware;
 using Devon4Net.Infrastructure.Swagger;
+using Devon4Net.Infrastructure.Cors;
+using Devon4Net.Application.GrpcService;
+using Devon4Net.Infrastructure.Logger;
+using Devon4Net.Infrastructure.Common.Application.ApplicationTypes.API;
+using Devon4Net.Infrastructure.Common.Application.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.InitializeDevonFw(builder.Host);
+builder.WebHost.InitializeDevonfwApi(builder.Host);
+builder.Services.AddControllers();
 
 #region services
 builder.Services.AddControllers();
@@ -23,11 +24,10 @@ builder.Services.AddGrpc();
 var app = builder.Build();
 
 #region devon app
-
+app.MapGrpcService<GreeterService>();
 app.ConfigureSwaggerEndPoint();
 app.SetupMiddleware(builder.Services);
 app.SetupCors();
-app.SetupGrpcServices(new List<string> { "Devon4Net.Application.GrpcServer" });
 if (devonfwOptions.ForceUseHttpsRedirection || (!devonfwOptions.UseIIS && devonfwOptions.Kestrel.UseHttps))
 {
     app.UseHttpsRedirection();
@@ -35,6 +35,7 @@ if (devonfwOptions.ForceUseHttpsRedirection || (!devonfwOptions.UseIIS && devonf
 #endregion
 
 app.UseHttpsRedirection();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

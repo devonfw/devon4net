@@ -7,7 +7,7 @@ using Constructs;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers;
 using Microsoft.Extensions.Options;
 
-namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
+namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers
 {
     public class AwsCdkApiGatewayHandler : AwsCdkBaseHandler, IAwsCdkApiGatewayHandler
     {

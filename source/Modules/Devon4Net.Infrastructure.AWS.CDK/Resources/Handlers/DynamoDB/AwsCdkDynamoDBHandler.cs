@@ -5,7 +5,7 @@ using Constructs;
 using Devon4Net.Infrastructure.AWS.CDK.Entities;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers;
 
-namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
+namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers
 {
     public class AwsCdkDynamoDBHandler : AwsCdkBaseHandler, IAwsCdkDynamoDBHandler
     {

@@ -15,7 +15,7 @@ namespace Devon4Net.Infrastructure.Swagger
         #region public methods
         public static void SetupSwagger(this IServiceCollection services, IConfiguration configuration, bool useSwagger = true)
         {
-            SwaggerOptions = services.GetTypedOptions<SwaggerOptions>(configuration, "Swagger");
+            SwaggerOptions = services.GetTypedOptions<SwaggerOptions>(configuration, OptionsDefinition.Swagger);
 
             if (!useSwagger) return;
             if (SwaggerOptions?.Endpoint == null) return;
@@ -24,7 +24,7 @@ namespace Devon4Net.Infrastructure.Swagger
 
         private static void SetupSwaggerService(ref IServiceCollection services)
         {
-            if (SwaggerOptions == null || SwaggerOptions.Contact == null || SwaggerOptions.License == null || SwaggerOptions.Terms == null) return;
+            if (SwaggerOptions?.Contact == null || SwaggerOptions.License == null || SwaggerOptions.Terms == null) return;
 
             services.AddSwaggerGen(c =>
             {

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
@@ -23,17 +23,12 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.6" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.21.0" />	  
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Devon4Net.Infrastructure.Common\Devon4Net.Infrastructure.Common.csproj" />
-    <ProjectReference Include="..\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />	  
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
@@ -55,6 +50,11 @@
 		  <Pack>True</Pack>
 		  <PackagePath>\</PackagePath>
 	  </None>	  
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Common\Devon4Net.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
   </ItemGroup>		
 	
 </Project>

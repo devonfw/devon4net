@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using Devon4Net.Infrastructure.Common.Constants;
 using Devon4Net.Infrastructure.Common.Handlers;
 using Devon4Net.Infrastructure.Kafka.Handlers.Administration;
 using Devon4Net.Infrastructure.Kafka.Options;
@@ -15,7 +16,7 @@ namespace Devon4Net.Infrastructure.Kafka
 
         public static void SetupKafka(this IServiceCollection services, IConfiguration configuration)
         {
-            KafkaOptions = services.GetTypedOptions<KafkaOptions>(configuration, "Kafka");
+            KafkaOptions = services.GetTypedOptions<KafkaOptions>(configuration, OptionsDefinition.Kafka);
 
             if (KafkaOptions?.EnableKafka != true || KafkaOptions.Administration?.Any() != true) return;
 

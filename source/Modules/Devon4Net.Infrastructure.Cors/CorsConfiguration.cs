@@ -1,11 +1,12 @@
-﻿using Devon4Net.Infrastructure.Common.Handlers;
+﻿using Devon4Net.Infrastructure.Common.Constants;
+using Devon4Net.Infrastructure.Common.Handlers;
 using Devon4Net.Infrastructure.Cors.Options;
-using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devon4Net.Application.WebAPI.Configuration
+namespace Devon4Net.Infrastructure.Cors
 {
     public static class CorsConfiguration
     {
@@ -17,7 +18,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         /// <param name="configuration"></param>
         public static void SetupCors(this IServiceCollection services, IConfiguration configuration)
         {
-            CorsOptions = services.GetTypedOptions<List<Origin>>(configuration, "Cors");
+            CorsOptions = services.GetTypedOptions<List<Origin>>(configuration, OptionsDefinition.Cors);
 
             if (CorsOptions == null || CorsOptions.Count == 0)
             {
@@ -59,6 +60,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
                     builder.AllowAnyOrigin(); // NOSONAR
                     builder.AllowAnyHeader();
                     builder.AllowAnyMethod();
+                    builder.WithExposedHeaders();
                 });
             });
         }
@@ -79,6 +81,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
                         builder.WithOrigins(definition.GetOriginsList().ToArray());
                         builder.WithHeaders(definition.GetHeadersList().ToArray());
                         builder.WithMethods(definition.GetMethodsList().ToArray());
+                        builder.WithExposedHeaders(definition.GetExposedHeadersList().ToArray());
                         if (definition.AllowCredentials) builder.AllowCredentials();
                     });
                 });

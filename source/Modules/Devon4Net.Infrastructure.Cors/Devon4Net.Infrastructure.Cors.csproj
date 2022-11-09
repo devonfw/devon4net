@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
@@ -14,7 +14,7 @@
     <license>https://github.com/devonfw/ide/blob/master/LICENSE/</license>
     <RepositoryType>git</RepositoryType>
     <PackageTags>devonfw;devon4net;Capgemini;cors</PackageTags>
-    <PackageReleaseNotes>NET 6.0+ compatibility version</PackageReleaseNotes>
+    <PackageReleaseNotes>NET 7.0+ compatibility version</PackageReleaseNotes>
     <PackageIcon>devonfw.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -23,8 +23,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>

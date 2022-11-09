@@ -7,6 +7,7 @@ using Amazon.CDK.AWS.S3;
 using Amazon.CDK;
 using System.Collections.Generic;
 using Amazon.CDK.AWS.ECR;
+using Amazon.CDK.AWS.Lambda;
 
 namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
 {
@@ -66,6 +67,13 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
         public IStage CreateEcrActionInStage(IStage stage, string actionName, string imageTag, Artifact_ outputArtifact, IRepository repositoryInstance, IRole role = null, string variableNamespace = null, double? runOrder = null) //NOSONAR number of params
         {
             var action = HandlerResources.AwsCdkPipelineHandler.CreateEcrAction(actionName, imageTag, outputArtifact, repositoryInstance, role, variableNamespace, runOrder);
+            stage.AddAction(action);
+            return stage;
+        }
+
+        public IStage CreateLambdaInvokeActionInStage(IStage stage, IFunction lambda, string actionName, IRole role, Artifact_[] inputArtifacts = null, Artifact_[] outputArtifacts = null, IDictionary<string, object> userParameters = null, string variablesNamespace = null) //NOSONAR number of params
+        {
+            var action = HandlerResources.AwsCdkPipelineHandler.CreateLambdaInvokeAction(lambda, actionName, role, inputArtifacts, outputArtifacts, userParameters, variablesNamespace);
             stage.AddAction(action);
             return stage;
         }

@@ -30,7 +30,7 @@
 		<TreatWarningsAsErrors>False</TreatWarningsAsErrors>
 		<NoWarn>1701;1702;NU1608;CA1822</NoWarn>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<None Include="..\..\..\assets\images\devonfw.png">
 			<Pack>True</Pack>
@@ -46,8 +46,8 @@
 		</None>
 	</ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Amazon.CDK.Lib" Version="2.31.1" />
-    <PackageReference Include="Constructs" Version="10.1.43" />
+    <PackageReference Include="Amazon.CDK.Lib" Version="2.50.0" />
+    <PackageReference Include="Constructs" Version="10.1.154" />
   </ItemGroup>
 
 </Project>

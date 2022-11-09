@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 using System.Threading.Tasks;
-using Devon4Net.Infrastructure.AWS.DynamoDb.Extensions;
+using Devon4Net.Infrastructure.Common.Helpers;
 
 namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
 {

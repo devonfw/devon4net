@@ -1,9 +1,11 @@
 ﻿using System.Reflection;
+using Devon4Net.Infrastructure.Common.Constants;
 using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Extensions.Helpers;
+using Devon4Net.Infrastructure.Common.Helpers;
+using Devon4Net.Infrastructure.Common.Helpers.Interfaces;
 using Devon4Net.Infrastructure.LiteDb.LiteDb;
 using Devon4Net.Infrastructure.LiteDb.Repository;
-using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.Common;
 using Devon4Net.Infrastructure.MediatR.Data.Service;
 using Devon4Net.Infrastructure.MediatR.Domain.Database;
 using Devon4Net.Infrastructure.MediatR.Domain.Entities;
@@ -20,7 +22,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
     {
         public static void SetupMediatR(this IServiceCollection services, IConfiguration configuration)
         {
-            var mediatROptions = services.GetTypedOptions<MediatROptions>(configuration, "MediatR");
+            var mediatROptions = services.GetTypedOptions<MediatROptions>(configuration, OptionsDefinition.MediatR);
 
             if (mediatROptions?.EnableMediatR != true) return;
             ConfigureMediatRGenericDependencyInjection(ref services);

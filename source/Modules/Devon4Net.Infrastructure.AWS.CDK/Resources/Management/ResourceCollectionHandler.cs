@@ -1,5 +1,4 @@
-﻿using ADC.PostNL.BuildingBlocks.AWSCDK.Handlers;
-using Amazon.CDK;
+﻿using Amazon.CDK;
 using Constructs;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.AutoScalingGroup;

@@ -1,5 +1,5 @@
 ﻿using Devon4Net.Infrastructure.Kafka.Handlers.Administration;
-using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

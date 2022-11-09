@@ -3,7 +3,8 @@ using Devon4Net.Infrastructure.AWS.Common.Options;
 using Devon4Net.Infrastructure.AWS.SQS.ConsoleApplication.Business.SQSManagement.Dto;
 using Devon4Net.Infrastructure.AWS.SQS.ConsoleApplication.Common.Consts;
 using Devon4Net.Infrastructure.AWS.SQS.Handlers;
-using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.AWS.SQS.Interfaces;
+using Devon4Net.Infrastructure.Common;
 using Microsoft.Extensions.Options;
 
 namespace Devon4Net.Infrastructure.AWS.SQS.ConsoleApplication
