@@ -2,7 +2,7 @@
 // Licensed under MIT licence. See License.txt in the project root for license information.
 
 using System.Reflection;
-using Devon4Net.Infrastructure.Common.Common;
+using Devon4Net.Infrastructure.Common.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Devon4Net.Infrastructure.Common.Helpers

@@ -1,6 +1,6 @@
 ﻿using Amazon.CDK.AWS.IAM;
 
-namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
+namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers
 {
     public interface IAwsCdkRoleHandler
     {

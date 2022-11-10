@@ -11,6 +11,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.CDK\Devon4Net.Infrastructure.AWS.CDK.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.Common\Devon4Net.Infrastructure.AWS.Common.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Common\Devon4Net.Infrastructure.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

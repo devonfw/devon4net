@@ -1,4 +1,5 @@
-﻿using Amazon.CDK.AWS.EC2;
+﻿using Amazon.CDK.AWS.CodePipeline;
+using Amazon.CDK.AWS.EC2;
 using Amazon.CDK.AWS.IAM;
 using Amazon.CDK.AWS.Lambda;
 using Amazon.CDK.AWS.S3;
@@ -140,6 +141,53 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
         private IFunction LocateLambda(string lambdaId, string exceptionMessageIfLambdaDoesNotExist, string exceptionMessageIfLambdaIsEmpty = null)
         {
             return StackResources.Locate<IFunction>(lambdaId, exceptionMessageIfLambdaDoesNotExist, exceptionMessageIfLambdaIsEmpty);
+        }
+
+        private void GetLambdaInvokeActionResources(PipelineActionLambdaInvokeOptions actionLambdaInvokeOptions, IDictionary<string, Artifact_> artifacts, out IFunction lambda, out List<Artifact_> inputArtifacts, out List<Artifact_> outputArtifacts, out IRole role)
+        {
+            // Find lambda function to invoke
+            lambda = LocateLambda(actionLambdaInvokeOptions.LambdaId, $"The lambda function id {actionLambdaInvokeOptions.LambdaId} does not exist", $"The lambda function id {actionLambdaInvokeOptions.LambdaId} cannot be null");
+
+            // Locate input artifacts
+            if (actionLambdaInvokeOptions.InputArtifacts == null)
+            {
+                // We don't have an input artifact specified
+                inputArtifacts = null;
+            }
+            else
+            {
+                inputArtifacts = new List<Artifact_>();
+                foreach (string artifact in actionLambdaInvokeOptions.InputArtifacts)
+                {
+                    if (!artifacts.TryGetValue(artifact, out var foundArtifact))
+                    {
+                        throw new ArgumentException($"The artifact {artifact} of the pipeline action {actionLambdaInvokeOptions.Name} was not found");
+                    }
+                    inputArtifacts.Add(foundArtifact);
+                }
+            }
+
+            // Locate output artifacts
+            if (actionLambdaInvokeOptions.OutputArtifacts == null)
+            {
+                // We don't have an output artifact specified
+                outputArtifacts = null;
+            }
+            else
+            {
+                outputArtifacts = new List<Artifact_>();
+                foreach (string artifact in actionLambdaInvokeOptions.OutputArtifacts)
+                {
+                    var newOutputArtifact = new Artifact_(artifact);
+                    outputArtifacts.Add(newOutputArtifact);
+                    artifacts.Add(artifact, newOutputArtifact);
+                }
+            }
+
+            // Locate role
+            role = LocateRole(actionLambdaInvokeOptions.Role,
+                $"There is no role in the pipeline action {actionLambdaInvokeOptions.Name}",
+                $"The role {actionLambdaInvokeOptions.Role} of the pipeline action {actionLambdaInvokeOptions.Name} was not found");
         }
     }
 }

@@ -2,7 +2,7 @@
 using Amazon.CDK.AWS.Lambda;
 using Amazon.CDK.AWS.Logs;
 
-namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
+namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers
 {
     public interface IAwsCdkApiGatewayHandler
     {

@@ -1,11 +1,11 @@
-﻿using Devon4Net.Infrastructure.Extensions;
+﻿using Devon4Net.Infrastructure.Common.Extensions;
+using Devon4Net.Infrastructure.Common.Helpers.Interfaces;
 using Devon4Net.Infrastructure.LiteDb.Repository;
-using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.Common;
 using Devon4Net.Infrastructure.MediatR.Common;
 using Devon4Net.Infrastructure.MediatR.Domain.Entities;
 using Devon4Net.Infrastructure.MediatR.Domain.ServiceInterfaces;
 using LiteDB;
-using IJsonHelper = Devon4Net.Infrastructure.Extensions.Helpers.IJsonHelper;
 
 namespace Devon4Net.Infrastructure.MediatR.Data.Service
 {
@@ -37,7 +37,7 @@ namespace Devon4Net.Infrastructure.MediatR.Data.Service
                     Retries = increaseRetryCounter ? 1 : 0,
                     AdditionalData = string.IsNullOrEmpty(additionalData) ? string.Empty : additionalData,
                     IsError = false,
-                    MessageContent = GetSerializedContent(command), //System.Text.Json.JsonSerializer.Serialize(command),
+                    MessageContent = GetSerializedContent(command), 
                     MessageType = command.MessageType,
                     TimeStampUTC = command.Timestamp.ToUniversalTime(),
                     Action = action.ToString(),

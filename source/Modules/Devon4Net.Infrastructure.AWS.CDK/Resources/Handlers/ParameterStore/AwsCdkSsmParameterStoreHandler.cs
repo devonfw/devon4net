@@ -12,11 +12,11 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.ParameterStore
             return StringParameter.FromStringParameterName(Scope, identification, paramterName);
         }
 
-        public IParameter Create(string parameterId, string parameterName, string value, ParameterType type = ParameterType.STRING, ParameterTier tier = ParameterTier.STANDARD, string description = null)
+        public IParameter Create(string parameterId, string parameterName, string value, ParameterDataType type = ParameterDataType.TEXT, ParameterTier tier = ParameterTier.STANDARD, string description = null)
         {
             var parameterProps = new StringParameterProps
             {
-                Type = type,
+                DataType =  type,
                 StringValue = value,
                 Description = string.IsNullOrWhiteSpace(description) ? null : description,
                 Tier = tier,

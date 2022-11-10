@@ -41,11 +41,10 @@
   </ItemGroup>
 
   <ItemGroup>
-	<ProjectReference Include="..\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />	  
-    <ProjectReference Include="..\Devon4Net.Infrastructure.AWS.ParameterStore\Devon4Net.Infrastructure.AWS.ParameterStore.csproj" />
-    <ProjectReference Include="..\Devon4Net.Infrastructure.AWS.SQS\Devon4Net.Infrastructure.AWS.SQS.csproj" />
-    <ProjectReference Include="..\Devon4Net.Infrastructure.WebAPI\Devon4Net.Infrastructure.WebAPI.csproj" />
-    <ProjectReference Include="..\Devon4Net.Infrastructure.AWS.Secrets\Devon4Net.Infrastructure.AWS.Secrets.csproj" />
+	<ProjectReference Include="..\Devon4Net.Infrastructure.AWS.Common\Devon4Net.Infrastructure.AWS.Common.csproj" />
+	<ProjectReference Include="..\Devon4Net.Infrastructure.AWS.Logger\Devon4Net.Infrastructure.AWS.Logger.csproj" />
+	<ProjectReference Include="..\Devon4Net.Infrastructure.AWS.SQS\Devon4Net.Infrastructure.AWS.SQS.csproj" />
+	<ProjectReference Include="..\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
   </ItemGroup>
 
 </Project>

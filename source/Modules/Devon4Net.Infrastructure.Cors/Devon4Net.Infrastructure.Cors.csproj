@@ -14,7 +14,7 @@
     <license>https://github.com/devonfw/ide/blob/master/LICENSE/</license>
     <RepositoryType>git</RepositoryType>
     <PackageTags>devonfw;devon4net;Capgemini;cors</PackageTags>
-    <PackageReleaseNotes>NET 6.0+ compatibility version</PackageReleaseNotes>
+    <PackageReleaseNotes>NET 7.0+ compatibility version</PackageReleaseNotes>
     <PackageIcon>devonfw.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

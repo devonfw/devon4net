@@ -26,6 +26,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Options.Resources
         public PipelineActionCloudFormationOptions ArgumentsCloudFormation { get; set; }
         public PipelineActionEcrOptions ArgumentsEcrRepository { get; set; }
         public PipelineActionEcsDeployOptions ArgumentsEcsDeploy { get; set; }
+        public PipelineActionLambdaInvokeOptions ArgumentsLambdaInvoke { get; set; }
     }
 
     public class PipelineActionS3Options
@@ -75,5 +76,16 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Options.Resources
         public string DeploymentRole { get; set; }
         public string Role { get; set; }
         public string[] CfnCapabilities { get; set; }
+    }
+
+    public class PipelineActionLambdaInvokeOptions
+    {
+        public string Name { get; set; }
+        public string LambdaId { get; set; }
+        public string[] InputArtifacts { get; set; }
+        public string[] OutputArtifacts { get; set; }
+        public string Role { get; set; }
+        public Dictionary<string, object> UserParameters { get; set; }
+        public string VariablesNamespace { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 using Constructs;
 using Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers;
 
-namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
+namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers
 {
     public class AwsCdkRoleHandler : AwsCdkBaseHandler, IAwsCdkRoleHandler
     {

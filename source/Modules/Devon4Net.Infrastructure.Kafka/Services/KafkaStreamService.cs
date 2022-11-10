@@ -13,7 +13,6 @@ namespace Devon4Net.Infrastructure.Kafka.Streams.Services
     public abstract class KafkaStreamService<TKey, TValue> : BackgroundService where TValue : class where TKey : class
     {
         private bool _disposed;
-
         private StreamOptions StreamOptions { get; set; }
         private KafkaStream Stream { get; set; }
         protected StreamBuilder StreamBuilder { get; set; }
@@ -26,17 +25,17 @@ namespace Devon4Net.Infrastructure.Kafka.Streams.Services
             StreamOptions = kafkaOptions.Streams.Find(s => s.ApplicationId == applicationId);
             GenerateStreamBuilder(keySerDes, valueSerDes);
         }
-        protected async override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await Stream.StartAsync();
+            return Stream.StartAsync();
         }
 
         public override void Dispose()
         {
-            Dispose(true);
+            DisposeKafkaStreamService(true);
             GC.SuppressFinalize(this);
         }
-        protected virtual void Dispose(bool disposing)
+        protected virtual void DisposeKafkaStreamService(bool disposing)
         {
             if (_disposed)
             {
@@ -52,9 +51,9 @@ namespace Devon4Net.Infrastructure.Kafka.Streams.Services
             _disposed = true;
         }
 
-        public async override Task StopAsync(CancellationToken cancellationToken)
+        public override Task StopAsync(CancellationToken cancellationToken)
         {
-            await base.StopAsync(cancellationToken);
+            return base.StopAsync(cancellationToken);
         }
 
         #region StreamConfiguration
@@ -68,20 +67,18 @@ namespace Devon4Net.Infrastructure.Kafka.Streams.Services
 
         private IStreamConfig GetConfigFromOptions(ISerDes<TKey> keySerDes, ISerDes<TValue> valueSerDes)
         {
-            var config = new StreamConfig();
-            
-            config.DefaultKeySerDes = keySerDes ?? GetSerDesForType<TKey>();
-            config.DefaultValueSerDes = valueSerDes ?? GetSerDesForType<TValue>();
-
-            config.ApplicationId = StreamOptions.ApplicationId;
-            config.BootstrapServers = StreamOptions.Servers;
-            config.AutoOffsetReset = KafkaConverters.GetAutoOffsetReset(StreamOptions.AutoOffsetReset);
-            config.StateDir = StreamOptions.StateDir;
-            config.CommitIntervalMs = StreamOptions.CommitIntervalMs ?? KafkaDefaultValues.StreamsCommitIntervalMs;
-            config.Guarantee = KafkaConverters.GetProcessingGuarantee(StreamOptions.Guarantee);
-            config.MetricsRecording = KafkaConverters.GetMetricsRecordingLevel(StreamOptions.MetricsRecording);
-
-            return config;
+            return new StreamConfig
+            {
+                DefaultKeySerDes = keySerDes ?? GetSerDesForType<TKey>(),
+                DefaultValueSerDes = valueSerDes ?? GetSerDesForType<TValue>(),
+                ApplicationId = StreamOptions.ApplicationId,
+                BootstrapServers = StreamOptions.Servers,
+                AutoOffsetReset = KafkaConverters.GetAutoOffsetReset(StreamOptions.AutoOffsetReset),
+                StateDir = StreamOptions.StateDir,
+                CommitIntervalMs = StreamOptions.CommitIntervalMs ?? KafkaDefaultValues.StreamsCommitIntervalMs,
+                Guarantee = KafkaConverters.GetProcessingGuarantee(StreamOptions.Guarantee),
+                MetricsRecording = KafkaConverters.GetMetricsRecordingLevel(StreamOptions.MetricsRecording)
+            };
         }
 
         protected TS GetInstance<TS>()

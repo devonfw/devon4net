@@ -6,7 +6,7 @@ using Amazon.DynamoDBv2.Model;
 using Amazon.Lambda.Core;
 using Amazon.Runtime;
 using Devon4Net.Infrastructure.AWS.DynamoDb.Common;
-using Devon4Net.Infrastructure.AWS.DynamoDb.Extensions;
+using Devon4Net.Infrastructure.Common.Helpers;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -124,7 +124,7 @@ namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
 
                 var result = await AmazonDynamoDBClient.GetItemAsync(tableName, attributes, consistentRead, cancellationToken).ConfigureAwait(false);
 
-                return result.Item.ContainsKey(AttributeValue) ? JsonHelper.Deserialize<T>(result.Item[AttributeValue].S) : default;
+                return result.Item.TryGetValue(AttributeValue, out AttributeValue value) ? JsonHelper.Deserialize<T>(value.S) : default;
             }
             catch (Exception ex)
             {

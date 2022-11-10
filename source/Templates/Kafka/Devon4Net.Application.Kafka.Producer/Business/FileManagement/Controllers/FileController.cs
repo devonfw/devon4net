@@ -1,6 +1,6 @@
 ﻿using Devon4Net.Application.Kafka.Producer.Business.FileManagement.Helpers;
 using Devon4Net.Application.Kafka.Producer.Business.KafkaManagement.Handlers;
-using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -2,7 +2,8 @@
 using Devon4Net.Infrastructure.AWS.SQS.ConsoleApplication.Business.SQSManagement.Dto;
 using Devon4Net.Infrastructure.AWS.SQS.Dto;
 using Devon4Net.Infrastructure.AWS.SQS.Handlers;
-using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.AWS.SQS.Interfaces;
+using Devon4Net.Infrastructure.Common;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 

@@ -8,7 +8,7 @@
 
 	
   <ItemGroup>
-	<PackageReference Include="AWSSDK.Core" Version="3.7.12.5" />
+	<PackageReference Include="AWSSDK.Core" Version="3.7.100.14" />
 	<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />	  
@@ -21,6 +21,7 @@
 	
   <ItemGroup>
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.Common\Devon4Net.Infrastructure.AWS.Common.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.Logger\Devon4Net.Infrastructure.AWS.Logger.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.SQS\Devon4Net.Infrastructure.AWS.SQS.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Common\Devon4Net.Infrastructure.Common.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />

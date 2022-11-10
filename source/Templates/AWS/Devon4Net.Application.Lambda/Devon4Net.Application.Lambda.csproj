@@ -45,7 +45,6 @@
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.Common\Devon4Net.Infrastructure.AWS.Common.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.Lambda\Devon4Net.Infrastructure.AWS.Lambda.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.S3\Devon4Net.Infrastructure.AWS.S3.csproj" />
-    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.Secrets\Devon4Net.Infrastructure.AWS.Secrets.csproj" />
   </ItemGroup>  
   
   <ItemGroup>

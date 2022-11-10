@@ -10,8 +10,8 @@ using Amazon.DynamoDBv2.DocumentModel;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Linq;
-using Devon4Net.Infrastructure.AWS.DynamoDb.Extensions;
 using Devon4Net.Infrastructure.AWS.DynamoDb.Common;
+using Devon4Net.Infrastructure.Common.Helpers;
 
 namespace Devon4Net.Infrastructure.AWS.DynamoDb.Domain.Repository
 {

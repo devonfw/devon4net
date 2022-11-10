@@ -3,7 +3,7 @@ using System.Text.Json;
 using Amazon;
 using Amazon.Lambda;
 using Amazon.Lambda.Model;
-using Devon4Net.Infrastructure.AWS.Common.Helper;
+using Devon4Net.Infrastructure.Common.Helpers;
 
 namespace Devon4Net.Infrastructure.AWS.Lambda.Handlers
 {

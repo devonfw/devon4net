@@ -33,10 +33,33 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.VPC
             return result;
         }
 
-        public IVpc Create(string identification, string cidr, double? maxAzs, DefaultInstanceTenancy defaultInstanceTenancy = DefaultInstanceTenancy.DEFAULT, bool enableDnsSupport = true, bool enableDnsHostnames = true, List<ISubnetConfiguration> subnetConfigurations = null, Dictionary<string, string> tags = null)
+        public IVpc Create(string identification, IIpAddresses ipAddresses, double? maxAzs, DefaultInstanceTenancy defaultInstanceTenancy = DefaultInstanceTenancy.DEFAULT, bool enableDnsSupport = true, bool enableDnsHostnames = true, List<ISubnetConfiguration> subnetConfigurations = null, Dictionary<string, string> tags = null)
         {
             var vpc = new Vpc(Scope, identification, new VpcProps
             {
+                IpAddresses = ipAddresses,
+                MaxAzs = maxAzs,
+                DefaultInstanceTenancy = defaultInstanceTenancy,
+                EnableDnsSupport = enableDnsSupport,
+                EnableDnsHostnames = enableDnsHostnames,
+                SubnetConfiguration = subnetConfigurations?.ToArray()
+            });
+
+            if (tags == null) return vpc;
+
+            foreach (var (key, value) in tags)
+            {
+                Tags.Of(vpc).Add(key, value);
+            }
+
+            return vpc;
+        }
+
+        [Obsolete("2022/11/09 new AWS CDK version. Use ipAddresses instead")]
+        public IVpc Create(string identification, string cidr, double? maxAzs, DefaultInstanceTenancy defaultInstanceTenancy = DefaultInstanceTenancy.DEFAULT, bool enableDnsSupport = true, bool enableDnsHostnames = true, List<ISubnetConfiguration> subnetConfigurations = null, Dictionary<string, string> tags = null)
+        {
+            var vpc = new Vpc(Scope, identification, new VpcProps
+            {               
                 Cidr = cidr,
                 MaxAzs =maxAzs,
                 DefaultInstanceTenancy = defaultInstanceTenancy,

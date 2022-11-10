@@ -1,5 +1,4 @@
-﻿using Devon4Net.Infrastructure.AWS.Common.Consts;
-using Devon4Net.Infrastructure.AWS.Common.Options;
+﻿using Devon4Net.Infrastructure.AWS.Common.Options;
 using Devon4Net.Infrastructure.AWS.SQS.Handlers;
 using Devon4Net.Infrastructure.Common.Handlers;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using Devon4Net.Infrastructure.AWS.SQS.Dto;
 using System.Threading.Tasks;
+using Devon4Net.Infrastructure.Common.Constants;
+using Devon4Net.Infrastructure.AWS.SQS.Interfaces;
 
 namespace Devon4Net.Infrastructure.AWS.SQS
 {
@@ -16,7 +17,7 @@ namespace Devon4Net.Infrastructure.AWS.SQS
 
         public static void SetupSqs(this IServiceCollection services, IConfiguration configuration)
         {
-            AwsOptions = services.GetTypedOptions<AwsOptions>(configuration, ConfigurationConsts.AwsOptionsNodeName);
+            AwsOptions = services.GetTypedOptions<AwsOptions>(configuration, OptionsDefinition.AwsOptions);
             if (AwsOptions == null || AwsOptions.SqSQueueList == null || AwsOptions.SqSQueueList == null || AwsOptions.SqSQueueList.Count == 0) return;
             services.AddSingleton<ISqsClientHandler, SqsClientHandler>();
         }
