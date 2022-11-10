@@ -1,0 +1,2 @@
+﻿Add to your project builder.Services.SetupNexus(builder.Configuration);
+
