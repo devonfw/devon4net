@@ -1,8 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+	<Title>devon4net CDK invoke sample project for AWS</Title>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6</TargetFramework>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

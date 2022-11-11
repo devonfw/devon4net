@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
+	<Title>devon4net sample project for Kafka stream producer</Title>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
 	<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
 	<Company>Capgemini S.A.</Company>
 	<Description>Kafka Producer template project. This project is in charge of producing messages to the Kafka topics. </Description>
-	<Version>6.0.6</Version>
+	<Version>6.0.7</Version>
 	<Copyright>Copyright © Capgemini</Copyright>
 	<PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
