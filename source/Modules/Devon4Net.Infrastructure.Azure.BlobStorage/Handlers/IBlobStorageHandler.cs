@@ -52,20 +52,15 @@ namespace Devon4Net.Infrastructure.Azure.BlobStorage.Handlers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<bool> CheckObjectExists(string containerName, string keyName, CancellationToken cancellationToken = default);
-        
+
         /// <summary>
         /// Upload Object
         /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="containerName"></param>
-        /// <param name="keyName"></param>
-        /// <param name="contentType"></param>
-        /// <param name="metadata"></param>
-        /// <param name="tags"></param>
+        /// <param name="uploadObjectBlobStorage"></param>
         /// <param name="autoCloseStream"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<bool> UploadObject(Stream stream, string containerName, string keyName, string contentType, IDictionary<string, string> metadata = null, IDictionary<string, string> tags = null, bool autoCloseStream = false, CancellationToken cancellationToken = default);
+        Task<bool> UploadObject(UploadObjectBlobStorage uploadObjectBlobStorage, bool autoCloseStream = false, CancellationToken cancellationToken = default);
         
         /// <summary>
         /// Delete object

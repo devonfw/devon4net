@@ -94,32 +94,27 @@ namespace Devon4Net.Infrastructure.Azure.BlobStorage.Handlers
         /// <summary>
         /// Upload Object
         /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="containerName"></param>
-        /// <param name="keyName"></param>
-        /// <param name="contentType"></param>
-        /// <param name="metadata"></param>
-        /// <param name="tags"></param>
+        /// <param name="uploadObjectBlobStorage"></param>
         /// <param name="autoCloseStream"></param>
         /// <param name="cancellationToken"></param>
-        public async Task<bool> UploadObject(Stream stream, string containerName, string keyName, string contentType, IDictionary<string, string> metadata = null, IDictionary<string, string> tags = null, bool autoCloseStream = false, CancellationToken cancellationToken = default)
+        public async Task<bool> UploadObject(UploadObjectBlobStorage uploadObjectBlobStorage, bool autoCloseStream = false, CancellationToken cancellationToken = default)
         {
             try
             {
-                CheckUploadObjectParams(stream, keyName, containerName, contentType);
+                CheckUploadObjectParams(uploadObjectBlobStorage.Stream, uploadObjectBlobStorage.KeyName, uploadObjectBlobStorage.ContainerName, uploadObjectBlobStorage.ContentType);
 
-                var blobClient = GetBlobClient(BlobServiceClient, containerName, keyName);
+                var blobClient = GetBlobClient(BlobServiceClient, uploadObjectBlobStorage.ContainerName, uploadObjectBlobStorage.KeyName);
 
                 BlobHttpHeaders headers = new()
                 {
-                    ContentType = contentType,
+                    ContentType = uploadObjectBlobStorage.ContentType,
                 };
 
-                var upload = await blobClient.UploadAsync(stream, headers, cancellationToken: cancellationToken);
+                var upload = await blobClient.UploadAsync(uploadObjectBlobStorage.Stream, headers, cancellationToken: cancellationToken);
 
                 var uploadResult = upload.GetRawResponse().Status == (int)HttpStatusCode.Created;
 
-                var resultsetSetMetadataAndTags = await SetMetadataAndTags(metadata, tags, blobClient);
+                var resultsetSetMetadataAndTags = await SetMetadataAndTags(uploadObjectBlobStorage.Metadata, uploadObjectBlobStorage.Tags, blobClient, cancellationToken);
 
                 return uploadResult && resultsetSetMetadataAndTags;
             }
@@ -184,20 +179,20 @@ namespace Devon4Net.Infrastructure.Azure.BlobStorage.Handlers
             }
         }
 
-        private static async Task<bool> SetMetadataAndTags(IDictionary<string, string> metadata, IDictionary<string, string> tags, BlobClient blobClient)
+        private static async Task<bool> SetMetadataAndTags(IDictionary<string, string> metadata, IDictionary<string, string> tags, BlobClient blobClient, CancellationToken cancellationToken)
         {
             bool resultSetMetadata = true;
             bool resultSetTags = true;
 
             if (metadata != null)
             {
-                var setmetadata = await blobClient.SetMetadataAsync(metadata);
+                var setmetadata = await blobClient.SetMetadataAsync(metadata, cancellationToken: cancellationToken);
                 resultSetMetadata = setmetadata.GetRawResponse().Status == (int)HttpStatusCode.OK;
             }
 
             if (tags != null)
             {
-                var setTags = await blobClient.SetTagsAsync(tags);
+                var setTags = await blobClient.SetTagsAsync(tags, cancellationToken: cancellationToken);
                 resultSetTags = setTags.Status == (int)HttpStatusCode.NoContent;
             }
 
