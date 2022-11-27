@@ -7,6 +7,7 @@
         public string Headers { get; set; }
         public string Methods { get; set; }
         public bool AllowCredentials { get; set; }
+        public string ExposedHeaders { get; set; }
 
         public List<string> GetOriginsList()
         {
@@ -21,6 +22,11 @@
         public List<string> GetHeadersList()
         {
             return Headers.Split(',').ToList();
+        }
+
+        public List<string> GetExposedHeadersList()
+        {
+            return ExposedHeaders.Split(',').ToList();
         }
     }
 }

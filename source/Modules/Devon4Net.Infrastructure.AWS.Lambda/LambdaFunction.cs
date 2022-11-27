@@ -1,16 +1,18 @@
-﻿using Amazon;
-using Amazon.Lambda.Core;
+﻿using Amazon.Lambda.Core;
 using Amazon.Runtime;
-using Amazon.Runtime.CredentialManagement;
-using Devon4Net.Infrastructure.AWS.Common.Consts;
+using Devon4Net.Infrastructure.AWS.Common.Managers.ParameterStoreManager;
+using Devon4Net.Infrastructure.AWS.Common.Managers.SecretsManager;
 using Devon4Net.Infrastructure.AWS.Common.Options;
 using Devon4Net.Infrastructure.AWS.Lambda.Interfaces;
-using Devon4Net.Infrastructure.AWS.ParameterStore;
-using Devon4Net.Infrastructure.AWS.Secrets;
+using Devon4Net.Infrastructure.AWS.SQS.Handlers;
+using Devon4Net.Infrastructure.AWS.SQS.Interfaces;
+using Devon4Net.Infrastructure.Common.Constants;
 using Devon4Net.Infrastructure.Common.Handlers;
-using Microsoft.Extensions.Configuration;
+using Devon4Net.Infrastructure.Common;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Devon4Net.Infrastructure.Logger;
+using Devon4Net.Infrastructure.AWS.Common.Helpers;
+using Devon4Net.Infrastructure.Common.Configuration;
 
 #if Lambda
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -19,15 +21,13 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
 {
     public abstract class LambdaFunction<TInput, TOutput> where TInput : class
     {
-        protected IConfigurationRoot Configuration { get; set; }
-        protected IConfigurationBuilder ConfigurationBuilder { get; set; }
         protected IServiceProvider ServiceProvider { get; set; }
         protected IServiceCollection ServiceCollection = new ServiceCollection();
         protected AWSCredentials AWSCredentials { get; set; }
-        protected ILogger Logger { get; set; }
         protected AwsOptions AwsOptions { get; set; }
         protected abstract void ConfigureServices(IServiceCollection services);
-
+        private AwsCredentialsHelper AwsCredentialsHelper { get; set; }
+        private readonly DevonfwConfigurationBuilder DevonfwConfigurationBuilder = new();
         protected LambdaFunction()
         {
             Setup();
@@ -36,9 +36,9 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
         public void Setup()
         {
             SetupConfiguration();
-            LoadAwsCredentials(ServiceCollection);
+            LoadAwsCredentials();
+            LoadAwsRegionEndpoint();
             LoadAwsConfigurationSources();
-            LoadAwsRegionEndpoint(ServiceCollection);
             SetupServiceActions();
             ConfigureServices(ServiceCollection);
             FinalizeSetupServiceProviderActions();
@@ -56,12 +56,12 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
                 if (handler == null)
                 {
                     var message = $"EventHandler<{name}> Not found. Please check the dependency injection declaration";
-                    Logger.LogError("EventHandler<{name}> Not found. Please check the dependency injection declaration", name);
+                    Devon4NetLogger.Error($"EventHandler<{name}> Not found. Please check the dependency injection declaration");
 
                     throw new InvalidOperationException(message);
                 }
 
-                Logger.LogInformation("Invoking handler {name}", name);
+                Devon4NetLogger.Information($"Invoking handler {name}");
 
                 return await handler.FunctionHandler(input, context).ConfigureAwait(false);
             }
@@ -69,111 +69,83 @@ namespace Devon4Net.Infrastructure.AWS.Lambda
             {
                 var lambdaMessage = $"Message '{name}': \"{ex?.Message}\" | InnerException: \"{ex?.InnerException}\"";
                 LambdaLogger.Log(lambdaMessage);
-
-                var message = ex?.Message;
-                var innerException = ex?.InnerException;
-                var stackTrace = ex?.StackTrace;
-                Logger.LogError("Message '{name}': \"{message}\" | InnerException: \"{innerException}\" | StackTrace: \"{stacktrace}\"", name, message, innerException, stackTrace);
-
+                Devon4NetLogger.Error(ex);
                 throw;
             }
             finally
             {
                 LambdaLogger.Log($"Disposing {name} function scope");
-                Logger.LogInformation("Disposing {name} function scope", name);
+                Devon4NetLogger.Information($"Disposing {name} function scope");
                 scope?.Dispose();
             }
         }
 
         #region private methods
-        private void ConfigureLogging(ILoggingBuilder logging)
-        {
-            logging.AddConfiguration(Configuration.GetSection("Logging"));
-            logging.AddLambdaLogger(new LambdaLoggerOptions
-            {
-                IncludeCategory = true,
-                IncludeLogLevel = true,
-                IncludeNewline = true,
-                IncludeEventId = true,
-                IncludeException = true
-            });
-        }
-
         private void SetupServiceActions()
         {
+            if (AWSCredentials != null)
+            {
+                ServiceCollection.SetupAwsLog(DevonfwConfigurationBuilder.Configuration, AWSCredentials);
+            }
+            else
+            {
+                ServiceCollection.SetupAwsLog(DevonfwConfigurationBuilder.Configuration);
+            }
+
             ServiceCollection.AddOptions();
-            ServiceCollection.AddSingleton(Configuration);
-            ServiceCollection.AddLogging(ConfigureLogging); //NOSONAR false positive
+            ServiceCollection.AddSingleton(DevonfwConfigurationBuilder.Configuration);
         }
 
         private void FinalizeSetupServiceProviderActions()
         {
             ServiceProvider = ServiceCollection.BuildServiceProvider();
-            Logger = ServiceProvider.GetRequiredService<ILogger<TInput>>();
         }
 
         protected void SetupConfiguration()
         {
-            ConfigurationBuilder = new ConfigurationBuilder()
-                .AddEnvironmentVariables()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-
-            Configuration = ConfigurationBuilder.Build();
-            AwsOptions = ServiceCollection.GetTypedOptions<AwsOptions>(Configuration, ConfigurationConsts.AwsOptionsNodeName);
+            AwsOptions = ServiceCollection.GetTypedOptions<AwsOptions>(DevonfwConfigurationBuilder.Configuration, OptionsDefinition.AwsOptions);
+            AwsCredentialsHelper = new AwsCredentialsHelper(AwsOptions);
         }
 
         private void LoadAwsConfigurationSources()
         {
             if (AwsOptions.UseSecrets)
             {
-                ConfigurationBuilder.AddSecretsHandler(AWSCredentials);
+                DevonfwConfigurationBuilder.ConfigurationBuilder.AddSecretsHandler(AWSCredentials);
             }
 
             if (AwsOptions.UseParameterStore)
             {
-                ConfigurationBuilder.AddParameterStoreHandler(AWSCredentials);
+                DevonfwConfigurationBuilder.ConfigurationBuilder.AddParameterStoreHandler(AWSCredentials);
             }
 
             if (AwsOptions.UseSqs)
             {
-                ConfigurationBuilder.AddParameterStoreHandler(AWSCredentials);
+                ServiceCollection.AddSingleton<ISqsClientHandler, SqsClientHandler>();
             }
 
             if (AwsOptions.UseParameterStore || AwsOptions.UseSecrets)
             {
-                Configuration = ConfigurationBuilder.Build();
+                DevonfwConfigurationBuilder.Configuration = DevonfwConfigurationBuilder.ConfigurationBuilder.Build();
             }
         }
 
-        private void LoadAwsRegionEndpoint(IServiceCollection services)
+        private void LoadAwsRegionEndpoint()
         {
-            if (!string.IsNullOrEmpty(AwsOptions.Credentials.Region))
+            if (!string.IsNullOrEmpty(AwsOptions?.Credentials?.Region))
             {
-                services.AddSingleton(RegionEndpoint.GetBySystemName(AwsOptions.Credentials.Region));
+                ServiceCollection.AddSingleton(AwsCredentialsHelper.LoadAwsRegionEndpoint());
             }
         }
 
-        private void LoadAwsCredentials(IServiceCollection services)
+        private void LoadAwsCredentials()
         {
-            AWSCredentials = null;
+            AWSCredentials = AwsCredentialsHelper?.LoadAwsCredentials();
 
-            if (!string.IsNullOrEmpty(AwsOptions.Credentials.AccessKeyId) && !string.IsNullOrEmpty(AwsOptions.Credentials.SecretAccessKey))
+            if (AWSCredentials != null)
             {
-                AWSCredentials = new BasicAWSCredentials(AwsOptions.Credentials.AccessKeyId, AwsOptions.Credentials.SecretAccessKey);
+                ServiceCollection.AddSingleton(AWSCredentials);
             }
-            else
-            {
-                if (!string.IsNullOrEmpty(AwsOptions.Credentials.Profile))
-                {
-                    var sharedFile = new SharedCredentialsFile();
-                    sharedFile.TryGetProfile(AwsOptions.Credentials.Profile, out var profile);
-                    AWSCredentialsFactory.TryGetAWSCredentials(profile, sharedFile, out AWSCredentials credentials);
-                    AWSCredentials = credentials;
-                }
-            }
-
-            if (AWSCredentials != null) services.AddSingleton(AWSCredentials);
         }
         #endregion
     }

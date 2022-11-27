@@ -8,7 +8,8 @@ using Devon4Net.Infrastructure.AWS.SQS.Dto;
 using Devon4Net.Infrastructure.AWS.SQS.Helper;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
-using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.AWS.SQS.Interfaces;
+using Devon4Net.Infrastructure.Common;
 
 namespace Devon4Net.Infrastructure.AWS.SQS.Handlers
 {

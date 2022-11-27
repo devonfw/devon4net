@@ -1,11 +1,13 @@
 ﻿using Devon4Net.Infrastructure.LiteDb.LiteDb;
-using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.Common;
 using LiteDB;
 
 namespace Devon4Net.Infrastructure.LiteDb.Repository
 {
     public class LiteDbRepository<T> : ILiteDbRepository<T> where T : class
     {
+        private const string ErrorMessage = "Please check the predicate is null and the deleteAllCheck param as well. The provided predicate is null and the input param deleteAllCheck is to false. If you want to delete all the collection please set the deleteAllCheck param to true.";
+
         private LiteDatabase LiteDb { get; }
         private string CollectionName { get; }
 
@@ -29,19 +31,25 @@ namespace Devon4Net.Infrastructure.LiteDb.Repository
 
         public int Delete(BsonExpression predicate, bool deleteAllCheck = false)
         {
-            if (predicate != null && !deleteAllCheck)
+            try
             {
-                return LiteDb.GetCollection<T>(CollectionName).DeleteMany(predicate);
-            }
+                if (predicate != null && !deleteAllCheck)
+                {
+                    return LiteDb.GetCollection<T>(CollectionName).DeleteMany(predicate);
+                }
 
-            if (predicate == null && deleteAllCheck)
+                if (predicate == null && deleteAllCheck)
+                {
+                    return LiteDb.GetCollection<T>(CollectionName).DeleteAll();
+                }
+
+                return int.MinValue;
+            }
+            catch (Exception ex)
             {
-                return LiteDb.GetCollection<T>(CollectionName).DeleteAll();
+                Devon4NetLogger.Error(ex, ErrorMessage);
+                throw;
             }
-
-            const string errorMessage = "Please check the predicate is null and the deleteAllCheck param as well. The provided predicate is null and the input param deleteAllCheck is to false. If you want to delete all the collection please set the deleteAllCheck param to true.";
-            Devon4NetLogger.Error(errorMessage);
-            throw new ArgumentException(errorMessage);
         }
 
         public IEnumerable<T> Get()

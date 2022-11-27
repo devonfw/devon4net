@@ -1,6 +1,6 @@
 ﻿using Amazon.CDK.AWS.DynamoDB;
 
-namespace ADC.PostNL.BuildingBlocks.AWSCDK.Handlers
+namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers
 {
     public interface IAwsCdkDynamoDBHandler
     {

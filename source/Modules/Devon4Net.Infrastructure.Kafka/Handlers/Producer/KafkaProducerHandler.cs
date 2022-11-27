@@ -4,7 +4,7 @@ using Devon4Net.Infrastructure.Kafka.Common.Converters;
 using Devon4Net.Infrastructure.Kafka.Exceptions;
 using Devon4Net.Infrastructure.Kafka.Options;
 using Devon4Net.Infrastructure.Kafka.Serialization;
-using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.Common;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Devon4Net.Infrastructure.Kafka.Handlers.Producer

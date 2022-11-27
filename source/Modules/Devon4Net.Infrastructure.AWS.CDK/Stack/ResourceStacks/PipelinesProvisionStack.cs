@@ -3,6 +3,7 @@ using Amazon.CDK.AWS.CodeBuild;
 using Amazon.CDK.AWS.CodePipeline;
 using Amazon.CDK.AWS.ECS;
 using Amazon.CDK.AWS.IAM;
+using Amazon.CDK.AWS.Lambda;
 using Amazon.CDK.AWS.S3;
 using Devon4Net.Infrastructure.AWS.CDK.Enums;
 using Devon4Net.Infrastructure.AWS.CDK.Options.Resources;
@@ -53,6 +54,10 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                             case PipelineActionType.ecsdeploy:
                                 var ecsDeployArguments = actionOption.ArgumentsEcsDeploy;
                                 CreateEcsDeployAction(stage, StackResources.Artifacts, ecsDeployArguments);
+                                break;
+                            case PipelineActionType.lambdainvoke:
+                                var lambdaInvokeArguments = actionOption.ArgumentsLambdaInvoke;
+                                CreateLambdaInvokeAction(stage, StackResources.Artifacts, lambdaInvokeArguments);
                                 break;
                         }
                     }
@@ -179,6 +184,13 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
 
             // Locate role
             role = LocateRole(actionEcsDeployOptions.Role, $"The role {actionEcsDeployOptions.Role} of the pipeline action {actionEcsDeployOptions.Name} was not found");
+        }
+
+        private void CreateLambdaInvokeAction(IStage stage, IDictionary<string, Artifact_> artifacts, PipelineActionLambdaInvokeOptions actionLambdaInvokeOptions)
+        {
+            GetLambdaInvokeActionResources(actionLambdaInvokeOptions, artifacts, out IFunction lambda, out var inputArtifacts, out var outputArtifacts, out var role);
+
+            AwsCdkHandler.CreateLambdaInvokeActionInStage(stage, lambda, actionLambdaInvokeOptions.Name, role, inputArtifacts.ToArray(), outputArtifacts.ToArray(), actionLambdaInvokeOptions.UserParameters, actionLambdaInvokeOptions.VariablesNamespace);
         }
     }
 }

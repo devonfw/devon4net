@@ -1,4 +1,5 @@
 ﻿
+using Devon4Net.Infrastructure.Common.Constants;
 using Devon4Net.Infrastructure.Common.Handlers;
 using Devon4Net.Infrastructure.Grpc.Constants;
 using Devon4Net.Infrastructure.Grpc.Helpers;
@@ -26,7 +27,7 @@ namespace Devon4Net.Infrastructure.Grpc
 
         public static void SetupGrpc(this IServiceCollection services, IConfiguration configuration)
         {
-            GrpcOptions = services.GetTypedOptions<GrpcOptions>(configuration, "Grpc");
+            GrpcOptions = services.GetTypedOptions<GrpcOptions>(configuration, OptionsDefinition.Grpc);
 
             if (!GrpcOptions.EnableGrpc || string.IsNullOrEmpty(GrpcOptions.GrpcServer)) return;
 
@@ -48,12 +49,17 @@ namespace Devon4Net.Infrastructure.Grpc
                     ServerCertificateCustomValidationCallback = GetBypass
                 };
 
-                services.AddSingleton(GrpcChannel.ForAddress(GrpcOptions.GrpcServer, new GrpcChannelOptions { HttpHandler = httpHandler, ServiceConfig = new ServiceConfig { MethodConfigs = { defaultMethodConfig } } }));
+                services.AddSingleton(GrpcChannel.ForAddress(GrpcOptions.GrpcServer, new GrpcChannelOptions 
+                {
+                    HttpHandler = httpHandler, MaxRetryAttempts = GrpcOptions.RetryPatternOptions.MaxAttempts,  
+                    ServiceConfig = new ServiceConfig { MethodConfigs = { defaultMethodConfig } }
+                }));
             }
             else
             {
                 services.AddSingleton(GrpcChannel.ForAddress(GrpcOptions.GrpcServer, new GrpcChannelOptions
                 {
+                    MaxRetryAttempts = GrpcOptions.RetryPatternOptions.MaxAttempts,
                     ServiceConfig = new ServiceConfig { MethodConfigs = { defaultMethodConfig } }
                 }));
             }

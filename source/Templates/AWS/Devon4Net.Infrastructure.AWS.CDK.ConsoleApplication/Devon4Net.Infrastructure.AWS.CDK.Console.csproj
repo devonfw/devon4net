@@ -1,8 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+	<Title>devon4net CDK invoke sample project for AWS</Title>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6</TargetFramework>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.CDK\Devon4Net.Infrastructure.AWS.CDK.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.Common\Devon4Net.Infrastructure.AWS.Common.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Common\Devon4Net.Infrastructure.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

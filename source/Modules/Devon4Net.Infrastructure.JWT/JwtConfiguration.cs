@@ -1,4 +1,5 @@
-﻿using Devon4Net.Infrastructure.Common.Handlers;
+﻿using Devon4Net.Infrastructure.Common.Constants;
+using Devon4Net.Infrastructure.Common.Handlers;
 using Devon4Net.Infrastructure.JWT.Common.Const;
 using Devon4Net.Infrastructure.JWT.Handlers;
 using Devon4Net.Infrastructure.JWT.Options;
@@ -12,7 +13,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
     {
         public static void SetupJwt(this IServiceCollection services, IConfiguration configuration)
         {
-            var jwtOptions = services.GetTypedOptions<JwtOptions>(configuration, "JWT");
+            var jwtOptions = services.GetTypedOptions<JwtOptions>(configuration, OptionsDefinition.Jwt);
 
             if (jwtOptions == null) return;
 

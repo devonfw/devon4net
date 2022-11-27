@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Title>devon4net http connectivity abstraction library</Title>	  
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
     <Company>Capgemini S.A.</Company>
     <Description>Circuit breaker to manage http communication. Added support to manage communication using a certificate via httpclient factory</Description>
-    <Version>6.0.6</Version>
+    <Version>6.0.7</Version>
     <Copyright>Copyright © Capgemini</Copyright>
     <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
@@ -31,14 +32,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="6.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="6.0.11" />
     <PackageReference Include="Polly" Version="7.2.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Devon4Net.Infrastructure.Common\Devon4Net.Infrastructure.Common.csproj" />
-    <ProjectReference Include="..\Devon4Net.Infrastructure.Extensions\Devon4Net.Infrastructure.Extensions.csproj" />
-    <ProjectReference Include="..\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,6 +49,10 @@
 		  <Pack>True</Pack>
 		  <PackagePath>\</PackagePath>
 	  </None>	  
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
   </ItemGroup>		
 
 </Project>

@@ -9,7 +9,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
             return HandlerResources.AwsCdkSsmParameterStoreHandler.LocateParameterFromName(identification, parameterName);
         }
 
-        public IParameter AddParameter(string parameterId, string parameterName, string value, ParameterType type = ParameterType.STRING, ParameterTier tier = ParameterTier.STANDARD, string description = null)
+        public IParameter AddParameter(string parameterId, string parameterName, string value, ParameterDataType type = ParameterDataType.TEXT, ParameterTier tier = ParameterTier.STANDARD, string description = null)
         {
             return HandlerResources.AwsCdkSsmParameterStoreHandler.Create(parameterId, parameterName, value, type, tier, description);
         }

@@ -1,12 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+	<Title>devon4net Lambda sample project for AWS</Title>
+	<Version>6.0.7</Version>
     <TargetFramework>net6.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AWSProjectType>Lambda</AWSProjectType>
     <AssemblyName>Devon4Net.Application.Lambda</AssemblyName>
     <!-- This property makes the build directory similar to a publish directory and helps the AWS .NET Lambda Mock Test Tool find project dependencies. -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!-- 
 		Enable trimming to reduce package size of self contained publish which can reduce cold starts. Trimming alters
 		the .NET assemblies put in the deployment package. Additional runtime testing is required to make sure trimming
@@ -45,7 +47,6 @@
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.Common\Devon4Net.Infrastructure.AWS.Common.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.Lambda\Devon4Net.Infrastructure.AWS.Lambda.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.S3\Devon4Net.Infrastructure.AWS.S3.csproj" />
-    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.AWS.Secrets\Devon4Net.Infrastructure.AWS.Secrets.csproj" />
   </ItemGroup>  
   
   <ItemGroup>

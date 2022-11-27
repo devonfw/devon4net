@@ -1,5 +1,5 @@
 ﻿using Devon4Net.Application.GrpcClient.Protos;
-using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.Common;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
 

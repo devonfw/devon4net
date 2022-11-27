@@ -1,16 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <AWSProjectType>Lambda</AWSProjectType>	  
+	<TargetFramework>net6.0</TargetFramework>
+	<Title>devon4net sample project for Azure AppService</Title>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
+	<Company>Capgemini S.A.</Company>
+	<Description>Azure AppService template project. This project shows how to instantiate devon4net and invoke devon4net modules</Description>
+	<Version>6.0.7</Version>
+	<Copyright>Copyright © Capgemini</Copyright>
+	<PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
+	<RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
+	<license>https://github.com/devonfw/ide/blob/master/LICENSE/</license>
+	<RepositoryType>git</RepositoryType>
+	<PackageTags>devonfw;devon4net;Capgemini;api;webapi</PackageTags>
+	<PackageReleaseNotes>NET 6.0+ compatibility version</PackageReleaseNotes>
+	<PackageIcon>devonfw.png</PackageIcon>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Program2.cs" />
-    <Compile Remove="Startup.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Azure" Version="1.5.0" />
@@ -19,7 +29,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Azure.Configuration\Devon4Net.Infrastructure.Azure.Configuration.csproj" />
-    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.WebAPI\Devon4Net.Infrastructure.WebAPI.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Cors\Devon4Net.Infrastructure.Cors.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Swagger\Devon4Net.Infrastructure.Swagger.csproj" />
   </ItemGroup>
 
 </Project>

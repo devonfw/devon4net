@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+	  <Title>devon4net for AWS CDK abstraction library</Title>
 	  <TargetFramework>net6.0</TargetFramework>
 	  <ImplicitUsings>enable</ImplicitUsings>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	  <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
 	  <Company>Capgemini S.A.</Company>
 	  <Description>AWS CDK library for devon4net</Description>
-	  <Version>6.0.6</Version>
+	  <Version>6.0.7</Version>
 	  <Copyright>Copyright © Capgemini</Copyright>
 	  <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
 	  <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
@@ -30,7 +31,7 @@
 		<TreatWarningsAsErrors>False</TreatWarningsAsErrors>
 		<NoWarn>1701;1702;NU1608;CA1822</NoWarn>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<None Include="..\..\..\assets\images\devonfw.png">
 			<Pack>True</Pack>
@@ -46,8 +47,8 @@
 		</None>
 	</ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Amazon.CDK.Lib" Version="2.31.1" />
-    <PackageReference Include="Constructs" Version="10.1.43" />
+    <PackageReference Include="Amazon.CDK.Lib" Version="2.50.0" />
+    <PackageReference Include="Constructs" Version="10.1.154" />
   </ItemGroup>
 
 </Project>

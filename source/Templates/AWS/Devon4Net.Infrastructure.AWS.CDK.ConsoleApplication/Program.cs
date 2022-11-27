@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System;
-using ADC.PostNL.BuildingBlocks.AWSInitCDK.Operations;
 using System.Linq;
 using Devon4Net.Infrastructure.AWS.CDK.Options.Global;
 using Devon4Net.Infrastructure.AWS.CDK.Stack;
+using Devon4Net.Infrastructure.Common.Configuration;
+using Devon4Net.Infrastructure.AWS.Common.Constants;
+using Devon4Net.Infrastructure.Common.Constants;
 
 namespace Cdk
 {
@@ -12,15 +14,15 @@ namespace Cdk
     {
         private static string AwsAccount { get; set; }
         private static string AwsRegion { get; set; }
-        private static IConfiguration Configuration { get; set; }
         private static List<CdkOptions> CdkOptions { get; set; }
+        private static readonly DevonfwConfigurationBuilder DevonfwConfigurationBuilder = new();
 
         public static void Main(string[] args)
         {
             if (args?.Any() == true)
             {
-                AwsAccount = args.Length >= 1 ? args[0] : Environment.GetEnvironmentVariable("CDK_DEFAULT_ACCOUNT");
-                AwsRegion = args.Length == 2 ? args[1] : Environment.GetEnvironmentVariable("CDK_DEFAULT_REGION");
+                AwsAccount = args.Length >= 1 ? args[0] : Environment.GetEnvironmentVariable(AwsConstants.CDK_DEFAULT_ACCOUNT);
+                AwsRegion = args.Length == 2 ? args[1] : Environment.GetEnvironmentVariable(AwsConstants.CDK_DEFAULT_REGION);
             }
 
             #region AppSettings
@@ -48,17 +50,7 @@ namespace Cdk
 
         private static void LoadConfigurationFiles()
         {
-            var file = FileOperationsHelper.GetFilesFromPath("appsettings.json")?.FirstOrDefault();
-            if (file == null) throw new ArgumentException("No appsettings.json was provided");
-
-            Configuration = new ConfigurationBuilder().AddJsonFile(file, true, true).Build();
-
-            var environmentFileName = Configuration.GetSection("Environment").Value;
-
-            var environmentFile = FileOperationsHelper.GetFilesFromPath($"appsettings.{environmentFileName}.json")?.FirstOrDefault();
-            Configuration = new ConfigurationBuilder().AddConfiguration(Configuration).AddJsonFile(environmentFile, true, true).Build();
-
-            CdkOptions = Configuration.GetSection("CdkOptions").Get<List<CdkOptions>>();
+            CdkOptions = DevonfwConfigurationBuilder.Configuration.GetSection(OptionsDefinition.CdkOptions).Get<List<CdkOptions>>();
         }
     }
 }

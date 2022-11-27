@@ -5,6 +5,7 @@ using Amazon.CDK.AWS.CodePipeline.Actions;
 using Amazon.CDK.AWS.ECR;
 using Amazon.CDK.AWS.ECS;
 using Amazon.CDK.AWS.IAM;
+using Amazon.CDK.AWS.Lambda;
 using Amazon.CDK.AWS.S3;
 using Constructs;
 using System.Collections.Generic;
@@ -101,6 +102,20 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.orig
                 Outputs = outputArtifact != null ? new[] { outputArtifact } : null,
                 Project = codeBuildProject,
                 EnvironmentVariables = environmentVariables
+            });
+        }
+
+        public LambdaInvokeAction CreateLambdaInvokeAction(IFunction lambda, string actionName, IRole role, Artifact_[] inputArtifacts = null, Artifact_[] outputArtifacts = null, IDictionary<string, object> userParameters = null, string variablesNamespace = null)
+        {
+            return new LambdaInvokeAction(new LambdaInvokeActionProps
+            {
+                Lambda = lambda,
+                ActionName = actionName,
+                Inputs = inputArtifacts,
+                Outputs = outputArtifacts,
+                Role = role,
+                UserParameters = userParameters,
+                VariablesNamespace = variablesNamespace
             });
         }
     }

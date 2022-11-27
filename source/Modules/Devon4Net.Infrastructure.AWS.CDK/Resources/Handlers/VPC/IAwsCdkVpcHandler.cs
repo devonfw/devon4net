@@ -5,6 +5,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.VPC
 {
     public interface IAwsCdkVpcHandler
     {
+        IVpc Create(string identification, IIpAddresses ipAddresses, double? maxAzs, DefaultInstanceTenancy defaultInstanceTenancy = DefaultInstanceTenancy.DEFAULT, bool enableDnsSupport = true, bool enableDnsHostnames = true, List<ISubnetConfiguration> subnetConfigurations = null, Dictionary<string, string> tags = null);//NOSONAR number of params
+        
+        [Obsolete("2022/11/09 new AWS CDK version. Use ipAddresses instead")]
         IVpc Create(string identification, string cidr, double? maxAzs, DefaultInstanceTenancy defaultInstanceTenancy = DefaultInstanceTenancy.DEFAULT, bool enableDnsSupport = true, bool enableDnsHostnames = true, List<ISubnetConfiguration> subnetConfigurations = null, Dictionary<string, string> tags = null); //NOSONAR number of params
         IVpc Locate(string identification, string vpcId, bool isDefault = true);
         ISubnetSelection GetVpcSubnetSelection(IVpc vpc, string subnetDomainToCheck, string defaultSubnetDomainSeparator = ",", SubnetType defaultSubnetType = SubnetType.PRIVATE_ISOLATED);

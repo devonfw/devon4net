@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka;
 using Devon4Net.Infrastructure.Kafka.Handlers.Consumer;
 using Devon4Net.Infrastructure.Kafka.Options;
-using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.Common;
 
 namespace Devon4Net.Application.Kafka.Consumer.Business.KafkaManagement.Handlers
 {

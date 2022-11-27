@@ -1,7 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Devon4Net.Infrastructure.Logger.Logging;
 using Devon4Net.Infrastructure.Azure.BlobStorage.Models;
+using Devon4Net.Infrastructure.Common;
 using System.Net;
 
 namespace Devon4Net.Infrastructure.Azure.BlobStorage.Handlers

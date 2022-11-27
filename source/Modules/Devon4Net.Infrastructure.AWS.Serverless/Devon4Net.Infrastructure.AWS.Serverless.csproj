@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+	  <Title>devon4net for AWS serverless api abstraction library</Title>
+	  <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
     <Company>Capgemini S.A.</Company>
     <Description>Configuration library for devon4net webapi template</Description>
-    <Version>6.0.6</Version>
+    <Version>6.0.7</Version>
     <Copyright>Copyright © Capgemini</Copyright>
     <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
@@ -41,11 +42,10 @@
   </ItemGroup>
 
   <ItemGroup>
-	<ProjectReference Include="..\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />	  
-    <ProjectReference Include="..\Devon4Net.Infrastructure.AWS.ParameterStore\Devon4Net.Infrastructure.AWS.ParameterStore.csproj" />
-    <ProjectReference Include="..\Devon4Net.Infrastructure.AWS.SQS\Devon4Net.Infrastructure.AWS.SQS.csproj" />
-    <ProjectReference Include="..\Devon4Net.Infrastructure.WebAPI\Devon4Net.Infrastructure.WebAPI.csproj" />
-    <ProjectReference Include="..\Devon4Net.Infrastructure.AWS.Secrets\Devon4Net.Infrastructure.AWS.Secrets.csproj" />
+	<ProjectReference Include="..\Devon4Net.Infrastructure.AWS.Common\Devon4Net.Infrastructure.AWS.Common.csproj" />
+	<ProjectReference Include="..\Devon4Net.Infrastructure.AWS.Logger\Devon4Net.Infrastructure.AWS.Logger.csproj" />
+	<ProjectReference Include="..\Devon4Net.Infrastructure.AWS.SQS\Devon4Net.Infrastructure.AWS.SQS.csproj" />
+	<ProjectReference Include="..\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
   </ItemGroup>
 
 </Project>

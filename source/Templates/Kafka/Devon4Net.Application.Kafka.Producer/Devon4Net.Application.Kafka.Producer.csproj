@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
+	<Title>devon4net sample project for Kafka stream producer</Title>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
 	<Company>Capgemini S.A.</Company>
 	<Description>Kafka Producer template project. This project is in charge of producing messages to the Kafka topics. </Description>
-	<Version>6.0.6</Version>
+	<Version>6.0.7</Version>
 	<Copyright>Copyright © Capgemini</Copyright>
 	<PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
@@ -22,11 +22,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Cors\Devon4Net.Infrastructure.Cors.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Kafka\Devon4Net.Infrastructure.Kafka.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
-    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Middleware\Devon4Net.Infrastructure.Middleware.csproj" />
     <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.Swagger\Devon4Net.Infrastructure.Swagger.csproj" />
-    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.WebAPI\Devon4Net.Infrastructure.WebAPI.csproj" />
   </ItemGroup>
 
 	<ItemGroup>

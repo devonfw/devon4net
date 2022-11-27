@@ -30,9 +30,9 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
             }
         }
 
-        private void GetSsmParametersResources(SsmParameterOptions ssmParameterOptions, out ParameterType parameterType, out ParameterTier parameterTier)
+        private void GetSsmParametersResources(SsmParameterOptions ssmParameterOptions, out ParameterDataType parameterType, out ParameterTier parameterTier)
         {
-            parameterType = ssmParameterOptions.IsStringList ? ParameterType.STRING_LIST : ParameterType.STRING;
+            parameterType = ParameterDataType.TEXT;
             parameterTier = ssmParameterOptions.IsAdvancedTier ? ParameterTier.ADVANCED : ParameterTier.STANDARD;
         }
 

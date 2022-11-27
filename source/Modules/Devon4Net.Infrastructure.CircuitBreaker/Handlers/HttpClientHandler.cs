@@ -1,8 +1,10 @@
 ﻿using System.Net.Http.Headers;
-using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
+using Devon4Net.Infrastructure.CircuitBreaker.Interfaces;
+using Devon4Net.Infrastructure.Common.Constants;
 using Devon4Net.Infrastructure.Common.Exceptions;
-using Devon4Net.Infrastructure.Extensions.Helpers;
-using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.Common.Helpers;
+using Devon4Net.Infrastructure.Common.Helpers.Interfaces;
+using Devon4Net.Infrastructure.Common;
 using Microsoft.AspNetCore.Http;
 
 namespace Devon4Net.Infrastructure.CircuitBreaker.Handlers

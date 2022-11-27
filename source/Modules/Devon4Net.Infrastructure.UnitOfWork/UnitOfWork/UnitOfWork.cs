@@ -1,6 +1,6 @@
 ﻿using Devon4Net.Domain.UnitOfWork.Exceptions;
 using Devon4Net.Domain.UnitOfWork.Repository;
-using Devon4Net.Infrastructure.Logger.Logging;
+using Devon4Net.Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Globalization;

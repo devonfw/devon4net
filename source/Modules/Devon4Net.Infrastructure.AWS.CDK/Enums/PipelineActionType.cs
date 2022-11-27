@@ -6,6 +6,7 @@
         codebuild,
         cloudformation,
         ecrsource,
-        ecsdeploy
+        ecsdeploy,
+        lambdainvoke
     }
 }

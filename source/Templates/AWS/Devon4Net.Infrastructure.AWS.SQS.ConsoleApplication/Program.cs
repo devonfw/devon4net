@@ -4,12 +4,12 @@ using Devon4Net.Infrastructure.AWS.SQS.ConsoleApplication.Business.SQSManagement
 using Microsoft.Extensions.DependencyInjection;
 
 Console.WriteLine("Hello, World!");
-var program = new ConsoleProgramExtension();
-program.GetConfigurationObjects(out var Configuration, out IServiceCollection ServiceCollection);
-program.GetAwsConfigurationObjects(out var awsCredentials, out var awsOptions);
+
+var awsc = new AwsConsoleExtension();
+awsc.GetConfigurationObjects(out var Configuration, out IServiceCollection ServiceCollection);
+
 
 using var sp = ServiceCollection.BuildServiceProvider();
-
 var sqsSample = sp.GetService<SqsSample>();
 var sqsConsumerSample = sp.GetService<SqsConsumerSample>();
 _ = Task.Factory.StartNew(async () => await sqsSample.StartSending().ConfigureAwait(true));
