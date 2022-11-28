@@ -5,7 +5,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <AWSProjectType>Lambda</AWSProjectType>
-	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<IsPackable>true</IsPackable>	  
   </PropertyGroup>
 
   <ItemGroup>
