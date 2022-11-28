@@ -188,3 +188,6 @@ project.lock.json
 # AWS CDK
 /**/cdk.out
 /**/cdk.context.json
+
+#Rider IDE
+.idea/

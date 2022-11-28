@@ -1,6 +1,6 @@
-﻿using Devon4Net.Infrastructure.CircuitBreaker.Common.Enums;
-using Devon4Net.Infrastructure.CircuitBreaker.Handlers;
-using Devon4Net.Infrastructure.Common.Enums;
+﻿using Devon4Net.Infrastructure.CircuitBreaker.Interfaces;
+using Devon4Net.Infrastructure.Common.Constants;
+using Devon4Net.Infrastructure.Common.Helpers;
 using Devon4Net.Infrastructure.Nexus.Constants;
 using Devon4Net.Infrastructure.Nexus.Enum;
 using Devon4Net.Infrastructure.Nexus.Model.Assets;
@@ -208,7 +208,7 @@ namespace Devon4Net.Infrastructure.Nexus.Handler
         /// <param name="repositoryDto"></param>
         public Task CreateRepository<T>(T repositoryDto) where T : NexusRepository
         {
-            var repoType = EnumOperations.GetEnumMemberAttrValue(typeof(RepositoryType), repositoryDto.GetType().Name).Split("-");
+            var repoType = EnumHelper.GetEnumMemberAttrValue(typeof(RepositoryType), repositoryDto.GetType().Name).Split("-");
 
             return _httpClientHandler.Send(HttpMethod.Post, "Nexus", string.Concat(NexusConst.RepositoriesUrl, repoType[0], "/", repoType[1]), repositoryDto, MediaType.ApplicationJson, GetLoginHeaders(NexusOptions.UserName, NexusOptions.Password));
         }
