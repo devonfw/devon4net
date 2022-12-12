@@ -27,6 +27,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
+using Devon4Net.Infrastructure.RabbitMQ;
 
 namespace Devon4Net.Application.WebAPI.Configuration
 {

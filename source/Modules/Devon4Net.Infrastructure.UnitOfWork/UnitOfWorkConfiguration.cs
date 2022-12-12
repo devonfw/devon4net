@@ -3,7 +3,7 @@ using Devon4Net.Domain.UnitOfWork.UnitOfWork;
 using Devon4Net.Infrastructure.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devon4Net.Domain.UnitOfWork
+namespace Devon4Net.Infrastructure.UnitOfWork
 {
     public static class UnitOfWorkConfiguration
     {

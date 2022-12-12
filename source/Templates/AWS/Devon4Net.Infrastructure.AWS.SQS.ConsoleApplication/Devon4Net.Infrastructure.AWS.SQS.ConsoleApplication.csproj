@@ -10,7 +10,7 @@
 
 	
   <ItemGroup>
-	<PackageReference Include="AWSSDK.Core" Version="3.7.100.23" />
+	<PackageReference Include="AWSSDK.Core" Version="3.7.102.1" />
 	<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />	  

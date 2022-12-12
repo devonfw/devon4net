@@ -33,7 +33,7 @@
     <PackageReference Include="Confluent.SchemaRegistry.Serdes.Avro" Version="1.9.3" />
     <PackageReference Include="Confluent.SchemaRegistry.Serdes.Json" Version="1.9.3" />
     <PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" Version="1.9.3" />
-    <PackageReference Include="Streamiz.Kafka.Net" Version="1.4.0" />
+    <PackageReference Include="Streamiz.Kafka.Net" Version="1.4.2" />
   </ItemGroup>
 
   <ItemGroup>
