@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel;
 using System.Linq.Expressions;
-using Devon4Net.Domain.UnitOfWork.Exceptions;
-using Devon4Net.Domain.UnitOfWork.Pagination;
 using Devon4Net.Infrastructure.Common;
+using Devon4Net.Infrastructure.UnitOfWork.Exceptions;
+using Devon4Net.Infrastructure.UnitOfWork.Pagination;
 using Microsoft.EntityFrameworkCore;
 
-namespace Devon4Net.Domain.UnitOfWork.Repository
+namespace Devon4Net.Infrastructure.UnitOfWork.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {

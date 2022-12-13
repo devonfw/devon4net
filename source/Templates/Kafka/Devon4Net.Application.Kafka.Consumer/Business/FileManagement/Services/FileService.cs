@@ -1,10 +1,10 @@
 ﻿
-using Devon4Net.Domain.UnitOfWork.Service;
-using Devon4Net.Domain.UnitOfWork.UnitOfWork;
 using Devon4Net.Application.Kafka.Consumer.Domain.Database;
 using Devon4Net.Application.Kafka.Consumer.Domain.RepositoryInterfaces;
 using Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Dto;
 using Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Converters;
+using Devon4Net.Infrastructure.UnitOfWork.Service;
+using Devon4Net.Infrastructure.UnitOfWork.UnitOfWork;
 
 namespace Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Services
 {

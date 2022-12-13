@@ -1,4 +1,4 @@
-﻿namespace Devon4Net.Domain.UnitOfWork.Enums
+﻿namespace Devon4Net.Infrastructure.UnitOfWork.Enums
 {
     public enum DatabaseType
     {

@@ -16,7 +16,7 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devon4Net.Application.WebAPI.Configuration
+namespace Devon4Net.Infrastructure.MediatR
 {
     public static class MediatRConfiguration
     {

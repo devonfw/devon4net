@@ -1,4 +1,4 @@
-﻿namespace Devon4Net.Domain.UnitOfWork.Service
+﻿namespace Devon4Net.Infrastructure.UnitOfWork.Service
 {
     public interface IService
     {

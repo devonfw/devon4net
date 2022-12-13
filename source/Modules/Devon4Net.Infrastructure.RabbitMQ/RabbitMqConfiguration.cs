@@ -17,7 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
-namespace Devon4Net.Application.WebAPI.Configuration
+namespace Devon4Net.Infrastructure.RabbitMQ
 {
     public static class RabbitMqConfiguration
     {

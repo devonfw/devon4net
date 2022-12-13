@@ -1,4 +1,4 @@
-﻿namespace Devon4Net.Domain.UnitOfWork.Pagination
+﻿namespace Devon4Net.Infrastructure.UnitOfWork.Pagination
 {
     public class PaginationResult<T> : PaginationBase where T : class
     {

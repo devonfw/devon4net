@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Linq.Expressions;
-using Devon4Net.Domain.UnitOfWork.Pagination;
+using Devon4Net.Infrastructure.UnitOfWork.Pagination;
 
-namespace Devon4Net.Domain.UnitOfWork.Repository
+namespace Devon4Net.Infrastructure.UnitOfWork.Repository
 {
     public interface IRepository<T> where T : class
     {

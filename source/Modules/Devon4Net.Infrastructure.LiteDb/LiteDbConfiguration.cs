@@ -6,7 +6,7 @@ using Devon4Net.Infrastructure.LiteDb.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devon4Net.Application.WebAPI.Configuration
+namespace Devon4Net.Infrastructure.LiteDb
 {
     public static class LiteDbConfiguration
     {

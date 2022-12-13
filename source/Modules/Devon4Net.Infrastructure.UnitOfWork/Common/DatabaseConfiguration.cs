@@ -1,10 +1,10 @@
-﻿using Devon4Net.Domain.UnitOfWork.Enums;
-using Devon4Net.Infrastructure.Common;
+﻿using Devon4Net.Infrastructure.Common;
+using Devon4Net.Infrastructure.UnitOfWork.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devon4Net.Domain.UnitOfWork.Common
+namespace Devon4Net.Infrastructure.UnitOfWork.Common
 {
     public static class SetupDatabaseConfiguration
     {

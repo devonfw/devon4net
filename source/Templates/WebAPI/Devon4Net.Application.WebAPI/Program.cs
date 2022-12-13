@@ -1,5 +1,4 @@
 using Devon4Net.Application.WebAPI.Configuration;
-using Devon4Net.Domain.UnitOfWork;
 using Devon4Net.Infrastructure.CircuitBreaker;
 using Devon4Net.Infrastructure.Cors;
 using Devon4Net.Infrastructure.Grpc;
@@ -8,6 +7,11 @@ using Devon4Net.Infrastructure.Swagger;
 using Devon4Net.Infrastructure.Logger;
 using Devon4Net.Infrastructure.Common.Application.ApplicationTypes.API;
 using Devon4Net.Infrastructure.Common.Application.Middleware;
+using Devon4Net.Infrastructure.JWT;
+using Devon4Net.Infrastructure.UnitOfWork;
+using Devon4Net.Infrastructure.LiteDb;
+using Devon4Net.Infrastructure.RabbitMQ;
+using Devon4Net.Infrastructure.MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 

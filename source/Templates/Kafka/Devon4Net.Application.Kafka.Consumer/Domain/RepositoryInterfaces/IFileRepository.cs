@@ -1,5 +1,5 @@
 ﻿using Devon4Net.Application.Kafka.Consumer.Domain.Entities;
-using Devon4Net.Domain.UnitOfWork.Repository;
+using Devon4Net.Infrastructure.UnitOfWork.Repository;
 
 namespace Devon4Net.Application.Kafka.Consumer.Domain.RepositoryInterfaces
 {
