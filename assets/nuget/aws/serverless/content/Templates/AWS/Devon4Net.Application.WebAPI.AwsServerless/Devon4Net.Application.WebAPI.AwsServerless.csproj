@@ -1,24 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
+	<Title>devon4net serverless API sample project for AWS</Title>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AWSProjectType>Lambda</AWSProjectType>	  
+    <AWSProjectType>Lambda</AWSProjectType>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<IsPackable>true</IsPackable>	  
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="7.2.0" />
+    <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="7.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Devon4Net.Infrastructure.AWS.Common" Version="6.0.6" />
-    <PackageReference Include="Devon4Net.Infrastructure.AWS.Secrets" Version="6.0.6" />
-    <PackageReference Include="Devon4Net.Infrastructure.AWS.Serverless" Version="6.0.6" />
-    <PackageReference Include="Devon4Net.Infrastructure.Cors" Version="6.0.6" />
-    <PackageReference Include="Devon4Net.Infrastructure.Logger" Version="6.0.6" />
-    <PackageReference Include="Devon4Net.Infrastructure.Middleware" Version="6.0.6" />
-    <PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="6.0.6" />
-    <PackageReference Include="Devon4Net.Infrastructure.WebAPI" Version="6.0.6" />
+	  <PackageReference Include="Devon4Net.Infrastructure.AWS.Common" Version="6.0.11" />
+	  <PackageReference Include="Devon4Net.Infrastructure.AWS.Serverless" Version="6.0.11" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Cors" Version="6.0.11" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Logger" Version="6.0.11" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="6.0.11" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Common" Version="6.0.11" />
   </ItemGroup>
 
 </Project>

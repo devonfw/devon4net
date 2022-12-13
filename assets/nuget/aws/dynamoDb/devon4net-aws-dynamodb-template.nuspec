@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Devon4Net.Application.DynamoDb.Template</id>
-    <version>6.0.6</version>
+    <version>6.0.12</version>
     <title>Devon4Net DynamoDb sample template</title>
     <authors>iCSD/ADCenter Capgemini Valencia</authors>
     <owners></owners>
@@ -15,7 +15,7 @@
     <releaseNotes>.Net 6 LTS devon4net template. Support for AWS DynamoDb features</releaseNotes>
     <copyright>Copyright © Capgemini</copyright>
     <language>en-US</language>
-    <tags>OASP devon4Net webapi devonfw aws serverless lambda aws dynamodb</tags>
+    <tags>devon4Net webapi devonfw aws serverless lambda aws dynamodb</tags>
     <packageTypes>
       <packageType name="Template" />
     </packageTypes>

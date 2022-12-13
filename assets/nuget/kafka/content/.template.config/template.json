@@ -1,7 +1,7 @@
 ﻿{
   "author": "Capgemini Valencia ",
   "classifications": ["devonfw", "Devon4Net", "Devon4NetKafka"],
-  "description": "Devon4Net Kafka solution template for .net core 3.1.10",
+  "description": "Devon4Net Kafka solution template for .net 6",
   "name": "Devon4Net Kafka solution template",
   "identity": "Devon4Net.Kafka",
   "groupIdentity": "Devon4NetKafka",
