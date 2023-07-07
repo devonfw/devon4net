@@ -25,21 +25,16 @@ namespace Devon4Net.Infrastructure.MediatR
             var mediatROptions = services.GetTypedOptions<MediatROptions>(configuration, OptionsDefinition.MediatR);
 
             if (mediatROptions?.EnableMediatR != true) return;
-            ConfigureMediatRGenericDependencyInjection(ref services);
-            SetupMediatRBackupLocalDatabase(ref services, ref mediatROptions);
-        }
-
-        private static void ConfigureMediatRGenericDependencyInjection(ref IServiceCollection services)
-        {
-            services.AddTransient(typeof(IJsonHelper), typeof(JsonHelper));
-            services.AddTransient(typeof(ILiteDbRepository<MediatRBackup>), typeof(LiteDbRepository<MediatRBackup>));
-            services.AddTransient(typeof(IMediatRBackupService), typeof(MediatRBackupService));
             services.AddTransient(typeof(IMediatRHandler), typeof(MediatRHandler));
-            services.AddMediatR(Assembly.GetExecutingAssembly());
+            if(mediatROptions?.Backup.UseLocalBackup != true) return;
+            SetupMediatRBackupLocalDatabase(ref services, ref mediatROptions);
         }
 
         private static void SetupMediatRBackupLocalDatabase(ref IServiceCollection services, ref MediatROptions mediatROptions)
         {
+            services.AddTransient(typeof(ILiteDbRepository<MediatRBackup>), typeof(LiteDbRepository<MediatRBackup>));
+            services.AddTransient(typeof(IMediatRBackupService), typeof(MediatRBackupService));
+            
             Devon4NetLogger.Information("Please setup your database in order to have the RabbitMq messaging backup feature");
             if (mediatROptions.Backup?.UseLocalBackup != true) return;
             Devon4NetLogger.Information("RabbitMq messaging backup feature is going to be used via LiteDb");

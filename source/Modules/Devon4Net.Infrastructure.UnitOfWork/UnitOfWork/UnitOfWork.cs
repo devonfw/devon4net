@@ -1,146 +1,62 @@
-﻿using Devon4Net.Domain.UnitOfWork.Exceptions;
-using Devon4Net.Domain.UnitOfWork.Repository;
+﻿using System.Data;
+using Devon4Net.Domain.UnitOfWork.Exceptions;
 using Devon4Net.Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Globalization;
 
-namespace Devon4Net.Domain.UnitOfWork.UnitOfWork
+namespace Devon4Net.Infrastructure.UnitOfWork.UnitOfWork;
+
+public class UnitOfWork<TContext> : IUnitOfWork where TContext : DbContext
 {
-    public class UnitOfWork<TContext> : IUnitOfWork<TContext> where TContext : DbContext, IDisposable
+    private const int DefaultSecondsTimeout = 30;
+
+    protected UnitOfWork(TContext context)
     {
-        private TContext Context { get; }
-        private IServiceProvider ServiceProvider { get; }
+        Context = context ?? throw new ContextNullException(nameof(context));
+    }
 
-        public UnitOfWork(TContext context, IServiceProvider serviceProvider)
+    private TContext Context { get; }
+
+    public async Task<IDbTransaction> GetDbTransaction(int secondsTimeout = DefaultSecondsTimeout)
+    {
+        Context.Database.SetCommandTimeout(secondsTimeout);
+
+        var dbContextTransaction = await Context.Database.BeginTransactionAsync();
+        return dbContextTransaction.GetDbTransaction();
+    }
+
+    public Task SaveChanges()
+    {
+        //Auditable entities
+        return Context.SaveChangesAsync();
+    }
+
+    public IExecutionStrategy CreateExecutionStrategy()
+    {
+        return Context.Database.CreateExecutionStrategy();
+    }
+
+    public async Task CommitTransaction(IDbTransaction transaction)
+    {
+        if (transaction == null)
+            throw new TransactionNullException("Transaction cannot be null to perform transaction operations.");
+
+        try
         {
-            Context = context ?? throw new ContextNullException(nameof(context));
-            ServiceProvider = serviceProvider;
+            await SaveChanges();
+
+            transaction.Commit();
         }
-
-        public Task<IDbContextTransaction> GetTransaction()
+        catch (Exception ex)
         {
-            return Context.Database.BeginTransactionAsync();
+            Devon4NetLogger.Error(ex);
+            transaction.Rollback();
+            throw;
         }
-
-        public IExecutionStrategy CreateExecutionStrategy()
+        finally
         {
-            return Context.Database.CreateExecutionStrategy();
-        }
-
-        public Task Commit(IDbContextTransaction transaction)
-        {
-            if (transaction == null)
-            {
-                throw new TransactionNullException("Transaction cannot be null to perform transaction operations.");
-            }
-
-            var transactionSavePointName = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff", CultureInfo.InvariantCulture);
-
-            return Task.Run(async () =>
-              {
-                  try
-                  {
-                      transaction.CreateSavepoint(transactionSavePointName);
-                      _ = await SaveChanges().ConfigureAwait(false);
-                      await transaction.CommitAsync().ConfigureAwait(false);
-                  }
-                  catch (DbUpdateConcurrencyException ex)
-                  {
-                      Devon4NetLogger.Error(ex);
-                      RollbackTransaction(transaction, transactionSavePointName);
-                      throw;
-                  }
-                  catch (Exception ex)
-                  {
-                      Devon4NetLogger.Error(ex);
-                      RollbackTransaction(transaction, transactionSavePointName);
-                      throw;
-                  }
-              });
-        }
-
-        private async Task<bool> SaveChanges()
-        {
-            try
-            {
-                await Context.SaveChangesAsync().ConfigureAwait(false);
-                return true;
-            }
-            catch (OperationCanceledException ex)
-            {
-                Devon4NetLogger.Error(ex);
-                throw;
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                foreach (var entry in ex.Entries)
-                {
-                    var databaseValues = entry.GetDatabaseValues();
-
-                    // Refresh original values to bypass next concurrency check
-                    entry.OriginalValues.SetValues(databaseValues);
-                }
-
-                Devon4NetLogger.Error(ex);
-                throw;
-            }
-            catch (DbUpdateException ex)
-            {
-                Devon4NetLogger.Error(ex);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// ets the typed repository class
-        /// </summary>
-        /// <typeparam name="T">The inherited repository class</typeparam>
-        /// <returns>The instantiated repository class</returns>
-        public T Repository<T>() where T : class
-        {
-            return GetRepository<T>();
-        }
-
-        /// <summary>
-        /// Gets the typed repository class and sets the database context
-        /// </summary>
-        /// <typeparam name="T">The inherited repository class</typeparam>
-        /// <typeparam name="TS">The entity class</typeparam>
-        /// <returns>The instantiated repository class</returns>
-        public T Repository<T,TS>() where T : class where TS : class
-        {
-            var repository = GetRepository<T>();
-
-            (repository as Repository<TS>)?.SetContext(Context);
-
-            return repository;
-        }
-
-        private static void RollbackTransaction(IDbContextTransaction transaction, string savePoint)
-        {
-            if (transaction == null)
-            {
-                const string message = "Transaction cannot be null to perform transaction operations";
-                Devon4NetLogger.Error(message);
-                throw new TransactionNullException(message);
-            }
-
-            transaction.RollbackToSavepoint(savePoint);
+            Context.Database.SetCommandTimeout(DefaultSecondsTimeout);
             transaction.Dispose();
-        }
-
-        private T GetRepository<T>() where T : class
-        {
-            var repositoryType = typeof(T);
-            var repository = ServiceProvider.GetService(repositoryType);
-
-            if (repository == null)
-            {
-                throw new RepositoryNotFoundException($"The repository {repositoryType.Name} was not found in the IOC container. Plase register the repository during startup.");
-            }
-
-            return repository as T;
         }
     }
 }

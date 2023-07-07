@@ -1,6 +1,6 @@
 ﻿using Devon4Net.Application.Kafka.Consumer.Domain.Database;
-using Devon4Net.Domain.UnitOfWork.Common;
 using Devon4Net.Domain.UnitOfWork.Enums;
+using Devon4Net.Infrastructure.UnitOfWork.Common;
 
 namespace Devon4Net.Application.Kafka.Consumer.Configuration
 {

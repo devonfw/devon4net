@@ -24,7 +24,7 @@ builder.Services.SetupSwagger(builder.Configuration);
 
 //UoW CONFIGURATION
 builder.Services.SetupDependencyInjection(builder.Configuration);
-builder.Services.SetupUnitOfWork(typeof(DIConfiguration));
+builder.Services.SetupUnitOfWork();
 
 //KAFKA CONFIGURATION
 builder.Services.SetupKafka(builder.Configuration);

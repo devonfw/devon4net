@@ -6,7 +6,7 @@ namespace Devon4Net.Application.WebAPI.Business.MediatRManagement.Commands
     /// <summary>
     /// THe command to create a TO-DO
     /// </summary>
-    public class CreateTodoCommand : CommandBase<TodoResultDto>
+    public record CreateTodoCommand : CommandBase<TodoResultDto>
     {
         /// <summary>
         /// Description

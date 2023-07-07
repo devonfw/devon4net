@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Devon4Net.Application\Devon4Net.Application.csproj" />
+      <ProjectReference Include="..\Devon4Net.Domain\Devon4Net.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

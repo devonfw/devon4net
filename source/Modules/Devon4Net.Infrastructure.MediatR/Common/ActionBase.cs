@@ -2,7 +2,7 @@
 
 namespace Devon4Net.Infrastructure.MediatR.Common
 {
-    public class ActionBase<T> : IRequest<T> where T : class
+    public record ActionBase<T> : IRequest<T> where T : class
     {
         public DateTime Timestamp { get; }
         public string MessageType { get; }

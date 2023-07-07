@@ -1,10 +1,7 @@
 ﻿using System.Linq.Expressions;
-using Devon4Net.Domain.UnitOfWork.Service;
-using Devon4Net.Domain.UnitOfWork.UnitOfWork;
 using Devon4Net.Infrastructure.Common;
 using Devon4Net.Application.WebAPI.Business.TodoManagement.Converters;
 using Devon4Net.Application.WebAPI.Business.TodoManagement.Dto;
-using Devon4Net.Application.WebAPI.Domain.Database;
 using Devon4Net.Application.WebAPI.Domain.Entities;
 using Devon4Net.Application.WebAPI.Domain.RepositoryInterfaces;
 
@@ -13,17 +10,17 @@ namespace Devon4Net.Application.WebAPI.Business.TodoManagement.Service
     /// <summary>
     /// Service implementation
     /// </summary>
-    public class TodoService: Service<TodoContext>, ITodoService
+    public class TodoService: ITodoService
     {
         private readonly ITodoRepository _todoRepository;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="uoW"></param>
-        public TodoService(IUnitOfWork<TodoContext> uoW) : base(uoW)
+        /// <param name="todoRepository"></param>
+        public TodoService(ITodoRepository todoRepository)
         {
-            _todoRepository = uoW.Repository<ITodoRepository>();
+            _todoRepository = todoRepository;
         }
 
         /// <summary>

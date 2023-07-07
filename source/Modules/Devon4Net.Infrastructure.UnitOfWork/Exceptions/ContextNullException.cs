@@ -1,23 +1,24 @@
-﻿namespace Devon4Net.Domain.UnitOfWork.Exceptions
+﻿using System.Runtime.Serialization;
+
+namespace Devon4Net.Domain.UnitOfWork.Exceptions;
+
+[Serializable]
+public class ContextNullException : Exception
 {
-    [Serializable]
-    public class ContextNullException : Exception
+    public ContextNullException()
     {
-        public ContextNullException() : base()
-        {
-        }
+    }
 
-        public ContextNullException(string message) : base(message)
-        {
-        }
+    public ContextNullException(string message) : base(message)
+    {
+    }
 
-        public ContextNullException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    public ContextNullException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 
-        protected ContextNullException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext)
-        {
-        }
+    protected ContextNullException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        : base(serializationInfo, streamingContext)
+    {
     }
 }

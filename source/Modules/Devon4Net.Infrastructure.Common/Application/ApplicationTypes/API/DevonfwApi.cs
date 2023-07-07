@@ -11,6 +11,8 @@ using Devon4Net.Infrastructure.Common.Application.Options;
 using Devon4Net.Infrastructure.Common.Application.ApplicationTypes.API.Servers;
 using Devon4Net.Infrastructure.Common.Application.ApplicationTypes.API.Configuration;
 using Devon4Net.Infrastructure.Common.Application.Attributes;
+using Devon4Net.Infrastructure.Common.Helpers;
+using Devon4Net.Infrastructure.Common.Helpers.Interfaces;
 
 namespace Devon4Net.Infrastructure.Common.Application.ApplicationTypes.API
 {
@@ -39,6 +41,8 @@ namespace Devon4Net.Infrastructure.Common.Application.ApplicationTypes.API
 
         public static DevonfwOptions SetupDevonfw(this IServiceCollection services, IConfiguration configuration)
         {
+            services?.SetupDevonfwServices();
+            
             DevonfwOptions = services?.GetTypedOptions<DevonfwOptions>(configuration, OptionsDefinition.DefaultSettingsNodeName);
 
             if (DevonfwOptions == null)
@@ -58,6 +62,12 @@ namespace Devon4Net.Infrastructure.Common.Application.ApplicationTypes.API
             if (DevonfwOptions.UseXsrf) services?.ConfigureXsrf();
 
             return DevonfwOptions;
+        }
+        
+        private static void SetupDevonfwServices(this IServiceCollection services)
+        {
+            services.AddSingleton<IRecyclableMemoryHelper, RecyclableMemoryHelper>();
+            services.AddTransient(typeof(IJsonHelper), typeof(JsonHelper));
         }
     }
 }

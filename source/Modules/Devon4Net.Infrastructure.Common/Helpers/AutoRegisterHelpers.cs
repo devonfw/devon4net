@@ -22,7 +22,7 @@ namespace Devon4Net.Infrastructure.Common.Helpers
         public static AutoRegisterData RegisterAssemblyPublicNonGenericClasses(this IServiceCollection services, params Assembly[] assemblies)
         {
             if (assemblies.Length == 0)
-                assemblies = new[] {Assembly.GetCallingAssembly()};
+                assemblies = new[] { Assembly.GetCallingAssembly() };
 
             var allPublicTypes = assemblies.SelectMany(x => x.GetExportedTypes()
                 .Where(y => y.IsClass && !y.IsAbstract && !y.IsGenericType && !y.IsNested));
@@ -50,12 +50,12 @@ namespace Devon4Net.Infrastructure.Common.Helpers
         /// <param name="autoRegData">AutoRegister data produced by <see cref="RegisterAssemblyPublicNonGenericClasses"/></param> method
         /// <param name="lifetime">Allows you to define the lifetime of the service - defaults to ServiceLifetime.Transient</param>
         /// <returns></returns>
-        public static IServiceCollection AsPublicImplementedInterfaces(this AutoRegisterData autoRegData, 
+        public static IServiceCollection AsPublicImplementedInterfaces(this AutoRegisterData autoRegData,
             ServiceLifetime lifetime = ServiceLifetime.Transient)
         {
             if (autoRegData == null) throw new ArgumentNullException(nameof(autoRegData));
-            foreach (var classType in (autoRegData.TypeFilter == null 
-                ? autoRegData.TypesToConsider 
+            foreach (var classType in (autoRegData.TypeFilter == null
+                ? autoRegData.TypesToConsider
                 : autoRegData.TypesToConsider.Where(autoRegData.TypeFilter)))
             {
                 var interfaces = classType.GetTypeInfo().ImplementedInterfaces;
@@ -86,36 +86,36 @@ namespace Devon4Net.Infrastructure.Common.Helpers
             return autoRegData.Services;
         }
 
-        public static void AutoRegisterClasses(this IServiceCollection services, List<Type> assemblyContainerToScan, string sufixName = "Service")
+        public static void AutoRegisterClasses(this IServiceCollection services, List<Assembly> assembliesNamespaceToScan,
+        List<string> suffixNames, ServiceLifetime serviceLifetime)
         {
-            if (assemblyContainerToScan == null || assemblyContainerToScan.Count == 0|| string.IsNullOrEmpty(sufixName)) return;
+            if (assembliesNamespaceToScan == null || assembliesNamespaceToScan.Count == 0 || suffixNames == null ||
+                suffixNames.Count == 0) return;
 
-            foreach (var assembly in assemblyContainerToScan)
+            foreach (var assembly in assembliesNamespaceToScan)
             {
-                var assemblyToScan = Assembly.GetAssembly(assembly);
-                if (assemblyToScan == null) continue;
-
-                services.RegisterAssemblyPublicNonGenericClasses(assemblyToScan)
-                .Where(x => x.Name.EndsWith(sufixName))
-                .AsPublicImplementedInterfaces();
+                foreach (var suffixName in suffixNames)
+                    services.RegisterAssemblyPublicNonGenericClasses(assembly)
+                        .Where(x => x.Name.EndsWith(suffixName))
+                        .AsPublicImplementedInterfaces(serviceLifetime);
             }
         }
 
-        public static void AutoRegisterClasses(this IServiceCollection services, List<Type> assemblyContainerToScan, List<string> sufixNames)
+        public static void AutoRegisterClasses(this IServiceCollection services, List<Type> assemblyContainerToScan,
+            List<string> suffixNames, ServiceLifetime serviceLifetime)
         {
-            if (assemblyContainerToScan == null || assemblyContainerToScan.Count == 0 || sufixNames == null || sufixNames.Count == 0) return;
+            if (assemblyContainerToScan == null || assemblyContainerToScan.Count == 0 || suffixNames == null ||
+                suffixNames.Count == 0) return;
 
             foreach (var assembly in assemblyContainerToScan)
             {
                 var assemblyToScan = Assembly.GetAssembly(assembly);
                 if (assemblyToScan == null) continue;
 
-                foreach (var sufixName in sufixNames)
-                {
+                foreach (var suffixName in suffixNames)
                     services.RegisterAssemblyPublicNonGenericClasses(assemblyToScan)
-                    .Where(x => x.Name.EndsWith(sufixName))
-                    .AsPublicImplementedInterfaces();
-                }
+                        .Where(x => x.Name.EndsWith(suffixName))
+                        .AsPublicImplementedInterfaces(serviceLifetime);
             }
         }
     }

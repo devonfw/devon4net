@@ -1,4 +1,4 @@
-﻿using Devon4Net.Application.WebAPI.Configuration;
+﻿using System.Reflection;
 using Devon4Net.Application.WebAPI.Business.EmployeeManagement.Dto;
 using Devon4Net.Application.WebAPI.Business.EmployeeManagement.Validators;
 using Devon4Net.Application.WebAPI.Business.MediatRManagement.Commands;
@@ -15,19 +15,16 @@ using Devon4Net.Infrastructure.Common.Constants;
 using Devon4Net.Infrastructure.FluentValidation;
 using Devon4Net.Infrastructure.JWT.Common;
 using Devon4Net.Infrastructure.MediatR.Options;
-using Devon4Net.Infrastructure.MediatR.Samples.Handler;
-using Devon4Net.Infrastructure.MediatR.Samples.Model;
-using Devon4Net.Infrastructure.MediatR.Samples.Query;
 using Devon4Net.Infrastructure.RabbitMQ.Options;
 using Devon4Net.Infrastructure.RabbitMQ.Samples.Handllers;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using MediatR;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
+using Devon4Net.Infrastructure.Common.Helpers;
+using Devon4Net.Infrastructure.MediatR.Behaviors;
 using Devon4Net.Infrastructure.RabbitMQ;
+using Devon4Net.Infrastructure.UnitOfWork.Common;
 
 namespace Devon4Net.Application.WebAPI.Configuration
 {
@@ -48,6 +45,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         public static void SetupCustomDependencyInjection(this IServiceCollection services, IConfiguration configuration)
         {
             SetupDatabase(services, configuration);
+            SetUpAutoRegisterClasses(services);
             SetupJwtPolicies(services);
             SetupFluentValidators(services);
 
@@ -66,6 +64,24 @@ namespace Devon4Net.Application.WebAPI.Configuration
                 SetupMediatRHandlers(services);
             }
         }
+        
+        private static void SetUpAutoRegisterClasses(IServiceCollection services)
+        {
+            List<Assembly> assemblyNamespaceToScan = new()
+            {
+                Assembly.GetExecutingAssembly(),
+            };
+
+            var suffixNamesToRegister = new List<string>
+            {
+                "Projector",
+                "Repository",
+                "Service",
+                "QueryBuilder"
+            };
+
+            services.AutoRegisterClasses(assemblyNamespaceToScan, suffixNamesToRegister, ServiceLifetime.Transient);
+        }
 
         private static void SetupRabbitHandlers(IServiceCollection services)
         {
@@ -75,9 +91,12 @@ namespace Devon4Net.Application.WebAPI.Configuration
 
         private static void SetupMediatRHandlers(IServiceCollection services)
         {
-            services.AddTransient(typeof(IRequestHandler<GetUserQuery, UserDto>), typeof(GetUserhandler));
-            services.AddTransient(typeof(IRequestHandler<GetTodoQuery, TodoResultDto>), typeof(GetTodoHandler));
-            services.AddTransient(typeof(IRequestHandler<CreateTodoCommand, TodoResultDto>), typeof(CreateTodoHandler));
+            var assembly = Assembly.GetExecutingAssembly();
+
+            services.AddMediatR(assembly);
+            services.AddValidatorsFromAssembly(assembly);
+
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         }
 
         private static void SetupFluentValidators(IServiceCollection services)
