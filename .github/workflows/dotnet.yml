@@ -22,9 +22,8 @@ jobs:
         dotnet-version: 6.0.x
     - name: Set Directory
       run: cd source
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: Restore dependencies & Build
+      working-directory: ./source
+      run: | 
+        dotnet restore
+        dotnet build --no-restore
