@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Devon4Net.Infrastructure.Azure.KeyVault\Devon4Net.Infrastructure.Azure.KeyVault.csproj" />
     <ProjectReference Include="..\Devon4Net.Infrastructure.Common\Devon4Net.Infrastructure.Common.csproj" />
     <ProjectReference Include="..\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
   </ItemGroup>
