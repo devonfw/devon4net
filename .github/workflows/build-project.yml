@@ -20,16 +20,28 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    - name: build 
-      run: |
+    # - name: build 
+    #   run: |
+    #       cd source
+    #       dotnet restore
+    #       dotnet build
+
+    - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        # shell: powershell
+        run: |
           cd source
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"JosepFe_devon4net" /o:"josepfe" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet restore
           dotnet build
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
-    - name: Analyze with SonarCloud
-        uses: sonarsource/sonarcloud-github-action@v1
-        with:
-          project-key: ${{ secrets.SONAR_PROJECT_KEY }}
-          project-name: "devon4net"
-          token: ${{ secrets.SONAR_TOKEN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Analyze with SonarCloud
+    #     uses: sonarsource/sonarcloud-github-action@v1
+    #     with:
+    #       project-key: ${{ secrets.SONAR_PROJECT_KEY }}
+    #       project-name: "devon4net"
+    #       token: ${{ secrets.SONAR_TOKEN }}
+    #       github-token: ${{ secrets.GITHUB_TOKEN }}
