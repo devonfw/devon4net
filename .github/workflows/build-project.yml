@@ -40,6 +40,9 @@ jobs:
           run: |
             mkdir -p .sonar/scanner
             dotnet tool update dotnet-sonarscanner --tool-path .sonar/scanner
+        - name: Verify installed SonarCloud scanner
+          run: |
+            ls -la .sonar/scanner # List the contents of the scanner directory for debugging
         - name: Build and analyze
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
