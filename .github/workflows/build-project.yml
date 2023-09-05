@@ -15,22 +15,22 @@ jobs:
       runs-on: ubuntu-latest # Change to Ubuntu
       steps:
         - name: Set up JDK 17
-          uses: actions/setup-java@v2 # Update to the latest version
+          uses: actions/setup-java@v3 # Update to the latest version
           with:
             java-version: 17
             distribution: 'adopt' # Ubuntu uses AdoptOpenJDK
-        - uses: actions/checkout@v2 # Update to the latest version
+        - uses: actions/checkout@v3 # Update to the latest version
           with:
             fetch-depth: 0
         - name: Cache SonarCloud packages
-          uses: actions/cache@v2 # Update to the latest version
+          uses: actions/cache@v3 # Update to the latest version
           with:
             path: ~/.sonar/cache # Change the path to the Linux format
             key: ${{ runner.os }}-sonar
             restore-keys: ${{ runner.os }}-sonar
         - name: Cache SonarCloud scanner
           id: cache-sonar-scanner
-          uses: actions/cache@v2 # Update to the latest version
+          uses: actions/cache@v3 # Update to the latest version
           with:
             path: ./.sonar/scanner
             key: ${{ runner.os }}-sonar-scanner
