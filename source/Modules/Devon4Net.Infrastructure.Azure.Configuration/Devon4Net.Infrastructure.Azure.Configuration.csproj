@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Devon4Net.Infrastructure.Azure.BlobStorage\Devon4Net.Infrastructure.Azure.BlobStorage.csproj" />
-    <ProjectReference Include="..\Devon4Net.Infrastructure.AZURE.KeyVault\Devon4Net.Infrastructure.Azure.KeyVault.csproj" />
+    <ProjectReference Include="..\Devon4Net.Infrastructure.Azure.KeyVault\Devon4Net.Infrastructure.Azure.KeyVault.csproj" />
     <ProjectReference Include="..\Devon4Net.Infrastructure.Common\Devon4Net.Infrastructure.Common.csproj" />
   </ItemGroup>
 
