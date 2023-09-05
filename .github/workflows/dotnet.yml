@@ -3,11 +3,7 @@
 
 name: .NET
 
-on:
-  push:
-    branches: [ "develop", "devon4net_github_actions" ]
-  pull_request:
-    branches: [ "develop" ]
+on: workflow_dispatch
 
 jobs:
   build:
