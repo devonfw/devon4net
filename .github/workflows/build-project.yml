@@ -52,5 +52,5 @@ jobs:
             cd source
             dotnet restore
             dotnet build
-            ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+            ./../.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
