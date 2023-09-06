@@ -15,16 +15,29 @@ public class EmployeeProjector : Projector, IEmployeeProjector
 
     public async Task<EmployeeDto> GetEmployeeById(long id)
     {
-        var employeeDtos = await GetProjection((IQueryable<Employee> employee) => employee
-            .Select(responseDto => new EmployeeDto
-            {
-                Name = responseDto.Name,
-                Surname = responseDto.Surname,
-                Mail = responseDto.Mail
-            })
-            .Where(x => x.Id == id)
-        );
+        var query = (IQueryable<Employee> employeeQuery) => employeeQuery
+        .Select(employee => new EmployeeDto
+        {
+            Name = employee.Name,
+            Surname = employee.Surname,
+            Mail = employee.Mail
+        })
+        .Where(employee => employee.Id == id);
+
+        var employeeDtos = await GetProjection(query);
 
         return employeeDtos.FirstOrDefault() ?? throw new EmployeeNotFoundException();
+    }
+
+    public Task<IEnumerable<EmployeeDto>> GetEmployees()
+    {
+        var query = (IQueryable<Employee> employeeQuery) => employeeQuery.Select(employee => new EmployeeDto
+        {
+            Name = employee.Name,
+            Surname = employee.Surname,
+            Mail = employee.Mail
+        });
+
+        return GetProjection(query);
     }
 }

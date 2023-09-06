@@ -19,23 +19,23 @@ public class EmployeeController : ControllerBase
     }
 
     [HttpPost("CreateEmployee")]
-    public async Task<EmployeeDto> CreateEmployee([FromBody] EmployeeDto employeeDto)
+    public Task<EmployeeDto> CreateEmployee([FromBody] EmployeeDto employeeDto)
     {
         var command = new CreateEmployeeCommand(employeeDto.Name, employeeDto.Surname, employeeDto.Mail);
-        return await _mediator.CommandAsync(command);
+        return _mediator.CommandAsync(command);
     }
 
     [HttpGet("GetEmployees")]
-    public async Task<IEnumerable<EmployeeDto>> GetAllEmployees()
+    public Task<IEnumerable<EmployeeDto>> GetAllEmployees()
     {
         var query = new GetAllEmployeesQuery();
-        return await _mediator.QueryAsync(query);
+        return _mediator.QueryAsync(query);
     }
 
     [HttpGet("GetEmployeeById")]
-    public async Task<EmployeeDto> GetAllEmployees([FromQuery] long id)
+    public Task<EmployeeDto> GetAllEmployees([FromQuery] long id)
     {
         var query = new GetEmployeeByIdQuery(id);
-        return await _mediator.QueryAsync(query);
+        return _mediator.QueryAsync(query);
     }
 }
