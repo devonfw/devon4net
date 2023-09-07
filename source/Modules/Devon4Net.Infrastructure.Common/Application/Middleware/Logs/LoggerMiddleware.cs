@@ -27,17 +27,16 @@ public class LoggerMiddleware
 
             var originalResponseBody = context.Response.Body;
             context.Response.Body = bodyReader;
-                
+
             Devon4NetLogger.Information($"REQUEST STARTED {context.TraceIdentifier} | HttpMethod: {context.Request.Method} | Path: {context.Request.Path} ");
 
             await _next(context).ConfigureAwait(false);
             bodyReader.Seek(0, SeekOrigin.Begin);
             await bodyReader.CopyToAsync(originalResponseBody).ConfigureAwait(false);
 
-
             if (Log.IsEnabled(LogEventLevel.Information))
             {
-                if (context.Response.StatusCode is < StatusCodes.Status200OK or > StatusCodes.Status300MultipleChoices) Devon4NetLogger.Information(await HandleResponseStream(context.TraceIdentifier, context?.Request?.Body, RequestBodyEntity).ConfigureAwait(false));
+                if (context.Response.StatusCode is < StatusCodes.Status200OK or > StatusCodes.Status300MultipleChoices) Devon4NetLogger.Information(await HandleResponseStream(context.TraceIdentifier, context.Request?.Body, RequestBodyEntity).ConfigureAwait(false));
                 Devon4NetLogger.Information(await HandleResponseStream(context.TraceIdentifier, context.Response.Body, ResponseBodyEntity, true).ConfigureAwait(false));
                 Devon4NetLogger.Information($"REQUEST FINISHED {context.TraceIdentifier} | Status Code: {context.Response.StatusCode}");
             }
@@ -49,7 +48,7 @@ public class LoggerMiddleware
             }
             else
             {
-                Devon4NetLogger.Debug(await HandleResponseStream(context.TraceIdentifier, context?.Request?.Body, RequestBodyEntity).ConfigureAwait(false));
+                Devon4NetLogger.Debug(await HandleResponseStream(context.TraceIdentifier, context.Request?.Body, RequestBodyEntity).ConfigureAwait(false));
                 Devon4NetLogger.Debug(await HandleResponseStream(context.TraceIdentifier, context.Response.Body, ResponseBodyEntity, true).ConfigureAwait(false));
                 Devon4NetLogger.Debug($"REQUEST FINISHED {context.TraceIdentifier} | Status Code: {context.Response.StatusCode}");
             }
@@ -64,10 +63,10 @@ public class LoggerMiddleware
     private static async Task<string> HandleResponseStream(string identifier, Stream bodyStream, string entityDisclaimer, bool trimBody = false)
     {
         var stringBuilder = new StringBuilder();
-            
-        stringBuilder.Append($"REQUEST {identifier} {entityDisclaimer}: ");
-            
-        if (bodyStream?.CanRead == false)
+
+        stringBuilder.Append("REQUEST ").Append(identifier).Append(' ').Append(entityDisclaimer).Append(": ");
+
+        if (bodyStream == null || !(bool)bodyStream?.CanRead)
         {
             stringBuilder.Append("No data found.");
             return stringBuilder.ToString();
@@ -85,7 +84,7 @@ public class LoggerMiddleware
         else
         {
             var text = await bodyReader.ReadToEndAsync().ConfigureAwait(false);
-            if(string.IsNullOrWhiteSpace(text)) return default;
+            if (string.IsNullOrWhiteSpace(text)) return default;
             stringBuilder.Append(text.Replace("\n", ""));
         }
 
