@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Devon4Net.Application.Exceptions
 {
     /// <summary>
-    /// Custom exception EmployeeNotFoundException
+    /// Custom exception AdminNotFoundException
     /// </summary>
     [Serializable]
     public class EmployeeNotFoundException : Exception, IWebApiException
@@ -21,14 +21,7 @@ namespace Devon4Net.Application.Exceptions
         public bool ShowMessage => true;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EmployeeNotFoundException"/> class.
-        /// </summary>
-        public EmployeeNotFoundException()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EmployeeNotFoundException"/> class.
+        /// Initializes a new instance of the <see cref="EmployeeNotFoundException"/> class with a specified error message.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
         public EmployeeNotFoundException(string message)
@@ -37,41 +30,46 @@ namespace Devon4Net.Application.Exceptions
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EmployeeNotFoundException"/> class.
+        /// Initializes a new instance of the <see cref="EmployeeNotFoundException"/> class with a specified error message
+        /// and a reference to the inner exception that caused this exception.
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="innerException"></param>
-        public EmployeeNotFoundException(string message, Exception innerException) : base(message, innerException)
+        /// <param name="message">The message that describes the error.</param>
+        /// <param name="innerException">The exception that caused this exception.</param>
+        public EmployeeNotFoundException(string message, Exception innerException)
+            : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EmployeeNotFoundException"/> class.
+        /// Initializes a new instance of the <see cref="EmployeeNotFoundException"/> class with serialized data.
         /// </summary>
-        /// <param name="serializationInfo"></param>
-        /// <param name="streamingContext"></param>
-        protected EmployeeNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-            : base(serializationInfo.GetString("Message"))
+        /// <param name="info">The <see cref="SerializationInfo"/> that holds the serialized object data.</param>
+        /// <param name="context">The <see cref="StreamingContext"/> that contains contextual information about the source or destination.</param>
+        protected EmployeeNotFoundException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+
+        public EmployeeNotFoundException() : base()
         {
         }
 
         /// <summary>
-        /// Implements the ISerializable interface for custom serialization.
+        /// GetObjectData is called during serialization to save the exception object's data.
         /// </summary>
-        /// <param name="info">The SerializationInfo that holds the serialized object data about the exception being thrown.</param>
-        /// <param name="context">The StreamingContext that contains contextual information about the source or destination.</param>
+        /// <param name="info">The <see cref="SerializationInfo"/> that holds the serialized object data.</param>
+        /// <param name="context">The <see cref="StreamingContext"/> that contains contextual information about the source or destination.</param>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            if (info == null)
+            if (info != null)
             {
-                throw new ArgumentNullException(nameof(info));
+                // Call the base class to save its data
+                base.GetObjectData(info, context);
             }
-
-            // Serialize the message property
-            info.AddValue("Message", this.Message);
-
-            // Call the base class implementation to save any other data that needs to be serialized.
-            base.GetObjectData(info, context);
+            else
+            {
+                throw new ArgumentNullException(nameof(info), "SerializationInfo must not be null.");
+            }
         }
     }
 }
