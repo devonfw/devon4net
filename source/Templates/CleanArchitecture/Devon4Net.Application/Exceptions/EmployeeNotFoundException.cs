@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Devon4Net.Application.Exceptions
 {
     /// <summary>
-    /// Custom exception AdminNotFoundException
+    /// Custom exception EmployeeNotFoundException
     /// </summary>
     [Serializable]
     public class EmployeeNotFoundException : Exception, IWebApiException
@@ -19,6 +19,10 @@ namespace Devon4Net.Application.Exceptions
         /// Show the message on the response?
         /// </summary>
         public bool ShowMessage => true;
+
+        public EmployeeNotFoundException()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmployeeNotFoundException"/> class with a specified error message.
@@ -43,33 +47,10 @@ namespace Devon4Net.Application.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="EmployeeNotFoundException"/> class with serialized data.
         /// </summary>
-        /// <param name="info">The <see cref="SerializationInfo"/> that holds the serialized object data.</param>
-        /// <param name="context">The <see cref="StreamingContext"/> that contains contextual information about the source or destination.</param>
-        protected EmployeeNotFoundException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+        /// <param name="info"></param>
+        /// <param name="context"></param>
+        protected EmployeeNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-        }
-
-        public EmployeeNotFoundException() : base()
-        {
-        }
-
-        /// <summary>
-        /// GetObjectData is called during serialization to save the exception object's data.
-        /// </summary>
-        /// <param name="info">The <see cref="SerializationInfo"/> that holds the serialized object data.</param>
-        /// <param name="context">The <see cref="StreamingContext"/> that contains contextual information about the source or destination.</param>
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info != null)
-            {
-                // Call the base class to save its data
-                base.GetObjectData(info, context);
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(info), "SerializationInfo must not be null.");
-            }
         }
     }
 }
