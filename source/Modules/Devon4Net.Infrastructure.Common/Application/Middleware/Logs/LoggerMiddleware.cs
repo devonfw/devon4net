@@ -66,7 +66,7 @@ public class LoggerMiddleware
 
         stringBuilder.Append("REQUEST ").Append(identifier).Append(' ').Append(entityDisclaimer).Append(": ");
 
-        if (bodyStream == null || !(bool)bodyStream?.CanRead)
+        if (bodyStream == null || !bodyStream.CanRead)
         {
             stringBuilder.Append("No data found.");
             return stringBuilder.ToString();

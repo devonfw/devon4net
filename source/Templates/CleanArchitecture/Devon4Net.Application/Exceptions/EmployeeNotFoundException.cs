@@ -1,5 +1,6 @@
 ﻿using Devon4Net.Infrastructure.Common.Exceptions;
 using Microsoft.AspNetCore.Http;
+using System.Runtime.Serialization;
 
 namespace Devon4Net.Application.Exceptions
 {
@@ -49,9 +50,28 @@ namespace Devon4Net.Application.Exceptions
         /// </summary>
         /// <param name="serializationInfo"></param>
         /// <param name="streamingContext"></param>
-        protected EmployeeNotFoundException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext)
+        protected EmployeeNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+            : base(serializationInfo.GetString("Message"))
         {
+        }
+
+        /// <summary>
+        /// Implements the ISerializable interface for custom serialization.
+        /// </summary>
+        /// <param name="info">The SerializationInfo that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">The StreamingContext that contains contextual information about the source or destination.</param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            // Serialize the message property
+            info.AddValue("Message", this.Message);
+
+            // Call the base class implementation to save any other data that needs to be serialized.
+            base.GetObjectData(info, context);
         }
     }
 }
