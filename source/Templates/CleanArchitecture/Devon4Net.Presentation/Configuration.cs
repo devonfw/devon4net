@@ -23,7 +23,7 @@ public static class Configuration
         List<Assembly> assemblyNamespaceToScan = new()
         {
             typeof(Application.AssemblyReference).Assembly,
-            typeof(Infrastructure.AssemblyReference).Assembly,
+            typeof(Infrastructure.AssemblyReference).Assembly
         };
 
         var suffixNamesToRegister = new List<string>

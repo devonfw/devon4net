@@ -18,7 +18,7 @@ public class EmployeeContext : DbContext
     }
 
     /// <summary>
-    /// Dbset
+    /// DbSet
     /// </summary>
     public virtual DbSet<Employee> Employee { get; set; }
 
