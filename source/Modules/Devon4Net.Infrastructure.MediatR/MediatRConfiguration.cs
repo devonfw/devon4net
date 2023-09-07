@@ -1,8 +1,5 @@
-﻿using System.Reflection;
-using Devon4Net.Infrastructure.Common.Constants;
+﻿using Devon4Net.Infrastructure.Common.Constants;
 using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.Common.Helpers;
-using Devon4Net.Infrastructure.Common.Helpers.Interfaces;
 using Devon4Net.Infrastructure.LiteDb.LiteDb;
 using Devon4Net.Infrastructure.LiteDb.Repository;
 using Devon4Net.Infrastructure.Common;
@@ -12,7 +9,6 @@ using Devon4Net.Infrastructure.MediatR.Domain.Entities;
 using Devon4Net.Infrastructure.MediatR.Domain.ServiceInterfaces;
 using Devon4Net.Infrastructure.MediatR.Handler;
 using Devon4Net.Infrastructure.MediatR.Options;
-using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,17 +22,16 @@ namespace Devon4Net.Infrastructure.MediatR
 
             if (mediatROptions?.EnableMediatR != true) return;
             services.AddTransient(typeof(IMediatRHandler), typeof(MediatRHandler));
-            if(mediatROptions?.Backup.UseLocalBackup != true) return;
-            SetupMediatRBackupLocalDatabase(ref services, ref mediatROptions);
+            if (mediatROptions.Backup?.UseLocalBackup != true) return;
+            SetupMediatRBackupLocalDatabase(ref services);
         }
 
-        private static void SetupMediatRBackupLocalDatabase(ref IServiceCollection services, ref MediatROptions mediatROptions)
+        private static void SetupMediatRBackupLocalDatabase(ref IServiceCollection services)
         {
             services.AddTransient(typeof(ILiteDbRepository<MediatRBackup>), typeof(LiteDbRepository<MediatRBackup>));
             services.AddTransient(typeof(IMediatRBackupService), typeof(MediatRBackupService));
-            
+
             Devon4NetLogger.Information("Please setup your database in order to have the RabbitMq messaging backup feature");
-            if (mediatROptions.Backup?.UseLocalBackup != true) return;
             Devon4NetLogger.Information("RabbitMq messaging backup feature is going to be used via LiteDb");
 
             services.AddSingleton<ILiteDbContext, MediatRBackupLiteDbContext>();
