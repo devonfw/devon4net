@@ -35,7 +35,7 @@ namespace Devon4Net.Infrastructure.MediatR
             services.AddTransient(typeof(ILiteDbRepository<MediatRBackup>), typeof(LiteDbRepository<MediatRBackup>));
             services.AddTransient(typeof(IMediatRBackupService), typeof(MediatRBackupService));
             services.AddTransient(typeof(IMediatRHandler), typeof(MediatRHandler));
-            services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
         }
 
         private static void SetupMediatRBackupLocalDatabase(ref IServiceCollection services, ref MediatROptions mediatROptions)

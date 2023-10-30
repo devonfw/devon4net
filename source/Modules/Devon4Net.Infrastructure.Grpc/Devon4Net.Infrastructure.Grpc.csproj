@@ -23,14 +23,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.50.0" />	  
-    <PackageReference Include="Google.Protobuf" Version="3.21.11" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.50.0" />
-	  <PackageReference Include="Grpc.Tools" Version="2.51.0">
+    <PackageReference Include="Grpc.AspNetCore" Version="2.58.0" />	  
+    <PackageReference Include="Google.Protobuf" Version="3.24.4" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.58.0" />
+	  <PackageReference Include="Grpc.Tools" Version="2.59.0">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
     <PackageReference Include="System.Collections" Version="4.3.0" />

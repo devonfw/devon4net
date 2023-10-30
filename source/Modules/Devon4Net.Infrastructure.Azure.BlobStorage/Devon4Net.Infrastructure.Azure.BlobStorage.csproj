@@ -15,12 +15,9 @@
     <PackageTags>devonfw;devon4net;Capgemini</PackageTags>
     <PackageReleaseNotes>NET 6.0+ compatibility version</PackageReleaseNotes>
   </PropertyGroup>
-
+    
   <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
-    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
-    <!--<PackageReference Include="Microsoft.Extensions.Azure" Version="1.5.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />-->
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.18.0" />
   </ItemGroup>
 
   <ItemGroup>

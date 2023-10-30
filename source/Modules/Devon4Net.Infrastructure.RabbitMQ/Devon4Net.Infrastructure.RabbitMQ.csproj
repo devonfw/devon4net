@@ -8,7 +8,7 @@
     <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
     <Company>Capgemini S.A.</Company>
     <Description>RabbitMq accellerator module for for event/CQRS management using Rabbit</Description>
-    <Version>6.0.11</Version>
+    <Version>6.0.24</Version>
     <Copyright>Copyright © Capgemini</Copyright>
     <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
@@ -45,20 +45,21 @@
     <ProjectReference Include="..\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EasyNetQ" Version="7.3.5" />
-    <PackageReference Include="LiteDB" Version="5.0.13" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.11">
+    <PackageReference Include="EasyNetQ" Version="7.6.0" />
+    <PackageReference Include="LiteDB" Version="5.0.17" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.24" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.24">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="6.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="6.0.24" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.24" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.24" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.24" />
+    <PackageReference Include="Oracle.EntityFrameworkCore" Version="6.21.120" />
     <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.11" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.24" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.22" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
     <PackageReference Include="EntityFrameworkCore.FirebirdSQL" Version="2.1.2.2" />
   </ItemGroup>

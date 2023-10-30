@@ -26,7 +26,7 @@
 		<PackageReference Include="Amazon.Lambda.Core" Version="2.1.0" />
 		<PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.101.3" />
 		<PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.2" />
-		<PackageReference Include="System.Text.Json" Version="6.0.7" />
+		<PackageReference Include="System.Text.Json" Version="7.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
