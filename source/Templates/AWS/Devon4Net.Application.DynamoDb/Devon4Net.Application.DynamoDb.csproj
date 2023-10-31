@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
 	<Title>devon4net sample project for AWS DynamoDB</Title>
-	<Version>6.0.11</Version>
+	<Version>6.0.25</Version>
 	<TargetFramework>net6.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AWSProjectType>Lambda</AWSProjectType>

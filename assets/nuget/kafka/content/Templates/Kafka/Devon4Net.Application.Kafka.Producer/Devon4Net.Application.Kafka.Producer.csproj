@@ -7,7 +7,7 @@
 	<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
 	<Company>Capgemini S.A.</Company>
 	<Description>Kafka Producer template project. This project is in charge of producing messages to the Kafka topics. </Description>
-	<Version>6.0.11</Version>
+	<Version>6.0.25</Version>
 	<Copyright>Copyright © Capgemini</Copyright>
 	<PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
@@ -22,11 +22,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <PackageReference Include="Devon4Net.Infrastructure.Kafka" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.Logger" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.Cors" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.UnitOfWork" Version="6.0.11" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Kafka" Version="6.0.25" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Logger" Version="6.0.25" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Cors" Version="6.0.25" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="6.0.25" />
+	  <PackageReference Include="Devon4Net.Infrastructure.UnitOfWork" Version="6.0.25" />
   </ItemGroup>
 
 	<ItemGroup>

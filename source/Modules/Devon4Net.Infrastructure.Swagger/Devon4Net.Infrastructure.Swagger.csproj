@@ -8,7 +8,7 @@
     <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
     <Company>Capgemini S.A.</Company>
     <Description>Swagger configuration library for devon4net webapi template using Swashbuckle</Description>
-    <Version>6.0.11</Version>
+    <Version>6.0.25</Version>
     <Copyright>Copyright © Capgemini</Copyright>
     <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>

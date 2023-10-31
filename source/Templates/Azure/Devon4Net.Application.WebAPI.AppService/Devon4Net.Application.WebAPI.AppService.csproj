@@ -7,7 +7,7 @@
 	<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
 	<Company>Capgemini S.A.</Company>
 	<Description>Azure AppService template project. This project shows how to instantiate devon4net and invoke devon4net modules</Description>
-	<Version>6.0.11</Version>
+	<Version>6.0.25</Version>
 	<Copyright>Copyright © Capgemini</Copyright>
 	<PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>

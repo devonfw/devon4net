@@ -14,12 +14,12 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <PackageReference Include="Devon4Net.Infrastructure.AWS.Common" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.AWS.Serverless" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.Cors" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.Logger" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.Common" Version="6.0.11" />
+	  <PackageReference Include="Devon4Net.Infrastructure.AWS.Common" Version="6.0.25" />
+	  <PackageReference Include="Devon4Net.Infrastructure.AWS.Serverless" Version="6.0.25" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Cors" Version="6.0.25" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Logger" Version="6.0.25" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="6.0.25" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Common" Version="6.0.25" />
   </ItemGroup>
 
 </Project>

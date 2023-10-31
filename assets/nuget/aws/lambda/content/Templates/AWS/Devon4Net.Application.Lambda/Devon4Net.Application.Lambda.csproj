@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
 	<Title>devon4net Lambda sample project for AWS</Title>
-	<Version>6.0.11</Version>
+	<Version>6.0.25</Version>
     <TargetFramework>net6.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AWSProjectType>Lambda</AWSProjectType>
@@ -44,9 +44,9 @@
   </ItemGroup>  
   
   <ItemGroup>
-   <PackageReference Include="Devon4Net.Infrastructure.AWS.Common" Version="6.0.11" />
-   <PackageReference Include="Devon4Net.Infrastructure.AWS.S3" Version="6.0.11" />
-   <PackageReference Include="Devon4Net.Infrastructure.AWS.Lambda" Version="6.0.11" />   
+   <PackageReference Include="Devon4Net.Infrastructure.AWS.Common" Version="6.0.25" />
+   <PackageReference Include="Devon4Net.Infrastructure.AWS.S3" Version="6.0.25" />
+   <PackageReference Include="Devon4Net.Infrastructure.AWS.Lambda" Version="6.0.25" />   
   </ItemGroup>  
   
   <ItemGroup>
