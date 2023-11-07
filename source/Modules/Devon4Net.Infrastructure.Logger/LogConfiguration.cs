@@ -99,7 +99,7 @@ public static class LogConfiguration
             {
                 HostnameOrAddress = graylogOptions.GrayLogHost,
                 TransportType = GetGraylogTransportTypeFromString(graylogOptions.GrayLogProtocol),
-                Host = graylogOptions.GrayLogHost,
+                HostnameOverride = graylogOptions.GrayLogHost,
                 Port = graylogOptions.GrayLogPort,
                 MaxMessageSizeInUdp = graylogOptions.MaxUdpMessageSize
             };

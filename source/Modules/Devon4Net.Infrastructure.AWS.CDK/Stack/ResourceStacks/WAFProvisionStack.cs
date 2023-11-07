@@ -20,7 +20,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Stack
                 var webAclAssociation = AwsCdkHandler.CreateWebAclAssociation($"{wafOption.Id}-association", webAcl, apiGatewayArn);
 
                 // This is necessary because the CDK does not detect the dependency between the deployment stage and the webAcl association, and generally, the creation of the association will begin before the deployment stage is created, causing the latter not being found when the CDK is deployed
-                webAclAssociation.AddDependsOn(apiGatewayDeploymentStage);
+                webAclAssociation.AddDependency(apiGatewayDeploymentStage);
 
                 StackResources.WebAcls.Add(wafOption.Id, webAcl);
             }
