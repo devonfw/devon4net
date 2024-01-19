@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Devon4Net.Domain.UnitOfWork.Common
+namespace Devon4Net.Infrastructure.UnitOfWork.Common
 {
     public static class PredicateBuilder
     {

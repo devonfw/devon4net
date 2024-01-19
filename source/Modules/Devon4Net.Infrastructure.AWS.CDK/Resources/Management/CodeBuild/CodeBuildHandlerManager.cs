@@ -10,7 +10,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Management
         {
             if (buildImage == null)
             {
-                buildImage = LinuxBuildImage.AMAZON_LINUX_2_3;
+                buildImage = LinuxBuildImage.AMAZON_LINUX_2_5;
             }
 
             if (computeType == null)

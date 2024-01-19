@@ -1,39 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<Title>Configuration library for devon4net</Title>
-		<TargetFramework>net6.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
-		<Company>Capgemini S.A.</Company>
-		<Description>Configuration library for devon4net</Description>
-		<Version>6.0.25</Version>
-		<Copyright>Copyright © Capgemini</Copyright>
-		<PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
-		<license>https://github.com/devonfw/ide/blob/master/LICENSE/</license>
-		<RepositoryType>git</RepositoryType>
-		<PackageTags>devonfw;devon4net;Capgemini</PackageTags>
-		<PackageReleaseNotes>NET 6.0+ compatibility version</PackageReleaseNotes>
-		<PackageIcon>devonfw.png</PackageIcon>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-	</PropertyGroup>
+  <PropertyGroup>
+	  <TargetFramework>net8.0</TargetFramework>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
+	  <Company>Capgemini S.A.</Company>
+	  <Description>Common classes for devon4net</Description>
+	  <Version>8.0.1</Version>
+	  <Copyright>Copyright © Capgemini</Copyright>
+	  <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
+	  <license>https://github.com/devonfw/ide/blob/master/LICENSE/</license>
+	  <RepositoryType>git</RepositoryType>
+	  <PackageTags>devonfw;devon4net;Capgemini;Common</PackageTags>
+	  <PackageReleaseNotes>NET 8.0+ compatibility version</PackageReleaseNotes>
+	  <PackageIcon>devonfw.png</PackageIcon>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <NoWarn>$(NoWarn);NETSDK1206;1701;1702;NU1608;CA1822</NoWarn>
+  </PropertyGroup>
 
   <ItemGroup>
 	  <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-	  <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
-	  <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
-	  <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
-	  <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
-	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
-	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-	  <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
-	  <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-	  <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
-	  <PackageReference Include="Serilog" Version="3.0.1" />
+	  <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.1" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.1" />
+	  <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+	  <PackageReference Include="Serilog" Version="3.1.1" />
   </ItemGroup>
 
 	<ItemGroup>

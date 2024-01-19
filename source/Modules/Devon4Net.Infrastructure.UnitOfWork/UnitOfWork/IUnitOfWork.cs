@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Devon4Net.Domain.UnitOfWork.UnitOfWork
+namespace Devon4Net.Infrastructure.UnitOfWork.UnitOfWork
 {
     public interface IUnitOfWork<TContext> where TContext : DbContext
     {

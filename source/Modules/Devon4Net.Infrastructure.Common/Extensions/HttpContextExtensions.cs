@@ -14,7 +14,7 @@ namespace Devon4Net.Infrastructure.Common.Extensions
             if (httpContext.ResponseContainsHeader(headerName)) return true;
             try
             {
-                httpContext.Response.Headers.Add(headerName, headerValue);
+                httpContext.Response.Headers.Append(headerName, headerValue);
                 return true;
             }
             catch (ArgumentException)

@@ -1,25 +1,22 @@
-dotnet nuget push Devon4Net.Infrastructure.AWS.CDK.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.AWS.Common.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.AWS.DynamoDb.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.AWS.Lambda.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.AWS.Logger.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.AWS.S3.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.AWS.Serverless.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.AWS.SQS.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.Azure.BlobStorage.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.Azure.Configuration.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.Azure.KeyVault.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.CircuitBreaker.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.Common.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.Cors.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.FluentValidation.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.Grpc.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.JWT.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.LiteDb.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.Logger.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.MediatR.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.Nexus.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.RabbitMQ.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.Swagger.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.UnitOfWork.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
-dotnet nuget push Devon4Net.Infrastructure.Kafka.6.0.25.nupkg --api-key YOUR_API_KEY_HERE! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.AWS.CDK.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.AWS.Common.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.AWS.DynamoDb.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.AWS.Lambda.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.AWS.Logger.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.AWS.S3.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.AWS.Serverless.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.AWS.SQS.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.CircuitBreaker.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.Common.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.Cors.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.FluentValidation.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.Grpc.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.JWT.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.Kafka.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.LiteDb.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.Logger.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.MediatR.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.RabbitMQ.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.Swagger.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+dotnet nuget push Devon4Net.Infrastructure.UnitOfWork.8.0.1.nupkg --api-key PUT YOUR API KEY HERE!!! --source https://api.nuget.org/v3/index.json
+

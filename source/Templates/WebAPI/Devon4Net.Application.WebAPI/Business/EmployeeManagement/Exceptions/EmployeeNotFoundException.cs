@@ -43,15 +43,5 @@ namespace Devon4Net.Application.WebAPI.Business.EmployeeManagement.Exceptions
         public EmployeeNotFoundException(string message, Exception innerException) : base(message, innerException)
         {
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EmployeeNotFoundException"/> class.
-        /// </summary>
-        /// <param name="serializationInfo"></param>
-        /// <param name="streamingContext"></param>
-        protected EmployeeNotFoundException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext)
-        {
-        }
     }
 }

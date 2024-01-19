@@ -9,8 +9,6 @@ using Devon4Net.Application.WebAPI.Business.RabbitMqManagement.Handlers;
 using Devon4Net.Application.WebAPI.Business.TodoManagement.Dto;
 using Devon4Net.Application.WebAPI.Business.TodoManagement.Validators;
 using Devon4Net.Application.WebAPI.Domain.Database;
-using Devon4Net.Domain.UnitOfWork.Common;
-using Devon4Net.Domain.UnitOfWork.Enums;
 using Devon4Net.Infrastructure.Common.Constants;
 using Devon4Net.Infrastructure.FluentValidation;
 using Devon4Net.Infrastructure.JWT.Common;
@@ -28,6 +26,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using Devon4Net.Infrastructure.RabbitMQ;
+using Devon4Net.Infrastructure.UnitOfWork.Common;
+using Devon4Net.Infrastructure.UnitOfWork.Enums;
 
 namespace Devon4Net.Application.WebAPI.Configuration
 {

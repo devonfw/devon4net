@@ -32,11 +32,5 @@ namespace Devon4Net.Infrastructure.Common.Exceptions
         {
             StatusCode = StatusCodes.Status500InternalServerError;
         }
-
-        protected HttpCustomRequestException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext)
-        {
-            StatusCode = StatusCodes.Status500InternalServerError;
-        }
     }
 }

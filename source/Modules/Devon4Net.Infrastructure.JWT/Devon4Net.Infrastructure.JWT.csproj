@@ -1,39 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<Title>devon4net JWT abstraction library</Title>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
     <Company>Capgemini S.A.</Company>
     <Description>JWT Configuration library for devon4net webapi template</Description>
-    <Version>6.0.25</Version>
+    <Version>8.0.1</Version>
     <Copyright>Copyright © Capgemini</Copyright>
     <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
     <license>https://github.com/devonfw/ide/blob/master/LICENSE/</license>
     <RepositoryType>git</RepositoryType>
     <PackageTags>devonfw;devon4net;Capgemini;webapi;API;jwt</PackageTags>
-    <PackageReleaseNotes>NET 6.0+ compatibility version</PackageReleaseNotes>
+    <PackageReleaseNotes>NET 8.0+ compatibility version</PackageReleaseNotes>
     <PackageIcon>devonfw.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>	
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>	 	  
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	<NoWarn>$(NoWarn);NETSDK1206;1701;1702;NU1608;CA1822</NoWarn>
   </PropertyGroup>
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.24" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.24" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />	  
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0" />	  
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer">
-      <Version>3.1.18</Version>
+      <Version>8.0.0</Version>
     </PackageReference>
   </ItemGroup>
 

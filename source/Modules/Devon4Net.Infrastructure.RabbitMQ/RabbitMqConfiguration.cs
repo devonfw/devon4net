@@ -60,9 +60,17 @@ namespace Devon4Net.Infrastructure.RabbitMQ
             catch (ArgumentNullException ex) { Devon4NetLogger.Error(ex); }
             catch (EasyNetQException ex) { Devon4NetLogger.Error(ex); }
             catch (ArgumentException ex) { Devon4NetLogger.Error(ex); }
-            catch (PathTooLongException ex ) { Devon4NetLogger.Error(ex); }
+            catch (PathTooLongException ex) { Devon4NetLogger.Error(ex); }
         }
 
+        /// <summary>
+        /// Add configuration for RabbitMQ. Please check the dependency injection for future versiosn
+        ///  sp.GetService<IBus>();  ->  sp.GetService<SelfHostedBus>(); 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="services"></param>
+        /// <param name="subscribeToQueue"></param>
+        /// <exception cref="ArgumentException"></exception>
         public static void AddRabbitMqHandler<T>(this IServiceCollection services, bool subscribeToQueue) where T : class
         {
             var memberInfo = typeof(T).BaseType;
@@ -102,7 +110,7 @@ namespace Devon4Net.Infrastructure.RabbitMQ
         private static HostConfiguration GetHostConfiguration(HostDefinition host)
         {
             var port = (ushort)(host.Port != null ? (ushort)host.Port.Value : 0);
-            var hostConfiguration = new HostConfiguration { Host = host.Host, Port = port};
+            var hostConfiguration = new HostConfiguration { Host = host.Host, Port = port };
 
             if (port > 0) hostConfiguration.Port = port;
             _ = Enum.TryParse(host.SslPolicyErrors, out SslPolicyErrors sslPolicyErrors);

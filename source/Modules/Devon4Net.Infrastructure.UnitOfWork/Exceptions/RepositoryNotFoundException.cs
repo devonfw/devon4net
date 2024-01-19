@@ -1,4 +1,4 @@
-﻿namespace Devon4Net.Domain.UnitOfWork.Exceptions
+﻿namespace Devon4Net.Infrastructure.UnitOfWork.Exceptions
 {
     [Serializable]
     public class RepositoryNotFoundException : Exception

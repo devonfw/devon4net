@@ -20,7 +20,7 @@ namespace Devon4Net.Infrastructure.Common.Application.Middleware
             var certificates = serviceProvider.GetService<IOptions<CertificatesOptions>>()?.Value;
 
             if (killSwitch?.UseKillSwitch == true) builder.UseMiddleware<KillSwicthMiddleware>();
-            if (certificates?.ClientCertificate?.EnableClientCertificateCheck == true) builder.UseMiddleware<ClientCertificatesMiddleware>();
+            if (certificates?.ClientCertificate?.EnableClientCertificateCheck == true || certificates?.ClientCertificate?.RequireClientCertificate== true) builder.UseMiddleware<ClientCertificatesMiddleware>();
 
             builder.UseMiddleware<ExceptionHandlingMiddleware>();
             builder.UseMiddleware<CustomHeadersMiddleware>();

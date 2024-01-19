@@ -12,7 +12,7 @@ namespace Devon4Net.Infrastructure.Common.Helpers
                 "tls12" => SslProtocols.Tls12,
                 "tls13" => SslProtocols.Tls13,
                 "none" => SslProtocols.None,
-                _ => SslProtocols.Tls12,
+                _ => SslProtocols.Tls13,
             };
         }
 
@@ -24,7 +24,9 @@ namespace Devon4Net.Infrastructure.Common.Helpers
             {
                 "http1" => HttpProtocols.Http1,
                 "http2" => HttpProtocols.Http2,
+                "http3" => HttpProtocols.Http3,
                 "http1andhttp2" => HttpProtocols.Http1AndHttp2,
+                "http1andhttp2andhttp3" => HttpProtocols.Http1AndHttp2AndHttp3,
                 "none" => HttpProtocols.None,
                 _ => HttpProtocols.Http1,
             };

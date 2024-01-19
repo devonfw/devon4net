@@ -40,15 +40,5 @@ namespace Devon4Net.Infrastructure.Kafka.Exceptions
         public ConsumerException(string message, Exception innerException) : base(message, innerException)
         {
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConsumerException"/> class.
-        /// </summary>
-        /// <param name="serializationInfo"></param>
-        /// <param name="streamingContext"></param>
-        protected ConsumerException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext)
-        {
-        }
     }
 }

@@ -7,7 +7,7 @@
         public BuiltInTypes()
         {
             BuiltInTypeObjecNames = new List<string>();
-            BuiltInTypeObjecNames = typeof(Type).Assembly.GetTypes().Where(x => x.IsPublic && x.IsSealed && x.IsSerializable && x.Namespace=="System").Select(x => x.Name).ToList();
+            BuiltInTypeObjecNames = typeof(Type).Assembly.GetTypes().Where(x => x.IsPublic && x.IsSealed && x.Namespace == "System").Select(x => x.Name).ToList();
         }
 
         public List<string> GetBuiltInTypeObjecNames()

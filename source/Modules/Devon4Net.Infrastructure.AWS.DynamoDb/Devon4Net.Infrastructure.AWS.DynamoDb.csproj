@@ -1,14 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<Title>devon4net for AWS DynamoDB abstraction library</Title>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
 		<Company>Capgemini S.A.</Company>
 		<Description>Configuration library for DynamoDB repository management</Description>
-		<Version>6.0.25</Version>
+		<Version>8.0.1</Version>
 		<Copyright>Copyright © Capgemini</Copyright>
 		<PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
@@ -20,13 +19,14 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<NoWarn>$(NoWarn);NETSDK1206;1701;1702;NU1608;CA1822</NoWarn>
 	</PropertyGroup>	
 
 	<ItemGroup>
-		<PackageReference Include="Amazon.Lambda.Core" Version="2.1.0" />
-		<PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.101.3" />
-		<PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.2" />
-		<PackageReference Include="System.Text.Json" Version="7.0.3" />
+		<PackageReference Include="Amazon.Lambda.Core" Version="2.2.0" />
+		<PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.300.39" />
+		<PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.300" />
+		<PackageReference Include="System.Text.Json" Version="8.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -40,15 +40,5 @@ namespace Devon4Net.Infrastructure.Kafka.Exceptions
         public ProducerNotFoundException(string message, Exception innerException) : base(message, innerException)
         {
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProducerNotFoundException"/> class.
-        /// </summary>
-        /// <param name="serializationInfo"></param>
-        /// <param name="streamingContext"></param>
-        protected ProducerNotFoundException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext)
-        {
-        }
     }
 }

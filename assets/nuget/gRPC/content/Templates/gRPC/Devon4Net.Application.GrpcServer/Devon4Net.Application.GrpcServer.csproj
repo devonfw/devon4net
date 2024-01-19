@@ -2,23 +2,24 @@
 
   <PropertyGroup>
 	<Title>devon4net sample project for protobuf server</Title>	  
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	<IsPackable>true</IsPackable>	  
+	<IsPackable>true</IsPackable>
+	<NoWarn>$(NoWarn);NETSDK1206;1701;1702;NU1608;CA1822</NoWarn>
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Grpc.AspNetCore" Version="2.58.0" />
+		<PackageReference Include="Grpc.AspNetCore" Version="2.60.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Devon4Net.Infrastructure.Cors" Version="6.0.25" />
-		<PackageReference Include="Devon4Net.Infrastructure.Grpc" Version="6.0.25" />
-		<PackageReference Include="Devon4Net.Infrastructure.Logger" Version="6.0.25" />
-		<PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="6.0.25" />
+		<PackageReference Include="Devon4Net.Infrastructure.Cors" Version="8.0.1" />
+		<PackageReference Include="Devon4Net.Infrastructure.Grpc" Version="8.0.1" />
+		<PackageReference Include="Devon4Net.Infrastructure.Logger" Version="8.0.1" />
+		<PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="8.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
-using Devon4Net.Domain.UnitOfWork.Repository;
 using Devon4Net.Application.WebAPI.Domain.Entities;
+using Devon4Net.Infrastructure.UnitOfWork.Repository;
 
 namespace Devon4Net.Application.WebAPI.Domain.RepositoryInterfaces
 {
