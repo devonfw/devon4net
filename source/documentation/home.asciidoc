@@ -1,0 +1,58 @@
+
+:toc: preamble
+:toc-title: Index 
+
+= devon4net
+
+toc::[]
+
+Welcome to devon4net's wiki, we'll learn more about this useful tool in this guide.
+This wiki covers everything you'll need to get started with this tool, from an explanation of its architecture to instructions on how to use the templates and components, as well as information about the environment and code convection.
+Because it's such a highly valuable tool, it is interesting to learn all of its complexities so you can get the most out of it. There are no limits to what you can achieve with devon4net.
+
+== Motivation
+
+Integrating young and senior developers into .net core is the most difficult task we face in our projects.
+There are several frameworks and architectures available on the market.
+
+On the one hand, the goal is to develop an architecture that strikes a balance between best practices and current trends.
+On the other hand, delivering a quick onboarding period while still using an architecture that allows us to expand while being productive.
+In addition, the architecture must be market-compatible. This is what devon4net provides, which was built with a real clean layered architectural design.
+
+"Make it work, make it right, make it fast." 
+-- Kent Beck
+
+== Wiki's content 
+
+=== https://github.com/devonfw/devon4net/wiki/architecture_guide[Architecture Overview]
+
+It consists of a detailed explanation of the architecture (onion design) in which our application is built. 
+
+=== https://github.com/devonfw/devon4net/wiki/cobiGen[cobiGen]
+
+This section describes how to use cobiGen, a sophisticated source code generator. 
+
+=== https://github.com/devonfw/devon4net/wiki/codeconvention[Coding Convention]
+
+About .Net Coding Standards documentation
+
+=== https://github.com/devonfw/devon4net/wiki/environment[Environment]
+
+Setup for starting an application with .Net
+
+=== https://github.com/devonfw/devon4net/wiki/howto[How to]
+
+In this page, you will find instructions for configuring your devonfw project, as well as guidelines for setting up some of its components. 
+
+
+=== https://github.com/devonfw/devon4net/wiki/packages[Packages]
+
+List of packages available on https://www.nuget.org/packages?q=devonfw[nuget.org]
+
+=== https://github.com/devonfw/devon4net/wiki/templates[Templates]
+
+A brief tutorial on how to set up the Devon4Net.WebAPI.Template
+
+=== https://github.com/devonfw/devon4net/wiki/userguide[Userguide]
+
+Rapid guide that contains everything you need to start developing your project with devon4net. 

@@ -1,0 +1,65 @@
+:toc:
+
+= Frecuently Asked Questions
+
+toc::[]
+== Introduction
+In this document you will find the most asked questions about devon4net framework. We divided the questions into different topics so you can easily navigate through all the information.
+
+== Configuration
+
+=== Is it possible to create a configuration for different environments?
+In the same way that it is possible to use different runtime environments in a .Net project, you can also specify this environment to devon so you can set a different configuration for each one of them. 
+
+For example, maybe you don't want to allow Swagger use in production. For that, you will need to create a separate `appsettings.Production.json` file with your wanted configuration, and set `Environment` property to `Production` in `devonfw` section in `appsettings.json` file.
+
+When changing this property to `Production`, only `appsettings.Production.json` will load as configuration. You will not be able to load other environment configurations such as `appsettings.Development.json`.
+
+To create a new environment configuration you can follow the next steps:
+
+==== Step 1: Add your new `appsettings.{environment}.json` file
+
+To add a new file, right click your startup project. And select `Add > New Item...` option.
+
+.Add a new item to your Startup Project
+image::images/add_new_item.png[]
+
+Search for Item `App Settings File` and create it with the name `appsettings.{environment}.json`. For this example we will use 
+
+.Create appsettings.Production.json file
+image::images/create_production_appsettings.png[]
+
+==== Step 2: Set environment property to `{environment}`
+
+Navigate to `appsettings.json` and change property Environment to your desired environment. For this example we will specify `Production` for this example:
+
+[source, json]
+----
+{
+  "devonfw": {
+    "Environment": "Production",
+  }
+}
+----
+
+NOTE: The configuration loaded will be `appsettings.json` and `appsettings.{environment}.json` being `{environment}` the `Environment` property set in `devonfw` section.
+
+=== Is there a way to add other configuration files?
+In devon we allow you to specify an array of filenames and directory paths that will be loaded as configuration files to your project. That way you can store configuration in other places.
+
+[source, json]
+----
+{
+    "ExtraSettingsFiles": [
+        "appsettingsExtra.json",
+        "/run/secrets/global",
+        "/app-configs/app/extra-settings.json"
+    ],
+}
+----
+
+You will find this section in `appsettings.{environment}.json`
+
+* Put a file name like `appsettingsExtra.json` to load configuration placed inside the project directory.
+* Put a directory path (relative/absolute/linux-like) like `/run/secrets/global` where there are many settings/secret files to load.
+* Put a specific file name (with/without path) like `/app-configs/app/extra-settings.json`.
