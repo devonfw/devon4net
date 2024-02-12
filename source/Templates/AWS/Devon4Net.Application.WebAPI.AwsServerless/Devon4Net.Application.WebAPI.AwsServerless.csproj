@@ -1,16 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-	<Title>devon4net serverless API sample project for AWS</Title>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <AWSProjectType>Lambda</AWSProjectType>
-	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	<IsPackable>true</IsPackable>	  
+	<NoWarn>$(NoWarn);NETSDK1206;AD0001;1701;1702;NU1608;CA1822</NoWarn>	  
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="7.3.0" />
+    <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="8.1.1" />
   </ItemGroup>
 
   <ItemGroup>

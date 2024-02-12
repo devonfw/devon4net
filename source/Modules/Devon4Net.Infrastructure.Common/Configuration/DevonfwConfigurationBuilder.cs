@@ -30,8 +30,6 @@ namespace Devon4Net.Infrastructure.Common.Configuration
             CheckExtraSettingsFiles();
         }
 
-
-
         private void AddConfigurationSettingsFile(string filename, bool optional, bool reloadOnChange, string defaultDirectory = null)
         {
             if (string.IsNullOrEmpty(filename) || string.IsNullOrWhiteSpace(filename))

@@ -1,21 +1,22 @@
 ﻿using System.Data;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Devon4Net.Infrastructure.UnitOfWork.UnitOfWork;
-
-public interface IUnitOfWork
+namespace Devon4Net.Infrastructure.UnitOfWork.UnitOfWork
 {
-    /// <summary>
-    /// Begins the transaction
-    /// </summary>
-    Task<IDbTransaction> GetDbTransaction(int secondsTimeout = 30);
+    public interface IUnitOfWork
+    {
+        /// <summary>
+        /// Begins the transaction
+        /// </summary>
+        Task<IDbTransaction> GetDbTransaction(int secondsTimeout = 30);
 
-    IExecutionStrategy CreateExecutionStrategy();
+        IExecutionStrategy CreateExecutionStrategy();
 
-    Task SaveChanges();
+        Task SaveChanges();
 
-    /// <summary>
-    /// Commit the transaction if is correct, else rollback. Both cases dispose.
-    /// </summary>
-    Task CommitTransaction(IDbTransaction transaction);
+        /// <summary>
+        /// Commit the transaction if is correct, else rollback. Both cases dispose.
+        /// </summary>
+        Task CommitTransaction(IDbTransaction transaction);
+    }
 }

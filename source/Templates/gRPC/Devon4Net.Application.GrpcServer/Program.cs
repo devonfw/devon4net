@@ -25,16 +25,16 @@ var app = builder.Build();
 
 #region devon app
 app.MapGrpcService<GreeterService>();
-app.ConfigureSwaggerEndPoint();
-app.SetupMiddleware(builder.Services);
 app.SetupCors();
+app.SetupMiddleware(builder.Services);
+app.ConfigureSwaggerEndPoint();
 if (devonfwOptions.ForceUseHttpsRedirection || (!devonfwOptions.UseIIS && devonfwOptions.Kestrel.UseHttps))
 {
     app.UseHttpsRedirection();
 }
 #endregion
 
-app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

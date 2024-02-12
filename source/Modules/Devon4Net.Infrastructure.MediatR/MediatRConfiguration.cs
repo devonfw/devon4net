@@ -1,16 +1,17 @@
 ﻿using Devon4Net.Infrastructure.Common.Constants;
 using Devon4Net.Infrastructure.Common.Handlers;
-using Devon4Net.Infrastructure.LiteDb.LiteDb;
 using Devon4Net.Infrastructure.LiteDb.Repository;
-using Devon4Net.Infrastructure.Common;
 using Devon4Net.Infrastructure.MediatR.Data.Service;
-using Devon4Net.Infrastructure.MediatR.Domain.Database;
 using Devon4Net.Infrastructure.MediatR.Domain.Entities;
 using Devon4Net.Infrastructure.MediatR.Domain.ServiceInterfaces;
 using Devon4Net.Infrastructure.MediatR.Handler;
 using Devon4Net.Infrastructure.MediatR.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using Devon4Net.Infrastructure.Common;
+using Devon4Net.Infrastructure.LiteDb.LiteDb;
+using Devon4Net.Infrastructure.MediatR.Domain.Database;
 
 namespace Devon4Net.Infrastructure.MediatR
 {
@@ -30,6 +31,9 @@ namespace Devon4Net.Infrastructure.MediatR
         {
             services.AddTransient(typeof(ILiteDbRepository<MediatRBackup>), typeof(LiteDbRepository<MediatRBackup>));
             services.AddTransient(typeof(IMediatRBackupService), typeof(MediatRBackupService));
+            services.AddTransient(typeof(IMediatRHandler), typeof(MediatRHandler));
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
 
             Devon4NetLogger.Information("Please setup your database in order to have the RabbitMq messaging backup feature");
             Devon4NetLogger.Information("RabbitMq messaging backup feature is going to be used via LiteDb");

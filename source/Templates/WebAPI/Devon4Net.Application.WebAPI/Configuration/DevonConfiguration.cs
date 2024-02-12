@@ -9,8 +9,6 @@ using Devon4Net.Application.WebAPI.Business.RabbitMqManagement.Handlers;
 using Devon4Net.Application.WebAPI.Business.TodoManagement.Dto;
 using Devon4Net.Application.WebAPI.Business.TodoManagement.Validators;
 using Devon4Net.Application.WebAPI.Domain.Database;
-using Devon4Net.Domain.UnitOfWork.Common;
-using Devon4Net.Domain.UnitOfWork.Enums;
 using Devon4Net.Infrastructure.Common.Constants;
 using Devon4Net.Infrastructure.FluentValidation;
 using Devon4Net.Infrastructure.JWT.Common;
@@ -25,6 +23,7 @@ using Devon4Net.Infrastructure.Common.Helpers;
 using Devon4Net.Infrastructure.MediatR.Behaviors;
 using Devon4Net.Infrastructure.RabbitMQ;
 using Devon4Net.Infrastructure.UnitOfWork.Common;
+using Devon4Net.Infrastructure.UnitOfWork.Enums;
 
 namespace Devon4Net.Application.WebAPI.Configuration
 {
@@ -93,7 +92,7 @@ namespace Devon4Net.Application.WebAPI.Configuration
         {
             var assembly = Assembly.GetExecutingAssembly();
 
-            services.AddMediatR(assembly);
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
             services.AddValidatorsFromAssembly(assembly);
 
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));

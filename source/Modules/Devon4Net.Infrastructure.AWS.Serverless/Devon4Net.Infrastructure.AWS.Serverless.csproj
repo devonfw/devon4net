@@ -1,25 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <Title>devon4net for AWS serverless api abstraction library</Title>
-	  <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
     <Company>Capgemini S.A.</Company>
     <Description>Configuration library for devon4net webapi template</Description>
-    <Version>6.0.11</Version>
+    <Version>8.0.1</Version>
     <Copyright>Copyright © Capgemini</Copyright>
     <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
     <license>https://github.com/devonfw/ide/blob/master/LICENSE/</license>
     <RepositoryType>git</RepositoryType>
     <PackageTags>devonfw;devon4net;Capgemini;webapi;API;AWS</PackageTags>
-    <PackageReleaseNotes>NET 6.0+ compatibility version</PackageReleaseNotes>
+    <PackageReleaseNotes>NET 8.0+ compatibility version</PackageReleaseNotes>
     <PackageIcon>devonfw.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>	
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>	 	  
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	<NoWarn>$(NoWarn);NETSDK1206;1701;1702;NU1608;CA1822</NoWarn>
   </PropertyGroup>
 	
   <ItemGroup>

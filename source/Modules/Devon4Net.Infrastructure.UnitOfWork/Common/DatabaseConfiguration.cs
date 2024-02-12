@@ -1,148 +1,148 @@
-﻿using Devon4Net.Domain.UnitOfWork.Common;
-using Devon4Net.Domain.UnitOfWork.Enums;
-using Devon4Net.Infrastructure.Common;
+﻿using Devon4Net.Infrastructure.Common;
+using Devon4Net.Infrastructure.UnitOfWork.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Devon4Net.Infrastructure.UnitOfWork.Common;
-
-public static class SetupDatabaseConfiguration
+namespace Devon4Net.Infrastructure.UnitOfWork.Common
 {
-    private const int MaxRetryDelay = 30;
-    private const int MaxRetryCount = 10;
-    private static ServiceLifetime ServiceLifetime { get; set; }
-
-    public static void SetupDatabase<T>(this IServiceCollection services, string connectionString,
-        DatabaseType databaseType, ServiceLifetime serviceLifetime = ServiceLifetime.Transient,
-        CosmosConfigurationParams cosmosConfigurationParams = null) where T : DbContext
+    public static class SetupDatabaseConfiguration
     {
-        if (string.IsNullOrWhiteSpace(connectionString))
-            throw new ArgumentException(
-                $"The provided connection string ({connectionString}) provided does not exists.");
-        ServiceLifetime = serviceLifetime;
-        SetDatabase<T>(services, databaseType, cosmosConfigurationParams, connectionString);
-    }
+        private const int MaxRetryDelay = 30;
+        private const int MaxRetryCount = 10;
+        private static ServiceLifetime ServiceLifetime { get; set; }
 
-    public static async Task SetupDatabase<T>(this IServiceCollection services, IConfiguration configuration,
-        string connectionStringName, DatabaseType databaseType,
-        ServiceLifetime serviceLifetime = ServiceLifetime.Transient, bool migrate = false,
-        CosmosConfigurationParams cosmosConfigurationParams = null) where T : DbContext
-    {
-        var connectionString = GetConnectionString(configuration, connectionStringName);
-
-        ServiceLifetime = serviceLifetime;
-
-        SetDatabase<T>(services, databaseType, cosmosConfigurationParams, connectionString.Value);
-        if (migrate) await Migrate<T>(services).ConfigureAwait(false);
-    }
-
-    private static IConfigurationSection GetConnectionString(IConfiguration configuration, string connectionStringName)
-    {
-        var applicationConnectionStrings = configuration.GetSection("ConnectionStrings").GetChildren();
-        if (applicationConnectionStrings == null)
-            throw new ArgumentException("There are no connection strings provided.");
-        var connectionString = applicationConnectionStrings.FirstOrDefault(c =>
-            string.Equals(c.Key, connectionStringName, StringComparison.CurrentCultureIgnoreCase));
-        if (connectionString == null || string.IsNullOrEmpty(connectionString.Value))
-            throw new ArgumentException(
-                $"The provided connection string ({connectionStringName}) provided does not exists.");
-        return connectionString;
-    }
-
-    private static async Task Migrate<T>(IServiceCollection services) where T : DbContext
-    {
-        try
+        public static void SetupDatabase<T>(this IServiceCollection services, string connectionString,
+            DatabaseType databaseType, ServiceLifetime serviceLifetime = ServiceLifetime.Transient,
+            CosmosConfigurationParams cosmosConfigurationParams = null) where T : DbContext
         {
-            using var sp = services.BuildServiceProvider();
-            if (sp == null)
-            {
-                Devon4NetLogger.Error(
-                    $"Unable to build the service provider, the migration {typeof(T).FullName} will not be launched");
-            }
-            else
-            {
-                var context = sp.GetService(typeof(T));
-                if (context == null)
-                    Devon4NetLogger.Error(
-                        $"Unable to resolve {typeof(T).FullName} and the migration will not be launched");
-
-                ((T)context)?.Database.Migrate();
-                await sp.DisposeAsync().ConfigureAwait(false);
-            }
+            if (string.IsNullOrWhiteSpace(connectionString))
+                throw new ArgumentException(
+                    $"The provided connection string ({connectionString}) provided does not exists.");
+            ServiceLifetime = serviceLifetime;
+            SetDatabase<T>(services, databaseType, cosmosConfigurationParams, connectionString);
         }
-        catch (Exception ex)
+
+        public static async Task SetupDatabase<T>(this IServiceCollection services, IConfiguration configuration,
+            string connectionStringName, DatabaseType databaseType,
+            ServiceLifetime serviceLifetime = ServiceLifetime.Transient, bool migrate = false,
+            CosmosConfigurationParams cosmosConfigurationParams = null) where T : DbContext
         {
-            Devon4NetLogger.Fatal(ex);
+            var connectionString = GetConnectionString(configuration, connectionStringName);
+
+            ServiceLifetime = serviceLifetime;
+
+            SetDatabase<T>(services, databaseType, cosmosConfigurationParams, connectionString.Value);
+            if (migrate) await Migrate<T>(services).ConfigureAwait(false);
         }
-    }
 
-    private static void SetDatabase<T>(IServiceCollection services, DatabaseType databaseType,
-        CosmosConfigurationParams cosmosConfigurationParams, string connectionString) where T : DbContext
-    {
-        switch (databaseType)
+        private static IConfigurationSection GetConnectionString(IConfiguration configuration, string connectionStringName)
         {
-            case DatabaseType.SqlServer:
-                services.AddDbContext<T>(options => options.UseSqlServer(connectionString), ServiceLifetime);
-                break;
+            var applicationConnectionStrings = configuration.GetSection("ConnectionStrings").GetChildren();
+            if (applicationConnectionStrings == null)
+                throw new ArgumentException("There are no connection strings provided.");
+            var connectionString = applicationConnectionStrings.FirstOrDefault(c =>
+                string.Equals(c.Key, connectionStringName, StringComparison.CurrentCultureIgnoreCase));
+            if (connectionString == null || string.IsNullOrEmpty(connectionString.Value))
+                throw new ArgumentException(
+                    $"The provided connection string ({connectionStringName}) provided does not exists.");
+            return connectionString;
+        }
 
-            case DatabaseType.InMemory:
-                services.AddDbContext<T>(options => options.UseInMemoryDatabase(connectionString), ServiceLifetime);
-                break;
-
-            case DatabaseType.MySql:
-                services.AddDbContext<T>(options => options.UseMySql(ServerVersion.AutoDetect(connectionString),
-                    sqlOptions =>
-                    {
-                        sqlOptions.EnableRetryOnFailure(
-                            MaxRetryCount,
-                            TimeSpan.FromSeconds(MaxRetryDelay),
-                            new List<int>());
-                    }), ServiceLifetime);
-                break;
-
-            case DatabaseType.MariaDb:
-                services.AddDbContext<T>(options => options.UseMySql(ServerVersion.AutoDetect(connectionString),
-                    sqlOptions =>
-                    {
-                        sqlOptions.EnableRetryOnFailure(
-                            MaxRetryCount,
-                            TimeSpan.FromSeconds(MaxRetryDelay),
-                            new List<int>());
-                    }), ServiceLifetime);
-                break;
-
-            case DatabaseType.Sqlite:
-                services.AddDbContext<T>(options => options.UseSqlite(connectionString), ServiceLifetime);
-                break;
-
-            case DatabaseType.Cosmos:
-                if (cosmosConfigurationParams == null)
-                    throw new ArgumentException("The Cosmos configuration can not be null.");
-                services.AddDbContext<T>(options => options.UseCosmos(cosmosConfigurationParams.Endpoint,
-                    cosmosConfigurationParams.Key, cosmosConfigurationParams.DatabaseName), ServiceLifetime);
-                break;
-
-            case DatabaseType.PostgreSQL:
-                services.AddDbContext<T>(options => options.UseNpgsql(connectionString, sqlOptions =>
+        private static async Task Migrate<T>(IServiceCollection services) where T : DbContext
+        {
+            try
+            {
+                using var sp = services.BuildServiceProvider();
+                if (sp == null)
                 {
-                    sqlOptions.EnableRetryOnFailure(
-                        MaxRetryCount,
-                        TimeSpan.FromSeconds(MaxRetryDelay),
-                        new List<string>());
-                }), ServiceLifetime);
-                break;
+                    Devon4NetLogger.Error(
+                        $"Unable to build the service provider, the migration {typeof(T).FullName} will not be launched");
+                }
+                else
+                {
+                    var context = sp.GetService(typeof(T));
+                    if (context == null)
+                        Devon4NetLogger.Error(
+                            $"Unable to resolve {typeof(T).FullName} and the migration will not be launched");
 
-            case DatabaseType.FireBird:
-                services.AddDbContext<T>(options => options.UseFirebird(connectionString), ServiceLifetime);
-                break;
+                    ((T)context)?.Database.Migrate();
+                    await sp.DisposeAsync().ConfigureAwait(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Devon4NetLogger.Fatal(ex);
+            }
+        }
 
-            case DatabaseType.Oracle:
-                services.AddDbContext<T>(options => options.UseOracle(connectionString), ServiceLifetime);
-                break;
+        private static void SetDatabase<T>(IServiceCollection services, DatabaseType databaseType,
+            CosmosConfigurationParams cosmosConfigurationParams, string connectionString) where T : DbContext
+        {
+            switch (databaseType)
+            {
+                case DatabaseType.SqlServer:
+                    services.AddDbContext<T>(options => options.UseSqlServer(connectionString), ServiceLifetime);
+                    break;
 
-            default:
-                throw new ArgumentException("Not provided a database driver");
+                case DatabaseType.InMemory:
+                    services.AddDbContext<T>(options => options.UseInMemoryDatabase(connectionString), ServiceLifetime);
+                    break;
+
+                case DatabaseType.MySql:
+                    services.AddDbContext<T>(options => options.UseMySql(ServerVersion.AutoDetect(connectionString),
+                        sqlOptions =>
+                        {
+                            sqlOptions.EnableRetryOnFailure(
+                                MaxRetryCount,
+                                TimeSpan.FromSeconds(MaxRetryDelay),
+                                new List<int>());
+                        }), ServiceLifetime);
+                    break;
+
+                case DatabaseType.MariaDb:
+                    services.AddDbContext<T>(options => options.UseMySql(ServerVersion.AutoDetect(connectionString),
+                        sqlOptions =>
+                        {
+                            sqlOptions.EnableRetryOnFailure(
+                                MaxRetryCount,
+                                TimeSpan.FromSeconds(MaxRetryDelay),
+                                new List<int>());
+                        }), ServiceLifetime);
+                    break;
+
+                case DatabaseType.Sqlite:
+                    services.AddDbContext<T>(options => options.UseSqlite(connectionString), ServiceLifetime);
+                    break;
+
+                case DatabaseType.Cosmos:
+                    if (cosmosConfigurationParams == null)
+                        throw new ArgumentException("The Cosmos configuration can not be null.");
+                    services.AddDbContext<T>(options => options.UseCosmos(cosmosConfigurationParams.Endpoint,
+                        cosmosConfigurationParams.Key, cosmosConfigurationParams.DatabaseName), ServiceLifetime);
+                    break;
+
+                case DatabaseType.PostgreSQL:
+                    services.AddDbContext<T>(options => options.UseNpgsql(connectionString, sqlOptions =>
+                    {
+                        sqlOptions.EnableRetryOnFailure(
+                            MaxRetryCount,
+                            TimeSpan.FromSeconds(MaxRetryDelay),
+                            new List<string>());
+                    }), ServiceLifetime);
+                    break;
+
+                case DatabaseType.FireBird:
+                    services.AddDbContext<T>(options => options.UseFirebird(connectionString), ServiceLifetime);
+                    break;
+
+                case DatabaseType.Oracle:
+                    services.AddDbContext<T>(options => options.UseOracle(connectionString), ServiceLifetime);
+                    break;
+
+                default:
+                    throw new ArgumentException("Not provided a database driver");
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Devon4Net.Application.Kafka.Consumer.Domain.RepositoryInterfaces;
+﻿
+using Devon4Net.Application.Kafka.Consumer.Domain.RepositoryInterfaces;
 using Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Dto;
 using Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Converters;
 

@@ -51,6 +51,11 @@ namespace Devon4Net.Infrastructure.Kafka.Streams.Services
             _disposed = true;
         }
 
+        public override Task StopAsync(CancellationToken cancellationToken)
+        {
+            return base.StopAsync(cancellationToken);
+        }
+
         #region StreamConfiguration
 
         private void GenerateStreamBuilder(ISerDes<TKey> keySerDes, ISerDes<TValue> valueSerDes)

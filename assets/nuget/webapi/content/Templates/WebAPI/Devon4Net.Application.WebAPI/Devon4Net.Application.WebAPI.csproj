@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-	  <TargetFramework>net6.0</TargetFramework>
+	  <TargetFramework>net8.0</TargetFramework>
 	  <Title>devon4net sample project for APIs</Title>	  
 	  <ImplicitUsings>enable</ImplicitUsings>
 	  <Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
 	  <Company>Capgemini S.A.</Company>
 	  <Description>WebAPI template project. This project shows how to instantiate devon4net and invoke devon4net modules</Description>
-	  <Version>6.0.11</Version>
+	  <Version>8.0.1</Version>
 	  <Copyright>Copyright © Capgemini</Copyright>
 	  <PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
 	  <RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
@@ -19,27 +19,28 @@
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	  <NoWarn>$(NoWarn);NETSDK1206;1701;1702;NU1608;CA1822</NoWarn>
   </PropertyGroup>	
 	
   <ItemGroup>
-    <PackageReference Include="Devon4Net.Infrastructure.LiteDb" Version="6.0.11" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-	  <PackageReference Include="Devon4Net.Infrastructure.CircuitBreaker" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.Common" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.Cors" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.FluentValidation" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.Grpc" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.JWT" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.Kafka" Version="6.0.11" />	  
-	  <PackageReference Include="Devon4Net.Infrastructure.Logger" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.MediatR" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.RabbitMQ" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.UnitOfWork" Version="6.0.11" />
+	  <PackageReference Include="Devon4Net.Infrastructure.CircuitBreaker" Version="8.0.1" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Common" Version="8.0.1" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Cors" Version="8.0.1" />
+	  <PackageReference Include="Devon4Net.Infrastructure.FluentValidation" Version="8.0.1" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Grpc" Version="8.0.1" />
+	  <PackageReference Include="Devon4Net.Infrastructure.JWT" Version="8.0.1" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Kafka" Version="8.0.1" />
+	  <PackageReference Include="Devon4Net.Infrastructure.LiteDb" Version="8.0.1" />	  
+	  <PackageReference Include="Devon4Net.Infrastructure.Logger" Version="8.0.1" />
+	  <PackageReference Include="Devon4Net.Infrastructure.MediatR" Version="8.0.1" />
+	  <PackageReference Include="Devon4Net.Infrastructure.RabbitMQ" Version="8.0.1" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="8.0.1" />
+	  <PackageReference Include="Devon4Net.Infrastructure.UnitOfWork" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>

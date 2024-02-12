@@ -1,7 +1,6 @@
 using Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Dto;
 using Devon4Net.Application.Kafka.Consumer.Business.KafkaManagement.Handlers;
 using Devon4Net.Application.Kafka.Consumer.Configuration;
-using Devon4Net.Domain.UnitOfWork;
 using Devon4Net.Infrastructure.Cors;
 using Devon4Net.Infrastructure.Kafka;
 using Devon4Net.Infrastructure.Swagger;

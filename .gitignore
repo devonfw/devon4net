@@ -183,11 +183,10 @@ FakesAssemblies/
 # Dotnet Core
 project.lock.json
 /**/.vs/
+/**/.vscode
+/**/.idea/
 /**/.sonarqube/
 
 # AWS CDK
 /**/cdk.out
 /**/cdk.context.json
-
-#Rider IDE
-.idea/

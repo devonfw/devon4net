@@ -52,10 +52,11 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Database
         /// <param name="removalPolicy"></param>
         /// <param name="backupRetentionDays"></param>
         /// <param name="deletionProtection"></param>
-        public IDatabaseCluster CreateDatabaseCluster(DeputyBase databaseEngineVersion, string identification, string clusterIdentifier, string instanceIdentifierBase, string databaseName, double? port, double? instances, string userName, string secretName, IVpc vpc, InstanceClass instanceClass, InstanceSize instanceSize, string securityId, string securityGroupId, string parameterGroupId = null, IRole[] roles = null, bool storageEncrypted = true, SubnetType subnetType = SubnetType.PRIVATE_ISOLATED, string defaultSubnetDomainSeparator = ",", string subnets = "", RemovalPolicy removalPolicy = RemovalPolicy.DESTROY, int backupRetentionDays = 1, bool deletionProtection = false)
+        public IDatabaseCluster CreateDatabaseCluster(DeputyBase databaseEngineVersion, string identification, string clusterIdentifier, string instanceIdentifierBase, string databaseName, double? port, double? instances, string userName, string secretName, IVpc vpc, InstanceClass instanceClass, InstanceSize instanceSize, string securityId, string securityGroupId, string parameterGroupId = null, IRole[] roles = null, bool storageEncrypted = true, SubnetType subnetType = SubnetType.PRIVATE_ISOLATED, string defaultSubnetDomainSeparator = ",", string subnets = "", RemovalPolicy removalPolicy = RemovalPolicy.DESTROY, int backupRetentionDays = 1, bool deletionProtection = false, bool publiclyAccessible = false, string instanceName = "Instance")
         {
             BasicDatabaseInfra(vpc, secretName, securityId, securityGroupId, subnetType, defaultSubnetDomainSeparator, subnets, out var securityGroup, out var secret, out var subnetSelection);
             var engine = GetClusterEngine(databaseEngineVersion);
+
             return new DatabaseCluster(Scope, identification, new DatabaseClusterProps
             {
                 ClusterIdentifier = clusterIdentifier,
@@ -64,18 +65,12 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Database
                 RemovalPolicy = removalPolicy,
                 DeletionProtection = deletionProtection,
                 Port = port,
-                InstanceProps = new Amazon.CDK.AWS.RDS.InstanceProps
-                {
-                    InstanceType = InstanceType.Of(instanceClass, instanceSize),
-                    VpcSubnets = subnetSelection,
-                    Vpc = vpc,
-                    SecurityGroups = new[]
-                    {
-                        securityGroup
-                    }
-                },
-                StorageEncrypted = storageEncrypted,
-                Instances = instances,
+                Vpc = vpc,
+                VpcSubnets = subnetSelection,
+                SecurityGroups = new[] { securityGroup },
+                Writer = GetWriterRDSProperties(instances, instanceClass, instanceSize, publiclyAccessible),
+                Readers = GetRDSProperties(instances, instanceClass, instanceSize, publiclyAccessible),
+                StorageEncrypted = storageEncrypted,                
                 Credentials = Credentials.FromPassword(userName, secret.SecretValue),
                 DefaultDatabaseName = databaseName,
                 ParameterGroup = CreateClusterParameterGroup(parameterGroupId, engine, roles),
@@ -83,6 +78,33 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Database
                 {
                     Retention = Duration.Days(backupRetentionDays)
                 }
+            });
+        }
+
+        private static IClusterInstance[] GetRDSProperties(double? numberOfInstances, InstanceClass instanceClass, InstanceSize instanceSize, bool publiclyAccessible = false, string instanceName = "Instance")
+        {
+           var instances = numberOfInstances == null ? 1: Convert.ToInt32(numberOfInstances.Value);
+            IEnumerable<IClusterInstance> result = new ClusterInstance[instances];
+            
+            for (int i = 1; i<=instances; i++)
+            {
+                result = result.Append(ClusterInstance.Provisioned($"{instanceName}{i}", new ProvisionedClusterInstanceProps
+                {
+                    InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(instanceClass, instanceSize),
+                    IsFromLegacyInstanceProps = true,
+                    PubliclyAccessible = publiclyAccessible
+                }));
+            }
+            return result.ToArray();
+        }
+
+        private static IClusterInstance GetWriterRDSProperties(double? numberOfInstances,  InstanceClass instanceClass, InstanceSize instanceSize, bool publiclyAccessible = false, string instanceName = "Instance")
+        {
+            return ClusterInstance.Provisioned(instanceName, new ProvisionedClusterInstanceProps
+            {
+                InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(instanceClass, instanceSize),
+                IsFromLegacyInstanceProps = true,
+                PubliclyAccessible = publiclyAccessible
             });
         }
 
@@ -109,7 +131,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Database
                 DeleteAutomatedBackups = deleteAutomatedBackups,
                 BackupRetention = Duration.Days(backupRetentionDays),
                 AllocatedStorage = allocatedStorageGb,
-                InstanceType = InstanceType.Of(instanceClass, instanceSize),
+                InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(instanceClass, instanceSize),
                 ParameterGroup = CreateClusterParameterGroup(parameterGroupId, engine, roles),
                 MultiAz = multiAZEnabled,
                 AutoMinorVersionUpgrade = autoMinorVersionUpgrade,
@@ -140,7 +162,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Database
                 DeleteAutomatedBackups = deleteAutomatedBackups,
                 BackupRetention = Duration.Days(backupRetentionDays),
                 AllocatedStorage = allocatedStorageGb,
-                InstanceType = InstanceType.Of(instanceClass, instanceSize),
+                InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(instanceClass, instanceSize),
                 ParameterGroup = parameterGroup,
                 CloudwatchLogsExports = logTypes,
                 StorageEncrypted = storageEncrypted,
@@ -173,7 +195,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.Database
                 DeleteAutomatedBackups = deleteAutomatedBackups,
                 BackupRetention = Duration.Days(backupRetentionDays),
                 AllocatedStorage = allocatedStorageGb,
-                InstanceType = InstanceType.Of(instanceClass, GetInstanceSize(instanceSize)),
+                InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(instanceClass, GetInstanceSize(instanceSize)),
                 ParameterGroup = CreateClusterParameterGroup(parameterGroupId, engine, parameterGroupRoles),
                 MultiAz = multiAZEnabled,
                 AutoMinorVersionUpgrade = autoMinorVersionUpgrade,

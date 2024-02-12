@@ -1,24 +1,25 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Devon4Net.Domain.UnitOfWork.Exceptions;
-
-[Serializable]
-public class RepositoryNotFoundException : Exception
+namespace Devon4Net.Infrastructure.UnitOfWork.Exceptions
 {
-    public RepositoryNotFoundException()
+    [Serializable]
+    public class RepositoryNotFoundException : Exception
     {
-    }
+        public RepositoryNotFoundException() : base()
+        {
+        }
 
-    public RepositoryNotFoundException(string message) : base(message)
-    {
-    }
+        public RepositoryNotFoundException(string message) : base(message)
+        {
+        }
 
-    public RepositoryNotFoundException(string message, Exception innerException) : base(message, innerException)
-    {
-    }
+        public RepositoryNotFoundException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
 
-    protected RepositoryNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        : base(serializationInfo, streamingContext)
-    {
+        protected RepositoryNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+            : base(serializationInfo, streamingContext)
+        {
+        }
     }
 }

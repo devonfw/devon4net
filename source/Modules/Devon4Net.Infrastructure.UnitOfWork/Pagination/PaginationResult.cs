@@ -1,11 +1,12 @@
-﻿namespace Devon4Net.Domain.UnitOfWork.Pagination;
-
-public class PaginationResult<T> : PaginationBase where T : class
+﻿namespace Devon4Net.Infrastructure.UnitOfWork.Pagination
 {
-    public PaginationResult()
+    public class PaginationResult<T> : PaginationBase where T : class
     {
-        Results = new List<T>();
-    }
+        public IList<T> Results { get; set; }
 
-    public IList<T> Results { get; set; }
+        public PaginationResult()
+        {
+            Results = new List<T>();
+        }
+    }
 }

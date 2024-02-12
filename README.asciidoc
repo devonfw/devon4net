@@ -13,7 +13,7 @@ Devon4net is intended for building backend applications.
 However denvonfw also has tools to build frontend client applications such as devon4ng. 
 
 [.text-center]
-image:https://img.shields.io/badge/.Net Core-v6.0-blueviolet[".Net Core version 6.0",link=https://docs.microsoft.com/en-us/dotnet/core/whats-new/dotnet-6]
+image:https://img.shields.io/badge/.Net Core-v8.0-blueviolet[".Net version 8.0",link=https://dotnet.microsoft.com/en-us/download/dotnet/8.0]
 image:https://img.shields.io/badge/SonarQube-passed-successs[]
 image:https://img.shields.io/badge/License-Apache 2.0-informational[]
 

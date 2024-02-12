@@ -63,6 +63,7 @@ namespace Devon4Net.Infrastructure.Common.Application.ApplicationTypes.API.Serve
             _ = int.TryParse(configuration["devonfw:Kestrel:ExtraSettings:Http2MaxStreamsPerConnection"], out int http2MaxStreamsPerConnection);
             _ = int.TryParse(configuration["devonfw:Kestrel:ExtraSettings:Http2InitialConnectionWindowSize"], out int Http2InitialConnectionWindowSize);
             _ = int.TryParse(configuration["devonfw:Kestrel:ExtraSettings:Http2InitialStreamWindowSize"], out int http2InitialStreamWindowSize);
+            _ = int.TryParse(configuration["devonfw:Kestrel:ExtraSettings:Http3MaxRequestHeaderFieldSize"], out int http3MaxRequestHeaderFieldSize);
             _ = bool.TryParse(configuration["devonfw:Kestrel:ExtraSettings:AllowSynchronousIO"], out bool allowSynchronousIO);
 
             if (maxConcurrentConnections > 0) options.Limits.MaxConcurrentConnections = maxConcurrentConnections;
@@ -75,6 +76,7 @@ namespace Devon4Net.Infrastructure.Common.Application.ApplicationTypes.API.Serve
             }
 
             if (http2MaxStreamsPerConnection > 0) options.Limits.Http2.MaxStreamsPerConnection = http2MaxStreamsPerConnection;
+            if (http3MaxRequestHeaderFieldSize > 0) options.Limits.Http3.MaxRequestHeaderFieldSize = http3MaxRequestHeaderFieldSize;
 
             if (Http2InitialConnectionWindowSize >= 65535 && Http2InitialConnectionWindowSize <= Math.Pow(2, 31))
             {

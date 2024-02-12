@@ -89,18 +89,20 @@ public static class LogConfiguration
 
     private static void SetupGraylog(LogOptions logOptions)
     {
-        if (logOptions?.UseGraylog != true || logOptions.GrayLog == null) return;
-        var graylogOptions = logOptions.GrayLog;
-        var graylogConfig = new GraylogSinkOptions
+        if (logOptions?.UseGraylog == true && logOptions.GrayLog != null)
         {
-            HostnameOrAddress = graylogOptions.GrayLogHost,
-            TransportType = GetGraylogTransportTypeFromString(graylogOptions.GrayLogProtocol),
-            Host = graylogOptions.GrayLogHost,
-            Port = graylogOptions.GrayLogPort,
-            MaxMessageSizeInUdp = graylogOptions.MaxUdpMessageSize
-        };
+            var graylogOptions = logOptions?.GrayLog;
+            var graylogConfig = new GraylogSinkOptions
+            {
+                HostnameOrAddress = graylogOptions.GrayLogHost,
+                TransportType = GetGraylogTransportTypeFromString(graylogOptions.GrayLogProtocol),
+                HostnameOverride = graylogOptions.GrayLogHost,
+                Port = graylogOptions.GrayLogPort,
+                MaxMessageSizeInUdp = graylogOptions.MaxUdpMessageSize
+            };
 
-        LoggerConfiguration = LoggerConfiguration.WriteTo.Graylog(graylogConfig);
+            LoggerConfiguration = LoggerConfiguration.WriteTo.Graylog(graylogConfig);
+        }
     }
 
     private static TransportType GetGraylogTransportTypeFromString(string transportType)

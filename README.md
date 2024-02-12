@@ -8,6 +8,8 @@
     - [NuGet packages](#nuget-packages)
     - [Complete documentation](#complete-documentation)
 
+
+_NOTE: This is a .net 8 branch. The .net 8 is in RC Status. Please do not use this version/branch for production environments. devon4net only uses LTS versions_
 Devon4Net is part of the devonfw free and open source framework for the .NET stack. It provides a solid architectural model based on *Onion Layered Design* for building cloud native solutions, microservices, WebAPI applications and protocol buffers (protobuf) applications.
 
 Devon4net is intended for building backend applications.

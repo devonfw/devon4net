@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Devon4Net.Application.Grpc.Template</id>
-    <version>6.0.11</version>
+    <version>8.0.1</version>
     <title>Devon4Net web API solution template</title>
     <authors>iCSD/ADCenter Capgemini Valencia</authors>
     <owners></owners>
@@ -11,7 +11,7 @@
     <license type="file">content\assets\LICENSE</license>
     <icon>content\assets\devonfw.png</icon>
     <projectUrl>https://devonfw.com/</projectUrl>
-    <description>Project template to develop a protobuf application in .NET 6.0</description>
+    <description>Project template to develop a protobuf application in .NET 8.0</description>
     <releaseNotes>.Net 6 LTS devon4net template. Support for Kafka, RabbitMq lifecycle, LiteDB and other improvements like HTTP2, JWT, Swagger, UoW, HTTP security via certificates, killswitch functionality and many more features.</releaseNotes>
     <copyright>Copyright © Capgemini</copyright>
     <language>en-US</language>

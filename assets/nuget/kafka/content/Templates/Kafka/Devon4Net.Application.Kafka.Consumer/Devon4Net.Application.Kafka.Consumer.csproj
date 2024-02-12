@@ -2,32 +2,34 @@
 
   <PropertyGroup>
 		<Title>devon4net sample project for Kafka stream consumer</Title>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Authors>Capgemini, ADCenter Valencia, Traiectum Team</Authors>
 		<Company>Capgemini S.A.</Company>
 		<Description>Kafka Consumer template project. This project is in charge of consuming the Kafka topics. </Description>
-		<Version>6.0.11</Version>
+		<Version>8.0.1</Version>
 		<Copyright>Copyright © Capgemini</Copyright>
 		<PackageProjectUrl>https://github.com/devonfw/devon4net</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/devonfw/devon4net</RepositoryUrl>
 		<license>https://github.com/devonfw/ide/blob/master/LICENSE/</license>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>devonfw;devon4net;Capgemini;kafka;stream</PackageTags>
-		<PackageReleaseNotes>NET 6.0+ compatibility version</PackageReleaseNotes>
+		<PackageReleaseNotes>NET 8.0+ compatibility version</PackageReleaseNotes>
 		<PackageIcon>devonfw.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<PackageLicenseFile>https://raw.githubusercontent.com/devonfw/ide/master/LICENSE</PackageLicenseFile>
+	  <NoWarn>$(NoWarn);NETSDK1206;1701;1702;NU1608;CA1822</NoWarn>		
   </PropertyGroup>
 
 
   <ItemGroup>
-	  <PackageReference Include="Devon4Net.Infrastructure.Kafka" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.Logger" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.Cors" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="6.0.11" />
-	  <PackageReference Include="Devon4Net.Infrastructure.UnitOfWork" Version="6.0.11" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Kafka" Version="8.0.1" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Logger" Version="8.0.1" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Cors" Version="8.0.1" />
+	  <PackageReference Include="Devon4Net.Infrastructure.Swagger" Version="8.0.1" />
+	  <PackageReference Include="Devon4Net.Infrastructure.UnitOfWork" Version="8.0.1" />
   </ItemGroup>
 
 	<ItemGroup>

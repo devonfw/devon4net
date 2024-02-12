@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
 	<Title>devon4net Lambda sample project for AWS</Title>
-	<Version>6.0.11</Version>
-    <TargetFramework>net6.0</TargetFramework>
+	<Version>8.0.1</Version>
+    <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AWSProjectType>Lambda</AWSProjectType>
     <AssemblyName>Devon4Net.Application.Lambda</AssemblyName>
@@ -37,16 +37,16 @@
   </ItemGroup>  
   
   <ItemGroup>
-    <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.5.0" />
-    <PackageReference Include="Amazon.Lambda.RuntimeSupport" Version="1.8.2" />
-    <PackageReference Include="Amazon.Lambda.Core" Version="2.1.0" />
-    <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.3.0" />
+    <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.7.0" />
+    <PackageReference Include="Amazon.Lambda.RuntimeSupport" Version="1.10.0" />
+    <PackageReference Include="Amazon.Lambda.Core" Version="2.2.0" />
+    <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.4.0" />
   </ItemGroup>  
   
   <ItemGroup>
-   <PackageReference Include="Devon4Net.Infrastructure.AWS.Common" Version="6.0.11" />
-   <PackageReference Include="Devon4Net.Infrastructure.AWS.S3" Version="6.0.11" />
-   <PackageReference Include="Devon4Net.Infrastructure.AWS.Lambda" Version="6.0.11" />   
+   <PackageReference Include="Devon4Net.Infrastructure.AWS.Common" Version="8.0.1" />   
+   <PackageReference Include="Devon4Net.Infrastructure.AWS.Lambda" Version="8.0.1" />
+	<PackageReference Include="Devon4Net.Infrastructure.AWS.Logger" Version="8.0.1" />
   </ItemGroup>  
   
   <ItemGroup>

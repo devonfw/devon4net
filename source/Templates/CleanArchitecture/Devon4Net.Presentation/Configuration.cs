@@ -1,11 +1,11 @@
-﻿using Devon4Net.Domain.UnitOfWork.Enums;
-using Devon4Net.Infrastructure.Common.Helpers;
+﻿using Devon4Net.Infrastructure.Common.Helpers;
 using Devon4Net.Infrastructure.MediatR.Behaviors;
 using FluentValidation;
 using MediatR;
 using System.Reflection;
 using Devon4Net.Infrastructure.Persistence;
 using Devon4Net.Infrastructure.UnitOfWork.Common;
+using Devon4Net.Infrastructure.UnitOfWork.Enums;
 
 namespace Devon4Net.Presentation;
 
@@ -41,7 +41,7 @@ public static class Configuration
     {
         var assembly = typeof(Application.AssemblyReference).Assembly;
 
-        services.AddMediatR(assembly);
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
         services.AddValidatorsFromAssembly(assembly);
 
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
