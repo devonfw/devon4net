@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Helpers\**" />
+    <Compile Remove="Service\**" />
+    <EmbeddedResource Remove="Helpers\**" />
+    <EmbeddedResource Remove="Service\**" />
+    <None Remove="Helpers\**" />
+    <None Remove="Service\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.MediatR\Devon4Net.Infrastructure.MediatR.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Devon4Net.Infrastructure.UnitOfWork\Devon4Net.Infrastructure.UnitOfWork.csproj" />
+    <ProjectReference Include="..\Devon4Net.Domain\Devon4Net.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Command\" />
+  </ItemGroup>
+
+</Project>

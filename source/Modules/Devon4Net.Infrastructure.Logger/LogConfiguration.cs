@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Sinks.Graylog;
+using Serilog.Sinks.Graylog.Core.Transport;
 
 namespace Devon4Net.Infrastructure.Logger;
 
@@ -23,32 +24,28 @@ public static class LogConfiguration
 
         if (logOptions == null) return;
 
-        LoggerConfiguration = CreateLoggerConfiguration();
-        
+        LoggerConfiguration = CreateLoggerConfiguration(configuration);
+
         services.AddSingleton(ConfigureLog(logOptions));
         services.AddSingleton(LoggerConfiguration);
-        
-        if (logOptions.UseAopTrace)
-        {
-            SetupLogAop(ref services, logOptions);
-        }
+
+        if (logOptions.UseAopTrace) SetupLogAop(ref services, logOptions);
     }
 
     private static ILoggerFactory ConfigureLog(LogOptions logOptions)
     {
-        SetLogLevel(logOptions.LogLevel?.Default!);
         ConfigureLogFile(logOptions);
         ConfigureLogSeq(logOptions);
         ConfigureLogSqLiteDb(logOptions);
         SetupGraylog(logOptions);
-        
+
         return CreateLoggerFactory();
     }
 
     private static void ConfigureLogFile(LogOptions logOptions)
     {
         if (!logOptions.UseLogFile) return;
-        
+
         var logFile = logOptions.LogFile != null
             ? string.Format(logOptions.LogFile, DateTime.Today.ToShortDateString().Replace("/", string.Empty))
             : DefaultLogFile;
@@ -58,28 +55,28 @@ public static class LogConfiguration
     private static void ConfigureLogSeq(LogOptions logOptions)
     {
         if (!string.IsNullOrEmpty(logOptions.SeqLogServerHost))
-        {
             LoggerConfiguration = LoggerConfiguration.WriteTo.Seq(logOptions.SeqLogServerHost);
-        }
     }
-    
+
     private static void ConfigureLogSqLiteDb(LogOptions logOptions)
     {
         if (logOptions.UseSqLiteDb && !string.IsNullOrEmpty(logOptions.SqliteDatabase))
-        {
-            LoggerConfiguration = LoggerConfiguration.WriteTo.SQLite(GetValidPath(logOptions.SqliteDatabase, DefaultSqliteFile));
-        }
+            LoggerConfiguration =
+                LoggerConfiguration.WriteTo.SQLite(GetValidPath(logOptions.SqliteDatabase, DefaultSqliteFile));
     }
-    
-    private static LoggerConfiguration CreateLoggerConfiguration()
+
+    private static LoggerConfiguration CreateLoggerConfiguration(IConfiguration configuration)
     {
-        return new LoggerConfiguration().Enrich.FromLogContext().WriteTo.Console(); //NOSONAR false positive
+        return new LoggerConfiguration() //NOSONAR false positive
+            .ReadFrom.Configuration(configuration)
+            .Enrich.FromLogContext().WriteTo.Console();
     }
-    
+
     private static ILoggerFactory CreateLoggerFactory()
     {
         Log.Logger = LoggerConfiguration.CreateLogger();
-        return LoggerFactory.Create(logging => { logging.AddSerilog(Log.Logger); }).AddSerilog();
+
+        return LoggerFactory.Create(logging => logging.AddSerilog(Log.Logger));
     }
 
     private static void SetupLogAop(ref IServiceCollection services, LogOptions logOptions)
@@ -89,7 +86,7 @@ public static class LogConfiguration
         services.AddMvc(options => options.Filters.Add(new AopControllerAttribute(logOptions.UseAopTrace)));
         services.AddMvc(options => options.Filters.Add(new AopExceptionFilterAttribute()));
     }
-    
+
     private static void SetupGraylog(LogOptions logOptions)
     {
         if (logOptions?.UseGraylog == true && logOptions.GrayLog != null)
@@ -108,50 +105,23 @@ public static class LogConfiguration
         }
     }
 
-    private static Serilog.Sinks.Graylog.Core.Transport.TransportType GetGraylogTransportTypeFromString(string transportType)
+    private static TransportType GetGraylogTransportTypeFromString(string transportType)
     {
-        if (transportType == null) return Serilog.Sinks.Graylog.Core.Transport.TransportType.Udp;
+        if (transportType == null) return TransportType.Udp;
         return transportType.ToLower() switch
         {
-            "tcp" => Serilog.Sinks.Graylog.Core.Transport.TransportType.Tcp,
-            "udp" => Serilog.Sinks.Graylog.Core.Transport.TransportType.Udp,
-            "http" => Serilog.Sinks.Graylog.Core.Transport.TransportType.Http,
-            _ => Serilog.Sinks.Graylog.Core.Transport.TransportType.Udp
+            "tcp" => TransportType.Tcp,
+            "udp" => TransportType.Udp,
+            "http" => TransportType.Http,
+            _ => TransportType.Udp
         };
     }
 
     private static string GetValidPath(string inputPath, string optionalFileName)
     {
         if (string.IsNullOrEmpty(inputPath) || string.IsNullOrEmpty(Path.GetFileName(inputPath)))
-        {
             return Path.Combine(FileOperations.GetApplicationPath() ?? string.Empty, optionalFileName);
-        }
 
         return Path.GetFullPath(inputPath);
-    }
-
-    private static void SetLogLevel(string logEventLevel = "verbose")
-    {
-        switch (logEventLevel.ToLower())
-        {
-            case "warning":
-               LoggerConfiguration.MinimumLevel.Warning();
-                return;
-            case "verbose":
-                LoggerConfiguration.MinimumLevel.Verbose();
-                return;
-            case "fatal":
-                LoggerConfiguration.MinimumLevel.Fatal();
-                return;
-            case "error":
-                LoggerConfiguration.MinimumLevel.Error();
-                return;
-            case "information":
-                LoggerConfiguration.MinimumLevel.Information();
-                return;
-            default:
-                LoggerConfiguration.MinimumLevel.Debug();
-                return;
-        }
     }
 }

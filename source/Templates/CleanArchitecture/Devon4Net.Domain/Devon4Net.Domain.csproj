@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(MSBuildProjectName)'=='Common.Domain/Entities'">
+    <SuppressWarnings>$(SuppressWarnings);CA2211;CA1822;CA1303</SuppressWarnings>
+  </PropertyGroup>
+
+</Project>

@@ -1,5 +1,6 @@
 ﻿using Devon4Net.Infrastructure.Common.Exceptions;
 using Microsoft.AspNetCore.Http;
+using System.Runtime.Serialization;
 
 namespace Devon4Net.Infrastructure.Kafka.Exceptions
 {
@@ -7,14 +8,17 @@ namespace Devon4Net.Infrastructure.Kafka.Exceptions
     /// Custom exception ConsumerException
     /// </summary>
     [Serializable]
-    public class ConsumerException : Exception, IWebApiException
+    public class ConsumerException : WebApiException
     {
-        public int StatusCode => StatusCodes.Status500InternalServerError;
+        /// <summary>
+        /// Gets the forced http status code to be fired on the exception manager.
+        /// </summary>
+        public override int StatusCode => StatusCodes.Status500InternalServerError;
 
         /// <summary>
-        /// Show the message on the response?
+        /// Gets a value indicating whether show the message on the response?.
         /// </summary>
-        public bool ShowMessage => true;
+        public override bool ShowMessage => true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsumerException"/> class.
@@ -38,6 +42,11 @@ namespace Devon4Net.Infrastructure.Kafka.Exceptions
         /// <param name="message"></param>
         /// <param name="innerException"></param>
         public ConsumerException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected ConsumerException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+            : base()
         {
         }
     }

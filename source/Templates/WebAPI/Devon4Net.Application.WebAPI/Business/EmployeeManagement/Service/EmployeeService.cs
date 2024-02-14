@@ -3,28 +3,25 @@ using Devon4Net.Infrastructure.Common;
 using Devon4Net.Application.WebAPI.Business.EmployeeManagement.Converters;
 using Devon4Net.Application.WebAPI.Business.EmployeeManagement.Dto;
 using Devon4Net.Application.WebAPI.Business.EmployeeManagement.Exceptions;
-using Devon4Net.Application.WebAPI.Domain.Database;
 using Devon4Net.Application.WebAPI.Domain.Entities;
 using Devon4Net.Application.WebAPI.Domain.RepositoryInterfaces;
-using Devon4Net.Infrastructure.UnitOfWork.UnitOfWork;
-using Devon4Net.Infrastructure.UnitOfWork.Service;
 
 namespace Devon4Net.Application.WebAPI.Business.EmployeeManagement.Service
 {
     /// <summary>
     /// Employee service implementation
     /// </summary>
-    public class EmployeeService: Service<EmployeeContext>, IEmployeeService
+    public class EmployeeService: IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="uoW"></param>
-        public EmployeeService(IUnitOfWork<EmployeeContext> uoW) : base(uoW)
+        /// <param name="employeeRepository"></param>
+        public EmployeeService(IEmployeeRepository employeeRepository)
         {
-            _employeeRepository = uoW.Repository<IEmployeeRepository>();
+            _employeeRepository = employeeRepository;
         }
 
         /// <summary>

@@ -23,15 +23,15 @@
 	</PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <WarningsAsErrors></WarningsAsErrors>
-      <NoWarn>1701;1702;8034;1705;NU1605;NU1608;NU1701;CS1705</NoWarn>
-      <WarningLevel>0</WarningLevel>
+        <WarningsAsErrors></WarningsAsErrors>
+        <NoWarn>1701;1702;8034;1705;NU1605;NU1608;NU1701;CS1705</NoWarn>
+        <WarningLevel>0</WarningLevel>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <WarningsAsErrors></WarningsAsErrors>
-      <NoWarn>1701;1702;8034;1705;NU1605;NU1608;NU1701;CS1705</NoWarn>
-      <WarningLevel>0</WarningLevel>
+        <WarningsAsErrors></WarningsAsErrors>
+        <NoWarn>1701;1702;8034;1705;NU1605;NU1608;NU1701;CS1705</NoWarn>
+        <WarningLevel>0</WarningLevel>
     </PropertyGroup>
 
     <ItemGroup>
@@ -49,25 +49,26 @@
       <PackageReference Include="Oracle.EntityFrameworkCore" Version="8.21.121" />
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
       <PackageReference Include="EntityFrameworkCore.FirebirdSQL" Version="2.1.2.2" />
+      <PackageReference Include="Dapper" Version="2.0.123" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
+        <ProjectReference Include="..\Devon4Net.Infrastructure.Logger\Devon4Net.Infrastructure.Logger.csproj" />
     </ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\..\assets\images\devonfw.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-	  <None Include="..\..\..\LICENSE">
-		  <Pack>True</Pack>
-		  <PackagePath>\</PackagePath>
-	  </None>	  
-  </ItemGroup>	
+	<ItemGroup>
+		<None Include="..\..\..\assets\images\devonfw.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
 </Project>

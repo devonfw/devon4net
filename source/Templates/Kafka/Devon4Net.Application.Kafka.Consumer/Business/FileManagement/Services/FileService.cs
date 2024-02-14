@@ -1,21 +1,17 @@
 ﻿
-using Devon4Net.Application.Kafka.Consumer.Domain.Database;
 using Devon4Net.Application.Kafka.Consumer.Domain.RepositoryInterfaces;
 using Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Dto;
 using Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Converters;
-using Devon4Net.Infrastructure.UnitOfWork.Service;
-using Devon4Net.Infrastructure.UnitOfWork.UnitOfWork;
 
 namespace Devon4Net.Application.Kafka.Consumer.Business.FileManagement.Services
 {
-
-    public class FileService: Service<FileContext>, IFileService
+    public class FileService: IFileService
     {
         private readonly IFileRepository _fileRepository;
 
-        public FileService(IUnitOfWork<FileContext> uoW) : base(uoW)
+        public FileService(IFileRepository fileRepository)
         {
-            _fileRepository = uoW.Repository<IFileRepository>();
+            _fileRepository = fileRepository;
         }
 
         public DataPieceDto<byte[]> CreateFile(DataPieceDto<byte[]> dataPiece)

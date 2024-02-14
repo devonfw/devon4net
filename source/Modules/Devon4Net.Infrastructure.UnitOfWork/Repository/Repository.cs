@@ -1,19 +1,16 @@
 ﻿using System.ComponentModel;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using Devon4Net.Infrastructure.Common;
 using Devon4Net.Infrastructure.UnitOfWork.Exceptions;
 using Devon4Net.Infrastructure.UnitOfWork.Pagination;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace Devon4Net.Infrastructure.UnitOfWork.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private DbContext DbContext { get; set; }
-        private bool DbContextBehaviour  { get; }
-
-        private IQueryable<T> Queryable => SetQuery<T>();
-
         /// <summary>
         /// Initialization class
         /// </summary>
@@ -25,7 +22,12 @@ namespace Devon4Net.Infrastructure.UnitOfWork.Repository
             DbContextBehaviour = dbContextBehaviour;
         }
 
-        public async Task<T> Create(T entity, bool autoSaveChanges= true, bool detach = true)
+        private DbContext DbContext { get; set; }
+        private bool DbContextBehaviour { get; }
+
+        private IQueryable<T> Queryable => SetQuery<T>();
+
+        public async Task<T> Create(T entity, bool autoSaveChanges = true, bool detach = true)
         {
             try
             {
@@ -107,9 +109,11 @@ namespace Devon4Net.Infrastructure.UnitOfWork.Repository
             return await GetQueryFromPredicate(predicate).ToListAsync().ConfigureAwait(false);
         }
 
-        public async Task<IList<T>> Get<TKey>(Expression<Func<T, bool>> predicate, Expression<Func<T, TKey>> keySelector, ListSortDirection sortDirection)
+        public async Task<IList<T>> Get<TKey>(Expression<Func<T, bool>> predicate, Expression<Func<T, TKey>> keySelector,
+            ListSortDirection sortDirection)
         {
-            return await GetSortedQueryFromPredicate(predicate, keySelector, sortDirection).ToListAsync().ConfigureAwait(false);
+            return await GetSortedQueryFromPredicate(predicate, keySelector, sortDirection).ToListAsync()
+                .ConfigureAwait(false);
         }
 
         public async Task<IList<T>> Get(IList<string> include, Expression<Func<T, bool>> predicate = null)
@@ -117,7 +121,8 @@ namespace Devon4Net.Infrastructure.UnitOfWork.Repository
             return await GetResultSetWithNestedProperties(include, predicate).ToListAsync().ConfigureAwait(false);
         }
 
-        public Task<PaginationResult<T>> Get(int currentPage, int pageSize, IList<string> includedNestedFiels, Expression<Func<T, bool>> predicate = null)
+        public Task<PaginationResult<T>> Get(int currentPage, int pageSize, IList<string> includedNestedFiels,
+            Expression<Func<T, bool>> predicate = null)
         {
             return GetResultSetWithNestedPropertiesPaged(currentPage, pageSize, includedNestedFiels, predicate);
         }
@@ -127,9 +132,11 @@ namespace Devon4Net.Infrastructure.UnitOfWork.Repository
             return GetPagedResult(currentPage, pageSize, GetQueryFromPredicate(predicate));
         }
 
-        public Task<PaginationResult<T>> Get<TKey>(int currentPage, int pageSize, Expression<Func<T, bool>> predicate , Expression<Func<T, TKey>> keySelector, ListSortDirection sortDirection)
+        public Task<PaginationResult<T>> Get<TKey>(int currentPage, int pageSize, Expression<Func<T, bool>> predicate,
+            Expression<Func<T, TKey>> keySelector, ListSortDirection sortDirection)
         {
-            return GetPagedResult(currentPage, pageSize, GetSortedQueryFromPredicate(predicate, keySelector, sortDirection));
+            return GetPagedResult(currentPage, pageSize,
+                GetSortedQueryFromPredicate(predicate, keySelector, sortDirection));
         }
 
         public Task<long> Count(Expression<Func<T, bool>> predicate = null)
@@ -139,38 +146,73 @@ namespace Devon4Net.Infrastructure.UnitOfWork.Repository
 
         private IQueryable<T> GetQueryFromPredicate(Expression<Func<T, bool>> predicate)
         {
-            return predicate != null ? Queryable.Where(predicate): Queryable;
+            return predicate != null ? Queryable.Where(predicate) : Queryable;
         }
 
-        private IQueryable<T> GetSortedQueryFromPredicate<TKey>(Expression<Func<T, bool>> predicate, Expression<Func<T, TKey>> keySelector, ListSortDirection sortDirection)
+        public Task<List<T>> ExecuteSpGetList(string spName, params SqlParameter[] parameters)
+        {
+            GenerateSpQuery(spName, parameters, out var parameterValues, out var query);
+
+            return DbContext.Set<T>().FromSqlInterpolated(FormattableStringFactory.Create(query, parameterValues))
+                .ToListAsync();
+        }
+
+        public Task<int> ExecuteSp(string spName, params SqlParameter[] parameters)
+        {
+            GenerateSpQuery(spName, parameters, out var parameterValues, out var query);
+
+            return DbContext.Database.ExecuteSqlInterpolatedAsync(FormattableStringFactory.Create(query, parameterValues));
+        }
+
+        private static void GenerateSpQuery(string spName, SqlParameter[] parameters, out string parameterValues, out string query)
+        {
+            var parameterList = new List<SqlParameter>(parameters);
+            var parameterPlaceholders = string.Join(", ", parameterList.Select((p, i) => $"@p{i}"));
+            parameterValues = string.Join(", ", parameterList.Select((p, i) => $"@p{i} = {p.Value}"));
+
+            query = $"EXEC {spName} {parameterPlaceholders}";
+        }
+
+        private IQueryable<T> GetSortedQueryFromPredicate<TKey>(Expression<Func<T, bool>> predicate,
+            Expression<Func<T, TKey>> keySelector, ListSortDirection sortDirection)
         {
             if (sortDirection == ListSortDirection.Ascending)
-            {
                 return predicate != null ? Queryable.Where(predicate).OrderBy(keySelector) : Queryable.OrderBy(keySelector);
-            }
 
-            return predicate != null ? Queryable.Where(predicate).OrderByDescending(keySelector) : Queryable.OrderByDescending(keySelector);
+            return predicate != null
+                ? Queryable.Where(predicate).OrderByDescending(keySelector)
+                : Queryable.OrderByDescending(keySelector);
         }
 
-        private IQueryable<T> GetResultSetWithNestedProperties(IList<string> includedNestedFiels, Expression<Func<T, bool>> predicate = null)
+        private IQueryable<T> GetResultSetWithNestedProperties(IList<string> includedNestedFiels,
+            Expression<Func<T, bool>> predicate = null)
         {
-            return includedNestedFiels.Aggregate(GetQueryFromPredicate(predicate), (current, property) => current.Include(property));
+            return includedNestedFiels.Aggregate(GetQueryFromPredicate(predicate),
+                (current, property) => current.Include(property));
         }
 
-        private Task<PaginationResult<T>> GetResultSetWithNestedPropertiesPaged(int currentPage, int pageSize, IList<string> includedNestedFiels, Expression<Func<T, bool>> predicate = null)
+        private Task<PaginationResult<T>> GetResultSetWithNestedPropertiesPaged(int currentPage, int pageSize,
+            IList<string> includedNestedFiels, Expression<Func<T, bool>> predicate = null)
         {
             return GetPagedResult(currentPage, pageSize, GetResultSetWithNestedProperties(includedNestedFiels, predicate));
         }
 
-        private static async Task<PaginationResult<T>> GetPagedResult(int currentPage, int pageSize, IQueryable<T> resultList)
+        private static async Task<PaginationResult<T>> GetPagedResult(int currentPage, int pageSize,
+            IQueryable<T> resultList)
         {
-            var pagedResult = new PaginationResult<T>() { CurrentPage = currentPage, PageSize = pageSize, RowCount = await resultList.CountAsync().ConfigureAwait(false) };
+            var pagedResult = new PaginationResult<T>
+            {
+                CurrentPage = currentPage,
+                PageSize = pageSize,
+                RowCount = await resultList.CountAsync().ConfigureAwait(false)
+            };
 
             var pageCount = (double)pagedResult.RowCount / pageSize;
             pagedResult.PageCount = (int)Math.Ceiling(pageCount);
 
             var skip = (currentPage - 1) * pageSize;
-            pagedResult.Results = await resultList.AsNoTracking().Skip(skip).Take(pageSize).ToListAsync().ConfigureAwait(false);
+            pagedResult.Results =
+                await resultList.AsNoTracking().Skip(skip).Take(pageSize).ToListAsync().ConfigureAwait(false);
 
             return pagedResult;
         }
@@ -181,13 +223,14 @@ namespace Devon4Net.Infrastructure.UnitOfWork.Repository
             return DbContext.Set<S>().AsNoTracking();
         }
 
-        private void SetContextBehaviour( bool enabled)
+        private void SetContextBehaviour(bool enabled)
         {
             DbContext.ChangeTracker.AutoDetectChangesEnabled = enabled;
 
             DbContext.ChangeTracker.LazyLoadingEnabled = enabled;
 
-            DbContext.ChangeTracker.QueryTrackingBehavior = enabled ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking;
+            DbContext.ChangeTracker.QueryTrackingBehavior =
+                enabled ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking;
         }
 
         internal void SetContext(DbContext context)

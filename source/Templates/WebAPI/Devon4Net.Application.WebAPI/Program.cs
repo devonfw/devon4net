@@ -26,7 +26,7 @@ builder.Services.SetupSwagger(builder.Configuration);
 builder.Services.SetupCircuitBreaker(builder.Configuration);
 builder.Services.SetupCors(builder.Configuration);
 builder.Services.SetupJwt(builder.Configuration);
-builder.Services.SetupUnitOfWork(typeof(Program));
+builder.Services.SetupUnitOfWork();
 builder.Services.SetupLiteDb(builder.Configuration);
 builder.Services.SetupRabbitMq(builder.Configuration);
 builder.Services.SetupMediatR(builder.Configuration);

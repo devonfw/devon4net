@@ -5,7 +5,7 @@ namespace Devon4Net.Application.WebAPI.Business.MediatRManagement.Queries
     /// <summary>
     /// 
     /// </summary>
-    public class GetTodoQuery : QueryBase<TodoResultDto>
+    public record GetTodoQuery : QueryBase<TodoResultDto>
     {
 
 
