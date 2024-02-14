@@ -1,36 +1,44 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Runtime.Serialization;
 
 namespace Devon4Net.Infrastructure.Common.Exceptions
 {
     [Serializable]
-    public class HttpCustomRequestException : Exception, IWebApiException
+    public class HttpCustomRequestException : WebApiException
     {
-        public int StatusCode { get; }
+        /// <summary>
+        /// Gets the forced http status code to be fired on the exception manager.
+        /// </summary>
+        public override int StatusCode => StatusCodes.Status404NotFound;
 
-        public bool ShowMessage => false;
+        /// <summary>
+        /// Gets a value indicating whether show the message on the response?.
+        /// </summary>
+        public override bool ShowMessage => true;
 
 
         public HttpCustomRequestException()
         {
-            StatusCode = StatusCodes.Status500InternalServerError;
         }
 
         public HttpCustomRequestException(string message)
             : base(message)
         {
-            StatusCode = StatusCodes.Status500InternalServerError;
         }
 
         public HttpCustomRequestException(string message, int statusCode)
             : base(message)
         {
-            StatusCode = statusCode;
         }
 
         public HttpCustomRequestException(string message, Exception inner)
             : base(message, inner)
         {
-            StatusCode = StatusCodes.Status500InternalServerError;
+        }
+
+        protected HttpCustomRequestException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+            : base()
+        {
         }
     }
 }

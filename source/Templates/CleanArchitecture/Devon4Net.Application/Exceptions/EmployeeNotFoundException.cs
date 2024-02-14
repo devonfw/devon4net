@@ -8,17 +8,17 @@ namespace Devon4Net.Application.Exceptions;
 /// Custom exception EmployeeNotFoundException
 /// </summary>
 [Serializable]
-public class EmployeeNotFoundException : Exception, IWebApiException
+public class EmployeeNotFoundException : WebApiException
 {
     /// <summary>
-    /// The forced http status code to be fired on the exception manager
+    /// Gets the forced http status code to be fired on the exception manager.
     /// </summary>
-    public int StatusCode => StatusCodes.Status404NotFound;
+    public override int StatusCode => StatusCodes.Status404NotFound;
 
     /// <summary>
-    /// Show the message on the response?
+    /// Gets a value indicating whether show the message on the response?.
     /// </summary>
-    public bool ShowMessage => true;
+    public override bool ShowMessage => true;
 
     public EmployeeNotFoundException()
     {
@@ -44,12 +44,8 @@ public class EmployeeNotFoundException : Exception, IWebApiException
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="EmployeeNotFoundException"/> class with serialized data.
-    /// </summary>
-    /// <param name="info"></param>
-    /// <param name="context"></param>
-    protected EmployeeNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
+    protected EmployeeNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+    : base()
     {
     }
 }

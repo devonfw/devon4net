@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Devon4Net.Infrastructure.Common.Application.Options;
 using Devon4Net.Infrastructure.Common.Application.Middleware.KillSwicth;
-using Devon4Net.Infrastructure.Common.Application.Middleware.Exception;
 using Devon4Net.Infrastructure.Common.Application.Middleware.Headers;
 using Devon4Net.Infrastructure.Common.Application.Middleware.Certificates;
 using Devon4Net.Infrastructure.Common.Application.Middleware.Logs;
@@ -26,7 +25,6 @@ namespace Devon4Net.Infrastructure.Common.Application.Middleware
             if (killSwitch?.UseKillSwitch == true) builder.UseMiddleware<KillSwicthMiddleware>();
             if (certificates?.ClientCertificate?.EnableClientCertificateCheck == true || certificates?.ClientCertificate?.RequireClientCertificate== true) builder.UseMiddleware<ClientCertificatesMiddleware>();
 
-            builder.UseMiddleware<ExceptionHandlingMiddleware>();
             builder.UseMiddleware<CustomHeadersMiddleware>();
         }
 

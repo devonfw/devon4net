@@ -57,6 +57,8 @@ namespace Devon4Net.Infrastructure.Common.Application.ApplicationTypes.API
                 services?.AddMvc(options => options.Filters.Add(typeof(ModelStateCheckerAttribute)));
             }
 
+            services.AddScoped<ExceptionHandlingFilterAttribute>();
+
             if (DevonfwOptions.UseIIS) services?.ConfigureIIS(DevonfwOptions.IIS);
 
             if (DevonfwOptions.UseXsrf) services?.ConfigureXsrf();
