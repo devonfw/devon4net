@@ -30,6 +30,9 @@ public class EmployeeContext : DbContext
     {
         modelBuilder.Entity<Employee>(entity =>
         {
+            entity.Property(e => e.Id)
+                .IsRequired()
+                .HasMaxLength(255);
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(255);

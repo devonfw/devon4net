@@ -33,7 +33,7 @@ public class EmployeeRepository : Repository<Employee>, IEmployeeRepository
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public Task<Employee> GetEmployeeById(long id)
+    public Task<Employee> GetEmployeeById(Guid id)
     {
         Devon4NetLogger.Debug($"GetEmployeeById method from repository EmployeeService with value : {id}");
         return GetFirstOrDefault(t => t.Id == id);
@@ -49,7 +49,7 @@ public class EmployeeRepository : Repository<Employee>, IEmployeeRepository
     public Task<Employee> Create(string name, string surName, string mail)
     {
         Devon4NetLogger.Debug($"SetEmployee method from repository EmployeeService with value : {name}");
-        return Create(new Employee { Name = name, Surname = surName, Mail = mail });
+        return Create(new Employee(name, surName, mail));
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ public class EmployeeRepository : Repository<Employee>, IEmployeeRepository
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public async Task<long> DeleteEmployeeById(long id)
+    public async Task<Guid> DeleteEmployeeById(Guid id)
     {
         Devon4NetLogger.Debug($"DeleteEmployeeById method from repository EmployeeService with value : {id}");
         var deleted = await Delete(t => t.Id == id).ConfigureAwait(false);

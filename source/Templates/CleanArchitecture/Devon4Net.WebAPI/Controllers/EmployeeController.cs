@@ -24,7 +24,6 @@ public class EmployeeController : ControllerBase
     [HttpPost]
     public Task<EmployeeDto> CreateEmployee([FromBody] EmployeeDto employeeDto)
     {
-        throw new HttpCustomRequestException("message");
         var command = new CreateEmployeeCommand(employeeDto.Name, employeeDto.Surname, employeeDto.Mail);
         return _mediator.CommandAsync(command);
     }
@@ -37,7 +36,7 @@ public class EmployeeController : ControllerBase
     }
 
     [HttpGet("{employeeId}")]
-    public Task<EmployeeDto> GetAllEmployees([FromRoute] long employeeId)
+    public Task<EmployeeDto> GetAllEmployees([FromRoute] Guid employeeId)
     {
         var query = new GetEmployeeByIdQuery(employeeId);
         return _mediator.QueryAsync(query);

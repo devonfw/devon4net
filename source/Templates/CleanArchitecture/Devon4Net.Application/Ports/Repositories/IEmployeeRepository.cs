@@ -21,7 +21,7 @@ public interface IEmployeeRepository : IRepository<Employee>
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    Task<Employee> GetEmployeeById(long id);
+    Task<Employee> GetEmployeeById(Guid id);
 
     /// <summary>
     /// Create
@@ -37,5 +37,5 @@ public interface IEmployeeRepository : IRepository<Employee>
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    Task<long> DeleteEmployeeById(long id);
+    Task<Guid> DeleteEmployeeById(Guid id);
 }

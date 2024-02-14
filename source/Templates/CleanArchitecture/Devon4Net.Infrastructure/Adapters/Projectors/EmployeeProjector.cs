@@ -13,11 +13,12 @@ public class EmployeeProjector : Projector, IEmployeeProjector
     {
     }
 
-    public async Task<EmployeeDto> GetEmployeeById(long id)
+    public async Task<EmployeeDto> GetEmployeeById(Guid id)
     {
         var query = (IQueryable<Employee> employeeQuery) => employeeQuery
         .Select(employee => new EmployeeDto
         {
+            Id = employee.Id,
             Name = employee.Name,
             Surname = employee.Surname,
             Mail = employee.Mail
@@ -33,6 +34,7 @@ public class EmployeeProjector : Projector, IEmployeeProjector
     {
         var query = (IQueryable<Employee> employeeQuery) => employeeQuery.Select(employee => new EmployeeDto
         {
+            Id = employee.Id,
             Name = employee.Name,
             Surname = employee.Surname,
             Mail = employee.Mail

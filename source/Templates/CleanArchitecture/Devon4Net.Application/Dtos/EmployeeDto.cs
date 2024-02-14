@@ -10,7 +10,7 @@ public class EmployeeDto
     /// <summary>
     /// the Id
     /// </summary>
-    public long Id { get; init; }
+    public Guid Id { get; init; }
 
     /// <summary>
     /// the Name

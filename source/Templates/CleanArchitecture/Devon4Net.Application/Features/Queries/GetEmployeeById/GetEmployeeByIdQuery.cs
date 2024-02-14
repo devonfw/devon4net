@@ -3,4 +3,4 @@ using Devon4Net.Infrastructure.MediatR.Query;
 
 namespace Devon4Net.Application.Features.Queries.GetEmployeeById;
 
-public record GetEmployeeByIdQuery(long Id) : QueryBase<EmployeeDto>;
+public record GetEmployeeByIdQuery(Guid Id) : QueryBase<EmployeeDto>;
