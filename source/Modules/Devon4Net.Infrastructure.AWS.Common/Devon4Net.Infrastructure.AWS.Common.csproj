@@ -43,9 +43,9 @@
     <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.7.301.34" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
-    <PackageReference Include="System.Text.Json" Version="8.0.1" />
+    <PackageReference Include="System.Text.Json" Version="8.0.3" />
   </ItemGroup>
 	
 	<ItemGroup>
