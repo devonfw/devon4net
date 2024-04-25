@@ -24,13 +24,13 @@
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
       <WarningsAsErrors></WarningsAsErrors>
-      <NoWarn>1701;1702;8034;1705;NU1605;NU1608;NU1701;CS1705</NoWarn>
+      <NoWarn>$(NoWarn);1701;1702;8034;1705;NU1605;NU1608;NU1701;CS1705;NETSDK1206</NoWarn>
       <WarningLevel>0</WarningLevel>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
       <WarningsAsErrors></WarningsAsErrors>
-      <NoWarn>1701;1702;8034;1705;NU1605;NU1608;NU1701;CS1705</NoWarn>
+      <NoWarn>$(NoWarn);1701;1702;8034;1705;NU1605;NU1608;NU1701;CS1705;NETSDK1206</NoWarn>
       <WarningLevel>0</WarningLevel>
     </PropertyGroup>
 

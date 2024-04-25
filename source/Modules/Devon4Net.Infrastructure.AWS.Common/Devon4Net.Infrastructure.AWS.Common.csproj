@@ -38,9 +38,9 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-    <PackageReference Include="AWSSDK.SecretsManager" Version="3.7.302.13" />
+    <PackageReference Include="AWSSDK.SecretsManager" Version="3.7.302.56" />
     <PackageReference Include="AWSSDK.SecretsManager.Caching" Version="1.0.6" />		
-    <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.7.301.34" />
+    <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.7.304" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
