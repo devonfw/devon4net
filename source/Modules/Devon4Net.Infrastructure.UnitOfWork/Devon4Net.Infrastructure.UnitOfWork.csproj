@@ -36,17 +36,17 @@
 
     <ItemGroup>
       <!--<PackageReference Include="EntityFrameworkCore.Jet" Version="3.1.0" />-->
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.7" />
       <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="8.0.4" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="8.0.4" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.4" />      
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.4" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.4" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" />
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
-      <PackageReference Include="Oracle.EntityFrameworkCore" Version="8.21.140" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="8.0.7" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="8.0.7" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.7" />      
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.7" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.7" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
+      <PackageReference Include="Oracle.EntityFrameworkCore" Version="8.23.50" />
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
       <PackageReference Include="EntityFrameworkCore.FirebirdSQL" Version="2.1.2.2" />
     </ItemGroup>
