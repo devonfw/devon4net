@@ -17,7 +17,7 @@
 
     <!-- Generate ready to run images during publishing to improvement cold starts. -->
     <PublishReadyToRun>true</PublishReadyToRun>
-
+	<NoWarn>$(NoWarn);NETSDK1206;1701;1702;NU1608;CA1822</NoWarn>
   </PropertyGroup>
   
   <!-- 
@@ -44,12 +44,12 @@
   </ItemGroup>  
   
   <ItemGroup>
-	<PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.302.22" />	  
+	<PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.305" />	  
     <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.7.0" />
     <PackageReference Include="Amazon.Lambda.RuntimeSupport" Version="1.10.0" />
     <PackageReference Include="Amazon.Lambda.Core" Version="2.2.0" />
-    <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.4.2" />
-    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.300" />
+    <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.4.3" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.301" />
   </ItemGroup>  
   
   <ItemGroup>

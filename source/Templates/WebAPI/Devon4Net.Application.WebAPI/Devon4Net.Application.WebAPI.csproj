@@ -6,6 +6,7 @@
     <UserSecretsId>25113a62-050c-45d6-a8ba-c5bd99499870</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..</DockerfileContext>
+	<NoWarn>$(NoWarn);NETSDK1206;1701;1702;NU1608;CA1822</NoWarn>	  
   </PropertyGroup>
 
   <ItemGroup>

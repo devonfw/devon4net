@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <NoWarn>$(NoWarn);NETSDK1206;1701;1702;NU1608;CA1822</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

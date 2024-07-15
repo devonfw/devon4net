@@ -5,6 +5,7 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);NETSDK1206;1701;1702;NU1608;CA1822</NoWarn>	  
   </PropertyGroup>
 
 	<ItemGroup>

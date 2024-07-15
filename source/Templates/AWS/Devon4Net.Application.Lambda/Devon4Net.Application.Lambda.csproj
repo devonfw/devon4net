@@ -4,6 +4,7 @@
     <LangVersion>latest</LangVersion>
     <AWSProjectType>Lambda</AWSProjectType>
     <AssemblyName>Devon4Net.Application.Lambda</AssemblyName>
+	<NoWarn>$(NoWarn);NETSDK1206;1701;1702;NU1608;CA1822</NoWarn>
     <!-- This property makes the build directory similar to a publish directory and helps the AWS .NET Lambda Mock Test Tool find project dependencies. -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 
@@ -38,7 +39,7 @@
     <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.7.0" />
     <PackageReference Include="Amazon.Lambda.RuntimeSupport" Version="1.10.0" />
     <PackageReference Include="Amazon.Lambda.Core" Version="2.2.0" />
-    <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.4.2" />
+    <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.4.3" />
   </ItemGroup>  
   
   <ItemGroup>

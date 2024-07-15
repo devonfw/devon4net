@@ -84,7 +84,7 @@ namespace Devon4Net.Infrastructure.AWS.CDK.Resources.Handlers.AutoScalingGroup
                 HealthCheck = healthCheck,
                 Role = autoScalingGroupEntity.Role,
                 NewInstancesProtectedFromScaleIn = autoScalingGroupEntity.EnableProtectionFromScaleIn,
-                KeyName = autoScalingGroupEntity.KeyPairName,
+                KeyPair = new KeyPair(Scope, autoScalingGroupEntity.KeyPairName),
                 BlockDevices = autoScalingGroupEntity.BlockDevices,
                 AutoScalingGroupName = autoScalingGroupEntity.AutoScalingGroupName,
                 UserData = userData

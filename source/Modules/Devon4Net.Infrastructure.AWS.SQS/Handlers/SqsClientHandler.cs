@@ -132,7 +132,7 @@ namespace Devon4Net.Infrastructure.AWS.SQS.Handlers
                     QueueUrl = queueUrl,
                     MaxNumberOfMessages = maxNumberOfMessagesToRetrievePerCall,
                     WaitTimeSeconds = ReceiveMessageWaitTimeSeconds,
-                    AttributeNames = new List<string> { QueueAttributeName.All },
+                    MessageSystemAttributeNames = new List<string> { QueueAttributeName.All },
                     MessageAttributeNames = new List<string> { QueueAttributeName.All }
                 }, cancellationToken).ConfigureAwait(false);
 
